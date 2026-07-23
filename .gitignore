@@ -1,0 +1,17 @@
+.env
+.mapikey
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+# .mcpb bundle build artifacts (keep source: manifest.json, main.py, build.ps1)
+*.mcpb
+mcpb/build/
+
+# 임시 배포 
+deploy/
+Dockerfile
+.dockerignore

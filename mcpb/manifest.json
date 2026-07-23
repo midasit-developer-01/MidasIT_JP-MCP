@@ -1,0 +1,53 @@
+{
+  "manifest_version": "0.2",
+  "name": "midas-nx",
+  "display_name": "MIDAS NX",
+  "version": "0.1.0",
+  "description": "MIDAS NX（CIVIL/GEN）Open API 用の MCP サーバーです。",
+  "long_description": "実行中の MIDAS CIVIL/GEN NX インスタンスを Open API 経由で操作します（DB の CRUD、DOC/POST アクション、エンドポイントカタログ検索）。ローカルの stdio で動作し、MAPI キーはこの PC 内にのみ保持されます。前提条件：MIDAS NX アプリがモデルファイルを開いた状態で起動している必要があります。",
+  "author": {
+    "name": "MIDAS IT"
+  },
+  "server": {
+    "type": "binary",
+    "entry_point": "server/midas-mcp.exe",
+    "mcp_config": {
+      "command": "${__dirname}/server/midas-mcp.exe",
+      "args": [],
+      "env": {
+        "MIDAS_MAPI_KEY": "${user_config.mapi_key}",
+        "MIDAS_BASE_URL": "${user_config.base_url}"
+      }
+    }
+  },
+  "user_config": {
+    "mapi_key": {
+      "type": "string",
+      "title": "MIDAS MAPI キー",
+      "description": "MIDAS NX の [API Settings] で発行したキーを入力してください。",
+      "sensitive": true,
+      "required": true
+    },
+    "base_url": {
+      "type": "string",
+      "title": "Base URL（任意）",
+      "description": "空欄の場合はキーから自動的に導出されます。必要な場合のみ入力してください。",
+      "required": false,
+      "default": ""
+    }
+  },
+  "tools": [
+    { "name": "midas_lookup", "description": "Search the MIDAS API endpoint catalog by keyword." },
+    { "name": "midas_describe", "description": "Full schema + example for one endpoint." },
+    { "name": "midas_db_read", "description": "Read model DB data." },
+    { "name": "midas_db_create", "description": "Create DB records." },
+    { "name": "midas_db_update", "description": "Update DB records." },
+    { "name": "midas_db_delete", "description": "Delete a single DB record." },
+    { "name": "midas_doc", "description": "Document/file control (ANAL, SAVE, OPEN, ...)." },
+    { "name": "midas_post_table", "description": "Extract a pre/post-processing table." },
+    { "name": "midas_request", "description": "Raw request escape hatch for any endpoint." }
+  ],
+  "compatibility": {
+    "platforms": ["win32"]
+  }
+}
