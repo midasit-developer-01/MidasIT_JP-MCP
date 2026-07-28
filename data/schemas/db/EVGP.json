@@ -1,0 +1,91 @@
+{
+  "_group": "db",
+  "_name": "EVGP",
+  "uri": "db/EVGP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EVGP": {
+      "type": "object",
+      "description": "Evaluation Group Assignment (EVGP). TYPE (PIER or ABUTMENT) together with bPIERCAP and bLINK/LINK_TYPE drive which optional fields apply.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Evaluation group name."
+        },
+        "TYPE": {
+          "type": "string",
+          "enum": ["PIER", "ABUTMENT"],
+          "description": "Group type. Case-insensitive. PIER=0, ABUTMENT=1. Determines applicability of link fields."
+        },
+        "bPIERCAP": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use pier cap. When true, PIER_ELEM_LIST must be specified (hard-enforced)."
+        },
+        "PIER_ELEM_LIST": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "description": "Pier cap element list. Required (non-empty) when bPIERCAP is true."
+        },
+        "EVGP_COLM_LIST": {
+          "type": "array",
+          "description": "Column list. Each entry defines a named column and its element list.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "NAME": {
+                "type": "string",
+                "description": "Column name."
+              },
+              "ELEM_LIST": {
+                "type": "array",
+                "items": { "type": "integer" },
+                "description": "Element list for this column."
+              }
+            },
+            "required": ["NAME", "ELEM_LIST"]
+          }
+        },
+        "bLINK": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use link. Applied only when TYPE is PIER. When TYPE=PIER and bLINK is true, LINK_NODE_LIST must be specified (hard-enforced)."
+        },
+        "LINK_TYPE": {
+          "type": "string",
+          "enum": ["LINK", "SUPPORT"],
+          "default": "LINK",
+          "description": "Link type for abutment. Case-insensitive. Wire values: \"LINK\"=Elastic Link (index 0), \"SUPPORT\"=Support (index 1). Required when TYPE=ABUTMENT (hard-enforced)."
+        },
+        "LINK_NODE_LIST": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "description": "Link node list. Required (non-empty) when TYPE=PIER and bLINK is true, or when TYPE=ABUTMENT."
+        }
+      },
+      "required": ["NAME", "TYPE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Pier Group 1",
+        "TYPE": "PIER",
+        "bPIERCAP": true,
+        "PIER_ELEM_LIST": [1, 2, 3],
+        "EVGP_COLM_LIST": [
+          { "NAME": "Column A", "ELEM_LIST": [4, 5] }
+        ],
+        "bLINK": true,
+        "LINK_NODE_LIST": [10, 11, 12]
+      },
+      "2": {
+        "NAME": "Abutment Group 1",
+        "TYPE": "ABUTMENT",
+        "bPIERCAP": false,
+        "LINK_TYPE": "SUPPORT",
+        "LINK_NODE_LIST": [20, 21]
+      }
+    }
+  }
+}

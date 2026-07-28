@@ -1,0 +1,50 @@
+{
+  "_group": "db",
+  "_name": "MEMB",
+  "uri": "db/MEMB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MEMB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Member Assignment (MEMB). Groups a set of connected elements into a single design/rating member; the member key drives which contiguous element chain is treated as one member, and the assigned elements must form a connected line not already claimed by another member.",
+      "properties": {
+        "AELEM": {
+          "description": "Element numbers that make up this member. The elements must be mutually connected (form a single continuous member); a single-element member is allowed. Assigning elements already belonging to another member is rejected.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "bREVERSE": {
+          "description": "Reverse the member local direction relative to the natural element ordering. Default false.",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "AELEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "AELEM": [
+          36,
+          48,
+          46,
+          49,
+          47
+        ]
+      },
+      "2": {
+        "AELEM": [
+          32,
+          43
+        ],
+        "bREVERSE": true
+      }
+    }
+  }
+}

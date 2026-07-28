@@ -1,0 +1,32 @@
+{
+  "_group": "doc",
+  "_name": "ANAL",
+  "uri": "doc/ANAL",
+  "methods": "POST",
+  "schema": {
+    "ANAL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Analysis (ANAL). Runs a structural analysis on the currently opened project; the request body selects the analysis type, and if no body is sent a default linear (+time history) analysis is performed.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body selecting the analysis type. If omitted, a default linear analysis (plus time history) is run.",
+          "properties": {
+            "TYPE": {
+              "type": "string",
+              "enum": ["Pushover"],
+              "description": "Analysis type to run. Case-insensitive (matched after upper-casing and removing spaces). Only 'Pushover' is supported; any other value returns \"The 'TYPE' is invalid.\"."
+            }
+          },
+          "required": ["TYPE"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "TYPE": "Pushover"
+    }
+  }
+}

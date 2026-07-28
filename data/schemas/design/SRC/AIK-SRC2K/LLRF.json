@@ -1,0 +1,111 @@
+{
+  "_group": "design",
+  "_name": "LLRF",
+  "uri": "design/SRC/AIK-SRC2K/LLRF",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "LLRF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Live Load Reduction Factor (LLRF). Fields are driven by CALC_RULE (calculation rule), the applied force components, the live load cases, and a per-story reduction data table.",
+      "additionalProperties": false,
+      "required": [
+        "CALC_RULE",
+        "APPLIED_COMP",
+        "LIVE_LOAD_CASES",
+        "REDUCTION_DATA"
+      ],
+      "properties": {
+        "CALC_RULE": {
+          "type": "integer",
+          "description": "Calculation rule. Must be 0 or 1. When CALC_RULE=0, the RANGE_MAX/RANGE_MIN reduction range per story is applied; when CALC_RULE=1, RANGE_MAX/RANGE_MIN are ignored (fixed internally to 1.0/0.5).",
+          "enum": [0, 1]
+        },
+        "APPLIED_COMP": {
+          "type": "array",
+          "description": "Applied force components the reduction is applied to. Case-insensitive. Use ALL to apply to axial, moments and shear simultaneously; otherwise list the individual components.",
+          "items": {
+            "type": "string",
+            "enum": ["ALL", "AXIAL", "MOMENTS", "SHEAR"]
+          }
+        },
+        "LIVE_LOAD_CASES": {
+          "type": "array",
+          "description": "Live load case names (must exist as static load cases). At most 5 are used; any beyond the first 5 are ignored.",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 5
+        },
+        "REDUCTION_DATA": {
+          "type": "array",
+          "description": "Per-story reduction data table.",
+          "items": {
+            "$ref": "#/definitions/LLRF_REDUCTION_ITEM"
+          }
+        }
+      },
+      "definitions": {
+        "LLRF_REDUCTION_ITEM": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["STORY", "XMIN", "XMAX", "YMIN", "YMAX"],
+          "properties": {
+            "STORY": {
+              "type": "string",
+              "description": "Story name (must exist as a story)."
+            },
+            "XMIN": {
+              "type": "number",
+              "description": "Minimum X coordinate of the reduction region."
+            },
+            "XMAX": {
+              "type": "number",
+              "description": "Maximum X coordinate of the reduction region."
+            },
+            "YMIN": {
+              "type": "number",
+              "description": "Minimum Y coordinate of the reduction region."
+            },
+            "YMAX": {
+              "type": "number",
+              "description": "Maximum Y coordinate of the reduction region."
+            },
+            "RANGE_MAX": {
+              "type": "number",
+              "description": "[CALC_RULE=0] Maximum reduction factor (Rmax). Only applied when CALC_RULE=0. Must be one of 1, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5 and must be >= RANGE_MIN.",
+              "default": 1.0,
+              "enum": [1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5]
+            },
+            "RANGE_MIN": {
+              "type": "number",
+              "description": "[CALC_RULE=0] Minimum reduction factor (Rmin). Only applied when CALC_RULE=0. Must be one of 1, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5 and must be <= RANGE_MAX.",
+              "default": 0.5,
+              "enum": [1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5]
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "CALC_RULE": 0,
+        "APPLIED_COMP": ["ALL"],
+        "LIVE_LOAD_CASES": ["LL"],
+        "REDUCTION_DATA": [
+          {
+            "STORY": "1F",
+            "XMIN": -10.0,
+            "XMAX": 10.0,
+            "YMIN": -10.0,
+            "YMAX": 10.0,
+            "RANGE_MAX": 1.0,
+            "RANGE_MIN": 0.5
+          }
+        ]
+      }
+    }
+  }
+}

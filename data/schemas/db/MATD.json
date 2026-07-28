@@ -1,0 +1,318 @@
+{
+  "_group": "db",
+  "_name": "MATD",
+  "uri": "db/MATD",
+  "methods": "GET, PUT",
+  "schema": {
+    "MATD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Material Design Data (MATD). The TYPE field (STEEL/CONC/SRC) selects which sub-blocks of DATA1/DATA2 and which rebar/serviceability fields are used; nested ANAL/DESIGN objects hold the analysis (elastic) and design (strength) values.",
+      "type": "object",
+      "required": ["TYPE", "NAME", "DATA1"],
+      "properties": {
+        "TYPE": {
+          "description": "Material type (case-insensitive). Only STEEL, CONC and SRC are functional in the write path; USER, ALUMINUM and TIMBER are rejected by the handler.",
+          "type": "string",
+          "enum": ["STEEL", "CONC", "USER", "SRC", "ALUMINUM", "TIMBER"]
+        },
+        "NAME": {
+          "description": "Material name.",
+          "type": "string"
+        },
+        "DATA1": {
+          "description": "Primary material data block. For STEEL/SRC it also carries hybrid top-flange/bottom-flange/web analysis and design sub-blocks; for CONC it carries the concrete design values.",
+          "type": "object",
+          "properties": {
+            "CODENAME": {
+              "description": "Design code name. When set to a valid (non-empty, non 'None') name the code+grade lookup path is used and CODEMATLNAME identifies the grade; otherwise the explicit ANAL/DESIGN values are used.",
+              "type": "string"
+            },
+            "SUBCODENAME": {
+              "description": "Design sub-code name (currently unused on the write path).",
+              "type": "string"
+            },
+            "CODEMATLNAME": {
+              "description": "Material grade name within CODENAME.",
+              "type": "string"
+            },
+            "bHYBRID_FACTOR": {
+              "description": "[TYPE=STEEL,SRC] Hybrid material factor flag.",
+              "type": "boolean"
+            },
+            "ANAL": {
+              "$ref": "#/definitions/ANAL"
+            },
+            "TOP_F_ANAL": {
+              "description": "[TYPE=STEEL,SRC] Analysis data for the top flange.",
+              "$ref": "#/definitions/ANAL"
+            },
+            "BOT_F_ANAL": {
+              "description": "[TYPE=STEEL,SRC] Analysis data for the bottom flange.",
+              "$ref": "#/definitions/ANAL"
+            },
+            "WEB_ANAL": {
+              "description": "[TYPE=STEEL,SRC] Analysis data for the web.",
+              "$ref": "#/definitions/ANAL"
+            },
+            "DESIGN": {
+              "$ref": "#/definitions/DESIGN"
+            },
+            "TOP_F_DESIGN": {
+              "description": "[TYPE=STEEL,SRC] Design data for the top flange.",
+              "$ref": "#/definitions/DESIGN"
+            },
+            "BOT_F_DESIGN": {
+              "description": "[TYPE=STEEL,SRC] Design data for the bottom flange.",
+              "$ref": "#/definitions/DESIGN"
+            },
+            "WEB_DESIGN": {
+              "description": "[TYPE=STEEL,SRC] Design data for the web.",
+              "$ref": "#/definitions/DESIGN"
+            }
+          }
+        },
+        "DATA2": {
+          "description": "Secondary material data block used for composite sections: [TYPE=STEEL,SRC] steel-composite concrete data, [TYPE=CONC] PSC composite concrete data.",
+          "type": "object",
+          "properties": {
+            "CODENAME": {
+              "description": "Composite concrete design code name. When valid, CODEMATLNAME identifies the grade; otherwise DESIGN.C_FC is used.",
+              "type": "string"
+            },
+            "SUBCODENAME": {
+              "description": "Composite design sub-code name.",
+              "type": "string"
+            },
+            "CODEMATLNAME": {
+              "description": "Composite material grade name within CODENAME.",
+              "type": "string"
+            },
+            "DESIGN": {
+              "$ref": "#/definitions/DESIGN"
+            }
+          }
+        },
+        "REBAR_CODENAME": {
+          "description": "[TYPE=STEEL,SRC,CONC] Rebar code name. When valid, MAINREBAR_REBARNAME/SUBREBAR_REBARNAME identify graded rebars; otherwise MAINREBAR_B_FY/SUBREBAR_B_FY define user rebar yield strengths (both must be > 0).",
+          "type": "string"
+        },
+        "MAINREBAR_REBARNAME": {
+          "description": "[TYPE=STEEL,SRC,CONC] Main rebar grade name (used when REBAR_CODENAME is valid).",
+          "type": "string"
+        },
+        "SUBREBAR_REBARNAME": {
+          "description": "[TYPE=STEEL,SRC,CONC] Sub rebar grade name (used when REBAR_CODENAME is valid).",
+          "type": "string",
+          "default": ""
+        },
+        "MAINREBAR_B_FY": {
+          "description": "[TYPE=STEEL,SRC,CONC] Main rebar yield strength (user-defined; required to be > 0 when REBAR_CODENAME is not a valid code).",
+          "type": "number",
+          "default": 0
+        },
+        "SUBREBAR_B_FY": {
+          "description": "[TYPE=STEEL,SRC,CONC] Sub rebar yield strength (user-defined; required to be > 0 when REBAR_CODENAME is not a valid code).",
+          "type": "number",
+          "default": 0
+        },
+        "REBAR_CODENAME2": {
+          "description": "[TYPE=CONC] PSC-composite rebar code name (second rebar set).",
+          "type": "string"
+        },
+        "MAINREBAR_REBARNAME2": {
+          "description": "[TYPE=CONC] PSC-composite main rebar grade name.",
+          "type": "string"
+        },
+        "SUBREBAR_REBARNAME2": {
+          "description": "[TYPE=CONC] PSC-composite sub rebar grade name.",
+          "type": "string"
+        },
+        "MAINREBAR_B_FY2": {
+          "description": "[TYPE=CONC] PSC-composite main rebar yield strength (user-defined; must be > 0 when assigned).",
+          "type": "number"
+        },
+        "SUBREBAR_B_FY2": {
+          "description": "[TYPE=CONC] PSC-composite sub rebar yield strength (user-defined; must be > 0 when assigned).",
+          "type": "number"
+        },
+        "bSERVCHECK": {
+          "description": "[TYPE=CONC] Serviceability check flag (used only for Eurocode2 concrete codes).",
+          "type": "boolean"
+        },
+        "dSHORTTERM": {
+          "description": "[TYPE=CONC] Short-term serviceability factor.",
+          "type": "number"
+        },
+        "dLONGTERM": {
+          "description": "[TYPE=CONC] Long-term serviceability factor.",
+          "type": "number"
+        }
+      },
+      "definitions": {
+        "ANAL": {
+          "description": "Analysis (elastic) material data.",
+          "type": "object",
+          "required": ["ELAST"],
+          "properties": {
+            "ELAST": {
+              "description": "Modulus of elasticity.",
+              "type": "number"
+            },
+            "POISSON": {
+              "description": "Poisson's ratio.",
+              "type": "number"
+            }
+          }
+        },
+        "DESIGN": {
+          "description": "Design (strength) material data. Which fields apply depends on TYPE and the active design code.",
+          "type": "object",
+          "properties": {
+            "MATLNAME": {
+              "description": "Material name for this design sub-block (flange/web).",
+              "type": "string"
+            },
+            "ALWS1": { "description": "[code=KSCE-ASD05 steel] Allowable stress 1.", "type": "number" },
+            "ALWS2": { "description": "[code=KSCE-ASD05 steel] Allowable stress 2.", "type": "number" },
+            "ALWS3": { "description": "[code=KSCE-ASD05 steel] Allowable stress 3.", "type": "number" },
+            "ALWS4": { "description": "[code=KSCE-ASD05 steel] Allowable stress 4.", "type": "number" },
+            "ALWS5": { "description": "[code=KSCE-ASD05 steel] Allowable stress 5.", "type": "number" },
+            "ALWS6": { "description": "[code=KSCE-ASD05 steel] Allowable stress 6.", "type": "number" },
+            "ALWS7": { "description": "[code=KSCE-ASD05 steel] Allowable stress 7.", "type": "number" },
+            "ALWS8": { "description": "[code=KSCE-ASD05 steel] Allowable stress 8.", "type": "number" },
+            "ALWS9": { "description": "[code=KSCE-ASD05 steel] Allowable stress 9.", "type": "number" },
+            "ALWS10": { "description": "[code=KSCE-ASD05 steel] Allowable stress 10.", "type": "number" },
+            "MIN_T1": { "description": "[code=KSCE-ASD05 steel] Minimum thickness threshold 1.", "type": "number" },
+            "MIN_T2": { "description": "[code=KSCE-ASD05 steel] Minimum thickness threshold 2.", "type": "number" },
+            "MIN_T3": { "description": "[code=KSCE-ASD05 steel] Minimum thickness threshold 3.", "type": "number" },
+            "S_FU": { "description": "[TYPE=STEEL,SRC] Tensile strength Fu.", "type": "number" },
+            "S_FY1": { "description": "[TYPE=STEEL,SRC] Yield strength Fy for thickness band 1.", "type": "number" },
+            "S_FY2": { "description": "[TYPE=STEEL,SRC] Yield strength Fy for thickness band 2.", "type": "number" },
+            "S_FY3": { "description": "[TYPE=STEEL,SRC] Yield strength Fy for thickness band 3.", "type": "number" },
+            "S_FY4": { "description": "[TYPE=STEEL,SRC] Yield strength Fy for thickness band 4.", "type": "number" },
+            "S_FY5": { "description": "[TYPE=STEEL,SRC] Yield strength Fy for thickness band 5.", "type": "number" },
+            "S_FY6": { "description": "[TYPE=STEEL,SRC] Yield strength Fy for thickness band 6.", "type": "number" },
+            "S_AFT": { "description": "[TYPE=STEEL,SRC] Tension thickness threshold 1.", "type": "number" },
+            "S_AFT2": { "description": "[TYPE=STEEL,SRC] Tension thickness threshold 2.", "type": "number" },
+            "S_AFT3": { "description": "[TYPE=STEEL,SRC] Tension thickness threshold 3.", "type": "number" },
+            "S_FY": { "description": "[TYPE=STEEL,SRC] Nominal yield strength Fy.", "type": "number" },
+            "S_AFV": { "description": "[TYPE=STEEL,SRC] Shear thickness threshold 1.", "type": "number" },
+            "S_AFV2": { "description": "[TYPE=STEEL,SRC] Shear thickness threshold 2.", "type": "number" },
+            "S_AFV3": { "description": "[TYPE=STEEL,SRC] Shear thickness threshold 3.", "type": "number" },
+            "DGAMMA_M": { "description": "[TYPE=STEEL] Material partial safety factor (non KSCE-ASD05 steel).", "type": "number" },
+            "C_FC": { "description": "[TYPE=CONC] Concrete compressive strength fck.", "type": "number" },
+            "bLAMBDA": { "description": "[TYPE=CONC] Lightweight concrete lambda check flag.", "type": "boolean" },
+            "dLAMBDA": { "description": "[TYPE=CONC] Lambda value (used when bLAMBDA is true).", "type": "number" },
+            "C_FCI": { "description": "[TYPE=CONC] Concrete strength at transfer fci (typically 0.7*C_FC).", "type": "number" },
+            "bTRANSFER": { "description": "[TYPE=CONC] Transfer strength check flag (AS 5100.5 PSC).", "type": "boolean" },
+            "dTRANSFERFCI": { "description": "[TYPE=CONC] Transfer fci value (AS 5100.5 PSC).", "type": "number" }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TYPE": "CONC",
+        "NAME": "C16/20",
+        "DATA1": {
+          "CODENAME": "EN(RC)",
+          "CODEMATLNAME": "C16/20",
+          "DESIGN": {
+            "C_FC": 16000,
+            "C_FCI": 11200,
+            "bLAMBDA": false
+          }
+        },
+        "REBAR_CODENAME": "EN04(RC)",
+        "MAINREBAR_REBARNAME": "ClassB",
+        "SUBREBAR_REBARNAME": "ClassC",
+        "MAINREBAR_B_FY": 500000,
+        "SUBREBAR_B_FY": 500000,
+        "bSERVCHECK": true,
+        "dSHORTTERM": 0.5,
+        "dLONGTERM": 0.5
+      },
+      "2": {
+        "TYPE": "STEEL",
+        "NAME": "Grade355",
+        "DATA1": {
+          "bHYBRID_FACTOR": false,
+          "ANAL": {
+            "ELAST": 210000000,
+            "POISSON": 0.3
+          },
+          "DESIGN": {
+            "S_FU": 470000,
+            "S_FY1": 355000,
+            "S_FY2": 345000,
+            "S_FY3": 335000,
+            "S_FY4": 325000,
+            "S_FY5": 315000,
+            "S_FY6": 295000,
+            "S_AFT": 0.016,
+            "S_AFT2": 0.04,
+            "S_AFT3": 0.063,
+            "S_FY": 355000,
+            "S_AFV": 0.016,
+            "S_AFV2": 0.04,
+            "S_AFV3": 0.063,
+            "DGAMMA_M": 1.0
+          },
+          "TOP_F_ANAL": { "ELAST": 210000000, "POISSON": 0.3 },
+          "BOT_F_ANAL": { "ELAST": 210000000, "POISSON": 0.3 },
+          "WEB_ANAL": { "ELAST": 210000000, "POISSON": 0.3 },
+          "TOP_F_DESIGN": { "MATLNAME": "Grade355", "S_FU": 470000, "S_FY1": 355000, "S_FY": 355000 },
+          "BOT_F_DESIGN": { "MATLNAME": "Grade355", "S_FU": 470000, "S_FY1": 355000, "S_FY": 355000 },
+          "WEB_DESIGN": { "MATLNAME": "Grade355", "S_FU": 470000, "S_FY1": 355000, "S_FY": 355000 }
+        },
+        "DATA2": {
+          "DESIGN": { "C_FC": 30000 }
+        },
+        "REBAR_CODENAME": "",
+        "MAINREBAR_B_FY": 400000,
+        "SUBREBAR_B_FY": 400000
+      },
+      "3": {
+        "TYPE": "SRC",
+        "NAME": "SRC-Grade355",
+        "DATA1": {
+          "bHYBRID_FACTOR": false,
+          "ANAL": {
+            "ELAST": 210000000,
+            "POISSON": 0.3
+          },
+          "DESIGN": {
+            "S_FU": 470000,
+            "S_FY1": 355000,
+            "S_FY2": 345000,
+            "S_FY3": 335000,
+            "S_FY4": 325000,
+            "S_FY5": 315000,
+            "S_FY6": 295000,
+            "S_AFT": 0.016,
+            "S_AFT2": 0.04,
+            "S_AFT3": 0.063,
+            "S_FY": 355000,
+            "S_AFV": 0.016,
+            "S_AFV2": 0.04,
+            "S_AFV3": 0.063
+          },
+          "TOP_F_ANAL": { "ELAST": 210000000, "POISSON": 0.3 },
+          "BOT_F_ANAL": { "ELAST": 210000000, "POISSON": 0.3 },
+          "WEB_ANAL": { "ELAST": 210000000, "POISSON": 0.3 },
+          "TOP_F_DESIGN": { "MATLNAME": "SRC-Grade355", "S_FU": 470000, "S_FY1": 355000, "S_FY": 355000 },
+          "BOT_F_DESIGN": { "MATLNAME": "SRC-Grade355", "S_FU": 470000, "S_FY1": 355000, "S_FY": 355000 },
+          "WEB_DESIGN": { "MATLNAME": "SRC-Grade355", "S_FU": 470000, "S_FY1": 355000, "S_FY": 355000 }
+        },
+        "DATA2": {
+          "DESIGN": { "C_FC": 30000 }
+        },
+        "REBAR_CODENAME": "",
+        "MAINREBAR_B_FY": 400000,
+        "SUBREBAR_B_FY": 400000
+      }
+    }
+  }
+}

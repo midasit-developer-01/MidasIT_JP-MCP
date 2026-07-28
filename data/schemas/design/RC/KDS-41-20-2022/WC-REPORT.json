@@ -1,0 +1,88 @@
+{
+  "_group": "design",
+  "_name": "WC-REPORT",
+  "uri": "design/RC/KDS-41-20-2022/WC-REPORT",
+  "methods": "POST",
+  "schema": {
+    "WC-REPORT": {
+      "type": "object",
+      "description": "Wall Check Report (WC-REPORT). Fields are driven by the DESIGN_WALL_REPORT_REQUEST DTO, whose report mode field is selected by REPORT_TYPE (WID+STORY vs WID).",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Wall design check report generation request.",
+          "properties": {
+            "REPORT_TYPE": {
+              "type": "string",
+              "description": "Report Type: WID+STORY or WID. Case-insensitive.",
+              "enum": ["WID+STORY", "WID"]
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Export Path (e.g. C:\\MIDAS\\Report\\)."
+            },
+            "OUTPUT_NAME": {
+              "type": "string",
+              "description": "Output File Name."
+            },
+            "CURRENT_MODE_WID_STORY": {
+              "type": "string",
+              "description": "[REPORT_TYPE=WID+STORY] Report Mode used when REPORT_TYPE is WID+STORY. Case-insensitive.",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"]
+            },
+            "CURRENT_MODE_WID": {
+              "type": "string",
+              "description": "[REPORT_TYPE=WID] Report Mode used when REPORT_TYPE is WID. Case-insensitive.",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"]
+            },
+            "SELECTIONS": {
+              "type": "array",
+              "description": "List of wall and story selections to include in the report. If omitted or empty, all walls and all stories are included.",
+              "items": {
+                "type": "object",
+                "description": "One wall-ID set + story set pair.",
+                "properties": {
+                  "WALL_IDS": {
+                    "type": "object",
+                    "description": "Wall ID Object - Specify Each Wall ID (KEYS) or Wall ID Range (TO). If omitted, all walls are included.",
+                    "properties": {
+                      "KEYS": {
+                        "type": "array",
+                        "description": "Specify Each Wall ID.",
+                        "items": { "type": "integer" }
+                      },
+                      "TO": {
+                        "type": "string",
+                        "description": "Specify Wall ID Range (e.g. 1to20)."
+                      }
+                    }
+                  },
+                  "STORY": {
+                    "type": "array",
+                    "description": "Story names to filter design analysis. If omitted, all stories are included.",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "required": ["REPORT_TYPE", "EXPORT_PATH", "OUTPUT_NAME"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "REPORT_TYPE": "WID+STORY",
+      "EXPORT_PATH": "C:\\MIDAS\\Report\\",
+      "OUTPUT_NAME": "WallCheckReport.mrb",
+      "CURRENT_MODE_WID_STORY": "Detail",
+      "SELECTIONS": [
+        {
+          "WALL_IDS": { "KEYS": [1, 2, 3] },
+          "STORY": ["1F", "2F"]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "_group": "design",
+  "_name": "DIOP",
+  "uri": "design/PSC/AASHTO-LRFD24/DIOP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DIOP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "PSC Design Input Option per Element (DIOP). Fields drive which design checks (moment strength, shear, torsion) are performed at the I/J ends of a PSC design-target element; each check type uses code 0=None, 1=I, 2=J, 3=I & J.",
+      "additionalProperties": false,
+      "required": [
+        "MOMENT_STRENGTH",
+        "SHEAR_TYPE",
+        "TORSION_TYPE"
+      ],
+      "properties": {
+        "MOMENT_STRENGTH": {
+          "type": "object",
+          "description": "Moment strength check settings for positive and negative moment.",
+          "additionalProperties": false,
+          "required": [
+            "POSITIVE_MOMENT",
+            "NEGATIVE_MOMENT"
+          ],
+          "properties": {
+            "POSITIVE_MOMENT": {
+              "type": "integer",
+              "description": "Positive moment strength check location. 0=None, 1=I, 2=J, 3=I & J.",
+              "minimum": 0,
+              "maximum": 3
+            },
+            "NEGATIVE_MOMENT": {
+              "type": "integer",
+              "description": "Negative moment strength check location. 0=None, 1=I, 2=J, 3=I & J.",
+              "minimum": 0,
+              "maximum": 3
+            }
+          }
+        },
+        "SHEAR_TYPE": {
+          "type": "integer",
+          "description": "Shear check location. 0=None, 1=I, 2=J, 3=I & J.",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "TORSION_TYPE": {
+          "type": "integer",
+          "description": "Torsion check location. 0=None, 1=I, 2=J, 3=I & J.",
+          "minimum": 0,
+          "maximum": 3
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "MOMENT_STRENGTH": {
+          "POSITIVE_MOMENT": 3,
+          "NEGATIVE_MOMENT": 3
+        },
+        "SHEAR_TYPE": 3,
+        "TORSION_TYPE": 1
+      }
+    }
+  }
+}

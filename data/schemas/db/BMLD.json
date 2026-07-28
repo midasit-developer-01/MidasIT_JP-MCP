@@ -1,0 +1,178 @@
+{
+  "_group": "db",
+  "_name": "BMLD",
+  "uri": "db/BMLD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "BMLD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Beam Loads (BMLD). A single object keyed by element number whose ITEMS array holds one or more beam-load definitions; each item's CMD (element type), TYPE (load type) and DIRECTION drive which of the vector/eccentricity/distance fields apply.",
+      "type": "object",
+      "properties": {
+        "ITEMS": {
+          "description": "Array of beam-load definitions applied to the element key. Each item is a distinct load; ID distinguishes multiple loads on the same element.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number that distinguishes multiple loads on the same element key. Combined with the element key to form the storage union key.",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Static load case name. Must match an existing static load case (validated at runtime).",
+                "type": "string"
+              },
+              "GROUP_NAME": {
+                "description": "Load group name. Empty string means no group; a non-empty name must match an existing load group (validated at runtime).",
+                "type": "string",
+                "default": ""
+              },
+              "CMD": {
+                "description": "Element type / load classification. BEAM = element beam load, LINE = line beam load, TYPICAL = typical beam load, FLOOR = floor load. Case-insensitive.",
+                "type": "string",
+                "enum": ["FLOOR", "LINE", "TYPICAL", "BEAM"]
+              },
+              "TYPE": {
+                "description": "Load type. CONLOAD = concentrated force, CONMOMENT = concentrated moment/torsion, UNILOAD = uniform/trapezoidal load, UNIMOMENT = uniform/trapezoidal moment/torsion, PRESSURE = pressure load. Case-insensitive; validity is hard-enforced.",
+                "type": "string",
+                "enum": ["CONLOAD", "CONMOMENT", "UNILOAD", "UNIMOMENT", "PRESSURE"]
+              },
+              "DIRECTION": {
+                "description": "Load direction. LX/LY/LZ = element local axes, GX/GY/GZ = global axes, VECTOR = user-defined vector (then VX/VY/VZ are used). Case-insensitive; validity is hard-enforced unless VECTOR.",
+                "type": "string",
+                "enum": ["LX", "LY", "LZ", "GX", "GY", "GZ", "VECTOR"]
+              },
+              "VX": {
+                "description": "[DIRECTION=VECTOR] X component of the user-defined load direction vector. Used only when DIRECTION is VECTOR.",
+                "type": "number"
+              },
+              "VY": {
+                "description": "[DIRECTION=VECTOR] Y component of the user-defined load direction vector. Used only when DIRECTION is VECTOR.",
+                "type": "number"
+              },
+              "VZ": {
+                "description": "[DIRECTION=VECTOR] Z component of the user-defined load direction vector. Used only when DIRECTION is VECTOR.",
+                "type": "number"
+              },
+              "USE_PROJECTION": {
+                "description": "Whether the load is applied as a projected load.",
+                "type": "boolean",
+                "default": false
+              },
+              "USE_ECCEN": {
+                "description": "Whether eccentricity is used. When true, ECCEN_TYPE, ECCEN_DIR, I_END, J_END and USE_J_END are applied.",
+                "type": "boolean",
+                "default": false
+              },
+              "ECCEN_TYPE": {
+                "description": "[USE_ECCEN=true] Eccentricity type. 0 = centroid, 1 = offset.",
+                "type": "integer",
+                "default": 0
+              },
+              "ECCEN_DIR": {
+                "description": "[USE_ECCEN=true] Eccentricity direction (same direction enum as DIRECTION). Case-insensitive; validity is hard-enforced when USE_ECCEN is true.",
+                "type": "string",
+                "enum": ["LX", "LY", "LZ", "GX", "GY", "GZ", "VECTOR"]
+              },
+              "I_END": {
+                "description": "[USE_ECCEN=true] Eccentricity distance at the I-end.",
+                "type": "number",
+                "default": 0
+              },
+              "J_END": {
+                "description": "[USE_ECCEN=true] Eccentricity distance at the J-end.",
+                "type": "number",
+                "default": 0
+              },
+              "USE_J_END": {
+                "description": "[USE_ECCEN=true] Whether the J-end eccentricity distance is used.",
+                "type": "boolean",
+                "default": false
+              },
+              "D": {
+                "description": "Distance ratios/positions of the load points [x1, x2, x3, x4]. Only the first 4 values are stored; fewer values are zero-padded to 4.",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 4
+              },
+              "P": {
+                "description": "Load values at the corresponding D points [v1, v2, v3, v4]. Only the first 4 values are stored; fewer values are zero-padded to 4.",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 4
+              },
+              "USE_ADDITIONAL": {
+                "description": "Whether an additional H-from-top load region is used.",
+                "type": "boolean",
+                "default": false
+              },
+              "ADDITIONAL_I_END": {
+                "description": "Additional-region distance at the I-end.",
+                "type": "number",
+                "default": 0
+              },
+              "ADDITIONAL_J_END": {
+                "description": "Additional-region distance at the J-end.",
+                "type": "number",
+                "default": 0
+              },
+              "USE_ADDITIONAL_J_END": {
+                "description": "Whether the additional-region J-end distance is used.",
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "required": ["LCNAME", "CMD", "TYPE", "DIRECTION"]
+          }
+        }
+      },
+      "required": ["ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "115": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "L",
+            "GROUP_NAME": "",
+            "CMD": "BEAM",
+            "TYPE": "UNILOAD",
+            "DIRECTION": "GZ",
+            "USE_PROJECTION": false,
+            "USE_ECCEN": false,
+            "D": [0, 1, 0, 0],
+            "P": [-50, -50, 0, 0]
+          },
+          {
+            "ID": 2,
+            "LCNAME": "L",
+            "GROUP_NAME": "",
+            "CMD": "BEAM",
+            "TYPE": "CONLOAD",
+            "DIRECTION": "VECTOR",
+            "VX": 0,
+            "VY": 0,
+            "VZ": -1,
+            "USE_PROJECTION": false,
+            "USE_ECCEN": true,
+            "ECCEN_TYPE": 1,
+            "ECCEN_DIR": "LZ",
+            "I_END": 0.1,
+            "J_END": 0.0,
+            "USE_J_END": false,
+            "D": [0.5, 0, 0, 0],
+            "P": [-100, 0, 0, 0]
+          }
+        ]
+      }
+    }
+  }
+}

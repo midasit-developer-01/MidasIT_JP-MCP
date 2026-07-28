@@ -1,0 +1,147 @@
+{
+  "_group": "db",
+  "_name": "SLAN",
+  "uri": "db/SLAN",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SLAN": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Traffic Surface Lane (SLAN). One lane definition per key; the lane geometry is driven by NAME/WIDTH/MV_DIR plus the LANE_ITEMS list of per-node lane data (offset, impact factor, and design-code-specific values).",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Lane name.",
+          "type": "string"
+        },
+        "WIDTH": {
+          "description": "Lane width.",
+          "type": "number"
+        },
+        "WHEEL_SPACE": {
+          "description": "Wheel spacing.",
+          "type": "number",
+          "default": 0
+        },
+        "SKEW_START": {
+          "description": "Skew angle at the lane start.",
+          "type": "number",
+          "default": 0
+        },
+        "SKEW_END": {
+          "description": "Skew angle at the lane end.",
+          "type": "number",
+          "default": 0
+        },
+        "bOPTIMIZE": {
+          "description": "Transverse lane optimization: automatically search the transverse position of the moving load.",
+          "type": "boolean",
+          "default": false
+        },
+        "ALLOW_WIDTH": {
+          "description": "Allowable width used by transverse lane optimization (relevant when bOPTIMIZE is true).",
+          "type": "number",
+          "default": 0
+        },
+        "MV_DIR": {
+          "description": "Moving direction. Case-insensitive. One of FORWARD, BACKWARD, BOTH.",
+          "type": "string",
+          "enum": ["FORWARD", "BACKWARD", "BOTH"]
+        },
+        "LANE_ITEMS": {
+          "description": "Lane data list: one entry per node defining the lane path and per-node moving-load parameters.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "NODE": {
+                "description": "Node key defining a point on the lane path.",
+                "type": "integer"
+              },
+              "OFFSET": {
+                "description": "Offset distance from the node to the lane center.",
+                "type": "number",
+                "default": 0
+              },
+              "IMPACT_FACTOR": {
+                "description": "Impact factor.",
+                "type": "number",
+                "default": 0
+              },
+              "bSPAN_START": {
+                "description": "Marks this node as a span start. Used except for Canada, BS, EuroCode, Russia, Korea LRFD, Australia, Poland, South Africa codes.",
+                "type": "boolean",
+                "default": false
+              },
+              "IMPACT_SPAN_TYPE": {
+                "description": "Impact span type (India code only). Case-insensitive. Selects how the impact value is specified: IF/CDA gives the factor directly (IMPACT_FACTOR_INDIA), SPAN_LENGTH derives it from SPAN_LENGTH.",
+                "type": "string",
+                "enum": ["IF/CDA", "SPAN_LENGTH"],
+                "default": "IF/CDA"
+              },
+              "IMPACT_FACTOR_INDIA": {
+                "description": "IF/CDA impact factor (India code only). Used when IMPACT_SPAN_TYPE is IF/CDA.",
+                "type": "number",
+                "default": 0
+              },
+              "SPAN_LENGTH": {
+                "description": "Span length (India code only). Used when IMPACT_SPAN_TYPE is SPAN_LENGTH.",
+                "type": "number",
+                "default": 0
+              },
+              "ECCEN_VERT_LOAD": {
+                "description": "Eccentricity of vertical loads to consider cant (EuroCode only).",
+                "type": "number",
+                "default": 0
+              },
+              "CENTRI_FORCE": {
+                "description": "Centrifugal force (AASHTO LRFD only).",
+                "type": "number",
+                "default": 0
+              }
+            },
+            "required": ["NODE"]
+          }
+        },
+        "SEQ": {
+          "description": "Sequence number (must be unique).",
+          "type": "integer",
+          "default": 1
+        }
+      },
+      "required": ["NAME", "WIDTH", "MV_DIR", "LANE_ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "LL_01",
+        "WIDTH": 3,
+        "WHEEL_SPACE": 1.8,
+        "SKEW_START": 10,
+        "SKEW_END": 15,
+        "bOPTIMIZE": true,
+        "ALLOW_WIDTH": 3,
+        "MV_DIR": "BOTH",
+        "SEQ": 1,
+        "LANE_ITEMS": [
+          {
+            "NODE": 1,
+            "OFFSET": -1.5
+          },
+          {
+            "NODE": 2,
+            "OFFSET": -1.5
+          },
+          {
+            "NODE": 3,
+            "OFFSET": -1.5
+          },
+          {
+            "NODE": 4,
+            "OFFSET": -1.5
+          }
+        ]
+      }
+    }
+  }
+}

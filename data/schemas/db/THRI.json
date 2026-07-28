@@ -1,0 +1,83 @@
+{
+  "_group": "db",
+  "_name": "THRI",
+  "uri": "db/THRI",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THRI": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Time History Analysis Results - Inelastic Hinge (THRI). TYPE_ELEMENT selects the element category which fixes the meaning of PROPERTY_KEY, while TYPE_RES/LOCATION/COMP pick the graphed result quantity.",
+      "type": "object",
+      "properties": {
+        "THIS_NAME": {
+          "description": "Name of the time history load case (T_THIS) this inelastic-hinge result graph belongs to; resolved to its internal key at set time.",
+          "type": "string"
+        },
+        "TYPE_ELEMENT": {
+          "description": "Type of Element, which also determines how PROPERTY_KEY is interpreted. 0: Beam (element key), 1: Truss (element key), 2: Wall (User Wall ID), 3: General Link (nonlinear link key). Hard checks: when 0 the referenced element must be a beam and when 1 it must be a truss, otherwise the request is rejected.",
+          "type": "integer",
+          "default": 0
+        },
+        "PROPERTY_KEY": {
+          "description": "Key of the target object; its meaning depends on TYPE_ELEMENT: [TYPE_ELEMENT=0/1] element key, [TYPE_ELEMENT=2] User Wall ID, [TYPE_ELEMENT=3] general (nonlinear) link key. The referenced object must exist.",
+          "type": "integer"
+        },
+        "STORY_NAME": {
+          "description": "[GEN only] Name of the story (used when TYPE_ELEMENT=2, Wall); resolved to its internal story key at set time. Ignored in non-GEN products.",
+          "type": "string",
+          "default": ""
+        },
+        "TYPE_RES": {
+          "description": "Type of Result. 0: Force-Deformation, 1: Force, 2: Deformation.",
+          "type": "integer",
+          "default": 0
+        },
+        "LOCATION": {
+          "description": "Location along the element. 0: I-Node, 1: J-Node.",
+          "type": "integer",
+          "default": 0
+        },
+        "COMP": {
+          "description": "Component of the result. 0: Fx/Dx, 1: Fy/Dy, 2: Fz/Dz, 3: Mx/Rx, 4: My/Ry, 5: Mz/Rz. [TYPE_ELEMENT=1] for a Truss this must be 0, otherwise the request is rejected.",
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "required": [
+        "THIS_NAME",
+        "PROPERTY_KEY"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "THIS_NAME": "HIST1",
+        "TYPE_ELEMENT": 0,
+        "PROPERTY_KEY": 2101,
+        "STORY_NAME": "",
+        "TYPE_RES": 0,
+        "LOCATION": 0,
+        "COMP": 0
+      },
+      "2": {
+        "THIS_NAME": "HIST1",
+        "TYPE_ELEMENT": 1,
+        "PROPERTY_KEY": 2137,
+        "STORY_NAME": "",
+        "TYPE_RES": 1,
+        "LOCATION": 0,
+        "COMP": 0
+      },
+      "3": {
+        "THIS_NAME": "HIST1",
+        "TYPE_ELEMENT": 3,
+        "PROPERTY_KEY": 3,
+        "STORY_NAME": "",
+        "TYPE_RES": 2,
+        "LOCATION": 1,
+        "COMP": 4
+      }
+    }
+  }
+}

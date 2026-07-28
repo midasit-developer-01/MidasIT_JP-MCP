@@ -1,0 +1,57 @@
+{
+  "_group": "db",
+  "_name": "HSPT",
+  "uri": "db/HSPT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "HSPT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Heat of Hydration Prescribed Temperature Load (HSPT). Keyed by element/entity id; each entry carries an ITEMS array where every item defines a prescribed temperature, optionally scoped to a boundary group.",
+      "type": "object",
+      "properties": {
+        "ITEMS": {
+          "description": "List of prescribed temperature items assigned to this entity key. Each item sets a temperature value, optionally tied to a boundary group name.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number identifying the item within this entity key. Used to match/replace an existing item; 0 lets the program assign a serial.",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Boundary group name this prescribed temperature applies to. Empty string means no group; a non-empty name must reference an existing boundary group or the request is rejected.",
+                "type": "string",
+                "default": ""
+              },
+              "TEMPER": {
+                "description": "Prescribed temperature value.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "TEMPER"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "TEMPER": 25
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "_group": "design",
+  "_name": "MEMB",
+  "uri": "design/STEEL/KDS-41-30-2022/MEMB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MEMB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Member Assignment (MEMB). Groups connected elements into a single design member; fields are driven by the element list and its local-direction option.",
+      "properties": {
+        "AELEM": {
+          "type": "array",
+          "description": "Element list forming the design member. Must be a set of connected elements; a single element is allowed.",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "bREVERSE": {
+          "type": "boolean",
+          "description": "Reverse the member local direction relative to the element direction.",
+          "default": false
+        }
+      },
+      "required": [
+        "AELEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "AELEM": [
+          1,
+          2,
+          3
+        ],
+        "bREVERSE": false
+      }
+    }
+  }
+}

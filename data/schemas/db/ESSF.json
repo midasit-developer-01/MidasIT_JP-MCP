@@ -1,0 +1,96 @@
+{
+  "_group": "db",
+  "_name": "ESSF",
+  "uri": "db/ESSF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "ESSF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Element Stiffness Scale Factor (ESSF). A single ITEMS array of scale-factor entries keyed per element; each entry carries the seven section stiffness scale factors, an optional boundary group name, and a Part selector for composite sections.",
+      "properties": {
+        "ITEMS": {
+          "description": "Array of element stiffness scale-factor entries to assign.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the scale-factor entry.",
+                "type": "integer",
+                "default": 0
+              },
+              "AREA_SF": {
+                "description": "Scale factor for Area (cross-sectional area).",
+                "type": "number",
+                "default": 1
+              },
+              "ASY_SF": {
+                "description": "Scale factor for Asy (effective shear area resisting shear along the element local y-axis).",
+                "type": "number",
+                "default": 1
+              },
+              "ASZ_SF": {
+                "description": "Scale factor for Asz (effective shear area resisting shear along the element local z-axis).",
+                "type": "number",
+                "default": 1
+              },
+              "IXX_SF": {
+                "description": "Scale factor for Ixx (torsional resistance about the element local x-axis).",
+                "type": "number",
+                "default": 1
+              },
+              "IYY_SF": {
+                "description": "Scale factor for Iyy (area moment of inertia about the element local y-axis).",
+                "type": "number",
+                "default": 1
+              },
+              "IZZ_SF": {
+                "description": "Scale factor for Izz (area moment of inertia about the element local z-axis).",
+                "type": "number",
+                "default": 1
+              },
+              "WGT_SF": {
+                "description": "Scale factor for Weight (cross-sectional area used for self-weight computation).",
+                "type": "number",
+                "default": 1
+              },
+              "GROUP_NAME": {
+                "description": "Name of an existing Boundary Group to associate with this entry; must reference an existing group name when non-empty, otherwise the request is rejected. Empty string means no group.",
+                "type": "string",
+                "default": ""
+              },
+              "iPart": {
+                "description": "Part selector for composite-type sections: 'Before' (before composite action), 'After' (after composite action), or 'All'. Case-insensitive.",
+                "type": "string",
+                "enum": ["Before", "After", "All"],
+                "default": "Before"
+              }
+            }
+          }
+        }
+      },
+      "required": ["ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "AREA_SF": 0.5,
+            "ASY_SF": 0.6,
+            "ASZ_SF": 0.7,
+            "IXX_SF": 0.8,
+            "IYY_SF": 0.8,
+            "IZZ_SF": 0.9,
+            "WGT_SF": 0.95,
+            "GROUP_NAME": "",
+            "iPart": "All"
+          }
+        ]
+      }
+    }
+  }
+}

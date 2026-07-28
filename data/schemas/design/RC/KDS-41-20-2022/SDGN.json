@@ -1,0 +1,29 @@
+{
+  "_group": "design",
+  "_name": "SDGN",
+  "uri": "design/RC/KDS-41-20-2022/SDGN",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SDGN": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Seismic Design Type (SDGN). A single Assign value object holding the seismic design classification (NTYPE) applied to the RC design database entry.",
+      "properties": {
+        "NTYPE": {
+          "type": "string",
+          "enum": ["Seismic", "Non-Seismic", "Non-Seismic-Force-Resisting"],
+          "description": "Seismic Design Type. Case-insensitive enum (matched on wire strings). Drives whether the member is treated as seismic, non-seismic, or non-seismic force-resisting in the design."
+        }
+      },
+      "required": ["NTYPE"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NTYPE": "Seismic"
+      }
+    }
+  }
+}

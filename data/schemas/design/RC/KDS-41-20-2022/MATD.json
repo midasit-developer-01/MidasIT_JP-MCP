@@ -1,0 +1,145 @@
+{
+  "_group": "design",
+  "_name": "MATD",
+  "uri": "design/RC/KDS-41-20-2022/MATD",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "MATD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Material - KDS-41-20-2022 RC (MATD_RC). Modify-only (PUT) payload patching an existing Type=\"C\" concrete material; CONCRETE.CODE and REBAR.CODE drive whether grade lookups auto-fill values (Standard) or the user supplies name/strength (None).",
+      "additionalProperties": false,
+      "required": [
+        "CONCRETE",
+        "REBAR"
+      ],
+      "properties": {
+        "CONCRETE": {
+          "type": "object",
+          "description": "CONCRETE section.",
+          "additionalProperties": false,
+          "required": [
+            "CODE"
+          ],
+          "properties": {
+            "CODE": {
+              "type": "string",
+              "enum": [
+                "NONE",
+                "STANDARD"
+              ],
+              "description": "Concrete code kind (None | Standard). Enum tokens are case-insensitive. Standard => CodeName=\"KS-RC22(KDS-41-20-22)\", GRADE auto-fills FC; None => NAME + FC come from request body."
+            },
+            "STANDARD_CODE": {
+              "type": "string",
+              "description": "Standard design code (must be 'KS19(RC)' when CODE=Standard)."
+            },
+            "GRADE": {
+              "type": "string",
+              "description": "[CODE=Standard] Concrete grade name (e.g. C30) -- required when CODE=Standard."
+            },
+            "NAME": {
+              "type": "string",
+              "description": "[CODE=None] User concrete name -- required (non-empty) when CODE=None."
+            },
+            "FC": {
+              "type": "number",
+              "description": "[CODE=None] Concrete compressive strength fck (>0); auto-filled from grade lookup when CODE=Standard."
+            },
+            "LIGHTWEIGHT": {
+              "type": "boolean",
+              "default": false,
+              "description": "Lightweight concrete flag."
+            },
+            "LAMBDA": {
+              "type": "number",
+              "default": 1.0,
+              "description": "Lightweight modification factor lambda (in [0.75, 1.0] when LIGHTWEIGHT=true; silently forced to 1.0 when LIGHTWEIGHT=false)."
+            }
+          }
+        },
+        "REBAR": {
+          "type": "object",
+          "description": "REBAR section.",
+          "additionalProperties": false,
+          "required": [
+            "CODE"
+          ],
+          "properties": {
+            "CODE": {
+              "type": "string",
+              "enum": [
+                "NONE",
+                "STANDARD"
+              ],
+              "description": "Rebar code kind (None | Standard). Enum tokens are case-insensitive. Standard => Rebar_CodeName=\"KS-RC22(KDS-41-20-22)\", grades auto-fill FY/FYS; None => user supplies names + FY/FYS."
+            },
+            "STANDARD_CODE": {
+              "type": "string",
+              "description": "Standard rebar code (must be 'KS19(RC)' when CODE=Standard)."
+            },
+            "MAIN_REBAR_GRADE": {
+              "type": "string",
+              "description": "[CODE=Standard] Main rebar grade (e.g. SD400) -- required when CODE=Standard."
+            },
+            "MAIN_REBAR_NAME": {
+              "type": "string",
+              "description": "[CODE=None] Main rebar user name -- required (non-empty) when CODE=None."
+            },
+            "SUB_REBAR_GRADE": {
+              "type": "string",
+              "description": "[CODE=Standard] Sub rebar grade (e.g. SD400) -- required when CODE=Standard."
+            },
+            "SUB_REBAR_NAME": {
+              "type": "string",
+              "description": "[CODE=None] Sub rebar user name -- required (non-empty) when CODE=None."
+            },
+            "FY": {
+              "type": "number",
+              "description": "[CODE=None] Main rebar yield strength fy (>0); auto-filled from grade lookup when CODE=Standard."
+            },
+            "FYS": {
+              "type": "number",
+              "description": "[CODE=None] Sub rebar yield strength fys (>0); auto-filled from grade lookup when CODE=Standard."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "CONCRETE": {
+          "CODE": "STANDARD",
+          "STANDARD_CODE": "KS19(RC)",
+          "GRADE": "C30",
+          "LIGHTWEIGHT": false,
+          "LAMBDA": 1.0
+        },
+        "REBAR": {
+          "CODE": "STANDARD",
+          "STANDARD_CODE": "KS19(RC)",
+          "MAIN_REBAR_GRADE": "SD400",
+          "SUB_REBAR_GRADE": "SD400"
+        }
+      },
+      "2": {
+        "CONCRETE": {
+          "CODE": "NONE",
+          "NAME": "MyConcrete",
+          "FC": 27.0,
+          "LIGHTWEIGHT": true,
+          "LAMBDA": 0.85
+        },
+        "REBAR": {
+          "CODE": "NONE",
+          "MAIN_REBAR_NAME": "MyMainRebar",
+          "SUB_REBAR_NAME": "MySubRebar",
+          "FY": 400.0,
+          "FYS": 400.0
+        }
+      }
+    }
+  }
+}

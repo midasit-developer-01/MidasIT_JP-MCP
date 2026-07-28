@@ -1,0 +1,35 @@
+{
+  "_group": "db",
+  "_name": "LDSQ",
+  "uri": "db/LDSQ",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LDSQ": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Loading Sequence (LDSQ). A single record (key 1) whose LCNAME_ITEM lists static load case names in the order they are applied; the handler resolves each name to its STLD key and stores the ordered sequence.",
+      "properties": {
+        "LCNAME_ITEM": {
+          "type": "array",
+          "description": "Ordered list of static load case (STLD) names defining the loading sequence. Each name must match an existing static load case; order is significant.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "LCNAME_ITEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME_ITEM": [
+          "DL(BC)4",
+          "DL(AC)"
+        ]
+      }
+    }
+  }
+}

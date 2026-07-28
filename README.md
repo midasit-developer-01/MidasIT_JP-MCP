@@ -3,9 +3,10 @@
 An [MCP](https://modelcontextprotocol.io) server that lets an LLM (Claude, etc.)
 drive a running **MIDAS CIVIL/GEN NX** instance through its Open API.
 
-Instead of one tool per endpoint (~256), it exposes a small set of **generic
-tools** plus a **catalog lookup** so the model discovers the exact schema/example
-at call time — including the undocumented `db/IEHP` (inelastic hinge property).
+Instead of one tool per endpoint (**539 endpoints across 10 groups**), it exposes
+**15 generic tools** plus a **catalog lookup** so the model discovers the exact
+schema/example at call time — including the undocumented `db/IEHP` (inelastic
+hinge property).
 
 ## Tools
 
@@ -17,12 +18,57 @@ at call time — including the undocumented `db/IEHP` (inelastic hinge property)
 | `midas_db_create(item, assign)` | `POST /db/{item}` | Create records (`{"Assign": ...}`) |
 | `midas_db_update(item, assign)` | `PUT /db/{item}` | Update records |
 | `midas_db_delete(item, item_id)` | `DELETE /db/{item}/{id}` | Delete one record |
-| `midas_doc(name, argument?)` | `POST /doc/{name}` | File/doc control (ANAL, SAVE, EXPORT…) |
-| `midas_post_table(argument)` | `POST /post/TABLE` | Extract pre/post tables |
-| `midas_request(method, endpoint, body?)` | any | Escape hatch (OPE/VIEW/…) |
+| `midas_doc(name, argument?)` | `POST /doc/{name}` | File/document control (NEW, OPEN, SAVE, ANAL, EXPORT…) |
+| `midas_ope(name, argument?, method?)` | `POST /ope/{name}` | Modeling operations (AUTOMESH, DIVIDEELEM, USLC…) |
+| `midas_view(name, argument?, method?)` | `POST /view/{name}` | View/display control (ACTIVE, ANGLE, CAPTURE…) |
+| `midas_post(name, argument?)` | `POST /post/{name}` | Post-processing/results (TABLE, STEELCODECHECK, PM…) |
+| `midas_design(path, …)` | `* /design/{path}` | Structural design / code check (RC/STEEL/SRC/PSC × code standard) |
+| `midas_rating(path, …)` | `* /rating/{path}` | Load rating (category × rating standard) |
+| `midas_temp(path, …)` | `* /temp/{path}` | Expansion / external-link DB + temporary DB |
+| `midas_requestinfo(path, …)` | `* /requestinfo/{path}` | Request metadata (what a request expects) |
+| `midas_config(path, …)` | `* /config/{path}` | Project info / program version |
 
-The catalog data (`data/midas-api-examples.json`, `data/midas-api-reference.md`)
-is bundled from the React template repo.
+The API has two body conventions: `db/` uses `Assign` (→ `midas_db_*`); the
+command groups `doc`/`ope`/`view`/`post` all use `Argument` and each get a
+dedicated tool named after their URL segment — so the tool name *is* the group.
+Every documented endpoint is reachable through these tools, so there is no raw
+escape hatch. The few `ope` endpoints that wrap the payload in a named key
+instead of `Argument` (STOR, STORYPROP, STORY_PARAM) take a verbatim `body=` on
+`midas_ope` (copy the shape from `midas_describe(name)`).
+
+The five **extended-group** tools (`design`/`rating`/`temp`/`requestinfo`/`config`)
+take a `path` — the `midas_lookup` uri after the leading `<group>/`. `design` and
+`rating` nest a **code category + standard** in that path (e.g.
+`design/RC/KDS-41-20-2022/DCRM-BEAM`), so the same name repeats across standards;
+always pass the full path from `midas_lookup`. Their body convention varies per
+endpoint — db-style items take `body={"Assign": {…}}`, the rest take
+`argument={…}`; reads use `method="GET"`. Copy the exact shape from
+`midas_describe`.
+
+Every tool carries MCP [`ToolAnnotations`](https://modelcontextprotocol.io/) hints
+(`readOnlyHint`/`destructiveHint`/`idempotentHint`/`openWorldHint`) so a host can,
+e.g., auto-approve reads (`midas_lookup`, `midas_db_read`, `midas_post`) but
+prompt before destructive writes (`midas_db_delete`, `midas_doc`).
+
+The catalog data lives one-file-per-endpoint under `data/schemas/<group>/<NAME>.json`
+(e.g. `data/schemas/db/NODE.json`); each file carries the endpoint's
+`uri`/`methods`/`schema`/`example` plus a derived `tables` type summary. The
+`design`/`rating` files nest under a code category + standard
+(`data/schemas/design/RC/KDS-41-20-2022/DCRM.json`). `catalog.py` scans the whole
+`data/schemas` tree **recursively** at startup, so deep code-standard paths are
+included. The reference doc (`data/midas-api-reference.md`) is bundled from the
+React template repo. (This replaces the old monolithic
+`data/midas-api-examples.json`.)
+
+## Client-side validation
+
+Before every `POST`/`PUT` to `/db/{item}`, the client validates the `Assign`
+body against that endpoint's bundled JSON Schema (`midas_mcp/hooks/`, using
+`jsonschema`). Invalid bodies are **not sent** — the caller gets a
+human-readable error naming the offending field, so the model can fix and retry
+without a round-trip to the app. Validation **fails open**: if `jsonschema` is
+missing or no schema is bundled for the item, the request goes through
+unchanged. Disable it with `MidasClient(validate=False)` or `MIDAS_VALIDATE=0`.
 
 ## Repository layout
 
@@ -30,7 +76,13 @@ Two independent distribution tracks share one core:
 
 ```
 midas_mcp/          # server source (stdio + streamable-http)  ── shared core
-data/               # endpoint catalog (bundled into every build)
+  ├─ server.py      #   the 15 FastMCP tools
+  ├─ client.py      #   thin REST client for the MIDAS Open API
+  ├─ catalog.py     #   offline endpoint lookup over data/schemas
+  └─ hooks/         #   pre-request JSON-Schema validation of DB bodies
+data/
+  ├─ schemas/       # endpoint catalog, one file per endpoint (bundled into every build)
+  └─ midas-api-reference.md
 mcpb/               # track 1: .mcpb bundle for Claude Desktop (PyInstaller, win32)
 Dockerfile          # track 2: container image for remote (streamable-http) deploy
 deploy/             # track 2: CloudFormation templates + AWS runbook
@@ -123,7 +175,7 @@ Two templates:
    (only `COMPONENT_DIR[i]==true` components hold valid values)
 3. `midas_db_read("IEHP")` → live data from the open model
 4. `midas_doc("ANAL")` → run analysis
-5. `midas_post_table({...})` → pull result tables
+5. `midas_post("TABLE", {...})` → pull result tables
 
 ## Notes
 

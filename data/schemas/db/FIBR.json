@@ -1,0 +1,200 @@
+{
+  "_group": "db",
+  "_name": "FIBR",
+  "uri": "db/FIBR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "FIBR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Fiber Section Division (FIBR). Defines the fiber discretization assigned to a section (SECT_KEY); each entry in FIBR_BASE is one fiber, and whether a fiber is a rebar (OPT_IS_REBAR) drives whether its polygon points (POINT_Y/POINT_Z) apply.",
+      "properties": {
+        "NAME": {
+          "description": "Fiber division name.",
+          "type": "string"
+        },
+        "SECT_KEY": {
+          "description": "Key of the section this fiber division is assigned to.",
+          "type": "integer"
+        },
+        "ASSIGN_TYPE": {
+          "description": "Assign type code for the fiber division.",
+          "type": "integer"
+        },
+        "FIMP_NAME": {
+          "description": "Names of the inelastic (fiber) material properties, one per material slot. Each non-empty name must resolve to an existing FIMP entry.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 6,
+          "maxItems": 6
+        },
+        "FIMP_COLOR": {
+          "description": "Optional display colors for each of the 6 inelastic material slots, as RGB objects.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "R": {
+                "description": "Red component (0-255).",
+                "type": "number",
+                "default": 0
+              },
+              "G": {
+                "description": "Green component (0-255).",
+                "type": "number",
+                "default": 0
+              },
+              "B": {
+                "description": "Blue component (0-255).",
+                "type": "number",
+                "default": 0
+              }
+            }
+          },
+          "minItems": 6,
+          "maxItems": 6
+        },
+        "FIBR_BASE": {
+          "description": "List of individual fibers making up the division. One object per fiber.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "FIBR_BASE_KEY": {
+                "description": "Unique key of this fiber within the division.",
+                "type": "integer"
+              },
+              "REBAR_NAME": {
+                "description": "Rebar name for this fiber (meaningful when OPT_IS_REBAR is true).",
+                "type": "string"
+              },
+              "AREA": {
+                "description": "Cross-sectional area of the fiber.",
+                "type": "number"
+              },
+              "CENTER_Y": {
+                "description": "Y coordinate of the fiber centroid.",
+                "type": "number"
+              },
+              "CENTER_Z": {
+                "description": "Z coordinate of the fiber centroid.",
+                "type": "number"
+              },
+              "FIBER_MATL_ID": {
+                "description": "Material slot index (1-based) referencing the FIMP_NAME material used by this fiber.",
+                "type": "number"
+              },
+              "AREA_CONSIDER_REBAR": {
+                "description": "Area of the fiber adjusted to account for overlapping rebar.",
+                "type": "number"
+              },
+              "OPT_IS_REBAR": {
+                "description": "Whether this fiber represents a rebar. When false, the fiber is a polygon defined by POINT_Y/POINT_Z.",
+                "type": "boolean"
+              },
+              "POINT_Y": {
+                "description": "[OPT_IS_REBAR=false] Y coordinates of the fiber polygon vertices. Required when OPT_IS_REBAR is false; only the first min(len(POINT_Y), len(POINT_Z)) points are used.",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "POINT_Z": {
+                "description": "[OPT_IS_REBAR=false] Z coordinates of the fiber polygon vertices. Required when OPT_IS_REBAR is false; paired with POINT_Y.",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "required": [
+              "FIBR_BASE_KEY",
+              "REBAR_NAME",
+              "AREA",
+              "CENTER_Y",
+              "CENTER_Z",
+              "FIBER_MATL_ID",
+              "AREA_CONSIDER_REBAR",
+              "OPT_IS_REBAR"
+            ]
+          }
+        },
+        "OPT_MONITORED_FIBER": {
+          "description": "Whether monitored fibers are defined. When true, MONITORED_FIBER is applied.",
+          "type": "boolean"
+        },
+        "MONITORED_FIBER": {
+          "description": "Keys of up to 8 monitored fibers (applied only when OPT_MONITORED_FIBER is true).",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 8,
+          "maxItems": 8
+        }
+      },
+      "required": [
+        "NAME",
+        "SECT_KEY",
+        "ASSIGN_TYPE",
+        "FIMP_NAME",
+        "FIBR_BASE",
+        "OPT_MONITORED_FIBER",
+        "MONITORED_FIBER"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "General",
+        "SECT_KEY": 11001,
+        "ASSIGN_TYPE": 0,
+        "FIMP_NAME": [
+          "Steel",
+          "Cover Concrete",
+          "Core Conc Column 1 2",
+          "Core Conc Column 1 2",
+          "Core Conc Column 1 2",
+          "Core Conc Column 1 2"
+        ],
+        "FIMP_COLOR": [
+          { "R": 121, "G": 198, "B": 220 },
+          { "R": 245, "G": 242, "B": 31 },
+          { "R": 214, "G": 126, "B": 176 },
+          { "R": 63, "G": 174, "B": 179 },
+          { "R": 40, "G": 130, "B": 89 },
+          { "R": 223, "G": 176, "B": 192 }
+        ],
+        "FIBR_BASE": [
+          {
+            "FIBR_BASE_KEY": 752,
+            "REBAR_NAME": "",
+            "AREA": 0.00688072,
+            "CENTER_Y": -1.05047e-16,
+            "CENTER_Z": 1.06179,
+            "FIBER_MATL_ID": 1,
+            "AREA_CONSIDER_REBAR": 0,
+            "OPT_IS_REBAR": false,
+            "POINT_Y": [0.0527429, 0.0527429, -0.0527429, -0.0527429, 0],
+            "POINT_Z": [1.08596, 1.029, 1.029, 1.08596, 1.1025]
+          },
+          {
+            "FIBR_BASE_KEY": 753,
+            "REBAR_NAME": "P1",
+            "AREA": 0.0005067,
+            "CENTER_Y": 0.04,
+            "CENTER_Z": 1.0,
+            "FIBER_MATL_ID": 1,
+            "AREA_CONSIDER_REBAR": 0.0005067,
+            "OPT_IS_REBAR": true
+          }
+        ],
+        "OPT_MONITORED_FIBER": true,
+        "MONITORED_FIBER": [0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    }
+  }
+}

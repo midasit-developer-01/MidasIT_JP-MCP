@@ -1,0 +1,110 @@
+{
+  "_group": "db",
+  "_name": "SSPS",
+  "uri": "db/SSPS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SSPS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Surface Spring Support (SSPS). Distributed spring support assigned per element (entity key); each entry in ITEMS is one spring definition whose applicable fields depend on ELEM_TYPE (FRAME uses WIDTH; every type except PLANAR(FACE) uses EDGE_FACE).",
+      "type": "object",
+      "properties": {
+        "ITEMS": {
+          "description": "List of surface spring support definitions assigned to the element key.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of this item within the element key. Defaults to 0 (auto).",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Name of the Boundary Group this spring belongs to. Must reference an existing boundary group name when non-empty; leave blank for no group.",
+                "type": "string",
+                "default": ""
+              },
+              "ELEM_TYPE": {
+                "description": "Type of element the spring is applied to (case-insensitive). \"FRAME\", \"PLANAR(FACE)\", \"PLANAR(EDGE)\", or \"SOLID\".",
+                "type": "string",
+                "enum": [
+                  "FRAME",
+                  "PLANAR(FACE)",
+                  "PLANAR(EDGE)",
+                  "SOLID"
+                ]
+              },
+              "EDGE_FACE": {
+                "description": "[ELEM_TYPE!=PLANAR(FACE)] Edge/face or local-axis index. For FRAME this is the local axis (Local x: 2, Local y: 0, Local z: 1); for PLANAR(EDGE)/SOLID this is the edge/face index (Edge#1: 0, Edge#2: 1, Edge#3: 2, Edge#4: 3). Ignored for PLANAR(FACE).",
+                "type": "integer",
+                "default": 0
+              },
+              "WIDTH": {
+                "description": "[ELEM_TYPE=FRAME] Width over which the spring stiffness is distributed. Applied only for FRAME elements.",
+                "type": "number",
+                "default": 0
+              },
+              "SPRING_TYPE": {
+                "description": "Spring behavior. Linear: 0, Compression-only: 1, Tension-only: 2.",
+                "type": "integer",
+                "default": 0
+              },
+              "MODULUS": {
+                "description": "Modulus of Subgrade Reaction (Ks).",
+                "type": "number"
+              }
+            },
+            "required": [
+              "ELEM_TYPE",
+              "MODULUS"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "ELEM_TYPE": "FRAME",
+            "EDGE_FACE": 2,
+            "WIDTH": 1.2,
+            "SPRING_TYPE": 0,
+            "MODULUS": 500
+          },
+          {
+            "ID": 2,
+            "GROUP_NAME": "",
+            "ELEM_TYPE": "PLANAR(FACE)",
+            "SPRING_TYPE": 0,
+            "MODULUS": 1000
+          },
+          {
+            "ID": 3,
+            "GROUP_NAME": "",
+            "ELEM_TYPE": "PLANAR(EDGE)",
+            "EDGE_FACE": 0,
+            "SPRING_TYPE": 1,
+            "MODULUS": 800
+          },
+          {
+            "ID": 4,
+            "GROUP_NAME": "",
+            "ELEM_TYPE": "SOLID",
+            "EDGE_FACE": 1,
+            "SPRING_TYPE": 2,
+            "MODULUS": 1200
+          }
+        ]
+      }
+    }
+  }
+}

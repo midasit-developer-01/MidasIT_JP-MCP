@@ -1,0 +1,117 @@
+{
+  "_group": "design",
+  "_name": "BRC-REPORT",
+  "uri": "design/RC/KDS-41-20-2022/BRC-REPORT",
+  "methods": "POST",
+  "schema": {
+    "BRC-REPORT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "RC Brace Design Report (BRC-REPORT). Fields are driven by the REPORT_REQUEST DTO: REPORT_TYPE selects the member/property report and which CURRENT_MODE_* field applies; EXPORT_PATH and OUTPUT_NAME set the output file destination.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Report generation request (REPORT_REQUEST).",
+          "properties": {
+            "REPORT_TYPE": {
+              "type": "string",
+              "description": "Report Type: MEMB or PROP. Enum matched case-insensitively.",
+              "enum": ["MEMB", "PROP"]
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Export Path (e.g. C:\\MIDAS\\Report\\)."
+            },
+            "OUTPUT_NAME": {
+              "type": "string",
+              "description": "Output File Name."
+            },
+            "CURRENT_MODE": {
+              "type": "string",
+              "description": "Report Mode. Fallback mode used when the REPORT_TYPE-specific mode field is not supplied. Enum matched case-insensitively.",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"]
+            },
+            "CURRENT_MODE_MEMB": {
+              "type": "string",
+              "description": "[REPORT_TYPE=MEMB] Report Mode for member report. Enum matched case-insensitively.",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"]
+            },
+            "CURRENT_MODE_PROP": {
+              "type": "string",
+              "description": "[REPORT_TYPE=PROP] Report Mode for property report. Enum matched case-insensitively.",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"]
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "Element Numbers selection.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "description": "Specify Each ID - Element No.",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "description": "Section Numbers.",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "DETAIL_POSITIONS": {
+              "type": "object",
+              "description": "Detail Print Positions (for RC Beam Design MEMB mode).",
+              "properties": {
+                "END_I": {
+                  "type": "boolean",
+                  "description": "Include End I position.",
+                  "default": true
+                },
+                "MID": {
+                  "type": "boolean",
+                  "description": "Include Mid position.",
+                  "default": false
+                },
+                "END_J": {
+                  "type": "boolean",
+                  "description": "Include End J position.",
+                  "default": false
+                }
+              }
+            }
+          },
+          "required": ["REPORT_TYPE", "EXPORT_PATH", "OUTPUT_NAME"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "REPORT_TYPE": "MEMB",
+      "EXPORT_PATH": "C:\\MIDAS\\Report\\",
+      "OUTPUT_NAME": "BraceDesignReport",
+      "CURRENT_MODE_MEMB": "Detail",
+      "ELEMS": {
+        "KEYS": [1, 2, 3],
+        "TO": "1-10"
+      },
+      "SECTIONS": [1, 2],
+      "DETAIL_POSITIONS": {
+        "END_I": true,
+        "MID": false,
+        "END_J": true
+      }
+    }
+  }
+}

@@ -1,0 +1,423 @@
+{
+  "_group": "db",
+  "_name": "REBB",
+  "uri": "db/REBB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "REBB": {
+      "type": "object",
+      "description": "Rebar Input for Beam Section (REBB). Keyed by section id (sectK); ITEMS is a list of rebar definitions, one per (sub-)section, each describing top/bottom main bars, shear bars and optional skin bars at the I/M/J bar sectors of the beam.",
+      "additionalProperties": false,
+      "required": [
+        "ITEMS"
+      ],
+      "properties": {
+        "ITEMS": {
+          "type": "array",
+          "description": "Concrete beam rebar items. One entry defines the reinforcement for the root section (subSectK=0) or a sub-section.",
+          "items": {
+            "type": "object",
+            "description": "Per-rebar entry. Provides bar sectors at I/M/J plus top/bottom cover distances; optionally creates a sub-section bound to specific elements.",
+            "additionalProperties": false,
+            "required": [
+              "BAR_SECTOR_I",
+              "BAR_SECTOR_M",
+              "BAR_SECTOR_J",
+              "DT",
+              "DB"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "CREATE_SUB_SECTION": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "CREATE_SUB_SECTION"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "ELEMS"
+                  ]
+                }
+              }
+            ],
+            "properties": {
+              "CREATE_SUB_SECTION": {
+                "type": "boolean",
+                "default": false,
+                "description": "If true, create a sub-section bound to the elements in ELEMS. When true and ID is omitted, subSectK is auto-generated. When false/omitted, the item targets the root section."
+              },
+              "ID": {
+                "type": "integer",
+                "description": "Sub-section id (subSectK). Omit for the root section or to auto-generate a new sub-section id; provide to target a specific existing sub-section."
+              },
+              "ELEMS": {
+                "type": "object",
+                "description": "Element selection for the sub-section. Required when CREATE_SUB_SECTION=true. Provide exactly one of KEYS, TO, or STRUCTURE_GROUP_NAME.",
+                "additionalProperties": false,
+                "properties": {
+                  "KEYS": {
+                    "type": "array",
+                    "description": "Explicit list of element ids to associate with the sub-section.",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "TO": {
+                    "type": "string",
+                    "description": "Element id range expression (e.g. \"1to10\" / \"1 3 5\") resolved to element ids."
+                  },
+                  "STRUCTURE_GROUP_NAME": {
+                    "type": "string",
+                    "description": "Structure group name; its member elements are associated with the sub-section."
+                  }
+                }
+              },
+              "BAR_SECTOR_I": {
+                "$ref": "#/definitions/REBB_SECTOR"
+              },
+              "BAR_SECTOR_M": {
+                "$ref": "#/definitions/REBB_SECTOR"
+              },
+              "BAR_SECTOR_J": {
+                "$ref": "#/definitions/REBB_SECTOR"
+              },
+              "DT": {
+                "type": "number",
+                "description": "Distance from top concrete face to center of top rebar."
+              },
+              "DB": {
+                "type": "number",
+                "description": "Distance from bottom concrete face to center of bottom rebar."
+              }
+            }
+          }
+        }
+      },
+      "definitions": {
+        "REBB_LAYER": {
+          "type": "object",
+          "description": "Single rebar layer {NAME, NUM}.",
+          "additionalProperties": false,
+          "required": [
+            "NAME",
+            "NUM"
+          ],
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Rebar size. One of the standard rebar names (validated against the material DB).",
+              "enum": [
+                "D4",
+                "D5",
+                "D6",
+                "D7",
+                "D8",
+                "D10",
+                "D13",
+                "D16",
+                "D19",
+                "D22",
+                "D25",
+                "D29",
+                "D32",
+                "D35",
+                "D38",
+                "D41",
+                "D43",
+                "D51",
+                "D57"
+              ]
+            },
+            "NUM": {
+              "type": "integer",
+              "description": "Number of rebars in the layer.",
+              "minimum": 0
+            }
+          }
+        },
+        "REBB_MAIN_BAR": {
+          "type": "object",
+          "description": "Main bar: LAYER1 (required) plus optional LAYER2.",
+          "additionalProperties": false,
+          "required": [
+            "LAYER1"
+          ],
+          "properties": {
+            "LAYER1": {
+              "$ref": "#/definitions/REBB_LAYER"
+            },
+            "LAYER2": {
+              "$ref": "#/definitions/REBB_LAYER"
+            }
+          }
+        },
+        "REBB_SHEAR": {
+          "type": "object",
+          "description": "Shear (stirrup) bar {NAME, LEG, DIST}. NAME is a shared field resolved with fallback I -> M -> J; supply it on at least one sector.",
+          "additionalProperties": false,
+          "required": [
+            "NAME",
+            "LEG",
+            "DIST"
+          ],
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Shear rebar size (validated against the material DB; must not be NONE).",
+              "enum": [
+                "D4",
+                "D5",
+                "D6",
+                "D7",
+                "D8",
+                "D10",
+                "D13",
+                "D16",
+                "D19",
+                "D22",
+                "D25",
+                "D29",
+                "D32",
+                "D35",
+                "D38",
+                "D41",
+                "D43",
+                "D51",
+                "D57"
+              ]
+            },
+            "LEG": {
+              "type": "integer",
+              "description": "Number of shear legs.",
+              "minimum": 0
+            },
+            "DIST": {
+              "type": "number",
+              "description": "Distance (spacing) between shear rebars (length unit; supports non-SI unit conversion)."
+            }
+          }
+        },
+        "REBB_SKIN_BAR": {
+          "type": "object",
+          "description": "Skin bar {NAME, NUM}. Optional; NAME is a shared field resolved with fallback I -> M -> J.",
+          "additionalProperties": false,
+          "required": [
+            "NAME",
+            "NUM"
+          ],
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Skin rebar size (validated against the material DB).",
+              "enum": [
+                "D4",
+                "D5",
+                "D6",
+                "D7",
+                "D8",
+                "D10",
+                "D13",
+                "D16",
+                "D19",
+                "D22",
+                "D25",
+                "D29",
+                "D32",
+                "D35",
+                "D38",
+                "D41",
+                "D43",
+                "D51",
+                "D57"
+              ]
+            },
+            "NUM": {
+              "type": "integer",
+              "description": "Number of skin rebars.",
+              "minimum": 0
+            }
+          }
+        },
+        "REBB_SECTOR": {
+          "type": "object",
+          "description": "Bar sector: top/bottom main bars, shear bar, and optional skin bar for one longitudinal position (I, M, or J).",
+          "additionalProperties": false,
+          "required": [
+            "MAIN_BAR_TOP",
+            "MAIN_BAR_BOT",
+            "SHEAR_BAR"
+          ],
+          "properties": {
+            "MAIN_BAR_TOP": {
+              "$ref": "#/definitions/REBB_MAIN_BAR"
+            },
+            "MAIN_BAR_BOT": {
+              "$ref": "#/definitions/REBB_MAIN_BAR"
+            },
+            "SHEAR_BAR": {
+              "$ref": "#/definitions/REBB_SHEAR"
+            },
+            "SKIN_BAR": {
+              "$ref": "#/definitions/REBB_SKIN_BAR"
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "BAR_SECTOR_I": {
+              "MAIN_BAR_TOP": {
+                "LAYER1": {
+                  "NAME": "D19",
+                  "NUM": 3
+                }
+              },
+              "MAIN_BAR_BOT": {
+                "LAYER1": {
+                  "NAME": "D19",
+                  "NUM": 3
+                }
+              },
+              "SHEAR_BAR": {
+                "NAME": "D10",
+                "LEG": 2,
+                "DIST": 150.0
+              }
+            },
+            "BAR_SECTOR_M": {
+              "MAIN_BAR_TOP": {
+                "LAYER1": {
+                  "NAME": "D19",
+                  "NUM": 3
+                }
+              },
+              "MAIN_BAR_BOT": {
+                "LAYER1": {
+                  "NAME": "D19",
+                  "NUM": 3
+                }
+              },
+              "SHEAR_BAR": {
+                "NAME": "D10",
+                "LEG": 2,
+                "DIST": 150.0
+              }
+            },
+            "BAR_SECTOR_J": {
+              "MAIN_BAR_TOP": {
+                "LAYER1": {
+                  "NAME": "D19",
+                  "NUM": 3
+                }
+              },
+              "MAIN_BAR_BOT": {
+                "LAYER1": {
+                  "NAME": "D19",
+                  "NUM": 3
+                }
+              },
+              "SHEAR_BAR": {
+                "NAME": "D10",
+                "LEG": 2,
+                "DIST": 150.0
+              }
+            },
+            "DT": 60.0,
+            "DB": 60.0
+          }
+        ]
+      },
+      "2": {
+        "ITEMS": [
+          {
+            "CREATE_SUB_SECTION": true,
+            "ELEMS": {
+              "KEYS": [
+                1,
+                2,
+                3
+              ]
+            },
+            "BAR_SECTOR_I": {
+              "MAIN_BAR_TOP": {
+                "LAYER1": {
+                  "NAME": "D22",
+                  "NUM": 4
+                },
+                "LAYER2": {
+                  "NAME": "D22",
+                  "NUM": 2
+                }
+              },
+              "MAIN_BAR_BOT": {
+                "LAYER1": {
+                  "NAME": "D22",
+                  "NUM": 4
+                }
+              },
+              "SHEAR_BAR": {
+                "NAME": "D13",
+                "LEG": 4,
+                "DIST": 125.0
+              },
+              "SKIN_BAR": {
+                "NAME": "D10",
+                "NUM": 2
+              }
+            },
+            "BAR_SECTOR_M": {
+              "MAIN_BAR_TOP": {
+                "LAYER1": {
+                  "NAME": "D22",
+                  "NUM": 4
+                }
+              },
+              "MAIN_BAR_BOT": {
+                "LAYER1": {
+                  "NAME": "D22",
+                  "NUM": 4
+                }
+              },
+              "SHEAR_BAR": {
+                "NAME": "D13",
+                "LEG": 4,
+                "DIST": 125.0
+              }
+            },
+            "BAR_SECTOR_J": {
+              "MAIN_BAR_TOP": {
+                "LAYER1": {
+                  "NAME": "D22",
+                  "NUM": 4
+                }
+              },
+              "MAIN_BAR_BOT": {
+                "LAYER1": {
+                  "NAME": "D22",
+                  "NUM": 4
+                }
+              },
+              "SHEAR_BAR": {
+                "NAME": "D13",
+                "LEG": 4,
+                "DIST": 125.0
+              }
+            },
+            "DT": 75.0,
+            "DB": 75.0
+          }
+        ]
+      }
+    }
+  }
+}

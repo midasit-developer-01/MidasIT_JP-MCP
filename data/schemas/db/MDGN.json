@@ -1,0 +1,122 @@
+{
+  "_group": "db",
+  "_name": "MDGN",
+  "uri": "db/MDGN",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MDGN": {
+      "type": "object",
+      "description": "Design Rebar Material Code / User Rebar (MDGN). A single-instance database (only key 1 exists) holding the concrete and SRC rebar material code/DB selections plus the user-defined rebar material and rebar size lists.",
+      "properties": {
+        "CONC_CODE": {
+          "type": "string",
+          "default": "",
+          "description": "Concrete rebar material design code name. When it (or CONC_MDB) changes, the concrete rebar kind is reapplied and stored in the design preference."
+        },
+        "CONC_MDB": {
+          "type": "string",
+          "default": "",
+          "description": "Concrete rebar material DB name paired with CONC_CODE."
+        },
+        "SRC_CODE": {
+          "type": "string",
+          "default": "",
+          "description": "SRC (steel-reinforced concrete) rebar material design code name. When it (or SRC_MDB) changes, the SRC rebar kind is reapplied and stored in the design preference."
+        },
+        "SRC_MDB": {
+          "type": "string",
+          "default": "",
+          "description": "SRC rebar material DB name paired with SRC_CODE."
+        },
+        "vMATL": {
+          "type": "array",
+          "description": "User-defined rebar material list. Each entry becomes a user rebar material (CodeName = REBAR_USER). If both vMATL and vDIA are non-empty the user-rebar flag is set.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "MATLNAME": {
+                "type": "string",
+                "default": "",
+                "description": "Rebar material name."
+              },
+              "ELAST": {
+                "type": "number",
+                "default": 0.0,
+                "description": "Modulus of elasticity (F/L^2)."
+              },
+              "DENSIDY": {
+                "type": "number",
+                "default": 0.0,
+                "description": "Weight density (F/L^3)."
+              },
+              "FY": {
+                "type": "number",
+                "default": 0.0,
+                "description": "Yield tensile strength (F/L^2)."
+              }
+            }
+          }
+        },
+        "vDIA": {
+          "type": "array",
+          "description": "User-defined rebar size list. Each entry becomes a user rebar diameter definition. If both vMATL and vDIA are non-empty the user-rebar flag is set.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "DIANAME": {
+                "type": "string",
+                "default": "",
+                "description": "Rebar size name."
+              },
+              "DIA": {
+                "type": "number",
+                "default": 0.0,
+                "description": "Diameter (L)."
+              },
+              "AREA": {
+                "type": "number",
+                "default": 0.0,
+                "description": "Cross-sectional area (L^2)."
+              },
+              "UNITWEIGHT": {
+                "type": "number",
+                "default": 0.0,
+                "description": "Unit weight (F/L)."
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "vMATL",
+        "vDIA"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "CONC_CODE": "ACI318M-19",
+        "CONC_MDB": "ASTM(RC)",
+        "SRC_CODE": "ACI318M-19",
+        "SRC_MDB": "ASTM(RC)",
+        "vMATL": [
+          {
+            "MATLNAME": "USER_REBAR_500",
+            "ELAST": 200000.0,
+            "DENSIDY": 76.98,
+            "FY": 500.0
+          }
+        ],
+        "vDIA": [
+          {
+            "DIANAME": "UD16",
+            "DIA": 16.0,
+            "AREA": 201.0,
+            "UNITWEIGHT": 0.00158
+          }
+        ]
+      }
+    }
+  }
+}

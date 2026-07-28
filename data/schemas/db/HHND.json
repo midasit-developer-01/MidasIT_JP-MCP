@@ -1,0 +1,59 @@
+{
+  "_group": "db",
+  "_name": "HHND",
+  "uri": "db/HHND",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "HHND": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Heat of Hydration Result Graph Node (HHND). Defines a monitoring point for heat-of-hydration stress results; TYPE selects whether the point is picked by node or by element, and COMP selects which stress component is graphed.",
+      "properties": {
+        "NAME": {
+          "description": "Name of the heat-of-hydration result graph point.",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Pick mode. 0 = Select Node (use NODE_KEY only), 1 = Select Element (use NODE_KEY together with ELEM_KEY; ELEM_KEY is forced to 0 when TYPE is not 1).",
+          "type": "integer",
+          "default": 0
+        },
+        "NODE_KEY": {
+          "description": "Node number of the monitoring point.",
+          "type": "integer",
+          "default": 0
+        },
+        "ELEM_KEY": {
+          "description": "[TYPE=1] Element number the node belongs to. Only applied when TYPE is 1 (Select Element); stored as 0 otherwise.",
+          "type": "integer",
+          "default": 0
+        },
+        "COMP": {
+          "description": "Stress component to graph. 0 = Sig-xx, 1 = Sig-yy, 2 = Sig-zz, 3 = Max(P1,P2,P3), 4 = Sig-P1, 5 = Sig-P2, 6 = Sig-P3.",
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "required": [
+        "NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "N1476-XX",
+        "TYPE": 0,
+        "NODE_KEY": 1476,
+        "COMP": 0
+      },
+      "2": {
+        "NAME": "E101-N2308-ZZ",
+        "TYPE": 1,
+        "NODE_KEY": 2308,
+        "ELEM_KEY": 101,
+        "COMP": 2
+      }
+    }
+  }
+}

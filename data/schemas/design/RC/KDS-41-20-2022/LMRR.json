@@ -1,0 +1,40 @@
+{
+  "_group": "design",
+  "_name": "LMRR",
+  "uri": "design/RC/KDS-41-20-2022/LMRR",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "LMRR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Limiting Max Rebar Ratio (LMRR). Design control values driving the limiting maximum rebar ratios for transverse rebar, longitudinal column rebar, and wall rebar.",
+      "properties": {
+        "RHOR": {
+          "type": "number",
+          "default": 0.03,
+          "description": "Limiting Max Rebar Ratio - Transverse."
+        },
+        "RHOC": {
+          "type": "number",
+          "default": 0.03,
+          "description": "Limiting Max Rebar Ratio - Longitudinal Column."
+        },
+        "RHOW": {
+          "type": "number",
+          "default": 0.04,
+          "description": "Limiting Max Rebar Ratio - Wall."
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "RHOR": 0.03,
+        "RHOC": 0.03,
+        "RHOW": 0.04
+      }
+    }
+  }
+}

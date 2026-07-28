@@ -1,0 +1,170 @@
+{
+  "_group": "temp",
+  "_name": "SVSL",
+  "uri": "temp/SVSL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SVSL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Static Vertical Seismic Load (SVSL). SVSL_LOAD_CODE selects the seismic code; only IS1893(2025) is currently supported, and it drives the IS2025 sub-object; ITEMS carries additional per-story loads and PROFILE holds the computed distribution returned by GET.",
+      "properties": {
+        "SVSL_LOAD_CODE": {
+          "type": "string",
+          "description": "Seismic Load Code. Selects the design code that governs the load. Only \"IS1893-2025\" is currently accepted by the handler; any other value is rejected."
+        },
+        "DESC": {
+          "type": "string",
+          "description": "Description of the seismic load case.",
+          "default": ""
+        },
+        "SCALE_FACTOR_Z": {
+          "type": "number",
+          "description": "Seismic Load Direction Factor (Scale Factor) : Z-Dir."
+        },
+        "IS2025": {
+          "type": "object",
+          "description": "[SVSL_LOAD_CODE=IS1893-2025] IS1893(2025) code parameters. Required data when the load code is IS1893-2025.",
+          "properties": {
+            "EQ_ZONE": {
+              "type": "string",
+              "description": "Earthquake Zone (case-insensitive).",
+              "enum": ["II", "III", "IV", "V", "VI"]
+            },
+            "RET_PERIOD": {
+              "type": "string",
+              "description": "Return Period (case-insensitive). Rxxx denotes the return period in years.",
+              "enum": ["R75", "R175", "R275", "R475", "R975", "R1275", "R2475", "R4975", "R9975"]
+            },
+            "ZONE_FACTOR": {
+              "type": "number",
+              "description": "Zone Factor."
+            },
+            "SITE_CLASS": {
+              "type": "string",
+              "description": "Site Class (case-insensitive).",
+              "enum": ["A", "B", "C", "D"]
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "DAMPING": {
+              "type": "number",
+              "description": "Damping (%)."
+            },
+            "PERIOD_Z": {
+              "type": "number",
+              "description": "Fundamental Period : Z-Dir."
+            },
+            "VERT_ELEM_SEL_METHOD": {
+              "type": "integer",
+              "description": "Vertical Element Selection Method. Index into the selection method enum: 0 = NO_XY, 1 = ALL_Z."
+            }
+          },
+          "required": [
+            "EQ_ZONE",
+            "RET_PERIOD",
+            "ZONE_FACTOR",
+            "SITE_CLASS",
+            "IMPORTANCE_FACTOR",
+            "DAMPING",
+            "PERIOD_Z",
+            "VERT_ELEM_SEL_METHOD"
+          ]
+        },
+        "ITEMS": {
+          "type": "array",
+          "description": "Additional Seismic Loads applied per story.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "STORY_NAME": {
+                "type": "string",
+                "description": "Story Name the additional load is applied to; must match an existing story."
+              },
+              "ADD_Z": {
+                "type": "number",
+                "description": "Additional-Z force added at the story."
+              }
+            },
+            "required": ["STORY_NAME", "ADD_Z"]
+          }
+        },
+        "PROFILE": {
+          "type": "object",
+          "description": "Profile. Computed vertical seismic load distribution, populated on GET.",
+          "properties": {
+            "ALONG_Z_PROFILE": {
+              "type": "array",
+              "description": "Along Z-Dir. Profile per story.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "STORY_NAME": {
+                    "type": "string",
+                    "description": "Story Name."
+                  },
+                  "STORY_WEIGHT": {
+                    "type": "number",
+                    "description": "Weight of the story."
+                  },
+                  "STORY_LEVEL": {
+                    "type": "number",
+                    "description": "Elevation of the story."
+                  },
+                  "SEISMIC_FORCE": {
+                    "type": "number",
+                    "description": "Seismic Force at the story."
+                  },
+                  "ADDED_FORCE": {
+                    "type": "number",
+                    "description": "Added Force at the story."
+                  },
+                  "STORY_FORCE": {
+                    "type": "number",
+                    "description": "Story Force."
+                  },
+                  "CUMU_FORCE": {
+                    "type": "number",
+                    "description": "Cumulative Force (story shear)."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": ["SVSL_LOAD_CODE", "SCALE_FACTOR_Z"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SVSL_LOAD_CODE": "IS1893-2025",
+        "DESC": "Static vertical seismic load per IS1893(2025)",
+        "SCALE_FACTOR_Z": 1.0,
+        "IS2025": {
+          "EQ_ZONE": "IV",
+          "RET_PERIOD": "R475",
+          "ZONE_FACTOR": 0.24,
+          "SITE_CLASS": "C",
+          "IMPORTANCE_FACTOR": 1.2,
+          "DAMPING": 5.0,
+          "PERIOD_Z": 0.35,
+          "VERT_ELEM_SEL_METHOD": 1
+        },
+        "ITEMS": [
+          {
+            "STORY_NAME": "2F",
+            "ADD_Z": 10.5
+          },
+          {
+            "STORY_NAME": "3F",
+            "ADD_Z": 8.0
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "_group": "db",
+  "_name": "HECB",
+  "uri": "db/HECB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "HECB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Element Convection Boundary (HECB). One record per element key holds an ITEMS array; each item binds an element face to a Convection Coefficient Function (CCFC) and an Ambient Temperature Function (ETFC), optionally grouped by a boundary group name.",
+      "properties": {
+        "ITEMS": {
+          "description": "List of element convection boundary definitions to assign under this element key. Each entry maps one face of the element to convection and ambient-temperature functions.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the item within this element key. If the (FACE_NO, GROUP_NAME) combination already exists, the matching record is replaced regardless of ID.",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Boundary group name. Optional; leave empty for no group. If non-empty it must reference an existing boundary group, otherwise the request is rejected.",
+                "type": "string",
+                "default": ""
+              },
+              "FACE_NO": {
+                "description": "Element face number the convection boundary is applied to (Face#1 through Face#6).",
+                "type": "integer"
+              },
+              "CCFC_NAME": {
+                "description": "Name of the Convection Coefficient Function (CCFC). Must reference an existing convection coefficient function.",
+                "type": "string"
+              },
+              "ETFC_NAME": {
+                "description": "Name of the Ambient Temperature Function (ETFC). Must reference an existing ambient temperature function.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "FACE_NO",
+              "CCFC_NAME",
+              "ETFC_NAME"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "10": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "FACE_NO": 1,
+            "CCFC_NAME": "ConvectionCoeff",
+            "ETFC_NAME": "AmbientTemperature"
+          }
+        ]
+      },
+      "11": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "FACE_NO": 2,
+            "CCFC_NAME": "ConvectionCoeff",
+            "ETFC_NAME": "AmbientTemperature"
+          }
+        ]
+      }
+    }
+  }
+}

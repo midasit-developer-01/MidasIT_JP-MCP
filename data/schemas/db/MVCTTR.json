@@ -1,0 +1,85 @@
+{
+  "_group": "db",
+  "_name": "MVCTTR",
+  "uri": "db/MVCTTR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVCTTR": {
+      "type": "object",
+      "description": "Moving Load Analysis Control Data - Transverse (MVCTTR). Single-instance record (key 1); INFL_GEN_POINT selects the influence-line generation method and thereby which spacing field applies (NUM_UNIT_LOAD when 0, DISTANCE otherwise).",
+      "properties": {
+        "LOAD_POINT_SEL": {
+          "type": "integer",
+          "description": "Load Point Selection. Integer code selecting the load-point set used for the transverse moving-load analysis."
+        },
+        "INFL_GEN_POINT": {
+          "type": "integer",
+          "default": 0,
+          "description": "Influence line generation method. 0 = generate by number of unit loads per line element (uses NUM_UNIT_LOAD); non-zero = generate by fixed spacing distance (uses DISTANCE)."
+        },
+        "NUM_UNIT_LOAD": {
+          "type": "integer",
+          "default": 0,
+          "description": "[INFL_GEN_POINT=0] Number of unit loads per line element used to generate the influence line."
+        },
+        "DISTANCE": {
+          "type": "number",
+          "default": 0,
+          "description": "[INFL_GEN_POINT!=0] Distance between load points (spacing) used to generate the influence line."
+        },
+        "ANALYSIS_RESULT": {
+          "type": "integer",
+          "description": "Analysis Results Type. Integer code selecting the category of results produced by the transverse moving-load analysis."
+        },
+        "OPT_COMBINED_STR": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include combined stress results."
+        },
+        "OPT_REACTIONS": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include reaction results."
+        },
+        "OPT_DISPLACEMENTS": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include displacement results."
+        },
+        "OPT_FORCE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include force/moment results."
+        }
+      },
+      "required": [
+        "LOAD_POINT_SEL",
+        "ANALYSIS_RESULT"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LOAD_POINT_SEL": 1,
+        "INFL_GEN_POINT": 0,
+        "NUM_UNIT_LOAD": 4,
+        "ANALYSIS_RESULT": 1,
+        "OPT_COMBINED_STR": false,
+        "OPT_REACTIONS": true,
+        "OPT_DISPLACEMENTS": true,
+        "OPT_FORCE": true
+      },
+      "2": {
+        "LOAD_POINT_SEL": 2,
+        "INFL_GEN_POINT": 1,
+        "DISTANCE": 1.5,
+        "ANALYSIS_RESULT": 2,
+        "OPT_COMBINED_STR": true,
+        "OPT_REACTIONS": false,
+        "OPT_DISPLACEMENTS": false,
+        "OPT_FORCE": true
+      }
+    }
+  }
+}

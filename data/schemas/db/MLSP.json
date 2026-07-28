@@ -1,0 +1,57 @@
+{
+  "_group": "db",
+  "_name": "MLSP",
+  "uri": "db/MLSP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MLSP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Support - Negative Moment (MLSP). TYPE selects the input mode: 'User Input' drives element-based fields (ELEMENT_NO, ELEMENT_TYPE, and POSITION when the element is a BEAM), while 'Auto Input' drives GROUP_NAME (a structure group).",
+      "properties": {
+        "TYPE": {
+          "description": "Input mode. 'User Input' assigns the negative-moment support to a specific element (ELEMENT_NO); 'Auto Input' assigns it via a structure group (GROUP_NAME). Case-insensitive.",
+          "type": "string",
+          "enum": ["User Input", "Auto Input"]
+        },
+        "ELEMENT_NO": {
+          "description": "[TYPE=User Input] Element number the support is applied to. Must be an existing element.",
+          "type": "integer",
+          "default": 0
+        },
+        "ELEMENT_TYPE": {
+          "description": "[TYPE=User Input] Element type of ELEMENT_NO. When BEAM, POSITION is required; PLATE does not use POSITION. Case-insensitive.",
+          "type": "string",
+          "enum": ["BEAM", "PLATE"],
+          "default": "BEAM"
+        },
+        "POSITION": {
+          "description": "[TYPE=User Input, ELEMENT_TYPE=BEAM] Support position along the beam element. Required when the element is a BEAM. Case-insensitive.",
+          "type": "string",
+          "enum": ["Both", "End-I", "End-J"],
+          "default": "Both"
+        },
+        "GROUP_NAME": {
+          "description": "[TYPE=Auto Input] Structure group name the support is applied to. Must reference an existing group when non-empty.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "required": ["TYPE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TYPE": "User Input",
+        "ELEMENT_NO": 5,
+        "ELEMENT_TYPE": "BEAM",
+        "POSITION": "Both"
+      },
+      "2": {
+        "TYPE": "Auto Input",
+        "GROUP_NAME": "CrossBeam"
+      }
+    }
+  }
+}

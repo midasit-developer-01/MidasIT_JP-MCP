@@ -1,0 +1,148 @@
+{
+  "_group": "design",
+  "_name": "MRBD",
+  "uri": "design/SRC/AIK-SRC2K/MRBD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MRBD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Modify SRC Beam Section Rebar Data (MRBD). Fields are driven by the SRC beam rebar arrangement per node sector (I/M/J), with top/bottom layer rebar, stirrup layout, and cover thicknesses.",
+      "additionalProperties": false,
+      "properties": {
+        "BAR_SECTOR_I": {
+          "$ref": "#/definitions/MRBD_BAR_SECTOR",
+          "description": "I-node sector rebar configuration. At least one of BAR_SECTOR_I, BAR_SECTOR_M, or BAR_SECTOR_J must be provided."
+        },
+        "BAR_SECTOR_M": {
+          "$ref": "#/definitions/MRBD_BAR_SECTOR",
+          "description": "M-node (center) sector rebar configuration. At least one of BAR_SECTOR_I, BAR_SECTOR_M, or BAR_SECTOR_J must be provided."
+        },
+        "BAR_SECTOR_J": {
+          "$ref": "#/definitions/MRBD_BAR_SECTOR",
+          "description": "J-node sector rebar configuration. At least one of BAR_SECTOR_I, BAR_SECTOR_M, or BAR_SECTOR_J must be provided."
+        },
+        "DT": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Top rebar cover thickness. Must be > 0."
+        },
+        "DB": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Bottom rebar cover thickness. Must be > 0."
+        },
+        "SHEAR_BAR": {
+          "type": "string",
+          "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"],
+          "description": "Stirrup rebar size designation (e.g. \"D10\"). Case-insensitive enum."
+        }
+      },
+      "required": ["DT", "DB", "SHEAR_BAR"],
+      "definitions": {
+        "MRBD_REBAR_LAYER": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "One rebar layer (LAYER1 or LAYER2).",
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"],
+              "description": "Rebar size designation (e.g. \"D22\"). Case-insensitive enum."
+            },
+            "NUM": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Rebar count. Must be >= 1."
+            }
+          },
+          "required": ["NAME", "NUM"]
+        },
+        "MRBD_REBAR": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "TOP or BOT rebar configuration (LAYER1 required, LAYER2 optional for a 2-row case).",
+          "properties": {
+            "LAYER1": {
+              "$ref": "#/definitions/MRBD_REBAR_LAYER",
+              "description": "Layer 1 rebar. Required."
+            },
+            "LAYER2": {
+              "$ref": "#/definitions/MRBD_REBAR_LAYER",
+              "description": "Layer 2 rebar. Optional (2-row case)."
+            }
+          },
+          "required": ["LAYER1"]
+        },
+        "MRBD_BAR_SECTOR": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "A node sector (I/M/J) with top rebar, bottom rebar, and stirrup layout.",
+          "properties": {
+            "TOP": {
+              "$ref": "#/definitions/MRBD_REBAR",
+              "description": "Top rebar configuration."
+            },
+            "BOT": {
+              "$ref": "#/definitions/MRBD_REBAR",
+              "description": "Bottom rebar configuration."
+            },
+            "STIRRUP_SPACE": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Stirrup spacing. Must be > 0."
+            },
+            "STIRRUP_NUM": {
+              "type": "integer",
+              "minimum": 2,
+              "maximum": 20,
+              "default": 2,
+              "description": "Number of stirrup sets. Must be between 2 and 20."
+            }
+          },
+          "required": ["TOP", "BOT", "STIRRUP_SPACE"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "BAR_SECTOR_I": {
+          "TOP": {
+            "LAYER1": { "NAME": "D22", "NUM": 4 },
+            "LAYER2": { "NAME": "D22", "NUM": 2 }
+          },
+          "BOT": {
+            "LAYER1": { "NAME": "D22", "NUM": 3 }
+          },
+          "STIRRUP_SPACE": 150.0,
+          "STIRRUP_NUM": 4
+        },
+        "BAR_SECTOR_M": {
+          "TOP": {
+            "LAYER1": { "NAME": "D19", "NUM": 3 }
+          },
+          "BOT": {
+            "LAYER1": { "NAME": "D19", "NUM": 3 }
+          },
+          "STIRRUP_SPACE": 200.0,
+          "STIRRUP_NUM": 2
+        },
+        "BAR_SECTOR_J": {
+          "TOP": {
+            "LAYER1": { "NAME": "D22", "NUM": 3 }
+          },
+          "BOT": {
+            "LAYER1": { "NAME": "D22", "NUM": 4 },
+            "LAYER2": { "NAME": "D22", "NUM": 2 }
+          },
+          "STIRRUP_SPACE": 150.0
+        },
+        "DT": 40.0,
+        "DB": 40.0,
+        "SHEAR_BAR": "D10"
+      }
+    }
+  }
+}

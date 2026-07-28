@@ -1,0 +1,30 @@
+{
+  "_group": "db",
+  "_name": "MLSR",
+  "uri": "db/MLSR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MLSR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Moving Load Support Reaction at Interior Piers (MLSR). The record key must be an existing node number; NODE is the only field and is stored as an internal temporary value that is effectively fixed at 0.",
+      "type": "object",
+      "properties": {
+        "NODE": {
+          "description": "Internal temporary value for the lane-support reaction record at the interior pier node. The record key itself must match an existing node number. Per the handler this stores inDTO.NODE into data.nTemp, which is effectively fixed at 0.",
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "required": [
+        "NODE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "60": {
+        "NODE": 0
+      }
+    }
+  }
+}

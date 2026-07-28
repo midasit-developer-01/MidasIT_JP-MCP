@@ -1,0 +1,22 @@
+{
+  "_group": "post",
+  "_name": "RCBEAMCHKRATIO",
+  "uri": "post/RCBEAMCHKRATIO",
+  "methods": "POST",
+  "schema": {
+    "RCBEAMCHKRATIO": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "RC Beam Checking Ratio (RCBEAMCHKRATIO). Business-logic endpoint that takes no request input; it reads the current model's analysis results and returns per-section and per-element RC beam design checking ratios (top/bottom moment and shear at the I, M, J sectors). Requires an open project with completed analysis results; the concrete design code SP 63.13330.2018 is not supported.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "No request body is required (empty DTO)."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

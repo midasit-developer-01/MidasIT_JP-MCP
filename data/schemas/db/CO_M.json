@@ -1,0 +1,76 @@
+{
+  "_group": "db",
+  "_name": "CO_M",
+  "uri": "db/CO_M",
+  "methods": "GET, PUT",
+  "schema": {
+    "CO_M": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Display Option Color - Material (CO_M). Per-material display colors, keyed by material id; each entry holds the wire-frame, hidden-fill and hidden-edge RGB channels plus a blending (opacity) flag and factor. All fields are optional; omitted channels keep their current stored value.",
+      "properties": {
+        "W_R": {
+          "description": "Wire frame color, red channel (0-255).",
+          "type": "integer"
+        },
+        "W_G": {
+          "description": "Wire frame color, green channel (0-255).",
+          "type": "integer"
+        },
+        "W_B": {
+          "description": "Wire frame color, blue channel (0-255).",
+          "type": "integer"
+        },
+        "HF_R": {
+          "description": "Hidden fill color, red channel (0-255).",
+          "type": "integer"
+        },
+        "HF_G": {
+          "description": "Hidden fill color, green channel (0-255).",
+          "type": "integer"
+        },
+        "HF_B": {
+          "description": "Hidden fill color, blue channel (0-255).",
+          "type": "integer"
+        },
+        "HE_R": {
+          "description": "Hidden edge color, red channel (0-255).",
+          "type": "integer"
+        },
+        "HE_G": {
+          "description": "Hidden edge color, green channel (0-255).",
+          "type": "integer"
+        },
+        "HE_B": {
+          "description": "Hidden edge color, blue channel (0-255).",
+          "type": "integer"
+        },
+        "bBLEMD": {
+          "description": "Blending (opacity) option on/off.",
+          "type": "boolean"
+        },
+        "FACT": {
+          "description": "Blending (opacity) factor; applies when bBLEMD is true.",
+          "type": "number"
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "W_R": 131,
+        "W_G": 131,
+        "W_B": 131,
+        "HF_R": 178,
+        "HF_G": 178,
+        "HF_B": 178,
+        "HE_R": 131,
+        "HE_G": 131,
+        "HE_B": 131,
+        "bBLEMD": false,
+        "FACT": 0.5
+      }
+    }
+  }
+}

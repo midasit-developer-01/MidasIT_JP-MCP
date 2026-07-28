@@ -1,0 +1,105 @@
+{
+  "_group": "db",
+  "_name": "TSGR",
+  "uri": "db/TSGR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "TSGR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Tapered Section Group (TSGR). ZVAR and YVAR select the section-shape variation law along the z- and y-axes; when a variation is POLY the matching polynomial fields (ZEXP/ZFROM/ZDIST or YEXP/YFROM/YDIST) drive that axis, otherwise (LINEAR) they are ignored.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Tapered section group name.",
+          "type": "string"
+        },
+        "ELEMLIST": {
+          "description": "List of element numbers belonging to this tapered section group.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "ZVAR": {
+          "description": "Section-shape variation along the z-axis. LINEAR: linear variation. POLY: polynomial variation (then ZEXP/ZFROM/ZDIST apply). Case-insensitive.",
+          "type": "string",
+          "enum": ["LINEAR", "POLY"]
+        },
+        "ZEXP": {
+          "description": "[ZVAR=POLY] z-axis polynomial exponent value. Ignored when ZVAR is LINEAR.",
+          "type": "number",
+          "default": 0
+        },
+        "ZFROM": {
+          "description": "[ZVAR=POLY] z-axis symmetric-plane reference end: i (i-end) or j (j-end). Ignored when ZVAR is LINEAR. Case-insensitive.",
+          "type": "string",
+          "enum": ["i", "j"],
+          "default": "i"
+        },
+        "ZDIST": {
+          "description": "[ZVAR=POLY] z-axis distance of the symmetric plane from the reference end (ZFROM). Ignored when ZVAR is LINEAR.",
+          "type": "number",
+          "default": 0
+        },
+        "YVAR": {
+          "description": "Section-shape variation along the y-axis. LINEAR: linear variation. POLY: polynomial variation (then YEXP/YFROM/YDIST apply). Case-insensitive.",
+          "type": "string",
+          "enum": ["LINEAR", "POLY"]
+        },
+        "YEXP": {
+          "description": "[YVAR=POLY] y-axis polynomial exponent value. Ignored when YVAR is LINEAR.",
+          "type": "number",
+          "default": 0
+        },
+        "YFROM": {
+          "description": "[YVAR=POLY] y-axis symmetric-plane reference end: i (i-end) or j (j-end). Ignored when YVAR is LINEAR. Case-insensitive.",
+          "type": "string",
+          "enum": ["i", "j"],
+          "default": "i"
+        },
+        "YDIST": {
+          "description": "[YVAR=POLY] y-axis distance of the symmetric plane from the reference end (YFROM). Ignored when YVAR is LINEAR.",
+          "type": "number",
+          "default": 0
+        }
+      },
+      "required": [
+        "NAME",
+        "ELEMLIST",
+        "ZVAR",
+        "YVAR"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Linear",
+        "ELEMLIST": [1, 2, 3],
+        "ZVAR": "LINEAR",
+        "YVAR": "LINEAR"
+      },
+      "2": {
+        "NAME": "ZPoly_YLinear",
+        "ELEMLIST": [4, 5, 6],
+        "ZVAR": "POLY",
+        "ZEXP": 2.0,
+        "ZFROM": "i",
+        "ZDIST": 1.2,
+        "YVAR": "LINEAR"
+      },
+      "3": {
+        "NAME": "Polynomial",
+        "ELEMLIST": [7, 8, 9],
+        "ZVAR": "POLY",
+        "ZEXP": 1.5,
+        "ZFROM": "j",
+        "ZDIST": 1.2,
+        "YVAR": "POLY",
+        "YEXP": 1.6,
+        "YFROM": "j",
+        "YDIST": 1.3
+      }
+    }
+  }
+}

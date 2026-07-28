@@ -1,0 +1,61 @@
+{
+  "_group": "db",
+  "_name": "NUCS",
+  "uri": "db/NUCS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "NUCS": {
+      "type": "object",
+      "description": "Named User Coordinate System (NUCS). Each entry defines a local coordinate system by its origin point and the direction vectors of its local X and Y axes.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "UCS name. A user-defined label identifying this named coordinate system."
+        },
+        "ORG_ITEM": {
+          "type": "array",
+          "description": "Origin O(X, Y, Z): the coordinates of the UCS origin in the global coordinate system.",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "VX_ITEM": {
+          "type": "array",
+          "description": "Local X-axis direction vector V(XX, XY, XZ): components defining the orientation of the UCS local X axis in the global coordinate system.",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "VY_ITEM": {
+          "type": "array",
+          "description": "Local Y-axis direction vector V(YX, YY, YZ): components defining the orientation of the UCS local Y axis in the global coordinate system.",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      },
+      "required": [
+        "NAME",
+        "ORG_ITEM",
+        "VX_ITEM",
+        "VY_ITEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "UCS-1",
+        "ORG_ITEM": [0.0, 0.0, 0.0],
+        "VX_ITEM": [1.0, 0.0, 0.0],
+        "VY_ITEM": [0.0, 1.0, 0.0]
+      }
+    }
+  }
+}

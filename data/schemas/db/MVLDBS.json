@@ -1,0 +1,565 @@
+{
+  "_group": "db",
+  "_name": "MVLDBS",
+  "uri": "db/MVLDBS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVLDBS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Case - BS (MVLDBS). Which load-case-data object is required is driven by bAUTOOPTIMIZE (optimization on/off) and LOADMODEL (Standard / Special / ALL Mode).",
+      "additionalProperties": false,
+      "required": [
+        "LCNAME",
+        "LOADMODEL",
+        "DGNCOMBFACTORTYPE",
+        "COMBMETHOD"
+      ],
+      "properties": {
+        "LCNAME": {
+          "type": "string",
+          "description": "Load case name."
+        },
+        "DESC": {
+          "type": "string",
+          "default": "",
+          "description": "Description."
+        },
+        "bAUTOOPTIMIZE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Moving Load Optimization on/off. When false the LCDATA_* (non-OPTI) object is used; when true the LCDATA_*_OPTI object is used."
+        },
+        "LOADMODEL": {
+          "type": "string",
+          "enum": [
+            "STANDER",
+            "SPECAIL",
+            "ALL_MODE_1",
+            "ALL_MODE_2"
+          ],
+          "description": "Select Load Model (case-insensitive). Drives which load-case-data object applies: STANDER/ALL_MODE_2 -> Standard, SPECAIL -> Special, ALL_MODE_1/ALL_MODE_2 -> ALL Mode."
+        },
+        "bAUTOLIVELOADCOMB": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auto Live Load Combination on/off. Selects which internal optimize-lane the OPTI ASSIGN_LANE maps to."
+        },
+        "DGNCOMBFACTORTYPE": {
+          "type": "string",
+          "enum": [
+            "ULTIMATE",
+            "SERVICEABIL"
+          ],
+          "description": "Type of Design Combination Factor (case-insensitive)."
+        },
+        "COMBMETHOD": {
+          "type": "string",
+          "enum": [
+            "COMB_1",
+            "COMB_2_3"
+          ],
+          "description": "Combination of Loads (case-insensitive)."
+        },
+        "LCDATA_STANDARD": {
+          "type": "object",
+          "description": "[bAUTOOPTIMIZE=false, LOADMODEL=STANDER or ALL_MODE_2] Load Case Data for Standard mode. Required in that branch.",
+          "additionalProperties": false,
+          "required": [
+            "LOADINGEFFECT",
+            "SUBLOADDATA"
+          ],
+          "properties": {
+            "LOADINGEFFECT": {
+              "type": "string",
+              "enum": [
+                "COMBINED",
+                "INDEPENDENT"
+              ],
+              "description": "Sub-Load Cases Loading Effect (case-insensitive)."
+            },
+            "SUBLOADDATA": {
+              "type": "array",
+              "description": "Sub-Load Cases.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "SCALEFACTOR",
+                  "NUMLOADEDLANE",
+                  "VEHICLE_NAME",
+                  "SELECTEDLANES",
+                  "STRAD_LANE"
+                ],
+                "properties": {
+                  "SCALEFACTOR": {
+                    "type": "number",
+                    "description": "Scale Factor."
+                  },
+                  "NUMLOADEDLANE": {
+                    "type": "integer",
+                    "description": "Number of Loaded Lanes."
+                  },
+                  "VEHICLE_NAME": {
+                    "type": "string",
+                    "description": "Vehicle (moving load) name."
+                  },
+                  "SELECTEDLANES": {
+                    "type": "array",
+                    "description": "All selected lane names.",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "STRAD_LANE": {
+                    "type": "array",
+                    "description": "Straddling lane pairs.",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "STARDD_LANE_1",
+                        "STARDD_LANE_2"
+                      ],
+                      "properties": {
+                        "STARDD_LANE_1": {
+                          "type": "string",
+                          "description": "Straddling lane 1 name."
+                        },
+                        "STARDD_LANE_2": {
+                          "type": "string",
+                          "description": "Straddling lane 2 name."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "LCDATA_SPECIAL": {
+          "type": "object",
+          "description": "[bAUTOOPTIMIZE=false, LOADMODEL=SPECAIL] Load Case Data for Special mode. Required in that branch.",
+          "additionalProperties": false,
+          "required": [
+            "VEHICLE_NAME",
+            "SPECIAL_VIHICLE_NAME",
+            "SELECTEDLANES",
+            "STRAD_LANE"
+          ],
+          "properties": {
+            "VEHICLE_NAME": {
+              "type": "string",
+              "description": "Vehicle name."
+            },
+            "SPECIAL_VIHICLE_NAME": {
+              "type": "string",
+              "description": "Special vehicle name."
+            },
+            "SELECTEDLANES": {
+              "type": "array",
+              "description": "All selected lane names.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "STRAD_LANE": {
+              "type": "array",
+              "description": "Straddling lane pairs.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "STARDD_LANE_1",
+                  "STARDD_LANE_2"
+                ],
+                "properties": {
+                  "STARDD_LANE_1": {
+                    "type": "string",
+                    "description": "Straddling lane 1 name."
+                  },
+                  "STARDD_LANE_2": {
+                    "type": "string",
+                    "description": "Straddling lane 2 name."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "LCDATA_ALLMODE": {
+          "type": "object",
+          "description": "[bAUTOOPTIMIZE=false, LOADMODEL=ALL_MODE_1 or ALL_MODE_2] Load Case Data for ALL Mode 1/2. Required in that branch. REMAINING_LANE is used only for ALL_MODE_1.",
+          "additionalProperties": false,
+          "required": [
+            "VEHICLE_NAME",
+            "SPECIAL_VIHICLE_NAME",
+            "SELECTEDLANES",
+            "STRAD_LANE",
+            "REMAINING_LANE"
+          ],
+          "properties": {
+            "VEHICLE_NAME": {
+              "type": "string",
+              "description": "Vehicle name."
+            },
+            "SPECIAL_VIHICLE_NAME": {
+              "type": "string",
+              "description": "Special vehicle name."
+            },
+            "SELECTEDLANES": {
+              "type": "array",
+              "description": "All selected lane names.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "STRAD_LANE": {
+              "type": "array",
+              "description": "Straddling lane pairs.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "STARDD_LANE_1",
+                  "STARDD_LANE_2"
+                ],
+                "properties": {
+                  "STARDD_LANE_1": {
+                    "type": "string",
+                    "description": "Straddling lane 1 name."
+                  },
+                  "STARDD_LANE_2": {
+                    "type": "string",
+                    "description": "Straddling lane 2 name."
+                  }
+                }
+              }
+            },
+            "REMAINING_LANE": {
+              "type": "array",
+              "description": "Remaining area lane names (only ALL Mode 1).",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "LCDATA_STANDARD_OPTI": {
+          "type": "object",
+          "description": "[bAUTOOPTIMIZE=true, LOADMODEL=STANDER or ALL_MODE_2] Optimization Load Case Data for Standard mode. Required in that branch.",
+          "additionalProperties": false,
+          "required": [
+            "LOADINGEFFECT",
+            "OPTI_BASE",
+            "OPTI_VEHICLE_BASE"
+          ],
+          "properties": {
+            "LOADINGEFFECT": {
+              "type": "string",
+              "enum": [
+                "COMBINED",
+                "INDEPENDENT"
+              ],
+              "description": "Load Cases Loading Effect (case-insensitive)."
+            },
+            "OPTI_BASE": {
+              "type": "object",
+              "description": "Optimization Common Data.",
+              "additionalProperties": false,
+              "required": [
+                "MINVEHLDIST",
+                "ASSIGN_LANE",
+                "NUMLOADEDLANES"
+              ],
+              "properties": {
+                "MINVEHLDIST": {
+                  "type": "number",
+                  "description": "Optimization Minimum Vehicle Distance."
+                },
+                "ASSIGN_LANE": {
+                  "type": "string",
+                  "description": "Assignment lane name."
+                },
+                "NUMLOADEDLANES": {
+                  "type": "integer",
+                  "description": "Number of Loaded Lanes."
+                }
+              }
+            },
+            "OPTI_VEHICLE_BASE": {
+              "type": "array",
+              "description": "Optimization Vehicle Data.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "VEHICLE_TYPE",
+                  "VEHICLE_NAME",
+                  "SCALE_FACTOR"
+                ],
+                "properties": {
+                  "VEHICLE_TYPE": {
+                    "type": "string",
+                    "enum": [
+                      "VC",
+                      "VL"
+                    ],
+                    "description": "Vehicle type (case-insensitive): VC = vehicle class, VL = vehicle load."
+                  },
+                  "VEHICLE_NAME": {
+                    "type": "string",
+                    "description": "Vehicle name (class name when VEHICLE_TYPE=VC, load name when VL)."
+                  },
+                  "SCALE_FACTOR": {
+                    "type": "number",
+                    "description": "Vehicle scale factor."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "LCDATA_SPECIAL_OPTI": {
+          "type": "object",
+          "description": "[bAUTOOPTIMIZE=true, LOADMODEL=SPECAIL] Optimization Load Case Data for Special mode. Required in that branch.",
+          "additionalProperties": false,
+          "required": [
+            "VEHICLE_NAME",
+            "SPECIAL_VIHICLE_NAME",
+            "OPTI_BASE"
+          ],
+          "properties": {
+            "VEHICLE_NAME": {
+              "type": "string",
+              "description": "Vehicle name."
+            },
+            "SPECIAL_VIHICLE_NAME": {
+              "type": "string",
+              "description": "Special vehicle name."
+            },
+            "OPTI_BASE": {
+              "type": "object",
+              "description": "Optimization Common Data.",
+              "additionalProperties": false,
+              "required": [
+                "MINVEHLDIST",
+                "ASSIGN_LANE",
+                "NUMLOADEDLANES"
+              ],
+              "properties": {
+                "MINVEHLDIST": {
+                  "type": "number",
+                  "description": "Optimization Minimum Vehicle Distance."
+                },
+                "ASSIGN_LANE": {
+                  "type": "string",
+                  "description": "Assignment lane name."
+                },
+                "NUMLOADEDLANES": {
+                  "type": "integer",
+                  "description": "Number of Loaded Lanes."
+                }
+              }
+            }
+          }
+        },
+        "LCDATA_ALLMODE_OPTI": {
+          "type": "object",
+          "description": "[bAUTOOPTIMIZE=true, LOADMODEL=ALL_MODE_1 or ALL_MODE_2] Optimization Load Case Data for ALL Mode 1/2. Required in that branch. REMAINING_LANE is used only for ALL_MODE_1.",
+          "additionalProperties": false,
+          "required": [
+            "VEHICLE_NAME",
+            "SPECIAL_VIHICLE_NAME",
+            "OPTI_BASE",
+            "REMAINING_LANE"
+          ],
+          "properties": {
+            "VEHICLE_NAME": {
+              "type": "string",
+              "description": "Vehicle name."
+            },
+            "SPECIAL_VIHICLE_NAME": {
+              "type": "string",
+              "description": "Special vehicle name."
+            },
+            "OPTI_BASE": {
+              "type": "object",
+              "description": "Optimization Common Data.",
+              "additionalProperties": false,
+              "required": [
+                "MINVEHLDIST",
+                "ASSIGN_LANE",
+                "NUMLOADEDLANES"
+              ],
+              "properties": {
+                "MINVEHLDIST": {
+                  "type": "number",
+                  "description": "Optimization Minimum Vehicle Distance."
+                },
+                "ASSIGN_LANE": {
+                  "type": "string",
+                  "description": "Assignment lane name."
+                },
+                "NUMLOADEDLANES": {
+                  "type": "integer",
+                  "description": "Number of Loaded Lanes."
+                }
+              }
+            },
+            "REMAINING_LANE": {
+              "type": "array",
+              "description": "Remaining area lane names (only ALL Mode 1).",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "Moving BS Standard",
+        "DESC": "Standard load model, no optimization",
+        "bAUTOOPTIMIZE": false,
+        "LOADMODEL": "STANDER",
+        "bAUTOLIVELOADCOMB": false,
+        "DGNCOMBFACTORTYPE": "ULTIMATE",
+        "COMBMETHOD": "COMB_1",
+        "LCDATA_STANDARD": {
+          "LOADINGEFFECT": "COMBINED",
+          "SUBLOADDATA": [
+            {
+              "SCALEFACTOR": 1.0,
+              "NUMLOADEDLANE": 2,
+              "VEHICLE_NAME": "HL-93",
+              "SELECTEDLANES": [
+                "Lane1",
+                "Lane2"
+              ],
+              "STRAD_LANE": [
+                {
+                  "STARDD_LANE_1": "Lane1",
+                  "STARDD_LANE_2": "Lane2"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "2": {
+        "LCNAME": "Moving BS Special",
+        "bAUTOOPTIMIZE": false,
+        "LOADMODEL": "SPECAIL",
+        "DGNCOMBFACTORTYPE": "SERVICEABIL",
+        "COMBMETHOD": "COMB_2_3",
+        "LCDATA_SPECIAL": {
+          "VEHICLE_NAME": "HL-93",
+          "SPECIAL_VIHICLE_NAME": "Special-1",
+          "SELECTEDLANES": [
+            "Lane1"
+          ],
+          "STRAD_LANE": [
+            {
+              "STARDD_LANE_1": "Lane1",
+              "STARDD_LANE_2": "Lane2"
+            }
+          ]
+        }
+      },
+      "3": {
+        "LCNAME": "Moving BS All Mode 1",
+        "bAUTOOPTIMIZE": false,
+        "LOADMODEL": "ALL_MODE_1",
+        "DGNCOMBFACTORTYPE": "ULTIMATE",
+        "COMBMETHOD": "COMB_1",
+        "LCDATA_ALLMODE": {
+          "VEHICLE_NAME": "HL-93",
+          "SPECIAL_VIHICLE_NAME": "Special-1",
+          "SELECTEDLANES": [
+            "Lane1",
+            "Lane2"
+          ],
+          "STRAD_LANE": [
+            {
+              "STARDD_LANE_1": "Lane1",
+              "STARDD_LANE_2": "Lane2"
+            }
+          ],
+          "REMAINING_LANE": [
+            "Lane3"
+          ]
+        }
+      },
+      "4": {
+        "LCNAME": "Moving BS Standard Opt",
+        "bAUTOOPTIMIZE": true,
+        "LOADMODEL": "STANDER",
+        "bAUTOLIVELOADCOMB": true,
+        "DGNCOMBFACTORTYPE": "ULTIMATE",
+        "COMBMETHOD": "COMB_1",
+        "LCDATA_STANDARD_OPTI": {
+          "LOADINGEFFECT": "INDEPENDENT",
+          "OPTI_BASE": {
+            "MINVEHLDIST": 15.0,
+            "ASSIGN_LANE": "Lane1",
+            "NUMLOADEDLANES": 2
+          },
+          "OPTI_VEHICLE_BASE": [
+            {
+              "VEHICLE_TYPE": "VL",
+              "VEHICLE_NAME": "HL-93",
+              "SCALE_FACTOR": 1.0
+            },
+            {
+              "VEHICLE_TYPE": "VC",
+              "VEHICLE_NAME": "Class-A",
+              "SCALE_FACTOR": 0.75
+            }
+          ]
+        }
+      },
+      "5": {
+        "LCNAME": "Moving BS Special Opt",
+        "bAUTOOPTIMIZE": true,
+        "LOADMODEL": "SPECAIL",
+        "bAUTOLIVELOADCOMB": false,
+        "DGNCOMBFACTORTYPE": "SERVICEABIL",
+        "COMBMETHOD": "COMB_2_3",
+        "LCDATA_SPECIAL_OPTI": {
+          "VEHICLE_NAME": "HL-93",
+          "SPECIAL_VIHICLE_NAME": "Special-1",
+          "OPTI_BASE": {
+            "MINVEHLDIST": 15.0,
+            "ASSIGN_LANE": "Lane1",
+            "NUMLOADEDLANES": 1
+          }
+        }
+      },
+      "6": {
+        "LCNAME": "Moving BS All Mode 1 Opt",
+        "bAUTOOPTIMIZE": true,
+        "LOADMODEL": "ALL_MODE_1",
+        "bAUTOLIVELOADCOMB": true,
+        "DGNCOMBFACTORTYPE": "ULTIMATE",
+        "COMBMETHOD": "COMB_1",
+        "LCDATA_ALLMODE_OPTI": {
+          "VEHICLE_NAME": "HL-93",
+          "SPECIAL_VIHICLE_NAME": "Special-1",
+          "OPTI_BASE": {
+            "MINVEHLDIST": 15.0,
+            "ASSIGN_LANE": "Lane1",
+            "NUMLOADEDLANES": 2
+          },
+          "REMAINING_LANE": [
+            "Lane3"
+          ]
+        }
+      }
+    }
+  }
+}

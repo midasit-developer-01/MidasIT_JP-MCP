@@ -1,0 +1,118 @@
+{
+  "_group": "db",
+  "_name": "LCOM-CFSTEEL",
+  "uri": "db/LCOM-CFSTEEL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LCOM-CFSTEEL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Cold-Formed Steel Design Load Combination (LCOM-CFSTEEL). Each keyed entry is one load combination for cold-formed steel design; NAME and the vCOMB list of (analysis-type, load-case, factor) terms drive the combination, while iTYPE selects how the terms are summed.",
+      "type": "object",
+      "properties": {
+        "NO": {
+          "description": "Read-only combination number assigned by the program on GET; ignored on write.",
+          "type": "integer"
+        },
+        "NAME": {
+          "description": "Combination name. Must be unique when adding a new combination.",
+          "type": "string"
+        },
+        "ACTIVE": {
+          "description": "Active/usage type of the combination. Typical values: \"ACTIVE\", \"INACTIVE\", \"STRENGTH\", \"SERVICE\". Converted internally to an integer code; case handling follows the program's active-type mapping.",
+          "type": "string",
+          "default": "ACTIVE"
+        },
+        "bES": {
+          "description": "Elastic-stage flag. Applied only for the concrete design load-combination type (LCOM-CONC); the handler ignores this field for the CFSTEEL type, so it has no effect here.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCB": {
+          "description": "Read-only min/max/envelope combination flag reported on GET (true when the combination is a min/max/all result type); ignored on write.",
+          "type": "boolean"
+        },
+        "iTYPE": {
+          "description": "Summation method for the combination terms. Add: 0, Envelope: 1, ABS: 2, SRSS: 3.",
+          "type": "integer",
+          "default": 0
+        },
+        "DESC": {
+          "description": "Free-text description of the combination.",
+          "type": "string",
+          "default": ""
+        },
+        "iSERV_TYPE": {
+          "description": "EC serviceability combination sub-type code. Not applied by the current handler (reserved/unused).",
+          "type": "integer"
+        },
+        "nLCOMTYPE": {
+          "description": "EC load-combination sub-type code. Not applied by the current handler (reserved/unused).",
+          "type": "integer"
+        },
+        "nSEISTYPE": {
+          "description": "EC seismic combination sub-type code. Not applied by the current handler (reserved/unused).",
+          "type": "integer"
+        },
+        "vCOMB": {
+          "description": "List of combination terms. Each term references a load case (by analysis type and case name) and a scale factor; the handler clears and rebuilds the combination from this list on every write.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ANAL": {
+                "description": "Analysis type of the referenced load case (case-insensitive). ST=Static, RS=Response Spectrum, TH=Time History, MV=Moving, SM=Settlement/Support Movement, ENVL=Envelope, CB=General Combination, CBS/CBC/CBF/CBR=combination variants, PO=Pushover, CS=Construction Stage, ES=Elastic Stage/Erection, GI=Geometric Initial, CN=Construction, CBA/CBSC/CBCF/CBSM/CBLN=further combination variants, NRS=Nonlinear RS, NES=Nonlinear ES. The handler rejects any value not resolvable to a valid analysis type.",
+                "type": "string",
+                "enum": ["ST", "RS", "TH", "MV", "SM", "ENVL", "CB", "CBS", "CBC", "CBF", "CBR", "PO", "CS", "ES", "GI", "CN", "CBA", "CBSC", "CBCF", "CBSM", "CBLN", "NRS", "NES"]
+              },
+              "LCNAME": {
+                "description": "Name of the referenced load case. Must resolve to an existing load case of the given analysis type or the write is rejected.",
+                "type": "string"
+              },
+              "FACTOR": {
+                "description": "Scale factor applied to the referenced load case.",
+                "type": "number"
+              }
+            },
+            "required": ["ANAL", "LCNAME", "FACTOR"]
+          }
+        }
+      },
+      "required": ["NAME", "vCOMB"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "cfsLCB1",
+        "ACTIVE": "STRENGTH",
+        "iTYPE": 0,
+        "DESC": "Strength combination",
+        "vCOMB": [
+          {
+            "ANAL": "ST",
+            "LCNAME": "DeadLoad",
+            "FACTOR": 1.2
+          },
+          {
+            "ANAL": "ST",
+            "LCNAME": "LiveLoad",
+            "FACTOR": 1.6
+          }
+        ]
+      },
+      "2": {
+        "NAME": "cfsLCB2",
+        "ACTIVE": "SERVICE",
+        "iTYPE": 1,
+        "DESC": "Serviceability envelope",
+        "vCOMB": [
+          {
+            "ANAL": "ST",
+            "LCNAME": "LiveLoad",
+            "FACTOR": 1.0
+          }
+        ]
+      }
+    }
+  }
+}

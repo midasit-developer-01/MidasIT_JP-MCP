@@ -1,0 +1,101 @@
+{
+  "_group": "db",
+  "_name": "EWSF",
+  "uri": "db/EWSF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EWSF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Effective Width Scale Factor (EWSF). Keyed by element number; ITEMS is a list of scale-factor definitions, one per boundary group, applied to the section's effective width. Each item carries the I-End (Sby/z_top/z_bot) factors, and when bJ is true also the J-End factors.",
+      "properties": {
+        "ITEMS": {
+          "description": "List of effective width scale factor definitions for the element. Each entry sets the I-End factors and optionally the J-End factors (used only when bJ is true).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the item within the element key. Distinguishes multiple scale-factor definitions.",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Boundary group name this scale factor applies to. Empty string means no group (group key 0). If non-empty it must match an existing boundary group name, otherwise the request is rejected.",
+                "type": "string",
+                "default": ""
+              },
+              "LYSCALE": {
+                "description": "I-End ly scale factor for Sby (effective width scale factor).",
+                "type": "number"
+              },
+              "ZTSCALE": {
+                "description": "I-End z_top scale factor.",
+                "type": "number"
+              },
+              "ZBSCALE": {
+                "description": "I-End z_bot scale factor.",
+                "type": "number"
+              },
+              "bJ": {
+                "description": "J-End check box. When true, the J-End scale factors (LYSCALE_J, ZTSCALE_J, ZBSCALE_J) are applied; when false they are ignored.",
+                "type": "boolean"
+              },
+              "LYSCALE_J": {
+                "description": "[bJ=true] J-End ly scale factor for Sby. Used only when bJ is true.",
+                "type": "number",
+                "default": 1.0
+              },
+              "ZTSCALE_J": {
+                "description": "[bJ=true] J-End z_top scale factor. Used only when bJ is true.",
+                "type": "number",
+                "default": 1.0
+              },
+              "ZBSCALE_J": {
+                "description": "[bJ=true] J-End z_bot scale factor. Used only when bJ is true.",
+                "type": "number",
+                "default": 1.0
+              }
+            },
+            "required": [
+              "LYSCALE",
+              "ZTSCALE",
+              "ZBSCALE",
+              "bJ"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "10": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "LYSCALE": 1.0,
+            "ZTSCALE": 1.0,
+            "ZBSCALE": 1.0,
+            "bJ": false
+          },
+          {
+            "ID": 2,
+            "GROUP_NAME": "",
+            "LYSCALE": 0.5,
+            "ZTSCALE": 0.6,
+            "ZBSCALE": 0.7,
+            "bJ": true,
+            "LYSCALE_J": 0.8,
+            "ZTSCALE_J": 0.9,
+            "ZBSCALE_J": 1.0
+          }
+        ]
+      }
+    }
+  }
+}

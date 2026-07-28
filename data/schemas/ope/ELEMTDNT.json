@@ -1,0 +1,41 @@
+{
+  "_group": "ope",
+  "_name": "ELEMTDNT",
+  "uri": "ope/ELEMTDNT",
+  "methods": "POST",
+  "schema": {
+    "ELEMTDNT": {
+      "type": "object",
+      "description": "Element Tendon Coordinates (ELEMTDNT). Returns the section tendon (strand) coordinates for an element at a given position along its length; fields are driven by the request DTO consumed in APIBusinessLogicHandlerELEMTDNT::OnPostWithBody.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request arguments identifying the element and the position along it at which to extract tendon coordinates.",
+          "properties": {
+            "ELEM": {
+              "type": "integer",
+              "description": "Element number whose section tendon data is queried (used to look up T_ELEM_D via AttrCtrl.GetElem)."
+            },
+            "POS": {
+              "type": "number",
+              "description": "Position ratio along the element length at which the section tendon coordinates are computed (dPos)."
+            }
+          },
+          "required": [
+            "ELEM",
+            "POS"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "ELEM": 1,
+      "POS": 0.5
+    }
+  }
+}

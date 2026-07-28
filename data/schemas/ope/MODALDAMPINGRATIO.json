@@ -1,0 +1,20 @@
+{
+  "_group": "ope",
+  "_name": "MODALDAMPINGRATIO",
+  "uri": "ope/MODALDAMPINGRATIO",
+  "methods": "POST",
+  "schema": {
+    "MODALDAMPINGRATIO": {
+      "type": "object",
+      "description": "Modal Damping Ratio (MODALDAMPINGRATIO). Retrieves the modal damping ratio data computed for the currently opened model; the request takes no meaningful body.",
+      "properties": {
+        "Argument": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

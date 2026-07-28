@@ -1,0 +1,111 @@
+{
+  "_group": "db",
+  "_name": "THMS",
+  "uri": "db/THMS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THMS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Multiple Support Excitation (THMS). A single ITEMS array holds one object per time history load case; each object binds a time history load case (LCNAME) to X/Y/Z ground-acceleration functions with per-direction scale factors and arrival times.",
+      "properties": {
+        "ITEMS": {
+          "description": "Array of multiple support excitation entries. Each object defines the ground acceleration input for one time history load case.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the excitation entry within the entity key. Used to identify/replace an existing entry; if omitted a serial is resolved from the load case name.",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Time history load case name. Must reference an existing time history load case (THIS); a non-existent name is rejected.",
+                "type": "string"
+              },
+              "FUNCX": {
+                "description": "X-direction ground acceleration function name. Must reference an existing time forcing function (THFC) whose data type is acceleration-compatible (nThisDataType 1 or 2); otherwise rejected. Leave empty to disable the X component.",
+                "type": "string"
+              },
+              "SCALEX": {
+                "description": "X-direction scale factor applied to FUNCX.",
+                "type": "number"
+              },
+              "ATIMEX": {
+                "description": "X-direction arrival time.",
+                "type": "number",
+                "default": 0
+              },
+              "FUNCY": {
+                "description": "Y-direction ground acceleration function name. Must reference an existing time forcing function (THFC) whose data type is acceleration-compatible (nThisDataType 1 or 2); otherwise rejected. Leave empty to disable the Y component.",
+                "type": "string"
+              },
+              "SCALEY": {
+                "description": "Y-direction scale factor applied to FUNCY.",
+                "type": "number"
+              },
+              "ATIMEY": {
+                "description": "Y-direction arrival time.",
+                "type": "number",
+                "default": 0
+              },
+              "FUNCZ": {
+                "description": "Z-direction ground acceleration function name. Must reference an existing time forcing function (THFC) whose data type is acceleration-compatible (nThisDataType 1 or 2); otherwise rejected. Leave empty to disable the Z component.",
+                "type": "string"
+              },
+              "SCALEZ": {
+                "description": "Z-direction scale factor applied to FUNCZ.",
+                "type": "number"
+              },
+              "ATIMEZ": {
+                "description": "Z-direction arrival time.",
+                "type": "number",
+                "default": 0
+              },
+              "ANGLE": {
+                "description": "Angle of horizontal ground acceleration (degrees).",
+                "type": "number",
+                "default": 0
+              }
+            },
+            "required": [
+              "LCNAME",
+              "FUNCX",
+              "SCALEX",
+              "FUNCY",
+              "SCALEY",
+              "FUNCZ",
+              "SCALEZ"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "LC1",
+            "FUNCX": "FC1",
+            "SCALEX": 1.1,
+            "ATIMEX": 0,
+            "FUNCY": "FC1",
+            "SCALEY": 1.1,
+            "ATIMEY": 0,
+            "FUNCZ": "FC1",
+            "SCALEZ": 1.1,
+            "ATIMEZ": 0,
+            "ANGLE": 0
+          }
+        ]
+      }
+    }
+  }
+}

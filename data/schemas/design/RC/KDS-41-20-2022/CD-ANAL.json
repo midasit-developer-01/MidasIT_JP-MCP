@@ -1,0 +1,66 @@
+{
+  "_group": "design",
+  "_name": "CD-ANAL",
+  "uri": "design/RC/KDS-41-20-2022/CD-ANAL",
+  "methods": "POST",
+  "schema": {
+    "CD-ANAL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "RC Column Design Analysis (CD-ANAL). Fields are driven by the DESIGN_ANAL request DTO, where PERFORM_TYPE selects whether all elements, specific elements, or specific sections are designed.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "DESIGN_ANAL request body controlling the scope of the RC column design analysis.",
+          "properties": {
+            "PERFORM_TYPE": {
+              "type": "string",
+              "enum": ["ALL", "ELEMS", "SECTIONS"],
+              "default": "ALL",
+              "description": "Perform Target - All Elements: ALL / By Element No.: ELEMS / By Section No.: SECTIONS. Case-insensitive."
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "[PERFORM_TYPE=ELEMS] Element No. object identifying which elements to design.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "description": "Specify Each ID - Element No."
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "description": "[PERFORM_TYPE=SECTIONS] Section No. list."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "PERFORM_TYPE": "ELEMS",
+      "ELEMS": {
+        "KEYS": [1, 2, 3],
+        "TO": "1-10",
+        "STRUCTURE_GROUP_NAME": "Columns"
+      },
+      "SECTIONS": [1, 2]
+    }
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "_group": "rating",
+  "_name": "RPSC-VBEAM",
+  "uri": "rating/PSC/AASHTO-LRFR19/RPSC-VBEAM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "RPSC-VBEAM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Reinforcement of Virtual Beam Section (RPSC-VBEAM). Fields are driven by the RPSC DTO: three same-as-J/cracked flags plus shear-reinforcement items (SBAR_ITEMS) and longitudinal-reinforcement property groups (MBARS), each of whose sub-fields become applicable only when the matching enable flag is on.",
+      "properties": {
+        "OPT_MBAR_J": {
+          "type": "boolean",
+          "description": "MBarJ Boolean. SSM convention true = I and J longitudinal reinforcement are identical (J is copied from I)."
+        },
+        "OPT_SBAR_J": {
+          "type": "boolean",
+          "description": "SBarJ Boolean. SSM convention true = I and J shear reinforcement are identical (J is copied from I)."
+        },
+        "OPT_CRACKED": {
+          "type": "boolean",
+          "description": "Cracked Boolean."
+        },
+        "SBAR_ITEMS": {
+          "type": "array",
+          "description": "Shear Reinforcement Properties. Up to two items (I and J); when OPT_SBAR_J is true only the first item is used.",
+          "items": {
+            "type": "object",
+            "description": "Reinforcement of Section (RPSC_SBAR).",
+            "properties": {
+              "OPT_DR": {
+                "type": "boolean",
+                "default": false,
+                "description": "Diagonal Reinforcement."
+              },
+              "DR_PITCH": {
+                "type": "number",
+                "description": "[OPT_DR=true] Diagonal reinforcement pitch."
+              },
+              "DR_THETA": {
+                "type": "number",
+                "description": "[OPT_DR=true] Diagonal reinforcement angle."
+              },
+              "DR_AW": {
+                "type": "number",
+                "description": "[OPT_DR=true] Diagonal reinforcement Aw."
+              },
+              "OPT_SBW": {
+                "type": "boolean",
+                "default": false,
+                "description": "Steel Bar for Web."
+              },
+              "SBW_PITCH": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Steel bar for web pitch."
+              },
+              "SBW_ANGLE": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Steel bar for web angle."
+              },
+              "SBW_AP": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Steel bar for web Ap."
+              },
+              "SBW_PS": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Steel bar for web Pe."
+              },
+              "SBW_FACTOR": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Steel bar for web shear reduction factor."
+              },
+              "OPT_TR": {
+                "type": "boolean",
+                "default": false,
+                "description": "Torsional Reinforcement."
+              },
+              "TR_PITCH": {
+                "type": "number",
+                "description": "[OPT_TR=true] Torsional reinforcement pitch."
+              },
+              "TR_AWT": {
+                "type": "number",
+                "description": "[OPT_TR=true] Torsional reinforcement Awt."
+              },
+              "TR_ALT": {
+                "type": "number",
+                "description": "[OPT_TR=true] Torsional reinforcement Alt."
+              },
+              "OPT_SR": {
+                "type": "boolean",
+                "default": false,
+                "description": "Stir Exist."
+              },
+              "SR_PITCH": {
+                "type": "number",
+                "description": "[OPT_SR=true] Stirrup pitch."
+              },
+              "SR_AW": {
+                "type": "number",
+                "description": "[OPT_SR=true] Stirrup Aw."
+              },
+              "OPT_LBAR_FLG": {
+                "type": "boolean",
+                "default": false,
+                "description": "Enclosing Stirrup."
+              },
+              "LBAR_THICK": {
+                "type": "number",
+                "description": "[OPT_LBAR_FLG=true] Cover thickness for the enclosed section area."
+              },
+              "LBAR_INC_FC": {
+                "type": "boolean",
+                "description": "[OPT_LBAR_FLG=true] Include Flange/Cantilever."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "MBARS": {
+          "type": "array",
+          "description": "Longitudinal Reinforcement Properties. Up to two groups (I and J); when OPT_MBAR_J is true only the first group is used.",
+          "items": {
+            "type": "object",
+            "description": "Longitudinal reinforcement property group (RPSC_MBAR_WRAPPER).",
+            "properties": {
+              "MBAR_ITEMS": {
+                "type": "array",
+                "description": "Longitudinal Reinforcement Property Detail.",
+                "items": {
+                  "type": "object",
+                  "description": "Longitudinal reinforcement bar (RPSC_MBAR).",
+                  "properties": {
+                    "IJ": {
+                      "type": "string",
+                      "enum": ["I", "J"],
+                      "description": "I / J (case-insensitive)."
+                    },
+                    "NAME": {
+                      "type": "string",
+                      "description": "Bar Name."
+                    },
+                    "REF_Y": {
+                      "type": "integer",
+                      "description": "Ref. Y."
+                    },
+                    "Y": {
+                      "type": "number",
+                      "default": 0,
+                      "description": "Y."
+                    },
+                    "REF_Z": {
+                      "type": "integer",
+                      "description": "Ref. Z."
+                    },
+                    "Z": {
+                      "type": "number",
+                      "default": 0,
+                      "description": "Z."
+                    },
+                    "NUM": {
+                      "type": "integer",
+                      "description": "Num."
+                    },
+                    "SPACING": {
+                      "type": "number",
+                      "default": 0,
+                      "description": "Spacing."
+                    },
+                    "PART": {
+                      "type": "integer",
+                      "description": "Part."
+                    }
+                  },
+                  "required": ["IJ", "NAME", "REF_Y", "REF_Z", "NUM", "PART"],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": ["MBAR_ITEMS"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["OPT_MBAR_J", "OPT_SBAR_J", "OPT_CRACKED", "SBAR_ITEMS", "MBARS"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "OPT_MBAR_J": true,
+        "OPT_SBAR_J": true,
+        "OPT_CRACKED": false,
+        "SBAR_ITEMS": [
+          {
+            "OPT_DR": false,
+            "OPT_SBW": true,
+            "SBW_PITCH": 150.0,
+            "SBW_ANGLE": 90.0,
+            "SBW_AP": 253.4,
+            "SBW_PS": 0.0,
+            "SBW_FACTOR": 1.0,
+            "OPT_TR": false,
+            "OPT_SR": true,
+            "SR_PITCH": 200.0,
+            "SR_AW": 253.4,
+            "OPT_LBAR_FLG": true,
+            "LBAR_THICK": 40.0,
+            "LBAR_INC_FC": false
+          }
+        ],
+        "MBARS": [
+          {
+            "MBAR_ITEMS": [
+              {
+                "IJ": "I",
+                "NAME": "P16",
+                "REF_Y": 0,
+                "Y": 0.0,
+                "REF_Z": 1,
+                "Z": -450.0,
+                "NUM": 6,
+                "SPACING": 100.0,
+                "PART": 0
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

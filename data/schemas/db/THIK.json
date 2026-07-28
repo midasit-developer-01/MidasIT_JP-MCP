@@ -1,0 +1,253 @@
+{
+  "_group": "db",
+  "_name": "THIK",
+  "uri": "db/THIK",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THIK": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Thickness (THIK). TYPE selects the thickness family (VALUE = plate thickness, STIFFENED = stiffened plate, STLWALL = steel-concrete wall); for STIFFENED, STYPE further selects which sub-object (VALUE, SECTION for USER/DB) drives the fields.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "[TYPE=VALUE] Thickness name.",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Thickness type (case-insensitive). VALUE = plate thickness value; STIFFENED = stiffened plate; STLWALL = steel-concrete composite wall.",
+          "type": "string",
+          "enum": ["VALUE", "STIFFENED", "STLWALL"]
+        },
+        "bINOUT": {
+          "description": "[TYPE=VALUE] Thickness mode. false = same in-plane & out-of-plane thickness; true = separate in-plane/out-of-plane thickness. Defaults to false when omitted.",
+          "type": "boolean"
+        },
+        "T_IN": {
+          "description": "[TYPE=VALUE] In-plane thickness.",
+          "type": "number"
+        },
+        "T_OUT": {
+          "description": "[TYPE=VALUE] Out-of-plane thickness (used when bINOUT is true).",
+          "type": "number"
+        },
+        "OFFSET": {
+          "description": "[TYPE=VALUE] Plate offset option. 0 = None; 1 = Thickness Ratio; 2 = Value.",
+          "type": "integer",
+          "default": 0
+        },
+        "O_VALUE": {
+          "description": "[TYPE=VALUE, OFFSET=1 or 2] Local z-direction offset amount: ratio when OFFSET=1, absolute value when OFFSET=2.",
+          "type": "number"
+        },
+        "STYPE": {
+          "description": "[TYPE=STIFFENED] Stiffened sub-type (case-insensitive). VALUE = enter stiffened values directly (uses VALUE object); USER = user-defined stiffener sections (uses SECTION object); DB = database stiffener sections (uses SECTION object).",
+          "type": "string",
+          "enum": ["VALUE", "USER", "DB"]
+        },
+        "RIB_POS": {
+          "description": "[TYPE=STIFFENED] Rib position (case-insensitive). LOWER or UPPER.",
+          "type": "string",
+          "enum": ["LOWER", "UPPER"]
+        },
+        "SECTION": {
+          "description": "[TYPE=STIFFENED, STYPE=USER or DB] Stiffened plate section definition.",
+          "type": "object",
+          "properties": {
+            "THIKNESS": {
+              "description": "Thickness of the plate element.",
+              "type": "number"
+            },
+            "DBNAME": {
+              "description": "[STYPE=DB] Name of the section database (e.g. steel DB standard).",
+              "type": "string"
+            },
+            "XZ": {
+              "$ref": "#/definitions/THIK_STIFFENED_SECT_DATA",
+              "description": "XZ-direction stiffener section data."
+            },
+            "YZ": {
+              "$ref": "#/definitions/THIK_STIFFENED_SECT_DATA",
+              "description": "YZ-direction stiffener section data."
+            }
+          },
+          "required": ["THIKNESS", "XZ", "YZ"]
+        },
+        "VALUE": {
+          "description": "[TYPE=STIFFENED, STYPE=VALUE] Stiffened plate values entered directly.",
+          "type": "object",
+          "properties": {
+            "WEIGHT": {
+              "description": "Weight-equivalent thickness of the stiffened plate.",
+              "type": "number"
+            },
+            "XZ": {
+              "$ref": "#/definitions/THIK_STIFFENED_VALUE_DATA",
+              "description": "XZ-direction stiffener value data."
+            },
+            "YZ": {
+              "$ref": "#/definitions/THIK_STIFFENED_VALUE_DATA",
+              "description": "YZ-direction stiffener value data."
+            }
+          },
+          "required": ["WEIGHT"]
+        },
+        "WALL": {
+          "description": "[TYPE=STLWALL] Steel-concrete composite wall thicknesses.",
+          "type": "object",
+          "properties": {
+            "CONC": {
+              "description": "Concrete wall thickness.",
+              "type": "number"
+            },
+            "STEEL": {
+              "description": "Steel wall thickness.",
+              "type": "number"
+            }
+          },
+          "required": ["CONC", "STEEL"]
+        }
+      },
+      "required": ["TYPE"],
+      "definitions": {
+        "THIK_STIFFENED_VALUE_DATA": {
+          "type": "object",
+          "properties": {
+            "SHAPE": {
+              "description": "Stiffener shape label.",
+              "type": "string"
+            },
+            "T_IN": {
+              "description": "In-plane thickness of the stiffener.",
+              "type": "number"
+            },
+            "T_OUT": {
+              "description": "Out-of-plane thickness of the stiffener.",
+              "type": "number"
+            },
+            "HU": {
+              "description": "Upper height of the stiffener.",
+              "type": "number"
+            },
+            "HL": {
+              "description": "Lower height of the stiffener.",
+              "type": "number"
+            }
+          }
+        },
+        "THIK_STIFFENED_SECT_DATA": {
+          "type": "object",
+          "properties": {
+            "bRIB": {
+              "description": "Whether a rib is attached to this stiffener section.",
+              "type": "boolean",
+              "default": false
+            },
+            "SHAPE": {
+              "description": "Section shape label.",
+              "type": "string"
+            },
+            "NAME": {
+              "description": "[STYPE=DB] Section name selected from the database.",
+              "type": "string"
+            },
+            "DIST": {
+              "description": "Spacing distance between stiffeners.",
+              "type": "number"
+            },
+            "SIZE": {
+              "description": "[STYPE=USER] User-defined section dimensions; up to 6 values are read (padded/truncated to the shape's dimension count).",
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "maxItems": 6
+            }
+          },
+          "required": ["SHAPE", "DIST"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "PL1",
+        "TYPE": "VALUE",
+        "bINOUT": false,
+        "T_IN": 0.1,
+        "T_OUT": 0.0,
+        "OFFSET": 0
+      },
+      "2": {
+        "TYPE": "STIFFENED",
+        "STYPE": "VALUE",
+        "RIB_POS": "LOWER",
+        "VALUE": {
+          "WEIGHT": 0.015,
+          "XZ": {
+            "SHAPE": "T",
+            "T_IN": 0.012,
+            "T_OUT": 0.012,
+            "HU": 0.1,
+            "HL": 0.1
+          },
+          "YZ": {
+            "SHAPE": "T",
+            "T_IN": 0.012,
+            "T_OUT": 0.012,
+            "HU": 0.1,
+            "HL": 0.1
+          }
+        }
+      },
+      "3": {
+        "TYPE": "STIFFENED",
+        "STYPE": "USER",
+        "RIB_POS": "UPPER",
+        "SECTION": {
+          "THIKNESS": 0.012,
+          "XZ": {
+            "bRIB": true,
+            "SHAPE": "H",
+            "DIST": 0.5,
+            "SIZE": [0.4, 0.2, 0.01, 0.015, 0.0, 0.0]
+          },
+          "YZ": {
+            "bRIB": true,
+            "SHAPE": "H",
+            "DIST": 0.5,
+            "SIZE": [0.4, 0.2, 0.01, 0.015, 0.0, 0.0]
+          }
+        }
+      },
+      "4": {
+        "TYPE": "STIFFENED",
+        "STYPE": "DB",
+        "RIB_POS": "LOWER",
+        "SECTION": {
+          "THIKNESS": 0.012,
+          "DBNAME": "KS",
+          "XZ": {
+            "bRIB": false,
+            "SHAPE": "H",
+            "DIST": 0.5,
+            "NAME": "H 300x300x10/15"
+          },
+          "YZ": {
+            "bRIB": false,
+            "SHAPE": "H",
+            "DIST": 0.5,
+            "NAME": "H 300x300x10/15"
+          }
+        }
+      },
+      "5": {
+        "TYPE": "STLWALL",
+        "WALL": {
+          "CONC": 0.3,
+          "STEEL": 0.02
+        }
+      }
+    }
+  }
+}

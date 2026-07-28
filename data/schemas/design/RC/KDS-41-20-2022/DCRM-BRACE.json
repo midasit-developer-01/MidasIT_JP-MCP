@@ -1,0 +1,63 @@
+{
+  "_group": "design",
+  "_name": "DCRM-BRACE",
+  "uri": "design/RC/KDS-41-20-2022/DCRM-BRACE",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DCRM-BRACE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Criteria for Rebar - Brace (DCRM-BRACE). Fields set the main/tie rebar sizes, Y/Z rebar arrangement counts, cover distance, spacing-limit check, and spliced-bars option for brace design under KDS-41-20-2022.",
+      "properties": {
+        "MAIN_REBAR": {
+          "type": "string",
+          "description": "Main Rebar for Brace (rebar size name). Case-insensitive.",
+          "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"]
+        },
+        "TIES_SPIRALS": {
+          "type": "string",
+          "description": "Ties/Spirals for Brace (rebar size name). Case-insensitive.",
+          "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"]
+        },
+        "ARRANGEMENT_Y": {
+          "type": "integer",
+          "description": "Rebar Arrangement (Y direction)."
+        },
+        "ARRANGEMENT_Z": {
+          "type": "integer",
+          "description": "Rebar Arrangement (Z direction)."
+        },
+        "DO": {
+          "type": "number",
+          "description": "Cover distance (do).",
+          "default": 0.0
+        },
+        "SPACING_LIMIT": {
+          "type": "boolean",
+          "description": "Consider Rebar Spacing Limit.",
+          "default": true
+        },
+        "SPLICED_BARS": {
+          "type": "string",
+          "description": "Spliced Bars option. Case-insensitive.",
+          "enum": ["None", "50%", "100%"],
+          "default": "50%"
+        }
+      },
+      "required": ["MAIN_REBAR", "TIES_SPIRALS", "ARRANGEMENT_Y", "ARRANGEMENT_Z"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "MAIN_REBAR": "D22",
+        "TIES_SPIRALS": "D10",
+        "ARRANGEMENT_Y": 3,
+        "ARRANGEMENT_Z": 3,
+        "DO": 40.0,
+        "SPACING_LIMIT": true,
+        "SPLICED_BARS": "50%"
+      }
+    }
+  }
+}

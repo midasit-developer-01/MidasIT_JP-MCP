@@ -1,0 +1,25 @@
+{
+  "_group": "doc",
+  "_name": "EXPORTMXT",
+  "uri": "doc/EXPORTMXT",
+  "methods": "POST",
+  "schema": {
+    "EXPORTMXT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Export MXT (EXPORTMXT). The request is a single string carrying the destination file path; the handler opens that path for writing and exports the current model to MXT via OnExportMgt.",
+      "properties": {
+        "Argument": {
+          "type": "string",
+          "description": "Full destination file path to export the MXT file to. Must be a writable path; the handler fails if the file cannot be opened."
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": "C:\\Temp\\model.mxt"
+  }
+}

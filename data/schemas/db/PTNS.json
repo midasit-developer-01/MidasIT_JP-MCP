@@ -1,0 +1,63 @@
+{
+  "_group": "db",
+  "_name": "PTNS",
+  "uri": "db/PTNS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PTNS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Prestress Loads (PTNS). Each element key maps to an ITEMS array of pretension load entries; each item ties a static load case (and optional load group) to a tension magnitude.",
+      "properties": {
+        "ITEMS": {
+          "description": "List of pretension load entries for this element key. Each entry is written with its own serial ID.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the pretension load entry within this element key (union sub-key). Defaults to 0.",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Static load case name (D_LCOM_STATIC). Must resolve to an existing load case or the write is rejected.",
+                "type": "string"
+              },
+              "GROUP_NAME": {
+                "description": "Load group name. When non-empty it must resolve to an existing load group or the write is rejected; empty means no group.",
+                "type": "string",
+                "default": ""
+              },
+              "TENSION": {
+                "description": "Pretension load (tension) magnitude applied to the element.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "LCNAME",
+              "TENSION"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "3431": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "PrS1",
+            "GROUP_NAME": "LoadGroup",
+            "TENSION": 130
+          }
+        ]
+      }
+    }
+  }
+}

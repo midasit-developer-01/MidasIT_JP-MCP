@@ -1,0 +1,198 @@
+{
+  "_group": "design",
+  "_name": "WC-TABLE",
+  "uri": "design/RC/KDS-41-20-2022/WC-TABLE",
+  "methods": "POST",
+  "schema": {
+    "WC-TABLE": {
+      "type": "object",
+      "description": "Wall Check Result Table (WC-TABLE). Fields are driven by the wall design check table request DTO, which selects walls/stories and formats the output result table.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Wall design check table request DTO.",
+          "properties": {
+            "TABLE_TYPE": {
+              "type": "string",
+              "enum": [
+                "WID+STORY",
+                "WID"
+              ],
+              "description": "Table Type: WID+STORY or WID (case-insensitive)."
+            },
+            "RESULT": {
+              "type": "integer",
+              "default": 0,
+              "description": "Result View Option: 0=All 1=OK 2=NG."
+            },
+            "TABLE_NAME": {
+              "type": "string",
+              "description": "Output table title in response."
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Save results to file path."
+            },
+            "UNIT": {
+              "type": "object",
+              "description": "Unit Settings.",
+              "properties": {
+                "FORCE": {
+                  "type": "string",
+                  "enum": [
+                    "KGF",
+                    "TONF",
+                    "N",
+                    "KN",
+                    "LBF",
+                    "KIPS"
+                  ],
+                  "description": "Force unit (case-insensitive)."
+                },
+                "DIST": {
+                  "type": "string",
+                  "enum": [
+                    "MM",
+                    "CM",
+                    "M",
+                    "IN",
+                    "FT"
+                  ],
+                  "description": "Distance unit (case-insensitive)."
+                },
+                "HEAT": {
+                  "type": "string",
+                  "enum": [
+                    "CAL",
+                    "KCAL",
+                    "J",
+                    "BTU",
+                    "KJ"
+                  ],
+                  "description": "Heat unit (case-insensitive)."
+                },
+                "TEMP": {
+                  "type": "string",
+                  "enum": [
+                    "C",
+                    "F"
+                  ],
+                  "description": "Temper unit (case-insensitive)."
+                }
+              }
+            },
+            "STYLES": {
+              "type": "object",
+              "description": "Number Format Settings.",
+              "properties": {
+                "FORMAT": {
+                  "type": "string",
+                  "enum": [
+                    "DEFAULT",
+                    "SCIENTIFIC",
+                    "FIXED",
+                    "GENERAL"
+                  ],
+                  "description": "Style Format (case-insensitive)."
+                },
+                "PLACE": {
+                  "type": "integer",
+                  "description": "Style Place (number of decimal places)."
+                }
+              }
+            },
+            "COMPONENTS": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Column filter list. Column names must belong to THIS endpoint's header set (defined in wg_db/DesignTableHeader.h); an unknown name ABORTS the request with \"'<name>' is not a valid COMPONENTS name\" — it is not silently ignored."
+            },
+            "SELECTIONS": {
+              "type": "array",
+              "description": "List of wall and story selections to include. If omitted or empty, all walls and all stories are included.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "WALL_IDS": {
+                    "type": "object",
+                    "description": "Wall ID Object - Specify Each Wall ID (KEYS) or Wall ID Range (TO). If omitted, all walls are included.",
+                    "properties": {
+                      "KEYS": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        },
+                        "description": "Specify Each Wall ID."
+                      },
+                      "TO": {
+                        "type": "string",
+                        "description": "Specify Wall ID Range (e.g. 1to20)."
+                      }
+                    }
+                  },
+                  "STORY": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Story names to filter. If omitted, all stories are included."
+                  }
+                }
+              }
+            },
+            "PRI_SORT": {
+              "type": "integer",
+              "default": 1,
+              "description": "[TABLE_TYPE=WID+STORY] Primary sort for WID+STORY: 0=Story 1=WID."
+            },
+            "PRI_SORT_WID": {
+              "type": "integer",
+              "default": 1,
+              "description": "[TABLE_TYPE=WID] Primary sort for WID: 0=Wall Mark 1=WID."
+            }
+          },
+          "required": [
+            "TABLE_TYPE"
+          ]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "TABLE_TYPE": "WID+STORY",
+      "RESULT": 0,
+      "TABLE_NAME": "Wall Check Result",
+      "UNIT": {
+        "FORCE": "KN",
+        "DIST": "M"
+      },
+      "STYLES": {
+        "FORMAT": "FIXED",
+        "PLACE": 3
+      },
+      "COMPONENTS": [
+        "WID",
+        "Story"
+      ],
+      "SELECTIONS": [
+        {
+          "WALL_IDS": {
+            "KEYS": [
+              1,
+              2,
+              3
+            ]
+          },
+          "STORY": [
+            "1F",
+            "2F"
+          ]
+        }
+      ],
+      "PRI_SORT": 1,
+      "PRI_SORT_WID": 1
+    }
+  }
+}

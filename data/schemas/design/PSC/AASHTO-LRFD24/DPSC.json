@@ -1,0 +1,136 @@
+{
+  "_group": "design",
+  "_name": "DPSC",
+  "uri": "design/PSC/AASHTO-LRFD24/DPSC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DPSC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "PSC Design Parameters (DPSC). Fields configure AASHTO-LRFD24 prestressed-concrete design settings: tendon/exposure/corrosion options and the stress/strength check flags written to the design database.",
+      "properties": {
+        "DGNCODE": {
+          "type": "string",
+          "enum": ["AASHTO-LRFD24"],
+          "description": "PSC Design Code (fixed: AASHTO-LRFD24). Case-insensitive enum; wire value is 'AASHTO-LRFD24'."
+        },
+        "TENDON_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2,
+          "default": 0,
+          "description": "Tendon Type (0=Low Relaxation Tendons, 1=Stress Relieved Tendons, 2=Prestressing Bars). Must be between 0 and 2."
+        },
+        "EXPOSURE_FACTOR": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2,
+          "default": 0,
+          "description": "Exposure Factor for Crack Width (0=Class 1 (1.0), 1=Class 2 (2.0), 2=USER). Must be between 0 and 2."
+        },
+        "USER_FACTOR": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "default": 1.0,
+          "description": "[EXPOSURE_FACTOR=2] User Defined Exposure Factor; applied only when EXPOSURE_FACTOR=2. When assigned it must be > 0."
+        },
+        "CORROSIVE_CONDITION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0,
+          "description": "Corrosive Condition (0=Severe, 1=Moderate/Mild). Must be 0 or 1."
+        },
+        "FLEXURAL_STRENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0,
+          "description": "Flexural Strength Calculation Method (0=Code, 1=Strain Compatibility). Must be 0 or 1."
+        },
+        "CONSTRUCTION_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 1,
+          "description": "Construction Type (0=Segmental, 1=Non-Segmental). Must be 0 or 1."
+        },
+        "STRESS_CS": {
+          "type": "boolean",
+          "default": false,
+          "description": "Stress by Construction Stage."
+        },
+        "STRESS_SLC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Stress by Service Load Combinations."
+        },
+        "STRESS_PT": {
+          "type": "boolean",
+          "default": false,
+          "description": "Stress in Prestressing Tendons."
+        },
+        "PRINCIPAL_STRESS_CS": {
+          "type": "boolean",
+          "default": false,
+          "description": "Principal Stress by Construction Stage."
+        },
+        "PRINCIPAL_STRESS_SLC_MAX_SHEAR": {
+          "type": "boolean",
+          "default": false,
+          "description": "Principal Stress by Service Load Combination (Max Shear)."
+        },
+        "PRINCIPAL_STRESS_SLC_MAX_TORSION": {
+          "type": "boolean",
+          "default": false,
+          "description": "Principal Stress by Service Load Combination (Max Torsion)."
+        },
+        "CRACK_CHECK": {
+          "type": "boolean",
+          "default": false,
+          "description": "Crack Check Option (Only Composite Section Model)."
+        },
+        "FLEXURAL_CHECK": {
+          "type": "boolean",
+          "default": false,
+          "description": "Flexural Strength Check."
+        },
+        "SHEAR_CHECK": {
+          "type": "boolean",
+          "default": false,
+          "description": "Shear Strength Check."
+        },
+        "SHEAR_TORSION_COMBINED": {
+          "type": "boolean",
+          "default": false,
+          "description": "Combined Shear and Torsion Check."
+        }
+      },
+      "required": ["DGNCODE"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DGNCODE": "AASHTO-LRFD24",
+        "TENDON_TYPE": 0,
+        "EXPOSURE_FACTOR": 2,
+        "USER_FACTOR": 1.5,
+        "CORROSIVE_CONDITION": 0,
+        "FLEXURAL_STRENGTH": 1,
+        "CONSTRUCTION_TYPE": 1,
+        "STRESS_CS": true,
+        "STRESS_SLC": true,
+        "STRESS_PT": true,
+        "PRINCIPAL_STRESS_CS": false,
+        "PRINCIPAL_STRESS_SLC_MAX_SHEAR": false,
+        "PRINCIPAL_STRESS_SLC_MAX_TORSION": false,
+        "CRACK_CHECK": true,
+        "FLEXURAL_CHECK": true,
+        "SHEAR_CHECK": true,
+        "SHEAR_TORSION_COMBINED": false
+      }
+    }
+  }
+}

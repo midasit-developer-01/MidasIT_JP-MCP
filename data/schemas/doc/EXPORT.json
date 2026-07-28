@@ -1,0 +1,24 @@
+{
+  "_group": "doc",
+  "_name": "EXPORT",
+  "uri": "doc/EXPORT",
+  "methods": "POST",
+  "schema": {
+    "EXPORT": {
+      "type": "object",
+      "description": "Export Model to File (EXPORT). Exports the current model to a JSON file; the request body carries the destination file path as a string, which the handler opens for writing and passes to the export command.",
+      "properties": {
+        "Argument": {
+          "type": "string",
+          "description": "Absolute file path of the destination JSON file to export the model to. The handler opens this path for writing (must be a valid, writable path) and then runs the export command. If a file-name path parameter is supplied on the route, only that single item is exported; otherwise the full model is exported."
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": "C:/Temp/model_export.json"
+  }
+}

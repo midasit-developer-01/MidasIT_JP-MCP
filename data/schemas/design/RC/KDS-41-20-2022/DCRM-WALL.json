@@ -1,0 +1,189 @@
+{
+  "_group": "design",
+  "_name": "DCRM-WALL",
+  "uri": "design/RC/KDS-41-20-2022/DCRM-WALL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DCRM-WALL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Rebar Criteria for Wall (DCRMW). Keyed by Wall ID; each item carries the per-story wall rebar design criteria (vertical/horizontal/end/boundary-element rebar sizes, boundary-element rebar spacing, and concrete-face-to-rebar-center distances).",
+      "additionalProperties": false,
+      "required": [
+        "ITEMS"
+      ],
+      "properties": {
+        "ITEMS": {
+          "type": "array",
+          "description": "Wall rebar items per story. At least one item is required; each Story may appear only once per Wall ID.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "STORY",
+              "VERTICAL_REBAR",
+              "HORIZONTAL_REBAR",
+              "END_REBAR",
+              "BE_HORZ_REBAR",
+              "BE_HORZ_SPACE",
+              "BE_VERT_SPACE"
+            ],
+            "properties": {
+              "STORY": {
+                "type": "string",
+                "description": "Story name. Must reference an existing story."
+              },
+              "VERTICAL_REBAR": {
+                "type": "string",
+                "description": "Vertical rebar size for wall. Case-insensitive enum.",
+                "enum": [
+                  "D4",
+                  "D5",
+                  "D6",
+                  "D7",
+                  "D8",
+                  "D10",
+                  "D13",
+                  "D16",
+                  "D19",
+                  "D22",
+                  "D25",
+                  "D29",
+                  "D32",
+                  "D35",
+                  "D38",
+                  "D41",
+                  "D43",
+                  "D51",
+                  "D57"
+                ]
+              },
+              "HORIZONTAL_REBAR": {
+                "type": "string",
+                "description": "Horizontal rebar size for wall. Case-insensitive enum.",
+                "enum": [
+                  "D4",
+                  "D5",
+                  "D6",
+                  "D7",
+                  "D8",
+                  "D10",
+                  "D13",
+                  "D16",
+                  "D19",
+                  "D22",
+                  "D25",
+                  "D29",
+                  "D32",
+                  "D35",
+                  "D38",
+                  "D41",
+                  "D43",
+                  "D51",
+                  "D57"
+                ]
+              },
+              "END_REBAR": {
+                "type": "string",
+                "description": "End rebar size for wall. Case-insensitive enum.",
+                "enum": [
+                  "D4",
+                  "D5",
+                  "D6",
+                  "D7",
+                  "D8",
+                  "D10",
+                  "D13",
+                  "D16",
+                  "D19",
+                  "D22",
+                  "D25",
+                  "D29",
+                  "D32",
+                  "D35",
+                  "D38",
+                  "D41",
+                  "D43",
+                  "D51",
+                  "D57"
+                ]
+              },
+              "BE_HORZ_REBAR": {
+                "type": "string",
+                "description": "Boundary element horizontal rebar size. Case-insensitive enum.",
+                "enum": [
+                  "D4",
+                  "D5",
+                  "D6",
+                  "D7",
+                  "D8",
+                  "D10",
+                  "D13",
+                  "D16",
+                  "D19",
+                  "D22",
+                  "D25",
+                  "D29",
+                  "D32",
+                  "D35",
+                  "D38",
+                  "D41",
+                  "D43",
+                  "D51",
+                  "D57"
+                ]
+              },
+              "BE_HORZ_SPACE": {
+                "type": "number",
+                "description": "Boundary element horizontal rebar spacing."
+              },
+              "BE_VERT_SPACE": {
+                "type": "number",
+                "description": "Boundary element vertical rebar spacing."
+              },
+              "DE": {
+                "type": "number",
+                "description": "de: concrete face to rebar center distance (end).",
+                "default": 0.0
+              },
+              "DW": {
+                "type": "number",
+                "description": "dw: concrete face to rebar center distance (web).",
+                "default": 0.0
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "STORY": "2F",
+            "VERTICAL_REBAR": "D13",
+            "HORIZONTAL_REBAR": "D10",
+            "END_REBAR": "D16",
+            "BE_HORZ_REBAR": "D10",
+            "BE_HORZ_SPACE": 150.0,
+            "BE_VERT_SPACE": 200.0,
+            "DE": 40.0,
+            "DW": 30.0
+          },
+          {
+            "STORY": "1F",
+            "VERTICAL_REBAR": "D16",
+            "HORIZONTAL_REBAR": "D13",
+            "END_REBAR": "D19",
+            "BE_HORZ_REBAR": "D13",
+            "BE_HORZ_SPACE": 125.0,
+            "BE_VERT_SPACE": 200.0
+          }
+        ]
+      }
+    }
+  }
+}

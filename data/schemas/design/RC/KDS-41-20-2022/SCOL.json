@@ -1,0 +1,32 @@
+{
+  "_group": "design",
+  "_name": "SCOL",
+  "uri": "design/RC/KDS-41-20-2022/SCOL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SCOL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Special Column (SCOL). Fields are driven by the special-column classification type used in RC seismic design.",
+      "properties": {
+        "TYPE": {
+          "type": "string",
+          "enum": ["PILOTI", "SOFT_STORY"],
+          "description": "Column Type classifying the special column: PILOTI or SOFT_STORY. Enum values are case-insensitive."
+        }
+      },
+      "required": ["TYPE"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TYPE": "PILOTI"
+      },
+      "2": {
+        "TYPE": "SOFT_STORY"
+      }
+    }
+  }
+}

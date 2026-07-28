@@ -1,0 +1,55 @@
+{
+  "_group": "db",
+  "_name": "SMPT",
+  "uri": "db/SMPT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SMPT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Settlement Point Group (SMPT). Defines a settlement load group with a prescribed settlement displacement applied to a list of nodes; all fields apply to every entry (no TYPE switch).",
+      "properties": {
+        "NAME": {
+          "description": "Settlement group name.",
+          "type": "string"
+        },
+        "SETTLE": {
+          "description": "Prescribed settlement displacement magnitude applied to the nodes in this group.",
+          "type": "number"
+        },
+        "ITEMS": {
+          "description": "List of node numbers that belong to this settlement group. The handler sorts these ascending on read.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "required": [
+        "NAME",
+        "SETTLE",
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "SG1",
+        "SETTLE": 25,
+        "ITEMS": [
+          100,
+          101
+        ]
+      },
+      "2": {
+        "NAME": "SG2",
+        "SETTLE": 15,
+        "ITEMS": [
+          102,
+          103
+        ]
+      }
+    }
+  }
+}

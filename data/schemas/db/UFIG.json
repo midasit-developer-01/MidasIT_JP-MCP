@@ -1,0 +1,27 @@
+{
+  "_group": "db",
+  "_name": "UFIG",
+  "uri": "db/UFIG",
+  "methods": "GET",
+  "schema": {
+    "UFIG": {
+      "type": "object",
+      "description": "User Figure (UFIG). A DYNAGEN figure entry used for M-Connector; read-only, the single NAME field holds the figure's name as stored in the model.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "default": "",
+          "description": "Figure name. On GET this returns the stored figure name (T_UFIG_D.strName). Optional; defaults to an empty string."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Figure 1"
+      }
+    }
+  }
+}

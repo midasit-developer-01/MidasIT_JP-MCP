@@ -1,0 +1,235 @@
+{
+  "_group": "db",
+  "_name": "MATL",
+  "uri": "db/MATL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MATL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Material (MATL). TYPE selects the material category and each PARAM entry's P_TYPE (1=Standard, 2=User-defined isotropic, 3=User-defined orthotropic) drives which parameter fields apply.",
+      "type": "object",
+      "properties": {
+        "TYPE": {
+          "description": "Material category. Case-insensitive. CONC=concrete, STEEL=steel, SRC=steel-reinforced concrete (uses two PARAM entries: steel then concrete), USER=user material, ALUMINUM=aluminum.",
+          "type": "string",
+          "enum": ["CONC", "STEEL", "SRC", "USER", "ALUMINUM"]
+        },
+        "NAME": {
+          "description": "Material name.",
+          "type": "string"
+        },
+        "HE_SPEC": {
+          "description": "Specific heat.",
+          "type": "number",
+          "default": 0
+        },
+        "HE_COND": {
+          "description": "Heat conduction coefficient.",
+          "type": "number",
+          "default": 0
+        },
+        "PLMT": {
+          "description": "Plasticity material key (0 = none).",
+          "type": "integer",
+          "default": 0
+        },
+        "P_NAME": {
+          "description": "Plasticity material name (blank when PLMT is 0).",
+          "type": "string",
+          "default": ""
+        },
+        "bMASS_DENS": {
+          "description": "Whether mass density is used.",
+          "type": "boolean",
+          "default": false
+        },
+        "DAMP_RAT": {
+          "description": "Damping ratio.",
+          "type": "number",
+          "default": 0
+        },
+        "PARAM": {
+          "description": "Material data entries. One entry for most types; for SRC the first entry is the steel data and the second is the concrete data.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "P_TYPE": {
+                "description": "Data type driving which fields below apply: 1 = Standard (values pulled from a DB standard/code), 2 = User-defined isotropic, 3 = User-defined orthotropic.",
+                "type": "integer",
+                "enum": [1, 2, 3]
+              },
+              "STANDARD": {
+                "description": "DB standard/code name (e.g. \"EN05(S)\"). Applies to all P_TYPE values.",
+                "type": "string"
+              },
+              "CODE": {
+                "description": "[P_TYPE=1] Sub-code / product name within the standard.",
+                "type": "string",
+                "default": ""
+              },
+              "DB": {
+                "description": "[P_TYPE=1] DB material name within the standard (e.g. \"S450\", \"C40/50\").",
+                "type": "string"
+              },
+              "bELAST": {
+                "description": "[P_TYPE=1] Use user-defined elasticity instead of the DB value.",
+                "type": "boolean",
+                "default": false
+              },
+              "ELAST": {
+                "description": "[P_TYPE=1|2] Modulus of elasticity. For P_TYPE=1 it is the user-defined elasticity (used when bELAST is true); for P_TYPE=2 the isotropic elastic modulus.",
+                "type": "number"
+              },
+              "POISN": {
+                "description": "[P_TYPE=2] Poisson's ratio (isotropic).",
+                "type": "number"
+              },
+              "THERMAL": {
+                "description": "[P_TYPE=2] Coefficient of linear thermal expansion (isotropic).",
+                "type": "number"
+              },
+              "ELAST_M": {
+                "description": "[P_TYPE=3] Moduli of elasticity in the X, Y, Z directions (orthotropic).",
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "POISN_M": {
+                "description": "[P_TYPE=3] Poisson's ratios in the X, Y, Z directions (orthotropic).",
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "THERMAL_M": {
+                "description": "[P_TYPE=3] Coefficients of linear thermal expansion in the X, Y, Z directions (orthotropic).",
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "SHEAR_M": {
+                "description": "[P_TYPE=3] Shear moduli of elasticity in the corresponding directions (orthotropic).",
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "DEN": {
+                "description": "[P_TYPE=2|3] Weight density.",
+                "type": "number"
+              },
+              "MASS": {
+                "description": "[P_TYPE=2|3] Mass density.",
+                "type": "number"
+              }
+            },
+            "required": ["P_TYPE"]
+          }
+        }
+      },
+      "required": ["TYPE", "NAME", "PARAM"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TYPE": "STEEL",
+        "NAME": "DB_Steel",
+        "DAMP_RAT": 0.02,
+        "PARAM": [
+          {
+            "P_TYPE": 1,
+            "STANDARD": "EN05(S)",
+            "CODE": "",
+            "DB": "S450",
+            "bELAST": false
+          }
+        ]
+      },
+      "2": {
+        "TYPE": "CONC",
+        "NAME": "DB_Conc",
+        "DAMP_RAT": 0.05,
+        "PARAM": [
+          {
+            "P_TYPE": 1,
+            "STANDARD": "EN04(RC)",
+            "CODE": "",
+            "DB": "C40/50",
+            "bELAST": false
+          }
+        ]
+      },
+      "3": {
+        "TYPE": "SRC",
+        "NAME": "DB_SRC",
+        "DAMP_RAT": 0.05,
+        "PARAM": [
+          {
+            "P_TYPE": 1,
+            "STANDARD": "EN05(S)",
+            "CODE": "",
+            "DB": "S450",
+            "bELAST": false
+          },
+          {
+            "P_TYPE": 1,
+            "STANDARD": "EN04(RC)",
+            "CODE": "",
+            "DB": "C40/50",
+            "bELAST": false
+          }
+        ]
+      },
+      "4": {
+        "TYPE": "USER",
+        "NAME": "User_Isotropic",
+        "bMASS_DENS": true,
+        "DAMP_RAT": 0,
+        "PARAM": [
+          {
+            "P_TYPE": 2,
+            "ELAST": 210000000,
+            "POISN": 0.3,
+            "THERMAL": 0.000012,
+            "DEN": 76.98,
+            "MASS": 7.849
+          }
+        ]
+      },
+      "5": {
+        "TYPE": "USER",
+        "NAME": "User_Orthotropic",
+        "DAMP_RAT": 0,
+        "PARAM": [
+          {
+            "P_TYPE": 3,
+            "ELAST_M": [210000000, 105000000, 105000000],
+            "POISN_M": [0.3, 0.3, 0.3],
+            "THERMAL_M": [0.000012, 0.000012, 0.000012],
+            "SHEAR_M": [80769000, 80769000, 80769000],
+            "DEN": 76.98,
+            "MASS": 7.849
+          }
+        ]
+      },
+      "6": {
+        "TYPE": "ALUMINUM",
+        "NAME": "DB_Aluminum",
+        "DAMP_RAT": 0,
+        "PARAM": [
+          {
+            "P_TYPE": 1,
+            "STANDARD": "ADM05(AL)",
+            "CODE": "",
+            "DB": "6061-T6",
+            "bELAST": false
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "_group": "design",
+  "_name": "SUEQ",
+  "uri": "design/RC/KDS-41-20-2022/SUEQ",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SUEQ": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Seismic Design Force Scale Factors (SUEQ). Fields are per-member scale factors applied to the earthquake load case and load combination results for axial, moment, and shear forces used in RC seismic design.",
+      "properties": {
+        "LC_AXIAL": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load Case - Axial Scale Factor."
+        },
+        "LC_MOMENT": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load Case - Moment Scale Factor."
+        },
+        "LC_SHEAR": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load Case - Shear Scale Factor."
+        },
+        "LCOM_AXIAL": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load Combination - Axial Scale Factor."
+        },
+        "LCOM_MOMENT": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load Combination - Moment Scale Factor."
+        },
+        "LCOM_SHEAR": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load Combination - Shear Scale Factor."
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LC_AXIAL": 1.0,
+        "LC_MOMENT": 1.25,
+        "LC_SHEAR": 1.5,
+        "LCOM_AXIAL": 1.0,
+        "LCOM_MOMENT": 1.1,
+        "LCOM_SHEAR": 1.2
+      }
+    }
+  }
+}

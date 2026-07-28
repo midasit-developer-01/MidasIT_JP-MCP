@@ -1,0 +1,86 @@
+{
+  "_group": "db",
+  "_name": "SDSP",
+  "uri": "db/SDSP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SDSP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Specified Displacements of Supports (SDSP). Each node key holds one ITEMS array; every item pairs a static load case (LCNAME) with 6 local-direction displacement components (VALUES: Dx, Dy, Dz, Rx, Ry, Rz).",
+      "properties": {
+        "ITEMS": {
+          "description": "List of specified-displacement definitions for this support node, one per load case / load group combination.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the item within the node's union key. Optional; used to identify an existing record for replacement. If omitted/0, the record is matched by load case and load group.",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Static load case name. Must reference an existing static load case; an invalid name is rejected at runtime.",
+                "type": "string"
+              },
+              "GROUP_NAME": {
+                "description": "Load group name. Optional; empty string means no load group. If non-empty it must reference an existing load group, otherwise the request is rejected.",
+                "type": "string",
+                "default": ""
+              },
+              "VALUES": {
+                "description": "Six local-direction displacement components in order [Dx, Dy, Dz, Rx, Ry, Rz]. The handler requires exactly 6 entries; each entry has a usage flag and a displacement value.",
+                "type": "array",
+                "minItems": 6,
+                "maxItems": 6,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "OPT_FLAG": {
+                      "description": "Usage flag for this displacement component. true = the displacement is applied in this direction.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "DISPLACEMENT": {
+                      "description": "Specified displacement value in the local direction (translation for Dx/Dy/Dz, rotation for Rx/Ry/Rz).",
+                      "type": "number",
+                      "default": 0.0
+                    }
+                  }
+                }
+              }
+            },
+            "required": [
+              "LCNAME"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "10": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "LL",
+            "GROUP_NAME": "",
+            "VALUES": [
+              { "OPT_FLAG": true, "DISPLACEMENT": 1.5 },
+              { "OPT_FLAG": true, "DISPLACEMENT": 1.5 },
+              { "OPT_FLAG": true, "DISPLACEMENT": 1.5 },
+              { "OPT_FLAG": false, "DISPLACEMENT": 0.0 },
+              { "OPT_FLAG": false, "DISPLACEMENT": 0.0 },
+              { "OPT_FLAG": false, "DISPLACEMENT": 0.0 }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

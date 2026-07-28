@@ -1,0 +1,69 @@
+{
+  "_group": "post",
+  "_name": "ANL",
+  "uri": "post/ANL",
+  "methods": "POST",
+  "schema": {
+    "ANL": {
+      "type": "object",
+      "description": "Create Analysis Model File (ANL_REQUEST). Exports an ANL analysis-model file for the given output load set; EXPORT_PATH and LOAD_SET are mandatory, the rest tune the output content.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "properties": {
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "ANL file export path (destination file path for the generated analysis model)."
+            },
+            "LOAD_SET": {
+              "type": "string",
+              "description": "Output load set name."
+            },
+            "SELECT_ALL_LOAD_COMB": {
+              "type": "boolean",
+              "default": true,
+              "description": "Select all load combinations for output. At least one of SELECT_ALL_LOAD_COMB or SELECT_ALL_LOAD_CASE must be true (both false is rejected)."
+            },
+            "SELECT_ALL_LOAD_CASE": {
+              "type": "boolean",
+              "default": false,
+              "description": "Select all load cases for output. At least one of SELECT_ALL_LOAD_COMB or SELECT_ALL_LOAD_CASE must be true (both false is rejected)."
+            },
+            "PLATE_OUTPUT_GCSUL": {
+              "type": "boolean",
+              "default": false,
+              "description": "Output plate results in the Global Coordinate System (GCS)."
+            },
+            "BEAM_OUTPUT_DETAIL_OPT": {
+              "type": "string",
+              "enum": [
+                "2pt",
+                "3pt",
+                "5pt"
+              ],
+              "default": "2pt",
+              "description": "Beam output detail option (number of output points along each beam). Case-insensitive; an invalid name is rejected."
+            }
+          },
+          "required": [
+            "EXPORT_PATH",
+            "LOAD_SET"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "EXPORT_PATH": "C:/temp/model.anl",
+      "LOAD_SET": "LoadSet1",
+      "SELECT_ALL_LOAD_COMB": true,
+      "SELECT_ALL_LOAD_CASE": false,
+      "PLATE_OUTPUT_GCSUL": false,
+      "BEAM_OUTPUT_DETAIL_OPT": "5pt"
+    }
+  }
+}

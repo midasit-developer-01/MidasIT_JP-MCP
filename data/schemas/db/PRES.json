@@ -1,0 +1,147 @@
+{
+  "_group": "db",
+  "_name": "PRES",
+  "uri": "db/PRES",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PRES": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Pressure Load (PRES). A single ITEMS array of pressure-load objects; ELEM_TYPE (PLATE/PLANE/SOLID) and FACE_EDGE_TYPE (FACE/EDGE/PRES) together drive which of FORCES, EDGE_LOADS and EDGE_FACE apply, and DIRECTION drives whether VECTORS/OPT_PROJECTION apply.",
+      "type": "object",
+      "properties": {
+        "ITEMS": {
+          "description": "Array of pressure-load items. One object per pressure load applied to the element identified by the request key.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of this load item within the element key. 0 lets the program assign it.",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Static load case name. Must reference an existing load case, or the request is rejected.",
+                "type": "string"
+              },
+              "GROUP_NAME": {
+                "description": "Load group name. Must reference an existing load group when non-empty; empty string means no group.",
+                "type": "string",
+                "default": ""
+              },
+              "CMD": {
+                "description": "Command type (case-insensitive). \"PRES\" for a pressure load, \"HYDRO\" for a hydrostatic load.",
+                "type": "string",
+                "enum": ["HYDRO", "PRES"],
+                "default": "PRES"
+              },
+              "ELEM_TYPE": {
+                "description": "Element type (case-insensitive). \"PLATE\" (plate/plane-stress/wall), \"PLANE\" (axisymmetric/plane-strain), \"SOLID\". Determines the internal load type: PLATE=1, PLANE=2, SOLID=3.",
+                "type": "string",
+                "enum": ["PLATE", "PLANE", "SOLID"],
+                "default": "PLATE"
+              },
+              "FACE_EDGE_TYPE": {
+                "description": "Pressure application type (case-insensitive). Constrained by ELEM_TYPE: for PLATE use \"FACE\" (face pressure) or \"EDGE\" (edge load); for PLANE only \"EDGE\" is allowed; for SOLID only \"PRES\" is allowed.",
+                "type": "string",
+                "enum": ["FACE", "EDGE", "PRES"]
+              },
+              "DIRECTION": {
+                "description": "Load direction (case-insensitive). \"NORMAL\", \"LX\"/\"LY\"/\"LZ\" (local), \"GX\"/\"GY\"/\"GZ\" (global), or \"VECTOR\" (user vector via VECTORS).",
+                "type": "string",
+                "enum": ["NORMAL", "LX", "LY", "LZ", "GX", "GY", "GZ", "VECTOR"],
+                "default": "NORMAL"
+              },
+              "VECTORS": {
+                "description": "[DIRECTION=VECTOR] Direction vector [X, Y, Z]. Required and must have 3 components when DIRECTION is \"VECTOR\".",
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "OPT_PROJECTION": {
+                "description": "[DIRECTION=GX/GY/GZ] Projection option; only consulted when DIRECTION is a global axis.",
+                "type": "boolean",
+                "default": false
+              },
+              "FORCES": {
+                "description": "[FACE_EDGE_TYPE=FACE or PRES] Pressure force array of 5 values. Uniform load: [PU, 0, 0, 0, 0]; linear load: [0, P1, P2, P3, P4]. Required (5 components) for PLATE+FACE and for SOLID+PRES.",
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "EDGE_LOADS": {
+                "description": "[FACE_EDGE_TYPE=EDGE] Edge load array of 3 values. Uniform load: [EPU, 0, 0]; linear load: [0, EP1, EP2]. Required (3 components) for EDGE loads (PLATE+EDGE or PLANE+EDGE).",
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "PSLT_KEY": {
+                "description": "Pressure slot key (used only in specific builds). Leave 0 unless required.",
+                "type": "integer",
+                "default": 0
+              },
+              "EDGE_FACE": {
+                "description": "Required except for PLATE+FACE. Face or edge index the load is applied to. For SOLID: face #1-#6; for PLATE/PLANE edge loads: edge #1-#4.",
+                "type": "integer"
+              }
+            },
+            "required": ["LCNAME", "FACE_EDGE_TYPE"]
+          }
+        }
+      },
+      "required": ["ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "116": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "Pressure",
+            "GROUP_NAME": "",
+            "CMD": "PRES",
+            "ELEM_TYPE": "PLATE",
+            "FACE_EDGE_TYPE": "FACE",
+            "DIRECTION": "LZ",
+            "FORCES": [-10, 0, 0, 0, 0]
+          },
+          {
+            "ID": 2,
+            "LCNAME": "Pressure",
+            "CMD": "PRES",
+            "ELEM_TYPE": "PLATE",
+            "FACE_EDGE_TYPE": "EDGE",
+            "DIRECTION": "NORMAL",
+            "EDGE_FACE": 1,
+            "EDGE_LOADS": [-5, 0, 0]
+          },
+          {
+            "ID": 3,
+            "LCNAME": "Pressure",
+            "CMD": "PRES",
+            "ELEM_TYPE": "PLANE",
+            "FACE_EDGE_TYPE": "EDGE",
+            "DIRECTION": "NORMAL",
+            "EDGE_FACE": 2,
+            "EDGE_LOADS": [0, -3, -6]
+          },
+          {
+            "ID": 4,
+            "LCNAME": "Pressure",
+            "CMD": "PRES",
+            "ELEM_TYPE": "SOLID",
+            "FACE_EDGE_TYPE": "PRES",
+            "DIRECTION": "GZ",
+            "OPT_PROJECTION": false,
+            "EDGE_FACE": 5,
+            "FORCES": [-12, 0, 0, 0, 0]
+          }
+        ]
+      }
+    }
+  }
+}

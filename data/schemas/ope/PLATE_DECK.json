@@ -1,0 +1,150 @@
+{
+  "_group": "ope",
+  "_name": "PLATE_DECK",
+  "uri": "ope/PLATE_DECK",
+  "methods": "POST",
+  "schema": {
+    "PLATE_DECK": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Plate Deck (PLATE_DECK). Creates plate deck elements from a set of horizontal station lines; the geometry is driven by MATL_KEY, THICKNESS and the HORIZONTAL list of stations, each carrying a set of 3D points optionally linked to girder nodes.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Plate deck creation request.",
+          "properties": {
+            "MATL_KEY": {
+              "type": "integer",
+              "description": "Material key of the plate deck elements."
+            },
+            "THICKNESS": {
+              "type": "number",
+              "description": "Thickness value of the plate deck."
+            },
+            "GROUP_NAME": {
+              "type": "string",
+              "description": "Structure group name assigned to the created plate deck elements.",
+              "default": ""
+            },
+            "HORIZONTAL": {
+              "type": "array",
+              "description": "Plate Deck - Horizontal info. Each entry is a station line defining the deck cross-section positions at that station.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "STATION": {
+                    "type": "number",
+                    "description": "Station value of this horizontal line."
+                  },
+                  "POS": {
+                    "type": "array",
+                    "description": "Ordered list of positions (points) along the deck at this station.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "POINT": {
+                          "type": "object",
+                          "description": "3D coordinate of the position.",
+                          "properties": {
+                            "X": {
+                              "type": "number",
+                              "description": "X coordinate."
+                            },
+                            "Y": {
+                              "type": "number",
+                              "description": "Y coordinate."
+                            },
+                            "Z": {
+                              "type": "number",
+                              "description": "Z coordinate."
+                            }
+                          },
+                          "required": [
+                            "X",
+                            "Y",
+                            "Z"
+                          ]
+                        },
+                        "GIRDER_NODE_KEY": {
+                          "type": "integer",
+                          "description": "Girder node key that this position links to (0 = no link).",
+                          "default": 0
+                        }
+                      },
+                      "required": [
+                        "POINT"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "STATION",
+                  "POS"
+                ]
+              }
+            }
+          },
+          "required": [
+            "MATL_KEY",
+            "THICKNESS",
+            "HORIZONTAL"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "MATL_KEY": 1,
+      "THICKNESS": 0.25,
+      "GROUP_NAME": "Deck",
+      "HORIZONTAL": [
+        {
+          "STATION": 0.0,
+          "POS": [
+            {
+              "POINT": {
+                "X": 0.0,
+                "Y": 0.0,
+                "Z": 0.0
+              },
+              "GIRDER_NODE_KEY": 1
+            },
+            {
+              "POINT": {
+                "X": 5.0,
+                "Y": 0.0,
+                "Z": 0.0
+              },
+              "GIRDER_NODE_KEY": 2
+            }
+          ]
+        },
+        {
+          "STATION": 10.0,
+          "POS": [
+            {
+              "POINT": {
+                "X": 0.0,
+                "Y": 10.0,
+                "Z": 0.0
+              },
+              "GIRDER_NODE_KEY": 3
+            },
+            {
+              "POINT": {
+                "X": 5.0,
+                "Y": 10.0,
+                "Z": 0.0
+              },
+              "GIRDER_NODE_KEY": 4
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

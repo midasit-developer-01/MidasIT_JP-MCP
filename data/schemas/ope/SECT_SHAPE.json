@@ -1,0 +1,22 @@
+{
+  "_group": "ope",
+  "_name": "SECT_SHAPE",
+  "uri": "ope/SECT_SHAPE",
+  "methods": "GET",
+  "schema": {
+    "SECT_SHAPE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Section Shape (SECT_SHAPE). Retrieves the list of available section shape names; the request takes no body and the optional {opt} path parameter (\"short\") selects the short shape-name list instead of the full list.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request has no body (DTO_EMPTY). The shape list is driven entirely by the HTTP path: no path parameter returns the full shape-name list, while the {opt} value \"short\" returns the short shape-name list."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

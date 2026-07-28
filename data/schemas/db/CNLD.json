@@ -1,0 +1,93 @@
+{
+  "_group": "db",
+  "_name": "CNLD",
+  "uri": "db/CNLD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CNLD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Nodal Load (CNLD). The outer key is the node number; ITEMS holds one entry per nodal load applied to that node, each tied to a static load case (LCNAME) and optionally a load group (GROUP_NAME).",
+      "properties": {
+        "ITEMS": {
+          "description": "List of nodal loads applied to the node. Each item is stored as a separate record keyed by (node, ID); a load case (LCNAME) plus optional load group determine which existing record is replaced.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of this nodal load record within the node. Multiple loads can share a node with different IDs. Defaults to 0 (auto-assign / match existing by load case + group).",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Static load case name. Must reference an existing static load case (STLD); otherwise the request fails.",
+                "type": "string"
+              },
+              "GROUP_NAME": {
+                "description": "Load group name. Empty string means no group; if non-empty it must reference an existing load group.",
+                "type": "string",
+                "default": ""
+              },
+              "FX": {
+                "description": "Nodal force in the global X direction.",
+                "type": "number",
+                "default": 0
+              },
+              "FY": {
+                "description": "Nodal force in the global Y direction.",
+                "type": "number",
+                "default": 0
+              },
+              "FZ": {
+                "description": "Nodal force in the global Z direction.",
+                "type": "number",
+                "default": 0
+              },
+              "MX": {
+                "description": "Nodal moment about the global X axis.",
+                "type": "number",
+                "default": 0
+              },
+              "MY": {
+                "description": "Nodal moment about the global Y axis.",
+                "type": "number",
+                "default": 0
+              },
+              "MZ": {
+                "description": "Nodal moment about the global Z axis.",
+                "type": "number",
+                "default": 0
+              }
+            },
+            "required": [
+              "LCNAME"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "8": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "D",
+            "GROUP_NAME": "",
+            "FX": 10,
+            "FY": 20,
+            "FZ": 30,
+            "MX": -40,
+            "MY": -50,
+            "MZ": -60
+          }
+        ]
+      }
+    }
+  }
+}

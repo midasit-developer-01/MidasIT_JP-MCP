@@ -1,0 +1,29 @@
+{
+  "_group": "db",
+  "_name": "RISS",
+  "uri": "db/RISS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "RISS": {
+      "type": "object",
+      "description": "Reduce Infill Strut Stiffness (RISS). Boundary attribute keyed by element key that flags whether the infill strut stiffness is reduced for that element.",
+      "properties": {
+        "REDUCE_STIFFNESS": {
+          "type": "boolean",
+          "description": "Reduce Infill Strut Stiffness. true reduces the infill strut stiffness for this element key; false keeps the full stiffness."
+        }
+      },
+      "required": [
+        "REDUCE_STIFFNESS"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "REDUCE_STIFFNESS": true
+      }
+    }
+  }
+}

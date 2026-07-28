@@ -1,0 +1,20 @@
+{
+  "_group": "ope",
+  "_name": "MXTINFO",
+  "uri": "ope/MXTINFO",
+  "methods": "GET",
+  "schema": {
+    "MXTINFO": {
+      "type": "object",
+      "description": "Material Type Info (MXTINFO). The request takes no body; it retrieves the available material-type code/description information from the current model.",
+      "properties": {
+        "Argument": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

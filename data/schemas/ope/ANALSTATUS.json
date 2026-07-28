@@ -1,0 +1,21 @@
+{
+  "_group": "ope",
+  "_name": "ANALSTATUS",
+  "uri": "ope/ANALSTATUS",
+  "methods": "POST",
+  "schema": {
+    "ANALSTATUS": {
+      "type": "object",
+      "description": "Analysis Status (ANALSTATUS). Reports the current analysis progress of the active model; the request carries no fields (DTO_EMPTY) and the response is driven by the solver's execution state and per-case progress.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "No request body; DTO_EMPTY takes no fields."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

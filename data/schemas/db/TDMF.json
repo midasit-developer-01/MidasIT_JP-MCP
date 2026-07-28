@@ -1,0 +1,102 @@
+{
+  "_group": "db",
+  "_name": "TDMF",
+  "uri": "db/TDMF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "TDMF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Time Dependent Material Function (TDMF). FTYPE selects the function kind; when FTYPE is CREEP the CTYPE and ELAST fields become applicable, and vDAY holds the (day, value) function points.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Material function name.",
+          "type": "string"
+        },
+        "FTYPE": {
+          "description": "Material function type (case-insensitive). CREEP: creep function; SHRINK: shrinkage strain function; RELAX: relaxation function.",
+          "type": "string",
+          "enum": ["CREEP", "SHRINK", "RELAX"]
+        },
+        "SCALE": {
+          "description": "Scale factor applied to the function values.",
+          "type": "number"
+        },
+        "CTYPE": {
+          "description": "[FTYPE=CREEP] Creep type (case-insensitive). SC: specific creep; CF: creep function; CC: creep coefficient. Required by the handler when FTYPE is CREEP.",
+          "type": "string",
+          "enum": ["SC", "CF", "CC"]
+        },
+        "ELAST": {
+          "description": "[FTYPE=CREEP] Elastic modulus value. Required by the handler when FTYPE is CREEP.",
+          "type": "number"
+        },
+        "DESC": {
+          "description": "Optional description text.",
+          "type": "string",
+          "default": ""
+        },
+        "RELAXATION": {
+          "description": "Relaxation time code (integer).",
+          "type": "integer"
+        },
+        "vDAY": {
+          "description": "Array of function data points, each an object with DAY (time) and VALUE.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "DAY": {
+                "description": "Time (day).",
+                "type": "number"
+              },
+              "VALUE": {
+                "description": "Function value at the given time.",
+                "type": "number"
+              }
+            },
+            "required": ["DAY", "VALUE"]
+          }
+        }
+      },
+      "required": ["NAME", "FTYPE", "SCALE", "RELAXATION", "vDAY"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Creep1",
+        "FTYPE": "CREEP",
+        "SCALE": 1.0,
+        "CTYPE": "SC",
+        "ELAST": 10.0,
+        "DESC": "",
+        "RELAXATION": 1,
+        "vDAY": [
+          { "DAY": 0.0, "VALUE": 0.0 },
+          { "DAY": 1.0, "VALUE": 20.0 }
+        ]
+      },
+      "2": {
+        "NAME": "Shrink1",
+        "FTYPE": "SHRINK",
+        "SCALE": 1.0,
+        "RELAXATION": 0,
+        "vDAY": [
+          { "DAY": 0.0, "VALUE": 0.0 },
+          { "DAY": 28.0, "VALUE": 0.0003 }
+        ]
+      },
+      "3": {
+        "NAME": "Relax1",
+        "FTYPE": "RELAX",
+        "SCALE": 1.0,
+        "RELAXATION": 1,
+        "vDAY": [
+          { "DAY": 0.0, "VALUE": 0.0 },
+          { "DAY": 100.0, "VALUE": 0.05 }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "_group": "design",
+  "_name": "LENG",
+  "uri": "design/SRC/AIK-SRC2K/LENG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LENG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Effective/Unbraced Length (LENG). All fields describe member unbraced lengths and calculation options; every field is optional.",
+      "properties": {
+        "LY": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced Length Ly (for in-plane buckling about the strong axis)."
+        },
+        "LZ": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced Length Lz (for out-of-plane buckling about the weak axis)."
+        },
+        "LB": {
+          "type": "number",
+          "default": 0,
+          "description": "Laterally Unbraced Length (Lb) for lateral-torsional buckling."
+        },
+        "bNOTUSE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Do not consider the laterally unbraced length."
+        },
+        "bAUTOCALC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate the unbraced lengths automatically by the design code."
+        },
+        "LT": {
+          "type": "number",
+          "default": 0,
+          "description": "Torsional Unbraced Length (Lt)."
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LY": 3.5,
+        "LZ": 3.5,
+        "LB": 3.5,
+        "bNOTUSE": false,
+        "bAUTOCALC": false,
+        "LT": 3.5
+      }
+    }
+  }
+}

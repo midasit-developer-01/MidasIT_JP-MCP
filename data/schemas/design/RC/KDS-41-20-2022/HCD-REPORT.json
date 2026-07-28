@@ -1,0 +1,66 @@
+{
+  "_group": "design",
+  "_name": "HCD-REPORT",
+  "uri": "design/RC/KDS-41-20-2022/HCD-REPORT",
+  "methods": "POST",
+  "schema": {
+    "HCD-REPORT": {
+      "type": "object",
+      "description": "Haunched Beam RC Design Report (HCD-REPORT). Fields are driven by the report output settings (export destination, report mode) and the optional element selection.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "properties": {
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Export Path (e.g. C:\\MIDAS\\Report\\)."
+            },
+            "OUTPUT_NAME": {
+              "type": "string",
+              "description": "Output File Name."
+            },
+            "CURRENT_MODE": {
+              "type": "string",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"],
+              "description": "Report Mode. Case-insensitive match; serialized wire strings."
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "Element Numbers to include in the report.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "description": "Specify Each ID - Element No."
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            }
+          },
+          "required": ["EXPORT_PATH", "OUTPUT_NAME", "CURRENT_MODE"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "EXPORT_PATH": "C:\\MIDAS\\Report\\",
+      "OUTPUT_NAME": "HCD_Report",
+      "CURRENT_MODE": "Detail",
+      "ELEMS": {
+        "KEYS": [1, 2, 3],
+        "TO": "1-10",
+        "STRUCTURE_GROUP_NAME": "Group1"
+      }
+    }
+  }
+}

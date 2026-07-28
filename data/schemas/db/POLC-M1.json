@@ -1,0 +1,203 @@
+{
+  "_group": "db",
+  "_name": "POLC-M1",
+  "uri": "db/POLC-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "POLC-M1": {
+      "type": "object",
+      "description": "Pushover Load Case (POLC-M1). Field applicability is driven by INCRE_METHOD (LOAD vs DISP, selecting which CTRL_OPT sub-fields apply) and by LOADPATTERNTYPE (LOAD/ACC/MODE/NOR_MODE, selecting which fields of each LOADPATTERN item apply).",
+      "required": [
+        "LCNAME",
+        "INCRE_STEP",
+        "NLTYPE",
+        "bUSEINITIAL",
+        "INCRE_METHOD",
+        "CTRL_OPT",
+        "LOADPATTERNTYPE",
+        "LOADPATTERN"
+      ],
+      "properties": {
+        "LCNAME": {
+          "type": "string",
+          "description": "Pushover load case name. Must be unique across pushover load cases."
+        },
+        "DESC": {
+          "type": "string",
+          "default": "",
+          "description": "Optional description text."
+        },
+        "INCRE_STEP": {
+          "type": "integer",
+          "description": "Number of increment steps (nstep)."
+        },
+        "NLTYPE": {
+          "type": "string",
+          "enum": ["NONE", "PDELTA", "LARGE"],
+          "description": "Geometric nonlinearity type. NONE = none, PDELTA = P-Delta, LARGE = large displacements. Case-insensitive."
+        },
+        "bUSEINITIAL": {
+          "type": "boolean",
+          "description": "Use initial load. When true, bREACOUTPUT must be provided; when false, bREACOUTPUT is ignored (stored as false)."
+        },
+        "bREACOUTPUT": {
+          "type": "boolean",
+          "description": "[bUSEINITIAL=true] Cumulative reaction by initial load. Required when bUSEINITIAL is true; not used when bUSEINITIAL is false."
+        },
+        "INCRE_METHOD": {
+          "type": "string",
+          "enum": ["LOAD", "DISP"],
+          "description": "Increment method. LOAD = load control, DISP = displacement control. Determines which CTRL_OPT sub-fields are required. Case-insensitive."
+        },
+        "CTRL_OPT": {
+          "type": "object",
+          "description": "Control option. Which sub-fields apply depends on INCRE_METHOD (LOAD vs DISP) and their sub-options.",
+          "properties": {
+            "STEPCTRLOPTION": {
+              "type": "string",
+              "enum": ["AUTO", "EQUAL", "INC_FUNC"],
+              "description": "[INCRE_METHOD=LOAD] Stepping control option, required for LOAD method. AUTO = auto-stepping, EQUAL = equal step, INC_FUNC = incremental control function. Case-insensitive."
+            },
+            "INCFUNC_NAME": {
+              "type": "string",
+              "description": "[STEPCTRLOPTION=INC_FUNC] Incremental control function name (must reference an existing function). Required only when STEPCTRLOPTION is INC_FUNC."
+            },
+            "STIFF_RATIO": {
+              "type": "number",
+              "description": "[INCRE_METHOD=LOAD] Current stiffness ratio (Cs), required for LOAD method."
+            },
+            "DISPCTRLOPTION": {
+              "type": "string",
+              "enum": ["GLOBAL", "NODE"],
+              "description": "[INCRE_METHOD=DISP] Displacement control option, required for DISP method. GLOBAL = global max displacement, NODE = master node control. Case-insensitive."
+            },
+            "GLOBAL_MAX_DISP": {
+              "type": "number",
+              "description": "[DISPCTRLOPTION=GLOBAL] Global maximum translational displacement, required when DISPCTRLOPTION is GLOBAL."
+            },
+            "MASTERNODE": {
+              "type": "integer",
+              "description": "[DISPCTRLOPTION=NODE] Master node ID, required when DISPCTRLOPTION is NODE."
+            },
+            "MASTERDIRECTION": {
+              "type": "string",
+              "enum": ["DX", "DY", "DZ"],
+              "description": "[DISPCTRLOPTION=NODE] Master node direction, required when DISPCTRLOPTION is NODE. Case-insensitive."
+            },
+            "MASTERMAXDISP": {
+              "type": "number",
+              "description": "[DISPCTRLOPTION=NODE] Master node maximum displacement, required when DISPCTRLOPTION is NODE."
+            }
+          }
+        },
+        "LOADPATTERNTYPE": {
+          "type": "string",
+          "enum": ["LOAD", "ACC", "MODE", "NOR_MODE"],
+          "description": "Load pattern type. LOAD = static load cases, ACC = uniform acceleration, MODE = mode shape, NOR_MODE = normalized mode shape. Determines which per-item fields of LOADPATTERN apply. Case-insensitive."
+        },
+        "LOADPATTERN": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Load pattern data list. Must contain at least one item. Which item field applies depends on LOADPATTERNTYPE.",
+          "items": {
+            "type": "object",
+            "required": ["SF"],
+            "properties": {
+              "LCNAME": {
+                "type": "string",
+                "description": "[LOADPATTERNTYPE=LOAD] Static load case name, required for LOAD pattern."
+              },
+              "DIR": {
+                "type": "string",
+                "enum": ["DX", "DY", "DZ"],
+                "description": "[LOADPATTERNTYPE=ACC] Acceleration direction, required for ACC pattern. Case-insensitive."
+              },
+              "MODE": {
+                "type": "integer",
+                "description": "[LOADPATTERNTYPE=MODE|NOR_MODE] Mode number, required for MODE and NOR_MODE patterns."
+              },
+              "SF": {
+                "type": "number",
+                "description": "Scale factor applied to this load pattern item."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "Pushover_X",
+        "DESC": "Load control, static load case pattern",
+        "INCRE_STEP": 10,
+        "NLTYPE": "PDELTA",
+        "bUSEINITIAL": true,
+        "bREACOUTPUT": true,
+        "INCRE_METHOD": "LOAD",
+        "CTRL_OPT": {
+          "STEPCTRLOPTION": "AUTO",
+          "STIFF_RATIO": 0.05
+        },
+        "LOADPATTERNTYPE": "LOAD",
+        "LOADPATTERN": [
+          { "LCNAME": "DL", "SF": 1.0 },
+          { "LCNAME": "LL", "SF": 0.5 }
+        ]
+      },
+      "2": {
+        "LCNAME": "Pushover_IncFunc",
+        "DESC": "Load control with incremental control function",
+        "INCRE_STEP": 20,
+        "NLTYPE": "NONE",
+        "bUSEINITIAL": false,
+        "INCRE_METHOD": "LOAD",
+        "CTRL_OPT": {
+          "STEPCTRLOPTION": "INC_FUNC",
+          "INCFUNC_NAME": "IncFunc1",
+          "STIFF_RATIO": 0.1
+        },
+        "LOADPATTERNTYPE": "ACC",
+        "LOADPATTERN": [
+          { "DIR": "DX", "SF": 1.0 }
+        ]
+      },
+      "3": {
+        "LCNAME": "Pushover_DispGlobal",
+        "DESC": "Displacement control, global max displacement",
+        "INCRE_STEP": 15,
+        "NLTYPE": "LARGE",
+        "bUSEINITIAL": false,
+        "INCRE_METHOD": "DISP",
+        "CTRL_OPT": {
+          "DISPCTRLOPTION": "GLOBAL",
+          "GLOBAL_MAX_DISP": 0.1
+        },
+        "LOADPATTERNTYPE": "MODE",
+        "LOADPATTERN": [
+          { "MODE": 1, "SF": 1.0 }
+        ]
+      },
+      "4": {
+        "LCNAME": "Pushover_DispNode",
+        "DESC": "Displacement control, master node",
+        "INCRE_STEP": 25,
+        "NLTYPE": "PDELTA",
+        "bUSEINITIAL": true,
+        "bREACOUTPUT": false,
+        "INCRE_METHOD": "DISP",
+        "CTRL_OPT": {
+          "DISPCTRLOPTION": "NODE",
+          "MASTERNODE": 101,
+          "MASTERDIRECTION": "DX",
+          "MASTERMAXDISP": 0.2
+        },
+        "LOADPATTERNTYPE": "NOR_MODE",
+        "LOADPATTERN": [
+          { "MODE": 2, "SF": 1.0 }
+        ]
+      }
+    }
+  }
+}

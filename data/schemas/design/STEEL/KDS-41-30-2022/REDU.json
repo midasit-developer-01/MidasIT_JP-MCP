@@ -1,0 +1,58 @@
+{
+  "_group": "design",
+  "_name": "REDU",
+  "uri": "design/STEEL/KDS-41-30-2022/REDU",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "REDU": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Force Reduction Factor (REDU). Fields drive the reduction factor applied to member design forces and which force components it is applied to.",
+      "properties": {
+        "FACTOR": {
+          "type": "number",
+          "description": "Reduction factor applied to the selected design force components. Must be between 0.3 and 1.0 (inclusive); values outside this range are rejected.",
+          "default": 1.0,
+          "minimum": 0.3,
+          "maximum": 1.0
+        },
+        "COMPONENTS": {
+          "type": "object",
+          "description": "Applied force components: which internal forces the reduction factor is applied to.",
+          "properties": {
+            "AXIAL": {
+              "type": "boolean",
+              "description": "Apply the reduction factor to axial force.",
+              "default": false
+            },
+            "MOMENT": {
+              "type": "boolean",
+              "description": "Apply the reduction factor to moments.",
+              "default": false
+            },
+            "SHEAR": {
+              "type": "boolean",
+              "description": "Apply the reduction factor to shear forces.",
+              "default": false
+            }
+          }
+        }
+      },
+      "required": [
+        "COMPONENTS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FACTOR": 0.8,
+        "COMPONENTS": {
+          "AXIAL": true,
+          "MOMENT": true,
+          "SHEAR": false
+        }
+      }
+    }
+  }
+}

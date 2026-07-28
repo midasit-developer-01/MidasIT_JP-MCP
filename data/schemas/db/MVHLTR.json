@@ -1,0 +1,95 @@
+{
+  "_group": "db",
+  "_name": "MVHLTR",
+  "uri": "db/MVHLTR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVHLTR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Vehicle Load - Transverse (MVHLTR). Defines a transverse moving vehicular load; the median-strip option controls whether the left-lane fields apply.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Vehicular load name."
+        },
+        "P": {
+          "type": "number",
+          "description": "P# concentrated wheel/axle load."
+        },
+        "W": {
+          "type": "number",
+          "description": "W distributed load."
+        },
+        "LW": {
+          "type": "number",
+          "description": "Long W, longitudinal distributed load."
+        },
+        "NUM": {
+          "type": "integer",
+          "description": "Num, number of loads."
+        },
+        "DW": {
+          "type": "number",
+          "description": "Dw transverse dimension/spacing."
+        },
+        "DV": {
+          "type": "number",
+          "description": "Dv transverse dimension/spacing."
+        },
+        "DE": {
+          "type": "number",
+          "default": 0,
+          "description": "De edge distance."
+        },
+        "OPT_MEDIAN_STRIP": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use median strip. When true, the median-strip fields (LEFT_LANES, ML, MW) are applied; otherwise the left-lane count is forced to 0."
+        },
+        "ML": {
+          "type": "number",
+          "description": "[OPT_MEDIAN_STRIP=true] Ml, median-strip left dimension (only applied when the median strip is used)."
+        },
+        "MW": {
+          "type": "number",
+          "description": "[OPT_MEDIAN_STRIP=true] Mw, median-strip width (only applied when the median strip is used)."
+        },
+        "LEFT_LANES": {
+          "type": "integer",
+          "description": "[OPT_MEDIAN_STRIP=true] Left lane count (only applied when the median strip is used; otherwise stored as 0)."
+        }
+      },
+      "required": [
+        "NAME",
+        "P",
+        "W",
+        "LW",
+        "NUM",
+        "DW",
+        "DV",
+        "ML",
+        "MW",
+        "LEFT_LANES"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Transverse Vehicle 1",
+        "P": 96.0,
+        "W": 12.5,
+        "LW": 9.3,
+        "NUM": 2,
+        "DW": 1.8,
+        "DV": 0.6,
+        "DE": 0.3,
+        "OPT_MEDIAN_STRIP": true,
+        "ML": 3.0,
+        "MW": 1.2,
+        "LEFT_LANES": 2
+      }
+    }
+  }
+}

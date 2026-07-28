@@ -1,0 +1,20 @@
+{
+  "_group": "doc",
+  "_name": "SAVE",
+  "uri": "doc/SAVE",
+  "methods": "POST",
+  "schema": {
+    "SAVE": {
+      "type": "object",
+      "description": "Save Document (SAVE). Saves the currently opened project to its existing file; the request takes no meaningful body (DTO_EMPTY) and fails if no project is open.",
+      "properties": {
+        "Argument": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

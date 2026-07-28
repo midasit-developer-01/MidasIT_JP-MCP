@@ -1,0 +1,105 @@
+{
+  "_group": "rating",
+  "_name": "STRPSSM",
+  "uri": "rating/PSC/AASHTO-LRFR19/STRPSSM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "STRPSSM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Additional Stress Points Data (STRPSSM). Defines additional stress point coordinates at the i-end and j-end of a section, used by the Section Manager stress-point data.",
+      "properties": {
+        "OPT_SAME_J": {
+          "type": "boolean",
+          "default": true,
+          "description": "Same Additional Stress Points Data at i & j-end. When true, the j-end uses the same additional stress points as the i-end."
+        },
+        "POINT_SIZE_1": {
+          "type": "integer",
+          "description": "Point Size 1. Number of additional stress points for data set 1 (i-end); should match the length of POINT1."
+        },
+        "POINT_SIZE_2": {
+          "type": "integer",
+          "description": "Point Size 2. Number of additional stress points for data set 2 (j-end); should match the length of POINT2."
+        },
+        "POINT1": {
+          "type": "array",
+          "description": "Point Data 1. Additional stress points for data set 1 (i-end).",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Y": {
+                "type": "number",
+                "description": "PY. Y-coordinate of the additional stress point."
+              },
+              "Z": {
+                "type": "number",
+                "description": "PZ. Z-coordinate of the additional stress point."
+              }
+            },
+            "required": [
+              "Y",
+              "Z"
+            ]
+          }
+        },
+        "POINT2": {
+          "type": "array",
+          "description": "Point Data 2. Additional stress points for data set 2 (j-end).",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Y": {
+                "type": "number",
+                "description": "PY. Y-coordinate of the additional stress point."
+              },
+              "Z": {
+                "type": "number",
+                "description": "PZ. Z-coordinate of the additional stress point."
+              }
+            },
+            "required": [
+              "Y",
+              "Z"
+            ]
+          }
+        }
+      },
+      "required": [
+        "POINT_SIZE_1",
+        "POINT_SIZE_2",
+        "POINT1",
+        "POINT2"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "OPT_SAME_J": true,
+        "POINT_SIZE_1": 2,
+        "POINT_SIZE_2": 2,
+        "POINT1": [
+          {
+            "Y": 0.15,
+            "Z": 0.6
+          },
+          {
+            "Y": -0.15,
+            "Z": 0.6
+          }
+        ],
+        "POINT2": [
+          {
+            "Y": 0.15,
+            "Z": 0.6
+          },
+          {
+            "Y": -0.15,
+            "Z": 0.6
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "_group": "db",
+  "_name": "OFFS",
+  "uri": "db/OFFS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "OFFS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Beam End Offset (OFFS). Keyed by element number; ITEMS holds one or more offset definitions whose TYPE (GLOBAL or ELEMENT) selects which distance fields apply.",
+      "properties": {
+        "ITEMS": {
+          "description": "List of beam end offset definitions to assign to the keyed element.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "A single beam end offset. TYPE selects the reference frame: GLOBAL uses RGDXi/RGDXj (GCS vector components); ELEMENT ignores RGDXi/RGDXj. RGDYi/RGDZi/RGDYj/RGDZj apply for both TYPEs.",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the offset within the element key. 0 lets the program assign/derive it.",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Name of the boundary group this offset belongs to. Empty means no group; a non-empty name must already exist.",
+                "type": "string",
+                "default": ""
+              },
+              "TYPE": {
+                "description": "Reference coordinate system of the offset (case-insensitive). GLOBAL = GCS (nOffsetType 1), ELEMENT = element local axes (nOffsetType 2).",
+                "type": "string",
+                "enum": ["GLOBAL", "ELEMENT"]
+              },
+              "RGDXi": {
+                "description": "[TYPE=GLOBAL] End offset distance at the i-end (N1) along GCS X. Not used for TYPE=ELEMENT.",
+                "type": "number",
+                "default": 0
+              },
+              "RGDYi": {
+                "description": "End offset distance at the i-end (N1): GLOBAL -> GCS Y; ELEMENT -> local Y (Mzi). Applies for both TYPEs.",
+                "type": "number",
+                "default": 0
+              },
+              "RGDZi": {
+                "description": "End offset distance at the i-end (N1): GLOBAL -> GCS Z; ELEMENT -> local Z (Myi). Applies for both TYPEs.",
+                "type": "number",
+                "default": 0
+              },
+              "RGDXj": {
+                "description": "[TYPE=GLOBAL] End offset distance at the j-end (N2) along GCS X. Not used for TYPE=ELEMENT.",
+                "type": "number",
+                "default": 0
+              },
+              "RGDYj": {
+                "description": "End offset distance at the j-end (N2): GLOBAL -> GCS Y; ELEMENT -> local Y (Mzj). Applies for both TYPEs.",
+                "type": "number",
+                "default": 0
+              },
+              "RGDZj": {
+                "description": "End offset distance at the j-end (N2): GLOBAL -> GCS Z; ELEMENT -> local Z (Myj). Applies for both TYPEs.",
+                "type": "number",
+                "default": 0
+              }
+            },
+            "required": ["TYPE"]
+          }
+        }
+      },
+      "required": ["ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "TYPE": "GLOBAL",
+            "RGDXi": 0.11,
+            "RGDYi": 0.12,
+            "RGDZi": 0.13,
+            "RGDXj": 0.21,
+            "RGDYj": 0.22,
+            "RGDZj": 0.23
+          }
+        ]
+      },
+      "2": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "TYPE": "ELEMENT",
+            "RGDYi": 0.05,
+            "RGDZi": 0.06,
+            "RGDYj": 0.07,
+            "RGDZj": 0.08
+          }
+        ]
+      }
+    }
+  }
+}

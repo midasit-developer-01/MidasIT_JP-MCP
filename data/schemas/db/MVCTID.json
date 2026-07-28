@@ -1,0 +1,180 @@
+{
+  "_group": "db",
+  "_name": "MVCTID",
+  "uri": "db/MVCTID",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVCTID": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Analysis Control Data - India (MVCTID). Controls how moving-load (IRC/India) analysis results are generated: influence-point generation, plate/frame result positions and stress checks, per-result calculation filters (reactions/displacements/forces/links) optionally restricted to a group, railway bridge tracks, and longitudinal load dispersion.",
+      "properties": {
+        "iIGP": {
+          "description": "Influence generating points mode. 0 = generate by number of points per line element (uses UNUMT); non-zero = generate by fixed distance between points (uses DIST).",
+          "type": "integer",
+          "default": 0
+        },
+        "UNUMT": {
+          "description": "[iIGP=0] Number of influence generating points per line element.",
+          "type": "integer",
+          "default": 0
+        },
+        "DIST": {
+          "description": "[iIGP!=0] Distance between influence generating points.",
+          "type": "number",
+          "default": 0
+        },
+        "PLATE": {
+          "description": "Analysis result position for plate elements. Case-insensitive.",
+          "type": "string",
+          "enum": [
+            "CENTER",
+            "NODAL"
+          ]
+        },
+        "bSTRCALC": {
+          "description": "Calculate plate element stresses.",
+          "type": "boolean",
+          "default": false
+        },
+        "FRAME": {
+          "description": "Analysis result type for frame (beam) elements. Case-insensitive.",
+          "type": "string",
+          "enum": [
+            "NORMAL",
+            "AXIAL"
+          ]
+        },
+        "bCSTRCALC": {
+          "description": "Calculate frame element combined stresses.",
+          "type": "boolean",
+          "default": false
+        },
+        "bREAC": {
+          "description": "Calculate reactions.",
+          "type": "boolean",
+          "default": false
+        },
+        "bRGP": {
+          "description": "Reaction filter scope: false = All, true = restrict to the group named in RGP.",
+          "type": "boolean",
+          "default": false
+        },
+        "RGP": {
+          "description": "[bREAC=true and bRGP=true] Structure group name to restrict reaction calculation to; must be an existing group. Empty string otherwise.",
+          "type": "string"
+        },
+        "bDISP": {
+          "description": "Calculate displacements.",
+          "type": "boolean",
+          "default": false
+        },
+        "bDGP": {
+          "description": "Displacement filter scope: false = All, true = restrict to the group named in DGP.",
+          "type": "boolean",
+          "default": false
+        },
+        "DGP": {
+          "description": "[bDISP=true and bDGP=true] Structure group name to restrict displacement calculation to; must be an existing group. Empty string otherwise.",
+          "type": "string"
+        },
+        "bFM": {
+          "description": "Calculate forces / moments.",
+          "type": "boolean",
+          "default": false
+        },
+        "bFGP": {
+          "description": "Force/moment filter scope: false = All, true = restrict to the group named in FGP.",
+          "type": "boolean",
+          "default": false
+        },
+        "FGP": {
+          "description": "[bFM=true and bFGP=true] Structure group name to restrict force/moment calculation to; must be an existing group. Empty string otherwise.",
+          "type": "string"
+        },
+        "bL": {
+          "description": "Calculate elastic / general link results.",
+          "type": "boolean",
+          "default": false
+        },
+        "bLG": {
+          "description": "Link filter scope: false = All, true = restrict to the boundary group named in LGP.",
+          "type": "boolean",
+          "default": false
+        },
+        "LGP": {
+          "description": "[bL=true and bLG=true] Boundary group name to restrict link calculation to; must be an existing boundary group. Empty string otherwise.",
+          "type": "string"
+        },
+        "BRIDGE": {
+          "description": "Bridge type used for impact / CDA (dynamic amplification) calculation.",
+          "type": "integer",
+          "default": 0
+        },
+        "TRACKS": {
+          "description": "Number of tracks for railway bridge information.",
+          "type": "integer",
+          "default": 0
+        },
+        "WIDTHTYPE": {
+          "description": "Sleeper width type for longitudinal load dispersion.",
+          "type": "integer",
+          "default": 0
+        },
+        "WIDTH": {
+          "description": "Sleeper width value for longitudinal load dispersion.",
+          "type": "number",
+          "default": 0
+        },
+        "DEPTH": {
+          "description": "Depth of fill (d) for longitudinal load dispersion.",
+          "type": "number",
+          "default": 0
+        },
+        "VHMAX": {
+          "description": "Maximum number of successive vehicles.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "PLATE",
+        "FRAME",
+        "RGP",
+        "DGP",
+        "FGP",
+        "LGP",
+        "VHMAX"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "iIGP": 0,
+        "UNUMT": 4,
+        "PLATE": "CENTER",
+        "bSTRCALC": true,
+        "FRAME": "NORMAL",
+        "bCSTRCALC": false,
+        "bREAC": true,
+        "bRGP": false,
+        "RGP": "",
+        "bDISP": true,
+        "bDGP": true,
+        "DGP": "DeckGroup",
+        "bFM": true,
+        "bFGP": false,
+        "FGP": "",
+        "bL": false,
+        "bLG": false,
+        "LGP": "",
+        "BRIDGE": 0,
+        "TRACKS": 2,
+        "WIDTHTYPE": 0,
+        "WIDTH": 0.25,
+        "DEPTH": 0.3,
+        "VHMAX": 3
+      }
+    }
+  }
+}

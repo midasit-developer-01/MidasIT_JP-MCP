@@ -1,0 +1,57 @@
+{
+  "_group": "db",
+  "_name": "GSPR",
+  "uri": "db/GSPR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "GSPR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "General Spring (GSPR). Assigns previously defined general spring types (TYPE_NAME) to a node key; each entry in ITEMS links the node to a general spring type and an optional boundary group.",
+      "properties": {
+        "ITEMS": {
+          "description": "List of general spring assignments for this node. Each element references a defined general spring type by name and, optionally, a boundary group name.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number identifying this assignment within the node key. When 0 (default) the key is resolved/created automatically from the node and group.",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Name of an existing boundary group to associate. Empty string (default) means no group. Must match a defined boundary group name; otherwise the request is rejected.",
+                "type": "string",
+                "default": ""
+              },
+              "TYPE_NAME": {
+                "description": "Name of a previously defined general spring type (GSTP). Must match an existing general spring type name; otherwise the request is rejected.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "TYPE_NAME"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "14": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "Service",
+            "TYPE_NAME": "GS_Stiff"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "_group": "db",
+  "_name": "BCCT",
+  "uri": "db/BCCT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "BCCT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Boundary Change Assignment to Load Cases/Analysis (BCCT). A single-instance table: bool flags select which boundary categories are affected, vBOUNDARY defines named boundary group combinations, and vLOADANAL assigns each load case / analysis type to one of those combinations (or leaves it Unchanged).",
+      "type": "object",
+      "properties": {
+        "bSPT": {
+          "description": "Include Support in the boundary change set.",
+          "type": "boolean",
+          "default": false
+        },
+        "bSPR": {
+          "description": "Include Point Spring Support in the boundary change set.",
+          "type": "boolean",
+          "default": false
+        },
+        "bGSPR": {
+          "description": "Include General Spring Support in the boundary change set.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCGLINK": {
+          "description": "Include Change General Link Property in the boundary change set.",
+          "type": "boolean",
+          "default": false
+        },
+        "bSSSF": {
+          "description": "Include Section Stiffness Scale Factor in the boundary change set.",
+          "type": "boolean",
+          "default": false
+        },
+        "bPSSF": {
+          "description": "Include Plate Stiffness Scale Factor in the boundary change set.",
+          "type": "boolean",
+          "default": false
+        },
+        "bRLS": {
+          "description": "Include Beam End Release in the boundary change set.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCDOF": {
+          "description": "Constrain DOF associated with specified displacements / settlements by boundary group combinations.",
+          "type": "boolean",
+          "default": false
+        },
+        "vBOUNDARY": {
+          "description": "Boundary group combination list. Each entry defines one named combination and the boundary groups it contains; combination names must be unique.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "BGCNAME": {
+                "description": "Boundary group combination name (referenced by vLOADANAL[].BGCNAME).",
+                "type": "string"
+              },
+              "vBG": {
+                "description": "Boundary group names that make up this combination; each name must already exist as a boundary group.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "BGCNAME",
+              "vBG"
+            ]
+          }
+        },
+        "vLOADANAL": {
+          "description": "Load cases & analysis assignment list. Each entry maps one load case / analysis TYPE to a boundary group combination (BGCNAME) or leaves it as \"Unchanged\". Missing analysis types are auto-filled as Unchanged by the handler.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "TYPE": {
+                "description": "Load case / analysis type (case-insensitive). ST = static load case (uses LCNAME); ULAT = unlisted analysis types; THRSEV = time history / response spectrum / eigenvalue; THNS = time history nonlinear static; PO = pushover; MV = moving load; SM = settlements.",
+                "type": "string",
+                "enum": [
+                  "ST",
+                  "ULAT",
+                  "THRSEV",
+                  "THNS",
+                  "PO",
+                  "MV",
+                  "SM"
+                ]
+              },
+              "BGCNAME": {
+                "description": "Boundary group combination name to assign; must match a vBOUNDARY[].BGCNAME, or \"Unchanged\" to leave the boundary condition unchanged for this type.",
+                "type": "string",
+                "default": ""
+              },
+              "LCNAME": {
+                "description": "[TYPE=ST] Static load case name to assign; must reference an existing static load case. Ignored for non-ST types.",
+                "type": "string",
+                "default": ""
+              }
+            },
+            "required": [
+              "TYPE"
+            ]
+          }
+        }
+      },
+      "required": [
+        "vBOUNDARY"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bSPT": true,
+        "bSPR": true,
+        "bGSPR": false,
+        "bCGLINK": false,
+        "bSSSF": true,
+        "bPSSF": false,
+        "bRLS": true,
+        "bCDOF": false,
+        "vBOUNDARY": [
+          {
+            "BGCNAME": "BGL1",
+            "vBG": [
+              "BG1",
+              "BG2"
+            ]
+          }
+        ],
+        "vLOADANAL": [
+          {
+            "TYPE": "ST",
+            "BGCNAME": "BGL1",
+            "LCNAME": "LC1"
+          },
+          {
+            "TYPE": "ULAT",
+            "BGCNAME": "BGL1"
+          },
+          {
+            "TYPE": "THRSEV",
+            "BGCNAME": "Unchanged"
+          },
+          {
+            "TYPE": "THNS",
+            "BGCNAME": "Unchanged"
+          },
+          {
+            "TYPE": "PO",
+            "BGCNAME": "Unchanged"
+          },
+          {
+            "TYPE": "MV",
+            "BGCNAME": "BGL1"
+          },
+          {
+            "TYPE": "SM",
+            "BGCNAME": "Unchanged"
+          }
+        ]
+      }
+    }
+  }
+}

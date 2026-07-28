@@ -1,0 +1,1634 @@
+{
+  "_group": "db",
+  "_name": "FIMP",
+  "uri": "db/FIMP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "FIMP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Inelastic Material Property (FIMP). MATL_TYPE (CONC or STEEL) and HYS_MODEL together select which child object under CONC or STEEL carries the model parameters.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Material property name.",
+          "type": "string"
+        },
+        "MATL_TYPE": {
+          "description": "Material type. Case-insensitive.",
+          "type": "string",
+          "enum": [
+            "CONC",
+            "STEEL"
+          ]
+        },
+        "HYS_MODEL": {
+          "description": "Hysteresis model. Case-insensitive. Concrete: KPM, JCSSM, JRSM, NHCM, TCM, GBCHINA, MANDER, JRSMH24, GBCHINA2010. Steel: MPM, BM, UBSM, TSM, PM, JRSM_S, GBCHINA2010_S, ENRGDSPT.",
+          "type": "string",
+          "enum": [
+            "KPM",
+            "JCSSM",
+            "JRSM",
+            "NHCM",
+            "TCM",
+            "GBCHINA",
+            "MANDER",
+            "JRSMH24",
+            "GBCHINA2010",
+            "MPM",
+            "BM",
+            "UBSM",
+            "TSM",
+            "PM",
+            "JRSM_S",
+            "GBCHINA2010_S",
+            "ENRGDSPT"
+          ]
+        },
+        "CONC": {
+          "description": "[MATL_TYPE=CONC] Concrete hysteresis model data. Exactly one child object matching HYS_MODEL is used.",
+          "type": "object",
+          "properties": {
+            "KENPAR": {
+              "description": "[HYS_MODEL=KPM] Kent & Park concrete model.",
+              "type": "object",
+              "properties": {
+                "FC": {
+                  "description": "Compressive strength fc.",
+                  "type": "number"
+                },
+                "EC0": {
+                  "description": "Strain at peak stress ec0.",
+                  "type": "number"
+                },
+                "K": {
+                  "description": "Confinement factor K.",
+                  "type": "number"
+                },
+                "ECU": {
+                  "description": "Ultimate strain ecu.",
+                  "type": "number"
+                },
+                "PARTIAL_FACT": {
+                  "description": "Partial safety factor.",
+                  "type": "number"
+                },
+                "EC1_METHOD": {
+                  "description": "Descending-branch input selection. 0: use ec1; 1: use Z.",
+                  "type": "integer"
+                },
+                "EC1": {
+                  "description": "[EC1_METHOD=0] Strain ec1.",
+                  "type": "number"
+                },
+                "Z": {
+                  "description": "[EC1_METHOD=1] Slope parameter Z.",
+                  "type": "number"
+                },
+                "STRENGTH_AFTER": {
+                  "description": "Strength after critical strain (ecu) property code.",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "FC",
+                "EC0",
+                "K",
+                "ECU",
+                "PARTIAL_FACT",
+                "EC1_METHOD",
+                "STRENGTH_AFTER"
+              ]
+            },
+            "JPSTND": {
+              "description": "[HYS_MODEL=JCSSM] Japanese Concrete Standard Specification model.",
+              "type": "object",
+              "properties": {
+                "FC": {
+                  "description": "Compressive strength fc.",
+                  "type": "number"
+                },
+                "EPEAK": {
+                  "description": "Strain at peak stress epeak.",
+                  "type": "number"
+                },
+                "PARTIAL_FACT": {
+                  "description": "Partial safety factor.",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "FC",
+                "EPEAK",
+                "PARTIAL_FACT"
+              ]
+            },
+            "JP_H14": {
+              "description": "[HYS_MODEL=JRSM] Japan Roadway Specification (H.14) concrete model.",
+              "type": "object",
+              "properties": {
+                "EARTHQUAKE_TYPE": {
+                  "description": "Earthquake type code.",
+                  "type": "integer"
+                },
+                "EC": {
+                  "description": "Elastic modulus of concrete Ec.",
+                  "type": "number"
+                },
+                "SIGMA_CK": {
+                  "description": "Design compressive strength sigma_ck.",
+                  "type": "number"
+                },
+                "SIGMA_SY": {
+                  "description": "Yield strength of confinement steel sigma_sy.",
+                  "type": "number"
+                },
+                "ALPHA": {
+                  "description": "Coefficient alpha.",
+                  "type": "number"
+                },
+                "SIGMA_BT": {
+                  "description": "Tensile strength sigma_bt.",
+                  "type": "number"
+                },
+                "AH": {
+                  "description": "Area of confinement steel Ah.",
+                  "type": "number"
+                },
+                "S": {
+                  "description": "Spacing s.",
+                  "type": "number"
+                },
+                "D": {
+                  "description": "Effective width d.",
+                  "type": "number"
+                },
+                "BETA": {
+                  "description": "Coefficient beta.",
+                  "type": "number"
+                },
+                "STRENGTH_LIMIT": {
+                  "description": "Strength after critical strain property code.",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "EARTHQUAKE_TYPE",
+                "EC",
+                "SIGMA_CK",
+                "SIGMA_SY",
+                "ALPHA",
+                "SIGMA_BT",
+                "AH",
+                "S",
+                "D",
+                "BETA",
+                "STRENGTH_LIMIT"
+              ]
+            },
+            "NAGOYA": {
+              "description": "[HYS_MODEL=NHCM] Nagoya Highway Corporation concrete model.",
+              "type": "object",
+              "properties": {
+                "SIGMA_CK": {
+                  "description": "Design compressive strength sigma_ck.",
+                  "type": "number"
+                },
+                "EPSILON_CC": {
+                  "description": "Strain for confined concrete epsilon_cc.",
+                  "type": "number"
+                },
+                "K": {
+                  "description": "Confinement factor K.",
+                  "type": "number"
+                },
+                "EPSILON_CU": {
+                  "description": "Ultimate strain for confined concrete epsilon_cu.",
+                  "type": "number"
+                },
+                "EPSILON_T0": {
+                  "description": "Tensile strain epsilon_t0.",
+                  "type": "number"
+                },
+                "EPSILON_TU": {
+                  "description": "Tensile ultimate strain epsilon_tu.",
+                  "type": "number"
+                },
+                "EPSILON_T1": {
+                  "description": "Tensile strain epsilon_t1.",
+                  "type": "number"
+                },
+                "STRENGTH_AFTER": {
+                  "description": "Strength after critical strain property code.",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "SIGMA_CK",
+                "EPSILON_CC",
+                "K",
+                "EPSILON_CU",
+                "EPSILON_T0",
+                "EPSILON_TU",
+                "EPSILON_T1",
+                "STRENGTH_AFTER"
+              ]
+            },
+            "TRILIN": {
+              "description": "[HYS_MODEL=TCM] Trilinear concrete model. INPUT_METHOD selects whether EPSILON_Y_ITEMS or K_ITEMS is used.",
+              "type": "object",
+              "properties": {
+                "INPUT_METHOD": {
+                  "description": "Input method. 0: sigma-epsilon (use EPSILON_Y_ITEMS); 1: sigma-alpha (use K_ITEMS).",
+                  "type": "integer"
+                },
+                "SIGMA_Y_ITEMS": {
+                  "description": "Yield stress values (first 3 used).",
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3
+                },
+                "EPSILON_T_ITEMS": {
+                  "description": "Tensile strain values epsilon_t (first 3 used).",
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3
+                },
+                "EPSILON_Y_ITEMS": {
+                  "description": "[INPUT_METHOD=0] Strain values epsilon_y (first 3 used).",
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3
+                },
+                "K_ITEMS": {
+                  "description": "[INPUT_METHOD=1] Stiffness ratio values K (first 3 used).",
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3
+                },
+                "EPSILON_CU": {
+                  "description": "Ultimate strain epsilon_cu.",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "INPUT_METHOD",
+                "SIGMA_Y_ITEMS",
+                "EPSILON_T_ITEMS",
+                "EPSILON_CU"
+              ]
+            },
+            "CHGB02": {
+              "description": "[HYS_MODEL=GBCHINA] China Concrete Code (GB50010-02) model.",
+              "type": "object",
+              "properties": {
+                "FCK": {
+                  "description": "Compressive strength fc*.",
+                  "type": "number"
+                },
+                "EC": {
+                  "description": "Strain at peak compressive stress epsilon_c.",
+                  "type": "number"
+                },
+                "FTK": {
+                  "description": "Tensile strength ft*.",
+                  "type": "number"
+                },
+                "ET": {
+                  "description": "Strain at peak tensile stress epsilon_t.",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "FCK",
+                "EC",
+                "FTK",
+                "ET"
+              ]
+            },
+            "MANDER": {
+              "description": "[HYS_MODEL=MANDER] Mander concrete model.",
+              "type": "object",
+              "properties": {
+                "CONC_TYPE": {
+                  "description": "Concrete type code.",
+                  "type": "integer"
+                },
+                "KE": {
+                  "description": "Confinement effectiveness data (ke).",
+                  "type": "object",
+                  "properties": {
+                    "SC_REBAR_TYPE": {
+                      "description": "Section & confinement rebar type. 0: Rectangular; 1: Circular-Hoop; 2: User Defined; 3: Circular-Spiral.",
+                      "type": "integer"
+                    },
+                    "OPT_ACC": {
+                      "description": "Use user-input Area of Effective Concrete Core (Acc).",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "ACC": {
+                      "description": "Area of effective concrete core (Acc).",
+                      "type": "number"
+                    },
+                    "OPT_AE": {
+                      "description": "Use user-input Total Area of Effectively Confined Core Concrete (Ae).",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "AE": {
+                      "description": "Total area of effectively confined core concrete (Ae).",
+                      "type": "number"
+                    },
+                    "OPT_KE": {
+                      "description": "Use user-input Ae/Acc ratio (ke).",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "KE": {
+                      "description": "Ae/Acc = Ae/(Ac(1-rho_cc)) (ke).",
+                      "type": "number"
+                    },
+                    "OPT_FL": {
+                      "description": "Use user-input effective lateral confining stress (circular).",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "FL": {
+                      "description": "Effective lateral confining stress on the concrete (circular) f'l.",
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "SC_REBAR_TYPE",
+                    "ACC",
+                    "AE",
+                    "KE",
+                    "FL"
+                  ]
+                },
+                "CCS": {
+                  "description": "Confined concrete strength & strain.",
+                  "type": "object",
+                  "properties": {
+                    "OPT_FCC": {
+                      "description": "Use user-input strength of confined concrete (fcc).",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "FCC": {
+                      "description": "Strength of confined concrete (fcc).",
+                      "type": "number"
+                    },
+                    "OPT_EPSILON_CC": {
+                      "description": "Use user-input strain for confined concrete (ecc).",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "EPSILON_CC": {
+                      "description": "Strain for confined concrete corresponding to fcc (ecc).",
+                      "type": "number"
+                    },
+                    "OPT_EPSILON_CY": {
+                      "description": "Use user-input yield strain for confined concrete.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "EPSILON_CY": {
+                      "description": "Yield strain for confined concrete.",
+                      "type": "number"
+                    },
+                    "OPT_ENABLE_EPSILON_CU": {
+                      "description": "Enable ultimate strain for concrete group.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "USE_RHO_S": {
+                      "description": "Use user-input ratio of the volume of transverse reinforcement (rho_s).",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "RHO_S": {
+                      "description": "Ratio of the volume of transverse confining steel (rho_s).",
+                      "type": "number"
+                    },
+                    "IDX_STEEL_MATERIAL": {
+                      "description": "Steel material key/index used for ultimate strain of confined concrete.",
+                      "type": "integer"
+                    },
+                    "USE_EPSILON_CU": {
+                      "description": "Use user-input ultimate strain for confined concrete (eCU).",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "EPSILON_CU": {
+                      "description": "Ultimate strain for confined concrete (eCU).",
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "FCC",
+                    "EPSILON_CC",
+                    "EPSILON_CY",
+                    "RHO_S",
+                    "IDX_STEEL_MATERIAL",
+                    "EPSILON_CU"
+                  ]
+                },
+                "UCD": {
+                  "description": "Unconfined concrete data.",
+                  "type": "object",
+                  "properties": {
+                    "OPT_FCO": {
+                      "description": "Use user-input unconfined concrete strength.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "FCO": {
+                      "description": "Unconfined concrete strength (fco').",
+                      "type": "number"
+                    },
+                    "OPT_EPSILON_CO": {
+                      "description": "Use user-input unconfined concrete strain.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "EPSILON_CO": {
+                      "description": "Unconfined concrete strain (eco).",
+                      "type": "number"
+                    },
+                    "OPT_EPSILON_CY": {
+                      "description": "Use user-input yield strain for unconfined concrete.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "EPSILON_CY": {
+                      "description": "Yield strain for unconfined concrete.",
+                      "type": "number"
+                    },
+                    "OPT_EPSILON_SP": {
+                      "description": "Use user-input spalling strain for unconfined concrete.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "EPSILON_SP": {
+                      "description": "Spalling strain for unconfined concrete (esp).",
+                      "type": "number"
+                    },
+                    "IDX_EC": {
+                      "description": "Elastic modulus of concrete type. 0: Mander et al.; 1: User Input.",
+                      "type": "integer"
+                    },
+                    "EC": {
+                      "description": "Elastic modulus of concrete (Ec).",
+                      "type": "number"
+                    },
+                    "IDX_FT": {
+                      "description": "Tensile strength of concrete type. 0: Mander et al.; 1: User Input; 2: Neglect Tensile Strength.",
+                      "type": "integer"
+                    },
+                    "FT": {
+                      "description": "Tensile strength of concrete (ft').",
+                      "type": "number"
+                    },
+                    "EPSILON_T": {
+                      "description": "Tensile strain of concrete (et).",
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "FCO",
+                    "EPSILON_CO",
+                    "EPSILON_CY",
+                    "EPSILON_SP",
+                    "IDX_EC",
+                    "EC",
+                    "IDX_FT",
+                    "FT",
+                    "EPSILON_T"
+                  ]
+                },
+                "FIELD_2": {
+                  "description": "Section geometry and reinforcement detailing data for the Mander model.",
+                  "type": "object",
+                  "properties": {
+                    "nRectSectAutoorUser": {
+                      "description": "Rectangular section data input type (0: Auto; 1: User Input).",
+                      "type": "integer"
+                    },
+                    "nCircSectAutoorUser": {
+                      "description": "Circular section data input type (0: Auto; 1: User Input).",
+                      "type": "integer"
+                    },
+                    "dXdirectionbc": {
+                      "description": "Concrete core dimension to center lines of perimeter hoop in y-dir (bc).",
+                      "type": "number"
+                    },
+                    "dXdirectionwxi": {
+                      "description": "i-th clear transverse spacing between adjacent longitudinal rebars in y-dir (w'yi).",
+                      "type": "number"
+                    },
+                    "nXdirectionn": {
+                      "description": "Number of transverse rebar in y-dir (n).",
+                      "type": "integer"
+                    },
+                    "dYdirectiondc": {
+                      "description": "Concrete core dimension to center lines of perimeter hoop in z-dir (dc).",
+                      "type": "number"
+                    },
+                    "dYdirectionwyj": {
+                      "description": "j-th clear transverse spacing between adjacent longitudinal rebars in z-dir (w'zj).",
+                      "type": "number"
+                    },
+                    "nYdirectionm": {
+                      "description": "Number of transverse rebar in z-dir (m).",
+                      "type": "integer"
+                    },
+                    "dds": {
+                      "description": "Diameter of spiral.",
+                      "type": "number"
+                    },
+                    "nLongiRebarType": {
+                      "description": "Longitudinal rebar type. 0: Rebar Number; 1: Total Area of Rebars.",
+                      "type": "integer"
+                    },
+                    "nLongiRebarNum": {
+                      "description": "Number of longitudinal rebar.",
+                      "type": "integer"
+                    },
+                    "strLongiRebarSize": {
+                      "description": "Rebar size of longitudinal rebar.",
+                      "type": "string"
+                    },
+                    "dLongiRebarArea": {
+                      "description": "Total area of longitudinal rebars.",
+                      "type": "number"
+                    },
+                    "bLongiRebarRatio": {
+                      "description": "Use user-input longitudinal reinforcement ratio.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "dLongiRebarRatio": {
+                      "description": "Longitudinal reinforcement ratio (rho_cc).",
+                      "type": "number"
+                    },
+                    "nGeneralRebarType": {
+                      "description": "General confinement rebar type. 0: Rebar Size; 1: Rebar Area.",
+                      "type": "integer"
+                    },
+                    "strGeneralRebarSize": {
+                      "description": "Rebar size of confinement rebar.",
+                      "type": "string"
+                    },
+                    "dGeneralRebarArea": {
+                      "description": "Confinement rebar area.",
+                      "type": "number"
+                    },
+                    "dHoopsSpaceS1": {
+                      "description": "Hoops space (s).",
+                      "type": "number"
+                    },
+                    "dClearHoopsSpaceS2": {
+                      "description": "Clear hoops space (s').",
+                      "type": "number"
+                    },
+                    "nGeneralRebarNumX": {
+                      "description": "Confinement rebar number y-dir (ny).",
+                      "type": "integer"
+                    },
+                    "nGeneralRebarNumY": {
+                      "description": "Confinement rebar number z-dir (nz).",
+                      "type": "integer"
+                    },
+                    "dGeneralAsx": {
+                      "description": "Total area of confinement rebars in y-dir (Asy).",
+                      "type": "number"
+                    },
+                    "dGeneralAsy": {
+                      "description": "Total area of confinement rebars in z-dir (Asz).",
+                      "type": "number"
+                    },
+                    "bRectStrengthfyh": {
+                      "description": "Use user-input confinement rebar yield strength (rectangular).",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "dRectStrengthfyh": {
+                      "description": "Confinement rebar yield strength (rectangular) fyh.",
+                      "type": "number"
+                    },
+                    "bGeneralAsx": {
+                      "description": "Use user-input total area of confinement rebars in y-dir.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "bGeneralAsy": {
+                      "description": "Use user-input total area of confinement rebars in z-dir.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "bRectRatiopx": {
+                      "description": "Use user-input transverse steel volume ratio in y-dir.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "dRectRatiopx": {
+                      "description": "Ratio of transverse confining steel volume to confined core volume in y-dir (rho_y).",
+                      "type": "number"
+                    },
+                    "bRectRatiopy": {
+                      "description": "Use user-input transverse steel volume ratio in z-dir.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "dRectRatiopy": {
+                      "description": "Ratio of transverse confining steel volume to confined core volume in z-dir (rho_z).",
+                      "type": "number"
+                    },
+                    "bRectStressflx": {
+                      "description": "Use user-input effective lateral confining stress in y-dir.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "dRectStressflx": {
+                      "description": "Effective lateral confining stress in y-dir (f'ly).",
+                      "type": "number"
+                    },
+                    "bRectStressfly": {
+                      "description": "Use user-input effective lateral confining stress in z-dir.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "dRectStressfly": {
+                      "description": "Effective lateral confining stress in z-dir (f'lz).",
+                      "type": "number"
+                    },
+                    "bCircularStrengthfyh": {
+                      "description": "Use user-input confinement rebar yield strength (circular).",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "dCircularStrengthfyh": {
+                      "description": "Confinement rebar yield strength (circular) fyh.",
+                      "type": "number"
+                    },
+                    "bGeneralRebarArea": {
+                      "description": "Use user-input area of confinement rebar.",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "bCircularRatiops": {
+                      "description": "Use user-input transverse steel volume ratio (circular).",
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "dCircularRatiops": {
+                      "description": "Ratio of volume of transverse confining steel (circular) rho_s.",
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "nRectSectAutoorUser",
+                    "nCircSectAutoorUser",
+                    "dXdirectionbc",
+                    "dXdirectionwxi",
+                    "nXdirectionn",
+                    "dYdirectiondc",
+                    "dYdirectionwyj",
+                    "nYdirectionm",
+                    "dds",
+                    "nLongiRebarType",
+                    "nLongiRebarNum",
+                    "strLongiRebarSize",
+                    "dLongiRebarArea",
+                    "dLongiRebarRatio",
+                    "nGeneralRebarType",
+                    "strGeneralRebarSize",
+                    "dGeneralRebarArea",
+                    "dHoopsSpaceS1",
+                    "dClearHoopsSpaceS2",
+                    "nGeneralRebarNumX",
+                    "nGeneralRebarNumY",
+                    "dGeneralAsx",
+                    "dGeneralAsy",
+                    "dRectStrengthfyh",
+                    "dRectRatiopx",
+                    "dRectRatiopy",
+                    "dRectStressflx",
+                    "dRectStressfly",
+                    "dCircularStrengthfyh",
+                    "dCircularRatiops"
+                  ]
+                }
+              },
+              "required": [
+                "CONC_TYPE",
+                "KE",
+                "CCS",
+                "UCD",
+                "FIELD_2"
+              ]
+            },
+            "JP_H24": {
+              "description": "[HYS_MODEL=JRSMH24] Japan Roadway Specification (H.24) concrete model.",
+              "type": "object",
+              "properties": {
+                "EC": {
+                  "description": "Elastic modulus of concrete Ec.",
+                  "type": "number"
+                },
+                "SIGMA_CK": {
+                  "description": "Design compressive strength sigma_ck.",
+                  "type": "number"
+                },
+                "SIGMA_SY": {
+                  "description": "Yield strength of confinement steel sigma_sy.",
+                  "type": "number"
+                },
+                "ALPHA": {
+                  "description": "Coefficient alpha.",
+                  "type": "number"
+                },
+                "SIGMA_BT": {
+                  "description": "Tensile strength sigma_bt.",
+                  "type": "number"
+                },
+                "AH": {
+                  "description": "Area of confinement steel Ah.",
+                  "type": "number"
+                },
+                "S": {
+                  "description": "Spacing s.",
+                  "type": "number"
+                },
+                "D": {
+                  "description": "Effective width d.",
+                  "type": "number"
+                },
+                "BETA": {
+                  "description": "Coefficient beta.",
+                  "type": "number"
+                },
+                "STRENGTH_LIMIT": {
+                  "description": "Strength after critical strain property code.",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "EC",
+                "SIGMA_CK",
+                "SIGMA_SY",
+                "ALPHA",
+                "SIGMA_BT",
+                "AH",
+                "S",
+                "D",
+                "BETA",
+                "STRENGTH_LIMIT"
+              ]
+            },
+            "CHGB10": {
+              "description": "[HYS_MODEL=GBCHINA2010] China Concrete Code (GB50010-10) model.",
+              "type": "object",
+              "properties": {
+                "FCR": {
+                  "description": "Representative compressive strength fc.r.",
+                  "type": "number"
+                },
+                "FTR": {
+                  "description": "Representative tensile strength ft.r.",
+                  "type": "number"
+                },
+                "ECR": {
+                  "description": "Strain at peak compressive stress epsilon_c.r.",
+                  "type": "number"
+                },
+                "ETR": {
+                  "description": "Strain at peak tensile stress epsilon_t.r.",
+                  "type": "number"
+                },
+                "EC": {
+                  "description": "Elastic modulus of concrete Ec.",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "FCR",
+                "FTR",
+                "ECR",
+                "ETR",
+                "EC"
+              ]
+            }
+          }
+        },
+        "STEEL": {
+          "description": "[MATL_TYPE=STEEL] Steel hysteresis model data. Exactly one child object matching HYS_MODEL is used.",
+          "type": "object",
+          "properties": {
+            "MENEGO": {
+              "description": "[HYS_MODEL=MPM] Menegotto-Pinto steel model.",
+              "type": "object",
+              "properties": {
+                "FY": {
+                  "description": "Yield strength fy.",
+                  "type": "number"
+                },
+                "E": {
+                  "description": "Elastic modulus E.",
+                  "type": "number"
+                },
+                "B": {
+                  "description": "Strain-hardening ratio b.",
+                  "type": "number"
+                },
+                "PARTIAL_FACT": {
+                  "description": "Partial safety factor.",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "FY",
+                "E",
+                "B",
+                "PARTIAL_FACT"
+              ]
+            },
+            "BILINE": {
+              "description": "[HYS_MODEL=BM] Bilinear steel model.",
+              "type": "object",
+              "properties": {
+                "FY": {
+                  "description": "Yield strength fY.",
+                  "type": "number"
+                },
+                "E1": {
+                  "description": "Initial elastic modulus E1.",
+                  "type": "number"
+                },
+                "E2E1": {
+                  "description": "Ratio of second slope to first slope E2/E1.",
+                  "type": "number"
+                },
+                "PARTIAL_FACT": {
+                  "description": "Partial safety factor.",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "FY",
+                "E1",
+                "E2E1",
+                "PARTIAL_FACT"
+              ]
+            },
+            "GENBIL": {
+              "description": "[HYS_MODEL=UBSM] Asymmetrical (unsymmetrical) bilinear steel model.",
+              "type": "object",
+              "properties": {
+                "SIGMA_Y": {
+                  "description": "Tensile yield stress sigma_Y.",
+                  "type": "number"
+                },
+                "SIGMA_CY": {
+                  "description": "Compressive yield stress sigma_CY.",
+                  "type": "number"
+                },
+                "EPSILON_1": {
+                  "description": "Strain epsilon_1.",
+                  "type": "number"
+                },
+                "EPSILON_2": {
+                  "description": "Strain epsilon_2.",
+                  "type": "number"
+                },
+                "E_ITEMS": {
+                  "description": "Elastic modulus values E (first 5 used).",
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 5
+                }
+              },
+              "required": [
+                "SIGMA_Y",
+                "SIGMA_CY",
+                "EPSILON_1",
+                "EPSILON_2",
+                "E_ITEMS"
+              ]
+            },
+            "TRILIN": {
+              "description": "[HYS_MODEL=TSM] Trilinear steel model. INPUT_METHOD selects whether EPSILON_Y_ITEMS or K_ITEMS is used.",
+              "type": "object",
+              "properties": {
+                "INPUT_METHOD": {
+                  "description": "Input method. 0: sigma-epsilon (use EPSILON_Y_ITEMS); 1: sigma-alpha (use K_ITEMS).",
+                  "type": "integer"
+                },
+                "SIGMA_Y_ITEMS": {
+                  "description": "Yield stress values sigma_y (first 6 used).",
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 6
+                },
+                "EPSILON_Y_ITEMS": {
+                  "description": "[INPUT_METHOD=0] Strain values epsilon_y (first 3 used).",
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3
+                },
+                "K_ITEMS": {
+                  "description": "[INPUT_METHOD=1] Stiffness ratio values K (first 3 used).",
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3
+                }
+              },
+              "required": [
+                "INPUT_METHOD",
+                "SIGMA_Y_ITEMS"
+              ]
+            },
+            "PARKMD": {
+              "description": "[HYS_MODEL=PM] Park steel model.",
+              "type": "object",
+              "properties": {
+                "FY": {
+                  "description": "Yield strength fy.",
+                  "type": "number"
+                },
+                "FU": {
+                  "description": "Ultimate strength fu.",
+                  "type": "number"
+                },
+                "ES": {
+                  "description": "Elastic modulus Es.",
+                  "type": "number"
+                },
+                "EPSILON_SH": {
+                  "description": "Strain at onset of strain hardening epsilon_sh.",
+                  "type": "number"
+                },
+                "EPSILON_SU": {
+                  "description": "Ultimate strain epsilon_su.",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "FY",
+                "FU",
+                "ES",
+                "EPSILON_SH",
+                "EPSILON_SU"
+              ]
+            },
+            "JPROAD": {
+              "description": "[HYS_MODEL=JRSM_S] Japan Roadway Specification steel model.",
+              "type": "object",
+              "properties": {
+                "SIGMA_Y": {
+                  "description": "Yield stress sigma_y.",
+                  "type": "number"
+                },
+                "ES": {
+                  "description": "Elastic modulus Es.",
+                  "type": "number"
+                },
+                "EPSILON_ST": {
+                  "description": "Strain at onset of strain hardening epsilon_st.",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "SIGMA_Y",
+                "ES",
+                "EPSILON_ST"
+              ]
+            },
+            "CHGB10": {
+              "description": "[HYS_MODEL=GBCHINA2010_S] China steel code (GB50010-10) model.",
+              "type": "object",
+              "properties": {
+                "FYR": {
+                  "description": "Representative yield strength fyr.",
+                  "type": "number"
+                },
+                "FSTR": {
+                  "description": "Representative ultimate strength fstr.",
+                  "type": "number"
+                },
+                "EPSILON_C": {
+                  "description": "Strain epsilon_c.",
+                  "type": "number"
+                },
+                "EPSILON_T": {
+                  "description": "Strain epsilon_t.",
+                  "type": "number"
+                },
+                "EUY": {
+                  "description": "Strain Euy.",
+                  "type": "number"
+                },
+                "EU": {
+                  "description": "Ultimate strain Eu.",
+                  "type": "number"
+                },
+                "K": {
+                  "description": "Coefficient K.",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "FYR",
+                "FSTR",
+                "EPSILON_C",
+                "EPSILON_T",
+                "EUY",
+                "EU",
+                "K"
+              ]
+            },
+            "ENRGDS": {
+              "description": "[HYS_MODEL=ENRGDSPT] Energy-based (FEMA) steel model.",
+              "type": "object",
+              "properties": {
+                "SHAPE_OF_CURVE": {
+                  "description": "Shape of curve. 0: General; 1: Perfect Plastic.",
+                  "type": "integer"
+                },
+                "OPT_STRENGTH_LOSS": {
+                  "description": "Enable strength loss.",
+                  "type": "boolean",
+                  "default": false
+                },
+                "OPT_USE_STRENGTH_LOSS": {
+                  "description": "Use strength loss.",
+                  "type": "boolean",
+                  "default": false
+                },
+                "OPT_SYMMETRIC": {
+                  "description": "Curve is symmetric.",
+                  "type": "boolean",
+                  "default": false
+                },
+                "INPUT_TYPE": {
+                  "description": "Input type code.",
+                  "type": "integer"
+                },
+                "FMR_ITEMS": {
+                  "description": "Force-moment ratio items (2 rows used: displacement and force).",
+                  "type": "array",
+                  "items": {
+                    "description": "Force-moment ratio item (row of 9 values).",
+                    "type": "object",
+                    "properties": {
+                      "ITEMS": {
+                        "description": "Force-moment ratio values (9 values used).",
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "minItems": 9
+                      }
+                    },
+                    "required": [
+                      "ITEMS"
+                    ]
+                  },
+                  "minItems": 2
+                },
+                "YIELD_STRENGTHS": {
+                  "description": "Yield strengths [+, -] (2 values used).",
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2
+                },
+                "OPT_USE_YIELD_STRAIN": {
+                  "description": "Yield strain is user-defined.",
+                  "type": "boolean",
+                  "default": false
+                },
+                "YIELD_STRAINS": {
+                  "description": "Yield strain items [+, -] (2 values used).",
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2
+                },
+                "ELASTIC_MODULUS": {
+                  "description": "Elastic modulus.",
+                  "type": "number"
+                },
+                "OPT_USE_TOTAL_STR_LOSS_AT_E": {
+                  "description": "Use total strength loss at point E, -E.",
+                  "type": "boolean",
+                  "default": false
+                },
+                "OPT_TOTAL_STR_LOSS_AT_E": {
+                  "description": "Enable total strength loss at point E, -E.",
+                  "type": "boolean",
+                  "default": false
+                },
+                "OPT_CYCLIC_DEGRATION": {
+                  "description": "Use cyclic degradation.",
+                  "type": "boolean",
+                  "default": false
+                },
+                "A_B_P": {
+                  "description": "A - B (cyclic degradation, +).",
+                  "type": "number"
+                },
+                "C_P": {
+                  "description": "C (cyclic degradation, +).",
+                  "type": "number"
+                },
+                "D_P": {
+                  "description": "D (cyclic degradation, +).",
+                  "type": "number"
+                },
+                "E_P": {
+                  "description": "E (cyclic degradation, +).",
+                  "type": "number"
+                },
+                "A_B_M": {
+                  "description": "A - B (cyclic degradation, -).",
+                  "type": "number"
+                },
+                "C_M": {
+                  "description": "C (cyclic degradation, -).",
+                  "type": "number"
+                },
+                "D_M": {
+                  "description": "D (cyclic degradation, -).",
+                  "type": "number"
+                },
+                "E_M": {
+                  "description": "E (cyclic degradation, -).",
+                  "type": "number"
+                },
+                "OPT_UNLOADING_STIFF_FACTOR": {
+                  "description": "Use unloading stiffness factor.",
+                  "type": "boolean",
+                  "default": false
+                },
+                "UNLOADING_STIFF_FACTOR": {
+                  "description": "Unloading stiffness factor.",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "SHAPE_OF_CURVE",
+                "OPT_STRENGTH_LOSS",
+                "OPT_USE_STRENGTH_LOSS",
+                "OPT_SYMMETRIC",
+                "INPUT_TYPE",
+                "FMR_ITEMS",
+                "YIELD_STRENGTHS",
+                "OPT_USE_YIELD_STRAIN",
+                "YIELD_STRAINS",
+                "ELASTIC_MODULUS",
+                "OPT_USE_TOTAL_STR_LOSS_AT_E",
+                "OPT_TOTAL_STR_LOSS_AT_E",
+                "OPT_CYCLIC_DEGRATION",
+                "A_B_P",
+                "C_P",
+                "D_P",
+                "E_P",
+                "A_B_M",
+                "C_M",
+                "D_M",
+                "E_M",
+                "OPT_UNLOADING_STIFF_FACTOR",
+                "UNLOADING_STIFF_FACTOR"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "NAME",
+        "MATL_TYPE",
+        "HYS_MODEL"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Conc_KentPark",
+        "MATL_TYPE": "CONC",
+        "HYS_MODEL": "KPM",
+        "CONC": {
+          "KENPAR": {
+            "FC": 30000.0,
+            "EC0": 0.002,
+            "K": 1.0,
+            "ECU": 0.004,
+            "PARTIAL_FACT": 1.0,
+            "EC1_METHOD": 0,
+            "EC1": 0.0025,
+            "STRENGTH_AFTER": 1
+          }
+        }
+      },
+      "2": {
+        "NAME": "Conc_JPStandard",
+        "MATL_TYPE": "CONC",
+        "HYS_MODEL": "JCSSM",
+        "CONC": {
+          "JPSTND": {
+            "FC": 24000.0,
+            "EPEAK": 0.002,
+            "PARTIAL_FACT": 1.3
+          }
+        }
+      },
+      "3": {
+        "NAME": "Conc_JPRoadH14",
+        "MATL_TYPE": "CONC",
+        "HYS_MODEL": "JRSM",
+        "CONC": {
+          "JP_H14": {
+            "EARTHQUAKE_TYPE": 1,
+            "EC": 25000000.0,
+            "SIGMA_CK": 24000.0,
+            "SIGMA_SY": 345000.0,
+            "ALPHA": 1.0,
+            "SIGMA_BT": 0.0,
+            "AH": 0.0002,
+            "S": 0.1,
+            "D": 0.5,
+            "BETA": 1.0,
+            "STRENGTH_LIMIT": 0
+          }
+        }
+      },
+      "4": {
+        "NAME": "Conc_Nagoya",
+        "MATL_TYPE": "CONC",
+        "HYS_MODEL": "NHCM",
+        "CONC": {
+          "NAGOYA": {
+            "SIGMA_CK": 24000.0,
+            "EPSILON_CC": 0.002,
+            "K": 1.2,
+            "EPSILON_CU": 0.01,
+            "EPSILON_T0": 0.0001,
+            "EPSILON_TU": 0.001,
+            "EPSILON_T1": 0.0005,
+            "STRENGTH_AFTER": 0
+          }
+        }
+      },
+      "5": {
+        "NAME": "Conc_Trilinear",
+        "MATL_TYPE": "CONC",
+        "HYS_MODEL": "TCM",
+        "CONC": {
+          "TRILIN": {
+            "INPUT_METHOD": 0,
+            "SIGMA_Y_ITEMS": [
+              10000.0,
+              20000.0,
+              24000.0
+            ],
+            "EPSILON_T_ITEMS": [
+              0.0005,
+              0.001,
+              0.002
+            ],
+            "EPSILON_Y_ITEMS": [
+              0.0005,
+              0.001,
+              0.0015
+            ],
+            "EPSILON_CU": 0.004
+          }
+        }
+      },
+      "6": {
+        "NAME": "Conc_GB2002",
+        "MATL_TYPE": "CONC",
+        "HYS_MODEL": "GBCHINA",
+        "CONC": {
+          "CHGB02": {
+            "FCK": 24000.0,
+            "EC": 0.002,
+            "FTK": 2000.0,
+            "ET": 0.0001
+          }
+        }
+      },
+      "7": {
+        "NAME": "Conc_Mander",
+        "MATL_TYPE": "CONC",
+        "HYS_MODEL": "MANDER",
+        "CONC": {
+          "MANDER": {
+            "CONC_TYPE": 0,
+            "KE": {
+              "SC_REBAR_TYPE": 0,
+              "OPT_ACC": false,
+              "ACC": 0.1,
+              "OPT_AE": false,
+              "AE": 0.09,
+              "OPT_KE": false,
+              "KE": 0.9,
+              "OPT_FL": false,
+              "FL": 2000.0
+            },
+            "CCS": {
+              "OPT_FCC": false,
+              "FCC": 30000.0,
+              "OPT_EPSILON_CC": false,
+              "EPSILON_CC": 0.002,
+              "OPT_EPSILON_CY": false,
+              "EPSILON_CY": 0.0015,
+              "OPT_ENABLE_EPSILON_CU": false,
+              "USE_RHO_S": false,
+              "RHO_S": 0.01,
+              "IDX_STEEL_MATERIAL": 0,
+              "USE_EPSILON_CU": false,
+              "EPSILON_CU": 0.02
+            },
+            "UCD": {
+              "OPT_FCO": false,
+              "FCO": 24000.0,
+              "OPT_EPSILON_CO": false,
+              "EPSILON_CO": 0.002,
+              "OPT_EPSILON_CY": false,
+              "EPSILON_CY": 0.0015,
+              "OPT_EPSILON_SP": false,
+              "EPSILON_SP": 0.005,
+              "IDX_EC": 0,
+              "EC": 25000000.0,
+              "IDX_FT": 0,
+              "FT": 2000.0,
+              "EPSILON_T": 0.0001
+            },
+            "FIELD_2": {
+              "nRectSectAutoorUser": 1,
+              "nCircSectAutoorUser": 1,
+              "dXdirectionbc": 0.4,
+              "dXdirectionwxi": 0.05,
+              "nXdirectionn": 3,
+              "dYdirectiondc": 0.4,
+              "dYdirectionwyj": 0.05,
+              "nYdirectionm": 3,
+              "dds": 0.012,
+              "nLongiRebarType": 0,
+              "nLongiRebarNum": 8,
+              "strLongiRebarSize": "D22",
+              "dLongiRebarArea": 0.0032,
+              "dLongiRebarRatio": 0.02,
+              "nGeneralRebarType": 0,
+              "strGeneralRebarSize": "D13",
+              "dGeneralRebarArea": 0.000127,
+              "dHoopsSpaceS1": 0.1,
+              "dClearHoopsSpaceS2": 0.088,
+              "nGeneralRebarNumX": 3,
+              "nGeneralRebarNumY": 3,
+              "dGeneralAsx": 0.000381,
+              "dGeneralAsy": 0.000381,
+              "dRectStrengthfyh": 345000.0,
+              "dRectRatiopx": 0.01,
+              "dRectRatiopy": 0.01,
+              "dRectStressflx": 2000.0,
+              "dRectStressfly": 2000.0,
+              "dCircularStrengthfyh": 345000.0,
+              "dCircularRatiops": 0.01
+            }
+          }
+        }
+      },
+      "8": {
+        "NAME": "Conc_JPRoadH24",
+        "MATL_TYPE": "CONC",
+        "HYS_MODEL": "JRSMH24",
+        "CONC": {
+          "JP_H24": {
+            "EC": 25000000.0,
+            "SIGMA_CK": 24000.0,
+            "SIGMA_SY": 345000.0,
+            "ALPHA": 1.0,
+            "SIGMA_BT": 0.0,
+            "AH": 0.0002,
+            "S": 0.1,
+            "D": 0.5,
+            "BETA": 1.0,
+            "STRENGTH_LIMIT": 0
+          }
+        }
+      },
+      "9": {
+        "NAME": "Conc_GB2010",
+        "MATL_TYPE": "CONC",
+        "HYS_MODEL": "GBCHINA2010",
+        "CONC": {
+          "CHGB10": {
+            "FCR": 24000.0,
+            "FTR": 2000.0,
+            "ECR": 0.002,
+            "ETR": 0.0001,
+            "EC": 25000000.0
+          }
+        }
+      },
+      "10": {
+        "NAME": "Steel_Menegotto",
+        "MATL_TYPE": "STEEL",
+        "HYS_MODEL": "MPM",
+        "STEEL": {
+          "MENEGO": {
+            "FY": 345000.0,
+            "E": 200000000.0,
+            "B": 0.01,
+            "PARTIAL_FACT": 1.0
+          }
+        }
+      },
+      "11": {
+        "NAME": "Steel_Bilinear",
+        "MATL_TYPE": "STEEL",
+        "HYS_MODEL": "BM",
+        "STEEL": {
+          "BILINE": {
+            "FY": 345000.0,
+            "E1": 200000000.0,
+            "E2E1": 0.01,
+            "PARTIAL_FACT": 1.0
+          }
+        }
+      },
+      "12": {
+        "NAME": "Steel_UnsymBilinear",
+        "MATL_TYPE": "STEEL",
+        "HYS_MODEL": "UBSM",
+        "STEEL": {
+          "GENBIL": {
+            "SIGMA_Y": 345000.0,
+            "SIGMA_CY": 345000.0,
+            "EPSILON_1": 0.002,
+            "EPSILON_2": 0.02,
+            "E_ITEMS": [
+              200000000.0,
+              2000000.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        }
+      },
+      "13": {
+        "NAME": "Steel_Trilinear",
+        "MATL_TYPE": "STEEL",
+        "HYS_MODEL": "TSM",
+        "STEEL": {
+          "TRILIN": {
+            "INPUT_METHOD": 0,
+            "SIGMA_Y_ITEMS": [
+              200000.0,
+              300000.0,
+              345000.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "EPSILON_Y_ITEMS": [
+              0.001,
+              0.0015,
+              0.002
+            ]
+          }
+        }
+      },
+      "14": {
+        "NAME": "Steel_Park",
+        "MATL_TYPE": "STEEL",
+        "HYS_MODEL": "PM",
+        "STEEL": {
+          "PARKMD": {
+            "FY": 345000.0,
+            "FU": 450000.0,
+            "ES": 200000000.0,
+            "EPSILON_SH": 0.01,
+            "EPSILON_SU": 0.1
+          }
+        }
+      },
+      "15": {
+        "NAME": "Steel_JPRoad",
+        "MATL_TYPE": "STEEL",
+        "HYS_MODEL": "JRSM_S",
+        "STEEL": {
+          "JPROAD": {
+            "SIGMA_Y": 345000.0,
+            "ES": 200000000.0,
+            "EPSILON_ST": 0.01
+          }
+        }
+      },
+      "16": {
+        "NAME": "Steel_GB2010",
+        "MATL_TYPE": "STEEL",
+        "HYS_MODEL": "GBCHINA2010_S",
+        "STEEL": {
+          "CHGB10": {
+            "FYR": 345000.0,
+            "FSTR": 455000.0,
+            "EPSILON_C": 0.002,
+            "EPSILON_T": 0.0001,
+            "EUY": 0.01,
+            "EU": 0.1,
+            "K": 0.01
+          }
+        }
+      },
+      "17": {
+        "NAME": "Steel_EnergyFEMA",
+        "MATL_TYPE": "STEEL",
+        "HYS_MODEL": "ENRGDSPT",
+        "STEEL": {
+          "ENRGDS": {
+            "SHAPE_OF_CURVE": 0,
+            "OPT_STRENGTH_LOSS": false,
+            "OPT_USE_STRENGTH_LOSS": false,
+            "OPT_SYMMETRIC": true,
+            "INPUT_TYPE": 0,
+            "FMR_ITEMS": [
+              {
+                "ITEMS": [
+                  0.0,
+                  0.1,
+                  0.2,
+                  0.3,
+                  0.4,
+                  0.5,
+                  0.6,
+                  0.7,
+                  0.8
+                ]
+              },
+              {
+                "ITEMS": [
+                  0.0,
+                  100.0,
+                  200.0,
+                  300.0,
+                  400.0,
+                  500.0,
+                  600.0,
+                  700.0,
+                  800.0
+                ]
+              }
+            ],
+            "YIELD_STRENGTHS": [
+              345000.0,
+              -345000.0
+            ],
+            "OPT_USE_YIELD_STRAIN": false,
+            "YIELD_STRAINS": [
+              0.002,
+              -0.002
+            ],
+            "ELASTIC_MODULUS": 200000000.0,
+            "OPT_USE_TOTAL_STR_LOSS_AT_E": false,
+            "OPT_TOTAL_STR_LOSS_AT_E": false,
+            "OPT_CYCLIC_DEGRATION": false,
+            "A_B_P": 0.0,
+            "C_P": 0.0,
+            "D_P": 0.0,
+            "E_P": 0.0,
+            "A_B_M": 0.0,
+            "C_M": 0.0,
+            "D_M": 0.0,
+            "E_M": 0.0,
+            "OPT_UNLOADING_STIFF_FACTOR": false,
+            "UNLOADING_STIFF_FACTOR": 1.0
+          }
+        }
+      }
+    }
+  }
+}

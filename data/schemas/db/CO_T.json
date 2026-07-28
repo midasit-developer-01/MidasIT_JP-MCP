@@ -1,0 +1,94 @@
+{
+  "_group": "db",
+  "_name": "CO_T",
+  "uri": "db/CO_T",
+  "methods": "GET, PUT",
+  "schema": {
+    "CO_T": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Display Option Color - Thickness (CO_T). Per-thickness display colors: each key is a thickness id, and the fields set the wire-frame, hidden-fill, and hidden-edge RGB components plus the opacity (blending) option and factor.",
+      "properties": {
+        "W_R": {
+          "description": "Wire-frame color, red component (0-255). Combined with W_G and W_B into the wire-frame RGB color.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "W_G": {
+          "description": "Wire-frame color, green component (0-255). Combined with W_R and W_B into the wire-frame RGB color.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "W_B": {
+          "description": "Wire-frame color, blue component (0-255). Combined with W_R and W_G into the wire-frame RGB color.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "HF_R": {
+          "description": "Hidden-fill color, red component (0-255). Combined with HF_G and HF_B into the hidden-fill RGB color.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "HF_G": {
+          "description": "Hidden-fill color, green component (0-255). Combined with HF_R and HF_B into the hidden-fill RGB color.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "HF_B": {
+          "description": "Hidden-fill color, blue component (0-255). Combined with HF_R and HF_G into the hidden-fill RGB color.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "HE_R": {
+          "description": "Hidden-edge color, red component (0-255). Combined with HE_G and HE_B into the hidden-edge RGB color.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "HE_G": {
+          "description": "Hidden-edge color, green component (0-255). Combined with HE_R and HE_B into the hidden-edge RGB color.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "HE_B": {
+          "description": "Hidden-edge color, blue component (0-255). Combined with HE_R and HE_G into the hidden-edge RGB color.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "bBLEMD": {
+          "description": "Opacity (blending) option. When true, the hidden-fill is rendered with the opacity factor FACT.",
+          "type": "boolean"
+        },
+        "FACT": {
+          "description": "Opacity (blending) factor, meaningful when bBLEMD is true. Typically 0.0 (transparent) to 1.0 (opaque).",
+          "type": "number"
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "W_R": 111,
+        "W_G": 142,
+        "W_B": 91,
+        "HF_R": 159,
+        "HF_G": 205,
+        "HF_B": 131,
+        "HE_R": 111,
+        "HE_G": 142,
+        "HE_B": 91,
+        "bBLEMD": false,
+        "FACT": 0.5
+      }
+    }
+  }
+}

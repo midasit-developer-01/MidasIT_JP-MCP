@@ -1,0 +1,93 @@
+{
+  "_group": "db",
+  "_name": "ETFC",
+  "uri": "db/ETFC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "ETFC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Ambient Temperature Function (ETFC). TYPE selects which fields apply: CONST uses TEMP, SINE uses MAX_TEMP/MEAN_TEMP/DELAY_TIME, and USER uses SCALE_FACTOR plus the ITEM time-value function data.",
+      "properties": {
+        "NAME": {
+          "description": "Function name.",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Ambient temperature function type (case-insensitive). CONST: constant temperature. SINE: sinusoidal variation. USER: user-defined time-value function.",
+          "type": "string",
+          "enum": ["CONST", "SINE", "USER"]
+        },
+        "TEMP": {
+          "description": "[TYPE=CONST] Constant ambient temperature.",
+          "type": "number",
+          "default": 0
+        },
+        "MAX_TEMP": {
+          "description": "[TYPE=SINE] Maximum temperature (T) of the sine function.",
+          "type": "number",
+          "default": 0
+        },
+        "MEAN_TEMP": {
+          "description": "[TYPE=SINE] Mean temperature (To) of the sine function.",
+          "type": "number",
+          "default": 0
+        },
+        "DELAY_TIME": {
+          "description": "[TYPE=SINE] Delay time (to) of the sine function.",
+          "type": "number",
+          "default": 0
+        },
+        "SCALE_FACTOR": {
+          "description": "[TYPE=USER] Scale factor applied to the user-defined function data.",
+          "type": "number"
+        },
+        "ITEM": {
+          "description": "[TYPE=USER] User-defined function data as an array of time-value points. Required and must be non-empty when TYPE is USER.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "TIME": {
+                "description": "Time.",
+                "type": "number"
+              },
+              "VALUE": {
+                "description": "Temperature value at the given time.",
+                "type": "number"
+              }
+            },
+            "required": ["TIME", "VALUE"]
+          }
+        }
+      },
+      "required": ["NAME", "TYPE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "AmbientConst",
+        "TYPE": "CONST",
+        "TEMP": 30
+      },
+      "2": {
+        "NAME": "AmbientSine",
+        "TYPE": "SINE",
+        "MAX_TEMP": 20,
+        "MEAN_TEMP": 0,
+        "DELAY_TIME": 1
+      },
+      "3": {
+        "NAME": "AmbientUser",
+        "TYPE": "USER",
+        "SCALE_FACTOR": 1,
+        "ITEM": [
+          { "TIME": 0, "VALUE": 20 },
+          { "TIME": 1, "VALUE": 30 },
+          { "TIME": 2, "VALUE": 40 }
+        ]
+      }
+    }
+  }
+}

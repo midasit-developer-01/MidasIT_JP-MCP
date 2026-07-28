@@ -1,0 +1,100 @@
+{
+  "_group": "db",
+  "_name": "NBOF",
+  "uri": "db/NBOF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "NBOF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Nodal Body Force (NBOF). Applies body-force load factors to a set of nodes; OPT_USE_GROUP decides whether the target set comes from a structure group (GROUP_NAME) or an explicit node key list (KEY_NODE_ITEMS).",
+      "properties": {
+        "LCNAME": {
+          "description": "Static load case name; must match an existing load case (resolved to a load-case key, error if not found).",
+          "type": "string"
+        },
+        "OPT_USE_GROUP": {
+          "description": "If true, apply to the structure group named by GROUP_NAME; if false, apply to the explicit node list in KEY_NODE_ITEMS.",
+          "type": "boolean",
+          "default": false
+        },
+        "GROUP_NAME": {
+          "description": "[OPT_USE_GROUP=true] Structure group name; must match an existing group (error if not found). Ignored when OPT_USE_GROUP is false.",
+          "type": "string",
+          "default": ""
+        },
+        "KEY_NODE_ITEMS": {
+          "description": "[OPT_USE_GROUP=false] List of node keys the load is applied to. Required (must be assigned) when OPT_USE_GROUP is false; ignored when OPT_USE_GROUP is true.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "OPT_NODAL_MASS": {
+          "description": "Nodal mass option.",
+          "type": "boolean",
+          "default": false
+        },
+        "OPT_LOAD_TO_MASS": {
+          "description": "Load-to-mass conversion option.",
+          "type": "boolean",
+          "default": false
+        },
+        "OPT_STRUCT_MASS": {
+          "description": "Structure (strict) mass option.",
+          "type": "boolean",
+          "default": false
+        },
+        "X": {
+          "description": "X-direction body-force factor.",
+          "type": "number"
+        },
+        "Y": {
+          "description": "Y-direction body-force factor.",
+          "type": "number",
+          "default": 0
+        },
+        "Z": {
+          "description": "Z-direction body-force factor.",
+          "type": "number",
+          "default": 0
+        }
+      },
+      "required": [
+        "LCNAME",
+        "X"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "E",
+        "OPT_USE_GROUP": false,
+        "KEY_NODE_ITEMS": [
+          12,
+          42,
+          39,
+          40,
+          11,
+          41
+        ],
+        "OPT_NODAL_MASS": true,
+        "OPT_LOAD_TO_MASS": true,
+        "OPT_STRUCT_MASS": true,
+        "X": 10,
+        "Y": 20,
+        "Z": 30
+      },
+      "2": {
+        "LCNAME": "E",
+        "OPT_USE_GROUP": true,
+        "GROUP_NAME": "SG1",
+        "X": 1.0,
+        "Y": 0,
+        "Z": -1.0
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "_group": "design",
+  "_name": "LCTB",
+  "uri": "design/STEEL/KDS-41-30-2022/LCTB",
+  "methods": "GET, DELETE",
+  "schema": {
+    "LCTB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Load Contribution (LCTB). Defines a named load contribution set whose members are load-case factor items (BASE_ITEM).",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Load Contribution Name."
+        },
+        "DESC": {
+          "type": "string",
+          "default": "",
+          "description": "Description of the load contribution."
+        },
+        "BASE_ITEM": {
+          "type": "array",
+          "description": "Load Contribution Items; each item pairs a factor with a load case.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "FACTOR": {
+                "type": "number",
+                "description": "Factor applied to the load case."
+              },
+              "LOAD_CASE_NAME": {
+                "type": "string",
+                "default": "",
+                "description": "Load Case Name (resolved from the load case key on read)."
+              }
+            },
+            "required": [
+              "FACTOR"
+            ]
+          }
+        }
+      },
+      "required": [
+        "NAME",
+        "BASE_ITEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "LC Group 1",
+        "DESC": "Dead and live load contribution",
+        "BASE_ITEM": [
+          {
+            "FACTOR": 1.2,
+            "LOAD_CASE_NAME": "Dead Load"
+          },
+          {
+            "FACTOR": 1.6,
+            "LOAD_CASE_NAME": "Live Load"
+          }
+        ]
+      }
+    }
+  }
+}

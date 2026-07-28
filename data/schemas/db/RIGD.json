@@ -1,0 +1,71 @@
+{
+  "_group": "db",
+  "_name": "RIGD",
+  "uri": "db/RIGD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "RIGD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Rigid Link (RIGD). The key is the master node number (entity key); ITEMS holds one or more rigid-link definitions, each pairing a constrained degree-of-freedom code (DOF) with the list of slave nodes rigidly connected to that master node.",
+      "properties": {
+        "ITEMS": {
+          "description": "List of rigid-link definitions attached to the master node given by the key. Each item is applied on OnSet by resolving its group and slave-type key.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the rigid-link entry under the master node. Optional; defaults to 0 (auto). On update, must match the existing serial for the resolved slave-type/group or the request is rejected.",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Boundary group name. Optional; empty string means no group. If non-empty it must reference an existing boundary group, otherwise the request fails.",
+                "type": "string",
+                "default": ""
+              },
+              "DOF": {
+                "description": "Constrained degree-of-freedom code for the slave nodes (nSlaveType). Six-digit flag read as DX DY DZ RX RY RZ from the 6th to the 1st decimal place; 1 = rigidly constrained to the master, 0 = free (e.g. 111111 constrains all six DOF).",
+                "type": "integer"
+              },
+              "S_NODE": {
+                "description": "Slave node numbers rigidly linked to the master node. On set the list replaces the existing slave nodes.",
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            },
+            "required": [
+              "DOF",
+              "S_NODE"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "DOF": 111111,
+            "S_NODE": [
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

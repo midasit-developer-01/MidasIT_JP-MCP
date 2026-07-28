@@ -1,0 +1,68 @@
+{
+  "_group": "db",
+  "_name": "MVLDTR",
+  "uri": "db/MVLDTR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVLDTR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Case - Transverse (MVLDTR). A transverse moving load case that references a moving vehicle load (MVHL) and a line lane, distributing the load across a number of lanes with per-lane factors.",
+      "properties": {
+        "LCNAME": {
+          "type": "string",
+          "description": "Load case name."
+        },
+        "DESC": {
+          "type": "string",
+          "description": "Description of the load case.",
+          "default": ""
+        },
+        "MVHL_NAME": {
+          "type": "string",
+          "description": "Vehicle (moving vehicle load, MVHL) name referenced by this load case."
+        },
+        "SCALEFACTOR": {
+          "type": "number",
+          "description": "Scale factor applied to the moving load."
+        },
+        "LLAN_NAME": {
+          "type": "string",
+          "description": "Line lane name referenced by this load case."
+        },
+        "NUM_LANE": {
+          "type": "integer",
+          "description": "Number of lanes across which the load is distributed."
+        },
+        "ITEMS": {
+          "type": "array",
+          "description": "Lane factors, one factor per lane.",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [
+        "LCNAME",
+        "MVHL_NAME",
+        "SCALEFACTOR",
+        "LLAN_NAME",
+        "NUM_LANE",
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "MVL-T1",
+        "DESC": "Transverse moving load case",
+        "MVHL_NAME": "Truck-A",
+        "SCALEFACTOR": 1.0,
+        "LLAN_NAME": "Lane-1",
+        "NUM_LANE": 2,
+        "ITEMS": [1.0, 0.9]
+      }
+    }
+  }
+}

@@ -1,0 +1,441 @@
+{
+  "_group": "rating",
+  "_name": "DFRC",
+  "uri": "rating/PSC/AASHTO-LRFR19/DFRC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DFRC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Rating Case for Load Rating Factor (DFRC). Fields describe an AASHTO LRFR19 rating case: limit state, primary/adjacent vehicle live loads, and per-load-type rating factors and load case lists selected by LIMIT_STATE.",
+      "additionalProperties": false,
+      "required": [
+        "NAME",
+        "LIMIT_STATE",
+        "PRIMARY_VEH",
+        "ADJACENT_VEH"
+      ],
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Rating Case Name."
+        },
+        "DESC": {
+          "type": "string",
+          "description": "Description.",
+          "default": ""
+        },
+        "LIMIT_STATE": {
+          "type": "integer",
+          "description": "Limit State (0=Service Limit State, 1=Strength Limit State). Selects which LOAD_ITEMS variant applies and the default rating factors.",
+          "enum": [0, 1]
+        },
+        "PRIMARY_VEH": {
+          "type": "object",
+          "description": "Primary Vehicle live load case and factor.",
+          "additionalProperties": false,
+          "required": ["LOAD_CASE_NAME"],
+          "properties": {
+            "LOAD_CASE_NAME": {
+              "type": "string",
+              "description": "Primary moving load case name, including suffix such as (MV)."
+            },
+            "FACTOR": {
+              "type": "number",
+              "description": "Primary vehicle factor (>= 0).",
+              "default": 1.0,
+              "minimum": 0
+            }
+          }
+        },
+        "ADJACENT_VEH": {
+          "type": "object",
+          "description": "Adjacent Vehicle live load case and factor.",
+          "additionalProperties": false,
+          "required": ["LOAD_CASE_NAME"],
+          "properties": {
+            "LOAD_CASE_NAME": {
+              "type": "string",
+              "description": "Adjacent moving load case name, including suffix such as (MV)."
+            },
+            "FACTOR": {
+              "type": "number",
+              "description": "Adjacent vehicle factor (>= 0).",
+              "default": 1.0,
+              "minimum": 0
+            }
+          }
+        },
+        "EVAL_TYPE": {
+          "type": "integer",
+          "description": "Eval Live Load Model (0=Design, 1=Legal, 2=Permit) per LRFR19.",
+          "default": 0,
+          "enum": [0, 1, 2]
+        },
+        "LOAD_ITEMS_SER": {
+          "type": "object",
+          "description": "[LIMIT_STATE=0 (Service)] Rating load items keyed by load type. Send only when LIMIT_STATE=0. Omitted load types keep model default/existing values.",
+          "additionalProperties": false,
+          "properties": {
+            "DC": {
+              "type": "object",
+              "description": "Dead load component (DC).",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "object",
+                  "description": "Max/min rating factors. Omitted -> keep model default.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "MAX": {
+                      "type": "number",
+                      "description": "Maximum factor (>= 0).",
+                      "minimum": 0
+                    },
+                    "MIN": {
+                      "type": "number",
+                      "description": "Minimum factor (>= 0).",
+                      "minimum": 0
+                    }
+                  }
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "DW": {
+              "type": "object",
+              "description": "Wearing surface/utility (DW).",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "object",
+                  "description": "Max/min rating factors. Omitted -> keep model default.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "MAX": {
+                      "type": "number",
+                      "description": "Maximum factor (>= 0).",
+                      "minimum": 0
+                    },
+                    "MIN": {
+                      "type": "number",
+                      "description": "Minimum factor (>= 0).",
+                      "minimum": 0
+                    }
+                  }
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "TEMP": {
+              "type": "object",
+              "description": "Temperature.",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "number",
+                  "description": "Rating factor (>= 0). Omitted -> keep model default.",
+                  "minimum": 0
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "TGRADIENT": {
+              "type": "object",
+              "description": "Temperature gradient.",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "number",
+                  "description": "Rating factor (>= 0). Omitted -> keep model default.",
+                  "minimum": 0
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "SECONDARY": {
+              "type": "object",
+              "description": "Secondary load.",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "number",
+                  "description": "Rating factor (>= 0). Omitted -> keep model default.",
+                  "minimum": 0
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "PERMANENT": {
+              "type": "object",
+              "description": "Permanent load.",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "number",
+                  "description": "Rating factor (>= 0). Omitted -> keep model default.",
+                  "minimum": 0
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "USER_DEFINED": {
+              "type": "object",
+              "description": "User defined load.",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "number",
+                  "description": "Rating factor (>= 0). Omitted -> keep model default.",
+                  "minimum": 0
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "LOAD_ITEMS_STR": {
+          "type": "object",
+          "description": "[LIMIT_STATE=1 (Strength)] Rating load items keyed by load type. Send only when LIMIT_STATE=1. Omitted load types keep model default/existing values.",
+          "additionalProperties": false,
+          "properties": {
+            "DC": {
+              "type": "object",
+              "description": "Dead load component (DC).",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "object",
+                  "description": "Max/min rating factors. Omitted -> keep model default.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "MAX": {
+                      "type": "number",
+                      "description": "Maximum factor (>= 0).",
+                      "minimum": 0
+                    },
+                    "MIN": {
+                      "type": "number",
+                      "description": "Minimum factor (>= 0).",
+                      "minimum": 0
+                    }
+                  }
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "DW": {
+              "type": "object",
+              "description": "Wearing surface/utility (DW).",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "object",
+                  "description": "Max/min rating factors. Omitted -> keep model default.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "MAX": {
+                      "type": "number",
+                      "description": "Maximum factor (>= 0).",
+                      "minimum": 0
+                    },
+                    "MIN": {
+                      "type": "number",
+                      "description": "Minimum factor (>= 0).",
+                      "minimum": 0
+                    }
+                  }
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "TEMP": {
+              "type": "object",
+              "description": "Temperature.",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "number",
+                  "description": "Rating factor (>= 0). Omitted -> keep model default.",
+                  "minimum": 0
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "TGRADIENT": {
+              "type": "object",
+              "description": "Temperature gradient.",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "number",
+                  "description": "Rating factor (>= 0). Omitted -> keep model default.",
+                  "minimum": 0
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "SECONDARY": {
+              "type": "object",
+              "description": "Secondary load.",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "number",
+                  "description": "Rating factor (>= 0). Omitted -> keep model default.",
+                  "minimum": 0
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "PERMANENT": {
+              "type": "object",
+              "description": "Permanent load.",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "number",
+                  "description": "Rating factor (>= 0). Omitted -> keep model default.",
+                  "minimum": 0
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "USER_DEFINED": {
+              "type": "object",
+              "description": "User defined load.",
+              "additionalProperties": false,
+              "properties": {
+                "FACTOR": {
+                  "type": "number",
+                  "description": "Rating factor (>= 0). Omitted -> keep model default.",
+                  "minimum": 0
+                },
+                "LOAD_CASES": {
+                  "type": "array",
+                  "description": "Load case names for this item, including type suffix (e.g. \"DC(ST)\").",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Service Rating I",
+        "DESC": "Service limit state rating case",
+        "LIMIT_STATE": 0,
+        "PRIMARY_VEH": {
+          "LOAD_CASE_NAME": "TRUCK(MV)",
+          "FACTOR": 1.0
+        },
+        "ADJACENT_VEH": {
+          "LOAD_CASE_NAME": "LANE(MV)",
+          "FACTOR": 1.0
+        },
+        "EVAL_TYPE": 0,
+        "LOAD_ITEMS_SER": {
+          "DC": {
+            "FACTOR": { "MAX": 1.0, "MIN": 1.0 },
+            "LOAD_CASES": ["Self(ST)", "SDL(ST)"]
+          },
+          "DW": {
+            "FACTOR": { "MAX": 1.0, "MIN": 1.0 },
+            "LOAD_CASES": ["Wearing(ST)"]
+          },
+          "TEMP": {
+            "FACTOR": 1.0,
+            "LOAD_CASES": ["Temp(ST)"]
+          }
+        }
+      },
+      "2": {
+        "NAME": "Strength Rating I",
+        "DESC": "Strength limit state rating case",
+        "LIMIT_STATE": 1,
+        "PRIMARY_VEH": {
+          "LOAD_CASE_NAME": "TRUCK(MV)",
+          "FACTOR": 1.75
+        },
+        "ADJACENT_VEH": {
+          "LOAD_CASE_NAME": "LANE(MV)",
+          "FACTOR": 1.75
+        },
+        "EVAL_TYPE": 1,
+        "LOAD_ITEMS_STR": {
+          "DC": {
+            "FACTOR": { "MAX": 1.25, "MIN": 0.9 },
+            "LOAD_CASES": ["Self(ST)", "SDL(ST)"]
+          },
+          "DW": {
+            "FACTOR": { "MAX": 1.5, "MIN": 0.9 },
+            "LOAD_CASES": ["Wearing(ST)"]
+          },
+          "PERMANENT": {
+            "FACTOR": 1.25,
+            "LOAD_CASES": ["Creep(CS)"]
+          },
+          "USER_DEFINED": {
+            "FACTOR": 1.25
+          }
+        }
+      }
+    }
+  }
+}

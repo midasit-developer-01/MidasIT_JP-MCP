@@ -1,0 +1,411 @@
+{
+  "_group": "db",
+  "_name": "STCT",
+  "uri": "db/STCT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "STCT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Construction Stage Analysis Control (STCT). Single-instance control record (key is always 1); the boolean gate flags (bLAST_FINAL, iINC_NLA, bINC_PDL, bINC_TDE, bCNS, bITD, bLFFC, bSD) decide which downstream option fields are actually consumed.",
+      "properties": {
+        "bLAST_FINAL": {
+          "description": "Final Stage option. true = use the last stage as the final stage; false = use the stage named in FINAL_STAGE.",
+          "type": "boolean",
+          "default": false
+        },
+        "FINAL_STAGE": {
+          "description": "[bLAST_FINAL=false] Name of the construction stage to treat as the final stage. Must resolve to an existing stage name.",
+          "type": "string",
+          "default": ""
+        },
+        "CPFC": {
+          "description": "Cable pretension force control type (case-insensitive). INTERNAL = initial force; EXTERNAL = external force.",
+          "type": "string",
+          "enum": ["INTERNAL", "EXTERNAL"],
+          "default": "INTERNAL"
+        },
+        "bEXT_REPL": {
+          "description": "External force type. false = Add; true = Replace.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCALC_CFF": {
+          "description": "Calculate concurrent forces of frame.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCALC_CSP": {
+          "description": "Calculate output of each part of composite section.",
+          "type": "boolean",
+          "default": false
+        },
+        "bAPPLY_IMF": {
+          "description": "Apply initial member force to C.S.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCONV": {
+          "description": "Convert final stage member forces to initial forces for Post C.S.",
+          "type": "boolean",
+          "default": false
+        },
+        "bTRUSS": {
+          "description": "Truss option (meaningful together with bCONV).",
+          "type": "boolean",
+          "default": false
+        },
+        "bBEAM": {
+          "description": "Beam option (meaningful together with bCONV).",
+          "type": "boolean",
+          "default": false
+        },
+        "bITD": {
+          "description": "Initial tangent displacement for erected structures. When true, ITD (and GROUP when ITD=GROUP) are consumed.",
+          "type": "boolean",
+          "default": false
+        },
+        "ITD": {
+          "description": "[bITD=true] Initial tangent displacement type (case-insensitive). ALL = all; GROUP = a structure group (requires GROUP). Empty string is treated as ALL. Any other value is rejected.",
+          "type": "string",
+          "default": "ALL"
+        },
+        "GROUP": {
+          "description": "[bITD=true & ITD=GROUP] Structure group name for the initial tangent displacement. Must resolve to an existing group.",
+          "type": "string",
+          "default": ""
+        },
+        "bSAVE_OCS": {
+          "description": "Save output of current stage.",
+          "type": "boolean",
+          "default": false
+        },
+        "bLFFC": {
+          "description": "Lack-of-Fit force control. When true, LFFGR is consumed.",
+          "type": "boolean",
+          "default": false
+        },
+        "LFFGR": {
+          "description": "[bLFFC=true] Structure group name for lack-of-fit force control. Must resolve to an existing group.",
+          "type": "string",
+          "default": ""
+        },
+        "bCAMBER": {
+          "description": "Apply camber displacement to C.S. (if defined).",
+          "type": "boolean",
+          "default": false
+        },
+        "bSELFCONS": {
+          "description": "Self-constrained forces & stresses.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCHANGE_CABLE": {
+          "description": "Change cable element to equivalent truss element for Post C.S.",
+          "type": "boolean",
+          "default": false
+        },
+        "iINC_NLA": {
+          "description": "Analysis type. 0 = linear analysis; 1 = nonlinear analysis; 2 = material nonlinear analysis. When 1 or 2, the nonlinear option fields (bIEMF, iLSTEP, iMAXITER, CF, BSSTEP, ADSTEP, bENEG/EV, bDISP/DV, bFORC/FV) are consumed.",
+          "type": "integer",
+          "default": 0
+        },
+        "iNLA_TYPE": {
+          "description": "Stage option. 0 = independent stage; 1 = accumulative stage.",
+          "type": "integer",
+          "default": 0
+        },
+        "bIEMF": {
+          "description": "[iINC_NLA=1 or 2] Include equilibrium element nodal forces.",
+          "type": "boolean",
+          "default": false
+        },
+        "iLSTEP": {
+          "description": "[iINC_NLA=1 or 2] Number of load steps.",
+          "type": "integer",
+          "default": 0
+        },
+        "iMAXITER": {
+          "description": "[iINC_NLA=1 or 2] Maximum number of iterations per load step.",
+          "type": "integer",
+          "default": 0
+        },
+        "CF": {
+          "description": "[iINC_NLA=1 or 2] Convergence failure handling flag.",
+          "type": "boolean",
+          "default": false
+        },
+        "BSSTEP": {
+          "description": "[iINC_NLA=1 or 2] Maximum bi-section level for a load step.",
+          "type": "integer",
+          "default": 5
+        },
+        "ADSTEP": {
+          "description": "[iINC_NLA=1 or 2] Maximum allowable diverged steps.",
+          "type": "integer",
+          "default": 3
+        },
+        "bENEG": {
+          "description": "[iINC_NLA=1 or 2] Consider energy norm convergence.",
+          "type": "boolean",
+          "default": false
+        },
+        "EV": {
+          "description": "[iINC_NLA=1 or 2] Energy norm value.",
+          "type": "number",
+          "default": 0
+        },
+        "bDISP": {
+          "description": "[iINC_NLA=1 or 2] Consider displacement norm convergence.",
+          "type": "boolean",
+          "default": false
+        },
+        "DV": {
+          "description": "[iINC_NLA=1 or 2] Displacement norm value.",
+          "type": "number",
+          "default": 0
+        },
+        "bFORC": {
+          "description": "[iINC_NLA=1 or 2] Consider force norm convergence.",
+          "type": "boolean",
+          "default": false
+        },
+        "FV": {
+          "description": "[iINC_NLA=1 or 2] Force norm value.",
+          "type": "number",
+          "default": 0
+        },
+        "bINC_PDL": {
+          "description": "Include P-Delta effect. When true, iITER and TOL are consumed.",
+          "type": "boolean",
+          "default": false
+        },
+        "iITER": {
+          "description": "[bINC_PDL=true] Number of iterations for P-Delta.",
+          "type": "integer",
+          "default": 0
+        },
+        "TOL": {
+          "description": "[bINC_PDL=true] Convergence tolerance for P-Delta.",
+          "type": "number",
+          "default": 0
+        },
+        "bINC_TDE": {
+          "description": "Include time dependent effect. When true, the creep/shrinkage and time-dependent option fields are consumed.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCNS": {
+          "description": "[bINC_TDE=true] Creep & shrinkage. When true, TYPE and the creep/shrinkage detail fields (bTTLE_CS, bRCE, bOUCC, bITS/iITS, bATS/iT10..iT10K) are consumed.",
+          "type": "boolean",
+          "default": false
+        },
+        "TYPE": {
+          "description": "[bINC_TDE=true & bCNS=true] Creep/shrinkage type (case-insensitive). CREEP = creep; SHRINK = shrinkage; BOTH = creep & shrinkage. iITER_CR/TOL_CR apply only for CREEP or BOTH.",
+          "type": "string",
+          "enum": ["CREEP", "SHRINK", "BOTH"],
+          "default": "CREEP"
+        },
+        "iITER_CR": {
+          "description": "[bINC_TDE=true & bCNS=true & TYPE=CREEP or BOTH] Number of creep iterations.",
+          "type": "integer",
+          "default": 0
+        },
+        "TOL_CR": {
+          "description": "[bINC_TDE=true & bCNS=true & TYPE=CREEP or BOTH] Creep convergence tolerance.",
+          "type": "number",
+          "default": 0
+        },
+        "bTTLE_CS": {
+          "description": "[bINC_TDE=true & bCNS=true] Tendon tension loss effect (creep & shrinkage).",
+          "type": "boolean",
+          "default": false
+        },
+        "bRCE": {
+          "description": "[bINC_TDE=true & bCNS=true] Consider re-bar confinement effect.",
+          "type": "boolean",
+          "default": false
+        },
+        "bVAR": {
+          "description": "[bINC_TDE=true] Variation of compressive strength.",
+          "type": "boolean",
+          "default": false
+        },
+        "bTTLE_ES": {
+          "description": "[bINC_TDE=true] Tendon tension loss effect (elastic shortening).",
+          "type": "boolean",
+          "default": false
+        },
+        "iTTLE_ES": {
+          "description": "[bINC_TDE=true] Elastic-shortening loss option. 0 = change with variation of tendon force; 1 = constant.",
+          "type": "integer",
+          "default": 0
+        },
+        "bAPPLY_ELA": {
+          "description": "[bINC_TDE=true] Apply time dependent effect elastic modulus to Post C.S.",
+          "type": "boolean",
+          "default": false
+        },
+        "bOUCC": {
+          "description": "[bINC_TDE=true & bCNS=true] Use only user's creep coefficient.",
+          "type": "boolean",
+          "default": false
+        },
+        "bITS": {
+          "description": "[bINC_TDE=true & bCNS=true] Internal time step for creep.",
+          "type": "boolean",
+          "default": false
+        },
+        "iITS": {
+          "description": "[bINC_TDE=true & bCNS=true] Internal time step value.",
+          "type": "integer",
+          "default": 0
+        },
+        "bATS": {
+          "description": "[bINC_TDE=true & bCNS=true] Auto time step generation for large time gap.",
+          "type": "boolean",
+          "default": false
+        },
+        "iT10": {
+          "description": "[bINC_TDE=true & bCNS=true] Auto time step for time gap T > 10.",
+          "type": "integer",
+          "default": 0
+        },
+        "iT100": {
+          "description": "[bINC_TDE=true & bCNS=true] Auto time step for time gap T > 100.",
+          "type": "integer",
+          "default": 0
+        },
+        "iT1K": {
+          "description": "[bINC_TDE=true & bCNS=true] Auto time step for time gap T > 1000.",
+          "type": "integer",
+          "default": 0
+        },
+        "iT5K": {
+          "description": "[bINC_TDE=true & bCNS=true] Auto time step for time gap T > 5000.",
+          "type": "integer",
+          "default": 0
+        },
+        "iT10K": {
+          "description": "[bINC_TDE=true & bCNS=true] Auto time step for time gap T > 10000.",
+          "type": "integer",
+          "default": 0
+        },
+        "bSD": {
+          "description": "Consider stress decrease at transfer length zone by post-tension. When true, iSDOPT and SDCONST are consumed.",
+          "type": "boolean",
+          "default": false
+        },
+        "iSDOPT": {
+          "description": "[bSD=true] Stress decrease method. 0 = linear interpolation; 1 = constant stress (uses SDCONST).",
+          "type": "integer",
+          "default": 0
+        },
+        "SDCONST": {
+          "description": "[bSD=true & iSDOPT=1] Ratio value for the constant stress type.",
+          "type": "number",
+          "default": 0
+        },
+        "iBSC": {
+          "description": "Beam section property option. 0 = constant; 1 = change with tendon.",
+          "type": "integer",
+          "default": 0
+        },
+        "vEREC": {
+          "description": "Erection load cases to be distinguished from dead load for C.S. output.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LTYPECC": {
+                "description": "Erection load case name.",
+                "type": "string"
+              },
+              "EREC": {
+                "description": "Load type for C.S. One of: D, DC, DW, EP, L, W, T, TPG, E, ER.",
+                "type": "string",
+                "enum": ["D", "DC", "DW", "EP", "L", "W", "T", "TPG", "E", "ER"]
+              },
+              "vLCNAME": {
+                "description": "List of load case names. Each must resolve to an existing static load case.",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["LTYPECC", "EREC", "vLCNAME"]
+          },
+          "default": []
+        },
+        "bSDLE": {
+          "description": "Secondary dead load effect for grid model (Civil/JP builds).",
+          "type": "boolean",
+          "default": false
+        },
+        "vSDLE": {
+          "description": "Grid analysis load case names for the secondary dead load effect. Each must resolve to an existing grid load case.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bLAST_FINAL": false,
+        "FINAL_STAGE": "CS1",
+        "CPFC": "INTERNAL",
+        "bEXT_REPL": false,
+        "iINC_NLA": 0,
+        "iNLA_TYPE": 0,
+        "bINC_PDL": true,
+        "iITER": 30,
+        "TOL": 0.001,
+        "bINC_TDE": true,
+        "bCNS": true,
+        "TYPE": "BOTH",
+        "iITER_CR": 5,
+        "TOL_CR": 0.01,
+        "bTTLE_CS": true,
+        "bRCE": false,
+        "bVAR": false,
+        "bTTLE_ES": false,
+        "iTTLE_ES": 0,
+        "bAPPLY_ELA": false,
+        "bOUCC": false,
+        "bITS": false,
+        "iITS": 0,
+        "bATS": true,
+        "iT10": 5,
+        "iT100": 10,
+        "iT1K": 20,
+        "iT5K": 30,
+        "iT10K": 50,
+        "bSD": true,
+        "iSDOPT": 1,
+        "SDCONST": 0.5,
+        "iBSC": 0,
+        "vEREC": [
+          {
+            "LTYPECC": "Erection Load 1",
+            "EREC": "D",
+            "vLCNAME": ["Self Weight"]
+          },
+          {
+            "LTYPECC": "Erection Load 2",
+            "EREC": "DC",
+            "vLCNAME": ["SIDL"]
+          }
+        ],
+        "bSDLE": false,
+        "vSDLE": []
+      }
+    }
+  }
+}

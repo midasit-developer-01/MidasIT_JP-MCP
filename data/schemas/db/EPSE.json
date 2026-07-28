@@ -1,0 +1,205 @@
+{
+  "_group": "db",
+  "_name": "EPSE",
+  "uri": "db/EPSE",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EPSE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Seismic Earth Pressure (EPSE). SEL_TYPE drives how the loading area is defined: SEL_TYPE=ELEM uses ELEM_LIST/NODE_LIST with ELEM_TYPE, while SEL_TYPE=GRUP uses LOADING_AREA_GROUP (which becomes mandatory at runtime for that branch).",
+      "properties": {
+        "LOADCASE": {
+          "description": "Static load case name this seismic earth pressure belongs to. Must match an existing static load case; otherwise the request is rejected.",
+          "type": "string"
+        },
+        "DIR": {
+          "description": "Loading direction. 'XY' applies the load in the horizontal direction, 'NORMAL' applies it normal to the surface. Case-insensitive.",
+          "type": "string",
+          "enum": ["XY", "NORMAL"],
+          "default": "XY"
+        },
+        "ANGLE": {
+          "description": "Seismic earth pressure loading angle (degrees).",
+          "type": "number",
+          "default": 0
+        },
+        "IN_PT": {
+          "description": "Inner point (x, y, z) used to orient/identify the loading area.",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3,
+          "default": [0, 0, 0]
+        },
+        "SF": {
+          "description": "Scale factor applied to the seismic earth pressure load.",
+          "type": "number",
+          "default": 1
+        },
+        "CODE": {
+          "description": "Design code for the seismic earth pressure. Case-insensitive. Only 'KDS(41-17-00:2019)' is currently supported in this build.",
+          "type": "string",
+          "enum": ["KDS(41-17-00:2019)"],
+          "default": "KDS(41-17-00:2019)"
+        },
+        "SEIS_LOAD": {
+          "description": "Seismic load (Seismic Load Code) name. Must match an existing seismic load definition; otherwise the request is rejected.",
+          "type": "string"
+        },
+        "LAYER_PARAM": {
+          "description": "Soil layer parameter used to compute ground displacement. 'SINGLE' = single layer, 'DOUBLE' = two layers, 'USER' = user-defined. Case-insensitive.",
+          "type": "string",
+          "enum": ["SINGLE", "DOUBLE", "USER"],
+          "default": "SINGLE"
+        },
+        "LAYER_LV": {
+          "description": "Top level of the 2nd soil layer (used with the double/two-layer method).",
+          "type": "number",
+          "default": 0
+        },
+        "SOIL_PROP": {
+          "description": "Soil property definition name. Must match an existing soil property; otherwise the request is rejected.",
+          "type": "string"
+        },
+        "SEL_TYPE": {
+          "description": "Selection type for the loading area. 'ELEM' uses selected boundary elements/nodes (ELEM_LIST/NODE_LIST with ELEM_TYPE); 'GRUP' uses a Loading Area Group (LOADING_AREA_GROUP is then required). Case-insensitive.",
+          "type": "string",
+          "enum": ["GRUP", "ELEM"],
+          "default": "ELEM"
+        },
+        "ELEM_TYPE": {
+          "description": "[SEL_TYPE=ELEM] Element type of the loading area. 'FRAME' for frame elements, 'PLANAR' for planar elements. Must match the actual element type of the elements in ELEM_LIST. Case-insensitive.",
+          "type": "string",
+          "enum": ["FRAME", "PLANAR"],
+          "default": "FRAME"
+        },
+        "NODE_LIST": {
+          "description": "[SEL_TYPE=ELEM] Node numbers defining the loading area. Each must be an existing node.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "ELEM_LIST": {
+          "description": "[SEL_TYPE=ELEM] Element numbers defining the loading area. Each must be an existing element whose type matches ELEM_TYPE.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "LOADING_AREA_GROUP": {
+          "description": "[SEL_TYPE=GRUP] Loading Area Group name. Required (and must reference an existing group that has a loading area plane) when SEL_TYPE=GRUP.",
+          "type": "string"
+        },
+        "PRES_PROFILE_ITEMS": {
+          "description": "Pressure profile table: one entry per level defining the seismic earth pressure distribution.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LEVEL": {
+                "description": "Level (elevation) of this pressure profile point.",
+                "type": "number"
+              },
+              "KH": {
+                "description": "Reaction force at this level.",
+                "type": "number"
+              },
+              "REL_DISP": {
+                "description": "Relative displacement at this level.",
+                "type": "number"
+              },
+              "SEIS_PRES": {
+                "description": "Seismic earth pressure at this level.",
+                "type": "number"
+              },
+              "ADD_PRES": {
+                "description": "Additional pressure at this level.",
+                "type": "number",
+                "default": 0
+              }
+            },
+            "required": ["LEVEL", "KH", "REL_DISP", "SEIS_PRES"]
+          }
+        }
+      },
+      "required": ["LOADCASE", "SEIS_LOAD", "SOIL_PROP"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LOADCASE": "HaX(+)",
+        "DIR": "XY",
+        "ANGLE": 0,
+        "IN_PT": [0, 0, 0],
+        "SF": 1,
+        "CODE": "KDS(41-17-00:2019)",
+        "SEIS_LOAD": "SeisLoad-1",
+        "LAYER_PARAM": "SINGLE",
+        "LAYER_LV": 0,
+        "SOIL_PROP": "Soil-1",
+        "SEL_TYPE": "ELEM",
+        "ELEM_TYPE": "PLANAR",
+        "NODE_LIST": [3461, 3831, 4856, 5597],
+        "ELEM_LIST": [18451],
+        "PRES_PROFILE_ITEMS": [
+          {
+            "LEVEL": 1,
+            "KH": 2233,
+            "REL_DISP": 0.0029,
+            "SEIS_PRES": 2.6103,
+            "ADD_PRES": 0
+          },
+          {
+            "LEVEL": 0,
+            "KH": 2233,
+            "REL_DISP": 0.0028,
+            "SEIS_PRES": 2.5214,
+            "ADD_PRES": 0
+          },
+          {
+            "LEVEL": -5,
+            "KH": 2233,
+            "REL_DISP": 0,
+            "SEIS_PRES": 0,
+            "ADD_PRES": 0
+          }
+        ]
+      },
+      "2": {
+        "LOADCASE": "HaY(+)",
+        "DIR": "NORMAL",
+        "ANGLE": 0,
+        "IN_PT": [0, 0, 0],
+        "SF": 1,
+        "CODE": "KDS(41-17-00:2019)",
+        "SEIS_LOAD": "SeisLoad-1",
+        "LAYER_PARAM": "DOUBLE",
+        "LAYER_LV": -3,
+        "SOIL_PROP": "Soil-1",
+        "SEL_TYPE": "GRUP",
+        "LOADING_AREA_GROUP": "LoadArea-1",
+        "PRES_PROFILE_ITEMS": [
+          {
+            "LEVEL": 0,
+            "KH": 2233,
+            "REL_DISP": 0.0028,
+            "SEIS_PRES": 2.5214,
+            "ADD_PRES": 0
+          },
+          {
+            "LEVEL": -5,
+            "KH": 2233,
+            "REL_DISP": 0,
+            "SEIS_PRES": 0,
+            "ADD_PRES": 0
+          }
+        ]
+      }
+    }
+  }
+}

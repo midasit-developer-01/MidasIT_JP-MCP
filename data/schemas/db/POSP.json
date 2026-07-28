@@ -1,0 +1,122 @@
+{
+  "_group": "db",
+  "_name": "POSP",
+  "uri": "db/POSP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "POSP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Soil Property (POSP). Defines a layered ground soil profile: top-level level values and an ITEMS array describing each soil layer used to compute the coefficient of horizontal ground reaction (Kh).",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Soil property name (identifier label)."
+        },
+        "DESC": {
+          "type": "string",
+          "default": "",
+          "description": "Optional free-text description of the soil property."
+        },
+        "GROUND_LEVEL": {
+          "type": "number",
+          "description": "Level of the ground surface."
+        },
+        "BEDROCK_LEVEL": {
+          "type": "number",
+          "description": "Level of the bedrock (bottom of the soil profile)."
+        },
+        "FOOTING_LEVEL": {
+          "type": "number",
+          "description": "Level of the footing bottom."
+        },
+        "OPT_USE_N": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use N Value flag. true: ANGLE_OR_N in each layer is the standard penetration N value; false: ANGLE_OR_N is the internal friction angle of the soil."
+        },
+        "ITEMS": {
+          "type": "array",
+          "description": "Soil layer parameters, one object per soil layer from the top down.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "HEIGHT": {
+                "type": "number",
+                "description": "Soil layer thickness."
+              },
+              "ANGLE_OR_N": {
+                "type": "number",
+                "description": "Internal friction angle of the soil, or the N value when OPT_USE_N is true."
+              },
+              "DENSITY": {
+                "type": "number",
+                "description": "Unit volume weight (density) of the soil layer."
+              },
+              "VS": {
+                "type": "number",
+                "description": "Shear wave velocity of the soil layer."
+              },
+              "KH": {
+                "type": "number",
+                "description": "Coefficient of horizontal ground reaction for the layer."
+              },
+              "DISP": {
+                "type": "number",
+                "description": "Relative displacement for the layer."
+              }
+            },
+            "required": ["HEIGHT", "ANGLE_OR_N", "DENSITY", "VS", "KH", "DISP"]
+          }
+        }
+      },
+      "required": ["NAME", "GROUND_LEVEL", "BEDROCK_LEVEL", "FOOTING_LEVEL", "ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Soil-1",
+        "DESC": "",
+        "OPT_USE_N": false,
+        "GROUND_LEVEL": 6,
+        "BEDROCK_LEVEL": -21,
+        "FOOTING_LEVEL": -17.5,
+        "ITEMS": [
+          {
+            "HEIGHT": 7,
+            "ANGLE_OR_N": 30,
+            "DENSITY": 17,
+            "VS": 160,
+            "KH": 11449,
+            "DISP": 0.001
+          },
+          {
+            "HEIGHT": 1,
+            "ANGLE_OR_N": 30,
+            "DENSITY": 17,
+            "VS": 160,
+            "KH": 15913,
+            "DISP": 0.001
+          },
+          {
+            "HEIGHT": 1,
+            "ANGLE_OR_N": 30,
+            "DENSITY": 18,
+            "VS": 210,
+            "KH": 25565,
+            "DISP": 0.001
+          },
+          {
+            "HEIGHT": 1,
+            "ANGLE_OR_N": 30,
+            "DENSITY": 24,
+            "VS": 736,
+            "KH": 476345,
+            "DISP": 0.001
+          }
+        ]
+      }
+    }
+  }
+}

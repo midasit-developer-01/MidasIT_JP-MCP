@@ -1,0 +1,21 @@
+{
+  "_group": "post",
+  "_name": "RCWALLDGNRATIO",
+  "uri": "post/RCWALLDGNRATIO",
+  "methods": "POST",
+  "schema": {
+    "RCWALLDGNRATIO": {
+      "type": "object",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "RC Wall Design Ratio (RCWALLDGNRATIO). Takes no request body; the operation reads the current model's analysis results and returns RC wall design ratio data (axial/moment for local Y and Z, and shear) per wall ID and per story. Requires an opened project with completed analysis; the design code SP 63.13330.2018 is not supported.",
+      "properties": {
+        "Argument": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "_group": "db",
+  "_name": "TDNT",
+  "uri": "db/TDNT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "TDNT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Tendon Property (TDNT). Field applicability is driven by TYPE (internal/external), LT (pre/post-tension) and especially the relaxation method code RM, which selects the relaxation-factor, wobble and CEB-FIP/USER-defined subfields.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Tendon type name.",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Tendon placement type (case-insensitive). \"INTERNAL\" maps to internal tendon, \"EXTERNAL\" to external tendon.",
+          "type": "string",
+          "enum": ["INTERNAL", "EXTERNAL"],
+          "default": "EXTERNAL"
+        },
+        "MATL": {
+          "description": "Tendon material property key.",
+          "type": "integer"
+        },
+        "AREA": {
+          "description": "Total tendon (strand) cross-section area. Required by the write path when the tendon uses a user-defined design code (the default); a value change is accepted only in that case.",
+          "type": "number"
+        },
+        "D_AREA": {
+          "description": "Duct area/diameter. Post-tension: duct diameter; Pre-tension: strand diameter; External: not used.",
+          "type": "number",
+          "default": 0.0
+        },
+        "LT": {
+          "description": "Tensioning (load) type (case-insensitive). \"PRE\" maps to pre-tension (load type 0), \"POST\" to post-tension (load type 1). Not used for external tendons.",
+          "type": "string",
+          "enum": ["PRE", "POST"],
+          "default": "PRE"
+        },
+        "ASB": {
+          "description": "Anchorage slip at begin end. Post-tension/External: used; Pre-tension: not used.",
+          "type": "number",
+          "default": 0
+        },
+        "ASE": {
+          "description": "Anchorage slip at end. Post-tension/External: used; Pre-tension: not used.",
+          "type": "number",
+          "default": 0
+        },
+        "bBONDED": {
+          "description": "Bonded flag. true = bonded (bond type 0), false = unbonded (bond type 1). Post-tension: used; Pre-tension/External: not used.",
+          "type": "boolean",
+          "default": false
+        },
+        "ALPHA": {
+          "description": "External-cable moment magnifier (alpha). External: used; Pre/Post-tension: not used.",
+          "type": "number",
+          "default": 0
+        },
+        "RM": {
+          "description": "Relaxation method code (integer). Selects the relaxation model and thereby which additional fields apply: RV (relaxation coefficient/ratio) for most codes; FT/LR/FPK/bOSRF for JTG04-family codes; TDMFNAME for the user-defined code; wobble fields (W_TYPE/WF/W_ANGLE) for CEB-FIP/European/Israeli/ABNT codes. e.g. 0 = Magura.",
+          "type": "integer"
+        },
+        "RV": {
+          "description": "Relaxation coefficient (or relaxation ratio, depending on RM). Applies to the relaxation-coefficient codes (e.g. Magura, India IRC18-2000, European, KSCE LSD15, India IRC112-2011, ABNT NBR 6118-2023, Israel SI466-3); otherwise carries the relaxation ratio.",
+          "type": "number"
+        },
+        "FT": {
+          "description": "[RM=JTG04-family] Relaxation coefficient factor. Applies when RM is one of JTG04, TB05, TB10092-17, QCR9300-18, AS 1500.5-2017.",
+          "type": "number"
+        },
+        "TDMFK": {
+          "description": "Time-dependent material (relaxation function) key. Applies when RM is NOT the user-defined code.",
+          "type": "integer",
+          "default": 1
+        },
+        "US": {
+          "description": "Ultimate strength.",
+          "type": "number",
+          "default": 0
+        },
+        "YS": {
+          "description": "Yield strength.",
+          "type": "number",
+          "default": 0
+        },
+        "bOSRF": {
+          "description": "[RM=JTG04-family] Apply over-stress reduction factor. Applies when RM is one of JTG04, TB05, TB10092-17, QCR9300-18, AS 1500.5-2017.",
+          "type": "boolean",
+          "default": false
+        },
+        "LR": {
+          "description": "[RM=JTG04-family] Low-relaxation flag. Applies when RM is one of JTG04, TB05, TB10092-17, QCR9300-18, AS 1500.5-2017.",
+          "type": "boolean",
+          "default": false
+        },
+        "FPK": {
+          "description": "[RM=JTG04-family] Characteristic value of strength (fpk). Applies when RM is one of JTG04, TB05, TB10092-17, QCR9300-18, AS 1500.5-2017.",
+          "type": "number"
+        },
+        "bRELAX": {
+          "description": "Relaxation-coefficient check-box flag (read-only indicator derived from the relaxation data; not consumed by the write path).",
+          "type": "boolean"
+        },
+        "TDMFNAME": {
+          "description": "[RM=USER_DEFINED] Time-dependent (relaxation) material function name. Required when RM is the user-defined code; the name must reference an existing relaxation function.",
+          "type": "string"
+        },
+        "FF": {
+          "description": "Curvature friction factor. Post-tension/External: used; Pre-tension: not used.",
+          "type": "number",
+          "default": 0
+        },
+        "W_TYPE": {
+          "description": "[RM=CEB-FIP/European/Israeli/ABNT] Wobble input type: 0 = wobble friction factor (WF), 1 = unintentional angular displacement (W_ANGLE). Applies when RM is one of CEB-FIP 1978/1990/2010, European, Israel SI466-3, ABNT NBR 6118-2023.",
+          "type": "integer",
+          "default": 0
+        },
+        "WF": {
+          "description": "Wobble friction factor. Used when W_TYPE = 0. Post-tension: used; Pre-tension/External: not used.",
+          "type": "number",
+          "default": 0
+        },
+        "W_ANGLE": {
+          "description": "[W_TYPE=1] Unintentional angular displacement. Post-tension/External: used; Pre-tension: not used.",
+          "type": "number",
+          "default": 0
+        }
+      },
+      "required": ["NAME", "MATL", "RM"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "In_Pre_Magura",
+        "TYPE": "INTERNAL",
+        "MATL": 1,
+        "AREA": 0.00504,
+        "D_AREA": 0.0152,
+        "RM": 0,
+        "RV": 45,
+        "US": 1860000,
+        "YS": 1570000,
+        "LT": "PRE"
+      },
+      "2": {
+        "NAME": "In_Post_Magura",
+        "TYPE": "INTERNAL",
+        "MATL": 1,
+        "AREA": 0.00504,
+        "D_AREA": 0.1,
+        "RM": 0,
+        "RV": 45,
+        "US": 1860000,
+        "YS": 1570000,
+        "LT": "POST",
+        "ASB": 0.006,
+        "ASE": 0.006,
+        "bBONDED": true,
+        "FF": 0.3,
+        "WF": 0.0066
+      },
+      "3": {
+        "NAME": "Ext_Magura",
+        "TYPE": "EXTERNAL",
+        "MATL": 1,
+        "AREA": 0.00504,
+        "RM": 0,
+        "RV": 10,
+        "US": 1860000,
+        "YS": 1570000,
+        "ASB": 0.006,
+        "ASE": 0.006,
+        "ALPHA": 3000,
+        "FF": 0.3
+      }
+    }
+  }
+}

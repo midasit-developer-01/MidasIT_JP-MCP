@@ -1,0 +1,24 @@
+{
+  "_group": "ope",
+  "_name": "API-RECORDER-LOAD",
+  "uri": "ope/API-RECORDER-LOAD",
+  "methods": "POST",
+  "schema": {
+    "API-RECORDER-LOAD": {
+      "type": "object",
+      "description": "API Recorder Load (API-RECORDER-LOAD). Loads a previously recorded API request session from the given file. The single Argument string is the file path passed to the recorder's Load routine; a load failure raises an error.",
+      "properties": {
+        "Argument": {
+          "type": "string",
+          "description": "File path of the recorded API request session to load."
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": "C:/Temp/api_record.json"
+  }
+}

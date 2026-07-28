@@ -1,0 +1,84 @@
+{
+  "_group": "design",
+  "_name": "DCO",
+  "uri": "design/STEEL/KDS-41-30-2022/DCO",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "DCO": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Steel Design Code Options (DCO). Fields describe global steel design settings; seismic-related fields (SEIS_SYS, COL_WEAK) are applied only when SEISMIC is true.",
+      "properties": {
+        "DGNCODE": {
+          "type": "string",
+          "enum": [
+            "KDS 41 30 : 2022"
+          ],
+          "description": "Design Code. Case-insensitive enum; wire values shown. Only 'KDS 41 30 : 2022' is accepted for this endpoint."
+        },
+        "LAT_BRACE": {
+          "type": "boolean",
+          "default": false,
+          "description": "All Beams/Girders are Laterally Braced."
+        },
+        "DEFL_CHK": {
+          "type": "boolean",
+          "default": true,
+          "description": "Check Beam/Column Deflection."
+        },
+        "SEISMIC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply Special Provisions for Seismic Design. When true, SEIS_SYS and COL_WEAK are applied."
+        },
+        "COMB_RATIO": {
+          "type": "integer",
+          "default": 0,
+          "description": "Combined Ratio Method for Circular Section."
+        },
+        "UNDGR_LD": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use Under Ground Load Combination Type for Under Ground Members."
+        },
+        "SEIS_SYS": {
+          "type": "string",
+          "enum": [
+            "Special Moment Frames",
+            "Intermediate Moment Frames",
+            "Ordinary Moment Frames",
+            "Special Concentrically Braced Frames",
+            "Ordinary Concentrically Braced Frames",
+            "Eccentrically Braced Frames",
+            "Buckling-Restrained Braced Frames",
+            "Special Plate Shear Walls"
+          ],
+          "default": "Special Moment Frames",
+          "description": "[SEISMIC=true] Seismic Load Resisting System. Applied only when SEISMIC is true. Case-insensitive enum; wire values shown."
+        },
+        "COL_WEAK": {
+          "type": "boolean",
+          "default": true,
+          "description": "[SEISMIC=true] Consider strong column-weak beam on last floor. Applied only when SEISMIC is true."
+        }
+      },
+      "required": [
+        "DGNCODE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DGNCODE": "KDS 41 30 : 2022",
+        "LAT_BRACE": false,
+        "DEFL_CHK": true,
+        "SEISMIC": true,
+        "COMB_RATIO": 0,
+        "UNDGR_LD": true,
+        "SEIS_SYS": "Special Concentrically Braced Frames",
+        "COL_WEAK": true
+      }
+    }
+  }
+}

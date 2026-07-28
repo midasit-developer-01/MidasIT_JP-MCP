@@ -1,0 +1,33 @@
+{
+  "_group": "db",
+  "_name": "SMCT",
+  "uri": "db/SMCT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SMCT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Settlement Analysis Control Data (SMCT). A single-instance control record (key is always 1) toggling whether concurrent forces are computed for plate and link elements during settlement analysis.",
+      "properties": {
+        "CONCURRENT_CALC": {
+          "description": "Plate Concurrent Force: when true, concurrent forces for plate elements are calculated during settlement analysis; false disables it.",
+          "type": "boolean",
+          "default": false
+        },
+        "CONCURRENT_LINK": {
+          "description": "Elastic/General Links Concurrent Force: when true, concurrent forces for elastic and general link elements are calculated; false disables it.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "CONCURRENT_CALC": true,
+        "CONCURRENT_LINK": false
+      }
+    }
+  }
+}

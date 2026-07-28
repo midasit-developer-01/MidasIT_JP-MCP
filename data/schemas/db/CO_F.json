@@ -1,0 +1,84 @@
+{
+  "_group": "db",
+  "_name": "CO_F",
+  "uri": "db/CO_F",
+  "methods": "GET, PUT",
+  "schema": {
+    "CO_F": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Floor Load Display Color (CO_F). Sets the display colors (wire frame, hidden fill, hidden edge) and blending for a floor load type; NAME identifies which existing floor load type the color is applied to and each key is that floor load type's id.",
+      "properties": {
+        "NAME": {
+          "description": "Floor load type name. Must match an existing floor load type; if no floor load type with this name exists the write is rejected.",
+          "type": "string"
+        },
+        "WF_R": {
+          "description": "Wire frame color, red channel (0-255). Unspecified channels keep the existing value.",
+          "type": "integer"
+        },
+        "WF_G": {
+          "description": "Wire frame color, green channel (0-255). Unspecified channels keep the existing value.",
+          "type": "integer"
+        },
+        "WF_B": {
+          "description": "Wire frame color, blue channel (0-255). Unspecified channels keep the existing value.",
+          "type": "integer"
+        },
+        "HF_R": {
+          "description": "Hidden fill color, red channel (0-255). Unspecified channels keep the existing value.",
+          "type": "integer"
+        },
+        "HF_G": {
+          "description": "Hidden fill color, green channel (0-255). Unspecified channels keep the existing value.",
+          "type": "integer"
+        },
+        "HF_B": {
+          "description": "Hidden fill color, blue channel (0-255). Unspecified channels keep the existing value.",
+          "type": "integer"
+        },
+        "HE_R": {
+          "description": "Hidden edge color, red channel (0-255). Unspecified channels keep the existing value.",
+          "type": "integer"
+        },
+        "HE_G": {
+          "description": "Hidden edge color, green channel (0-255). Unspecified channels keep the existing value.",
+          "type": "integer"
+        },
+        "HE_B": {
+          "description": "Hidden edge color, blue channel (0-255). Unspecified channels keep the existing value.",
+          "type": "integer"
+        },
+        "OPT_BLEND": {
+          "description": "Blending on/off for the hidden fill display.",
+          "type": "boolean"
+        },
+        "BLEND_FACTOR": {
+          "description": "Blending factor used when OPT_BLEND is true (0.0-1.0).",
+          "type": "number"
+        }
+      },
+      "required": [
+        "NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "FL",
+        "WF_R": 166,
+        "WF_G": 202,
+        "WF_B": 240,
+        "HF_R": 166,
+        "HF_G": 202,
+        "HF_B": 240,
+        "HE_R": 166,
+        "HE_G": 202,
+        "HE_B": 240,
+        "OPT_BLEND": true,
+        "BLEND_FACTOR": 0.25
+      }
+    }
+  }
+}

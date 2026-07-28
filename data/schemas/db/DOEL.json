@@ -1,0 +1,46 @@
+{
+  "_group": "db",
+  "_name": "DOEL",
+  "uri": "db/DOEL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DOEL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Domain Element (DOEL). Assigns each node/element key to a domain; TYPE selects whether the key belongs to a main domain or a sub domain, and MAIN_DOMAIN_NAME resolves the owning main domain.",
+      "properties": {
+        "TYPE": {
+          "description": "Domain type of this key. 0 = Main-Domain, 1 = Sub-Domain. On write this value is taken from the existing stored record (nDomainType), so it identifies the domain kind of the element.",
+          "type": "integer"
+        },
+        "KEY_DOMAIN": {
+          "description": "Key of the owning domain. On write this value is taken from the existing stored record; for TYPE=0 it may be re-resolved from MAIN_DOMAIN_NAME to the matching main-domain key.",
+          "type": "integer"
+        },
+        "MAIN_DOMAIN_NAME": {
+          "description": "[TYPE=0] Name of the main domain to associate with this key. Used only when TYPE=0 and non-empty: the handler looks up the main-domain key by this name and stores it as KEY_DOMAIN. Ignored for TYPE=1.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "TYPE",
+        "KEY_DOMAIN",
+        "MAIN_DOMAIN_NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "165": {
+        "TYPE": 0,
+        "KEY_DOMAIN": 1,
+        "MAIN_DOMAIN_NAME": "DM1"
+      },
+      "163": {
+        "TYPE": 1,
+        "KEY_DOMAIN": 1,
+        "MAIN_DOMAIN_NAME": "DM1"
+      }
+    }
+  }
+}

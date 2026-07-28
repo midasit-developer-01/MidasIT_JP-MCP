@@ -1,0 +1,44 @@
+{
+  "_group": "db",
+  "_name": "LTSR",
+  "uri": "db/LTSR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LTSR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Limiting Slenderness Ratio (LTSR). Per-element steel/SRC design limiting slenderness ratio; the id key is the element number and all fields are optional overrides of the stored values.",
+      "properties": {
+        "bNOTCHECK": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, do not check the slenderness ratio for this element."
+        },
+        "COMP": {
+          "type": "number",
+          "default": 0,
+          "description": "Limiting slenderness ratio for compression members."
+        },
+        "TENS": {
+          "type": "number",
+          "default": 0,
+          "description": "Limiting slenderness ratio for tension members."
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "602": {
+        "bNOTCHECK": false,
+        "COMP": 150,
+        "TENS": 400
+      },
+      "651": {
+        "bNOTCHECK": true,
+        "COMP": 0,
+        "TENS": 0
+      }
+    }
+  }
+}

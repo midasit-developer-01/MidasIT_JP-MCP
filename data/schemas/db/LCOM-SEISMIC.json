@@ -1,0 +1,113 @@
+{
+  "_group": "db",
+  "_name": "LCOM-SEISMIC",
+  "uri": "db/LCOM-SEISMIC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LCOM-SEISMIC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Load Combination for Seismic Design (LCOM-SEISMIC). A named seismic-design load combination whose members are listed in vCOMB; each member ties an analysis type (ANAL) and load case (LCNAME) to a scale FACTOR.",
+      "type": "object",
+      "properties": {
+        "NO": {
+          "description": "Combination number (read-only). Assigned by the program; ignored on write.",
+          "type": "integer"
+        },
+        "NAME": {
+          "description": "Combination name. Must be unique when creating a new combination.",
+          "type": "string"
+        },
+        "ACTIVE": {
+          "description": "Active state of the combination. Typical values: \"ACTIVE\", \"INACTIVE\".",
+          "type": "string",
+          "default": "ACTIVE"
+        },
+        "bES": {
+          "description": "Elastic-stage flag; applied only for the concrete-design combination type (D_LCOMTYPE_CONCRETE) and has no effect on the SEISMIC endpoint.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCB": {
+          "description": "Min/Max/All (envelope) combination flag (read-only). Derived by the program from the combination contents.",
+          "type": "boolean"
+        },
+        "iTYPE": {
+          "description": "Summation (combination) method. Common codes: 0 = Add, 1 = Envelope, 3 = SRSS.",
+          "type": "integer",
+          "default": 0
+        },
+        "DESC": {
+          "description": "Free-text description of the combination.",
+          "type": "string",
+          "default": ""
+        },
+        "iSERV_TYPE": {
+          "description": "Eurocode service type code. Reserved/not applied by the current write path.",
+          "type": "integer"
+        },
+        "nLCOMTYPE": {
+          "description": "Eurocode load-combination type code. Reserved/not applied by the current write path.",
+          "type": "integer"
+        },
+        "nSEISTYPE": {
+          "description": "Eurocode seismic type code. Reserved/not applied by the current write path.",
+          "type": "integer"
+        },
+        "vCOMB": {
+          "description": "List of combination members. Each member contributes ANAL/LCNAME scaled by FACTOR.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ANAL": {
+                "description": "Analysis type of the referenced load case (case-insensitive). ST=Static, RS=Response Spectrum, TH=Time History, MV=Moving, SM=Settlement, CS=Construction Stage, CB=General Comb., others per solver.",
+                "type": "string",
+                "enum": ["ST", "RS", "TH", "MV", "SM", "ENVL", "CB", "CBS", "CBC", "CBF", "CBR", "PO", "CS", "ES", "GI", "CN", "CBA", "CBSC", "CBCF", "CBSM", "CBLN", "NRS", "NES"]
+              },
+              "LCNAME": {
+                "description": "Name of the load case being combined. Must reference an existing load case of the given ANAL type.",
+                "type": "string"
+              },
+              "FACTOR": {
+                "description": "Scale factor applied to this load case member.",
+                "type": "number"
+              }
+            },
+            "required": ["ANAL", "LCNAME", "FACTOR"]
+          }
+        }
+      },
+      "required": ["NAME", "vCOMB"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "S1",
+        "ACTIVE": "ACTIVE",
+        "iTYPE": 0,
+        "DESC": "",
+        "vCOMB": [
+          {
+            "ANAL": "RS",
+            "LCNAME": "RX",
+            "FACTOR": 1.0
+          }
+        ]
+      },
+      "2": {
+        "NAME": "S2",
+        "ACTIVE": "ACTIVE",
+        "iTYPE": 0,
+        "DESC": "",
+        "vCOMB": [
+          {
+            "ANAL": "RS",
+            "LCNAME": "RY",
+            "FACTOR": 1.0
+          }
+        ]
+      }
+    }
+  }
+}

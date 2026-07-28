@@ -1,0 +1,25 @@
+{
+  "_group": "ope",
+  "_name": "CPEXPORT",
+  "uri": "ope/CPEXPORT",
+  "methods": "POST",
+  "schema": {
+    "CPEXPORT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Construction Stage / CP Export (CPEXPORT). The request body is a single string giving the full destination file path; the handler opens that path for writing, creates any missing parent folders, and runs the CP export command.",
+      "properties": {
+        "Argument": {
+          "type": "string",
+          "description": "Full destination file path to export to. The file is opened for writing (must be a writable path) and any missing parent directories are created before the CP export runs."
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": "C:/Temp/Export/model_cp.txt"
+  }
+}

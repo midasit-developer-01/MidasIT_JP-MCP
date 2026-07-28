@@ -1,0 +1,83 @@
+{
+  "_group": "db",
+  "_name": "ARPR",
+  "uri": "db/ARPR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "ARPR": {
+      "type": "object",
+      "description": "Area Pressure Load (ARPR). The TYPE field selects how ELEM_LISTS is interpreted: TYPE=GROUP treats ELEM_LISTS[0] as a plane/area group key, while TYPE=ELEMENT treats ELEM_LISTS as the list of element keys.",
+      "additionalProperties": false,
+      "properties": {
+        "DIRECTION": {
+          "type": "string",
+          "enum": ["NORMAL", "GX", "GY", "GZ", "VECTOR"],
+          "description": "Loading direction. Case-insensitive. NORMAL = normal to the area; GX/GY/GZ = global axis directions; VECTOR = direction given by VECTOR_ARRAY."
+        },
+        "INNER_POINTS": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "Inner reference point [X, Y, Z] used to define the loaded area."
+        },
+        "VECTOR_ARRAY": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3,
+          "description": "Direction vector [X, Y, Z]. Used to define the load direction when DIRECTION=VECTOR."
+        },
+        "ELEM_LISTS": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "minItems": 1,
+          "description": "[TYPE=GROUP] first element is the plane/area group key (only ELEM_LISTS[0] is used). [TYPE=ELEMENT] full list of element keys the pressure applies to."
+        },
+        "bPROJECTION": {
+          "type": "boolean",
+          "description": "Projection flag. true applies the pressure on the projected area."
+        },
+        "P": {
+          "type": "number",
+          "description": "Pressure load magnitude (P1)."
+        },
+        "TYPE": {
+          "type": "string",
+          "enum": ["GROUP", "ELEMENT"],
+          "description": "Selection type. Case-insensitive. GROUP = ELEM_LISTS[0] is an area/plane group key; ELEMENT = ELEM_LISTS is a list of element keys."
+        },
+        "GROUP_NAME": {
+          "type": "string",
+          "default": "",
+          "description": "Load group name. Empty string means no load group; a non-empty name must reference an existing load group."
+        }
+      },
+      "required": ["DIRECTION", "INNER_POINTS", "VECTOR_ARRAY", "ELEM_LISTS", "bPROJECTION", "P", "TYPE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DIRECTION": "NORMAL",
+        "INNER_POINTS": [0.0, 0.0, 0.0],
+        "VECTOR_ARRAY": [0.0, 0.0, 1.0],
+        "ELEM_LISTS": [1],
+        "bPROJECTION": false,
+        "P": 10.0,
+        "TYPE": "GROUP",
+        "GROUP_NAME": ""
+      },
+      "2": {
+        "DIRECTION": "VECTOR",
+        "INNER_POINTS": [1.0, 0.0, 0.0],
+        "VECTOR_ARRAY": [0.0, 0.0, -1.0],
+        "ELEM_LISTS": [1, 2, 3],
+        "bPROJECTION": true,
+        "P": 25.5,
+        "TYPE": "ELEMENT",
+        "GROUP_NAME": ""
+      }
+    }
+  }
+}

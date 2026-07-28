@@ -1,0 +1,67 @@
+{
+  "_group": "design",
+  "_name": "LCTB",
+  "uri": "design/SRC/AIK-SRC2K/LCTB",
+  "methods": "GET, DELETE",
+  "schema": {
+    "LCTB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Load Contribution (LCTB). Fields are driven by the load contribution name/description and its list of load-case contribution items.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Load Contribution Name."
+        },
+        "DESC": {
+          "type": "string",
+          "default": "",
+          "description": "Description."
+        },
+        "BASE_ITEM": {
+          "type": "array",
+          "description": "Load Contribution Items.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "FACTOR": {
+                "type": "number",
+                "description": "Factor."
+              },
+              "LOAD_CASE_NAME": {
+                "type": "string",
+                "default": "",
+                "description": "Load Case Name. Populated on GET from the referenced static load case."
+              }
+            },
+            "required": [
+              "FACTOR"
+            ]
+          }
+        }
+      },
+      "required": [
+        "NAME",
+        "BASE_ITEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Load Contribution 1",
+        "DESC": "Strength combination contribution",
+        "BASE_ITEM": [
+          {
+            "FACTOR": 1.25,
+            "LOAD_CASE_NAME": "Dead Load"
+          },
+          {
+            "FACTOR": 1.5,
+            "LOAD_CASE_NAME": "Live Load"
+          }
+        ]
+      }
+    }
+  }
+}

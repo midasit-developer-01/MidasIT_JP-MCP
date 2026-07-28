@@ -1,0 +1,206 @@
+{
+  "_group": "design",
+  "_name": "MATD",
+  "uri": "design/SRC/AIK-SRC2K/MATD",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "MATD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Modify SRC Design Material - AIK-SRC2K (MATD). Modify-only payload patching an existing Type=\"SRC\" material record; each Assign value carries STEEL, CONCRETE, and REINFORCEMENT sub-objects whose fields are driven by each sub-object's CODE (None | Standard).",
+      "additionalProperties": false,
+      "required": [
+        "STEEL",
+        "CONCRETE",
+        "REINFORCEMENT"
+      ],
+      "properties": {
+        "STEEL": {
+          "type": "object",
+          "description": "STEEL section (written to Data1). CODE drives branching: Standard auto-fills ES/FU/Fy from the grade lookup; None takes NAME + ES/FU/FY from the request body.",
+          "additionalProperties": false,
+          "required": [
+            "CODE"
+          ],
+          "properties": {
+            "CODE": {
+              "type": "string",
+              "enum": [
+                "NONE",
+                "STANDARD"
+              ],
+              "description": "Steel code kind (None | Standard). Case-insensitive enum."
+            },
+            "STANDARD_CODE": {
+              "type": "string",
+              "description": "Standard steel code (must be 'KS22(S)' when CODE=Standard)."
+            },
+            "GRADE": {
+              "type": "string",
+              "description": "[CODE=Standard] Steel grade name (e.g. SS275) -- required when CODE=Standard."
+            },
+            "NAME": {
+              "type": "string",
+              "description": "[CODE=None] User steel name -- required when CODE=None."
+            },
+            "ES": {
+              "type": "number",
+              "description": "Modulus of elasticity Es (>0)."
+            },
+            "FU": {
+              "type": "number",
+              "description": "Tensile strength Fu (>0)."
+            },
+            "FY": {
+              "type": "number",
+              "description": "[CODE=None] Yield strength Fy (>0) -- canonical when CODE=None (fanned out to S_Fy1..S_Fy10)."
+            },
+            "FY1": {
+              "type": "number",
+              "description": "Yield strength Fy1 (>0) -- ignored under CODE=None; auto-filled from grade lookup under CODE=Standard."
+            },
+            "FY2": {
+              "type": "number",
+              "description": "Yield strength Fy2 -- ignored (fanned out from S_Fy1 for AIK-SRC2K)."
+            },
+            "FY3": {
+              "type": "number",
+              "description": "Yield strength Fy3 -- ignored (fanned out from S_Fy1 for AIK-SRC2K)."
+            },
+            "FY4": {
+              "type": "number",
+              "description": "Yield strength Fy4 -- ignored (fanned out from S_Fy1 for AIK-SRC2K)."
+            },
+            "FY5": {
+              "type": "number",
+              "description": "Yield strength Fy5 -- ignored (fanned out from S_Fy1 for AIK-SRC2K)."
+            }
+          }
+        },
+        "CONCRETE": {
+          "type": "object",
+          "description": "CONCRETE section (written to Data2). Standard auto-fills FC + Analysis.* from the grade lookup; None takes NAME + FC from the request body.",
+          "additionalProperties": false,
+          "required": [
+            "CODE"
+          ],
+          "properties": {
+            "CODE": {
+              "type": "string",
+              "enum": [
+                "NONE",
+                "STANDARD"
+              ],
+              "description": "Concrete code kind (None | Standard). Case-insensitive enum."
+            },
+            "STANDARD_CODE": {
+              "type": "string",
+              "description": "Standard concrete code (must be 'KS19(RC)' when CODE=Standard)."
+            },
+            "GRADE": {
+              "type": "string",
+              "description": "[CODE=Standard] Concrete grade name (e.g. C30) -- required when CODE=Standard."
+            },
+            "NAME": {
+              "type": "string",
+              "description": "[CODE=None] User concrete name -- required when CODE=None."
+            },
+            "FC": {
+              "type": "number",
+              "description": "Concrete compressive strength fck (>0)."
+            }
+          }
+        },
+        "REINFORCEMENT": {
+          "type": "object",
+          "description": "REINFORCEMENT section (written to Rebar_CodeName/MainRebarData/SubRebarData). Standard auto-fills B_fy/B_Elast/B_Density from the grade lookup; None takes names + FYR/FYS from the request body.",
+          "additionalProperties": false,
+          "required": [
+            "CODE"
+          ],
+          "properties": {
+            "CODE": {
+              "type": "string",
+              "enum": [
+                "NONE",
+                "STANDARD"
+              ],
+              "description": "Reinforcement code kind (None | Standard). Case-insensitive enum."
+            },
+            "STANDARD_CODE": {
+              "type": "string",
+              "description": "Standard rebar code (must be 'KS19(RC)' when CODE=Standard)."
+            },
+            "MAIN_REBAR_GRADE": {
+              "type": "string",
+              "description": "[CODE=Standard] Main rebar grade (e.g. SD400) -- required when CODE=Standard."
+            },
+            "MAIN_REBAR_NAME": {
+              "type": "string",
+              "description": "[CODE=None] Main rebar user name -- required when CODE=None."
+            },
+            "SUB_REBAR_GRADE": {
+              "type": "string",
+              "description": "[CODE=Standard] Sub rebar grade (e.g. SD400) -- required when CODE=Standard."
+            },
+            "SUB_REBAR_NAME": {
+              "type": "string",
+              "description": "[CODE=None] Sub rebar user name -- required when CODE=None."
+            },
+            "FYR": {
+              "type": "number",
+              "description": "Main rebar yield strength fyr (>0)."
+            },
+            "FYS": {
+              "type": "number",
+              "description": "Sub rebar yield strength fys (>0)."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "STEEL": {
+          "CODE": "STANDARD",
+          "STANDARD_CODE": "KS22(S)",
+          "GRADE": "SS275"
+        },
+        "CONCRETE": {
+          "CODE": "STANDARD",
+          "STANDARD_CODE": "KS19(RC)",
+          "GRADE": "C30"
+        },
+        "REINFORCEMENT": {
+          "CODE": "STANDARD",
+          "STANDARD_CODE": "KS19(RC)",
+          "MAIN_REBAR_GRADE": "SD400",
+          "SUB_REBAR_GRADE": "SD400"
+        }
+      },
+      "2": {
+        "STEEL": {
+          "CODE": "NONE",
+          "NAME": "MySteel",
+          "ES": 205000.0,
+          "FU": 410.0,
+          "FY": 275.0
+        },
+        "CONCRETE": {
+          "CODE": "NONE",
+          "NAME": "MyConcrete",
+          "FC": 30.0
+        },
+        "REINFORCEMENT": {
+          "CODE": "NONE",
+          "MAIN_REBAR_NAME": "MyMainRebar",
+          "SUB_REBAR_NAME": "MySubRebar",
+          "FYR": 400.0,
+          "FYS": 400.0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "_group": "db",
+  "_name": "NLNK-M1",
+  "uri": "db/NLNK-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "NLNK-M1": {
+      "type": "object",
+      "description": "General Link (NLNK-M1). Connects two nodes with a general-link property; REF_SYSTEM chooses the reference coordinate system (0=Element uses BETA_ANGLE, 1=Global uses INPUT_METHOD to pick ANGLE_VALUES/POINT_VALUES/VECTOR_VALUES).",
+      "properties": {
+        "NODE1": {
+          "type": "integer",
+          "description": "Node number 1 (first connected node)."
+        },
+        "NODE2": {
+          "type": "integer",
+          "description": "Node number 2 (second connected node)."
+        },
+        "PROP_NAME": {
+          "type": "string",
+          "description": "General Link Property name; must reference an existing general-link property (NLLP) or the request is rejected."
+        },
+        "REF_SYSTEM": {
+          "type": "integer",
+          "description": "Reference coordinate system: 0 = Element (uses BETA_ANGLE), 1 = Global (uses INPUT_METHOD and the matching values array).",
+          "enum": [0, 1]
+        },
+        "GROUP_NAME": {
+          "type": "string",
+          "description": "Boundary Group name; must reference an existing boundary group when non-empty, otherwise the request is rejected. Empty string means no group.",
+          "default": ""
+        },
+        "BETA_ANGLE": {
+          "type": "number",
+          "description": "[REF_SYSTEM=0] Beta angle in degrees for the Element reference coordinate system.",
+          "default": 0
+        },
+        "INPUT_METHOD": {
+          "type": "integer",
+          "description": "[REF_SYSTEM=1] Orientation input method for the Global reference system: 0 = Angle (ANGLE_VALUES), 1 = 3 Points (POINT_VALUES), 2 = Vector (VECTOR_VALUES).",
+          "enum": [0, 1, 2]
+        },
+        "ANGLE_VALUES": {
+          "type": "array",
+          "description": "[REF_SYSTEM=1, INPUT_METHOD=0] Rotation angles. One object whose VALUE holds 3 numbers (x, y', z\").",
+          "items": {
+            "type": "object",
+            "properties": {
+              "VALUE": {
+                "type": "array",
+                "description": "Angle components [x, y', z\"] in degrees; 3 values.",
+                "items": { "type": "number" }
+              }
+            },
+            "required": ["VALUE"]
+          }
+        },
+        "POINT_VALUES": {
+          "type": "array",
+          "description": "[REF_SYSTEM=1, INPUT_METHOD=1] Three points P0, P1, P2. Three objects, each VALUE holding 3 numbers (X, Y, Z).",
+          "items": {
+            "type": "object",
+            "properties": {
+              "VALUE": {
+                "type": "array",
+                "description": "Point coordinates [X, Y, Z]; 3 values per point.",
+                "items": { "type": "number" }
+              }
+            },
+            "required": ["VALUE"]
+          }
+        },
+        "VECTOR_VALUES": {
+          "type": "array",
+          "description": "[REF_SYSTEM=1, INPUT_METHOD=2] Two direction vectors V1, V2. Two objects, each VALUE holding 3 numbers (X, Y, Z).",
+          "items": {
+            "type": "object",
+            "properties": {
+              "VALUE": {
+                "type": "array",
+                "description": "Vector components [X, Y, Z]; 3 values per vector.",
+                "items": { "type": "number" }
+              }
+            },
+            "required": ["VALUE"]
+          }
+        }
+      },
+      "required": ["NODE1", "NODE2", "PROP_NAME", "REF_SYSTEM"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NODE1": 1,
+        "NODE2": 2,
+        "PROP_NAME": "GenLink1",
+        "REF_SYSTEM": 0,
+        "BETA_ANGLE": 0,
+        "GROUP_NAME": ""
+      },
+      "2": {
+        "NODE1": 3,
+        "NODE2": 4,
+        "PROP_NAME": "GenLink1",
+        "REF_SYSTEM": 1,
+        "INPUT_METHOD": 0,
+        "ANGLE_VALUES": [
+          { "VALUE": [0.0, 0.0, 0.0] }
+        ]
+      },
+      "3": {
+        "NODE1": 5,
+        "NODE2": 6,
+        "PROP_NAME": "GenLink1",
+        "REF_SYSTEM": 1,
+        "INPUT_METHOD": 1,
+        "POINT_VALUES": [
+          { "VALUE": [0.0, 0.0, 0.0] },
+          { "VALUE": [1.0, 0.0, 0.0] },
+          { "VALUE": [0.0, 1.0, 0.0] }
+        ]
+      },
+      "4": {
+        "NODE1": 7,
+        "NODE2": 8,
+        "PROP_NAME": "GenLink1",
+        "REF_SYSTEM": 1,
+        "INPUT_METHOD": 2,
+        "VECTOR_VALUES": [
+          { "VALUE": [1.0, 0.0, 0.0] },
+          { "VALUE": [0.0, 1.0, 0.0] }
+        ]
+      }
+    }
+  }
+}

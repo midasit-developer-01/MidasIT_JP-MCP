@@ -1,0 +1,32 @@
+{
+  "_group": "db",
+  "_name": "HAHS",
+  "uri": "db/HAHS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "HAHS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Heat of Hydration Loads (HAHS). Assigns a heat source to an element by referencing a Heat Source Function (HSFC) by name; the referenced function name must already exist in the model.",
+      "properties": {
+        "FUNC_NAME": {
+          "type": "string",
+          "description": "Name of the Heat Source Function (HSFC) to assign. Must match an existing HSFC name in the model; an empty string clears the reference. A non-empty name that does not resolve to an existing function is rejected."
+        }
+      },
+      "required": [
+        "FUNC_NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "358": {
+        "FUNC_NAME": "HSF1"
+      },
+      "359": {
+        "FUNC_NAME": "HSF2"
+      }
+    }
+  }
+}

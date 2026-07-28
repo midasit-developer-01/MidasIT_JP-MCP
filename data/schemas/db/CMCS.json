@@ -1,0 +1,39 @@
+{
+  "_group": "db",
+  "_name": "CMCS",
+  "uri": "db/CMCS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CMCS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Camber for Construction Stage (CMCS). Keyed by element number; each entry stores the deformation-based and user-defined camber values for that element.",
+      "properties": {
+        "DEFORM": {
+          "description": "Camber value derived from the construction-stage deformation of the element (T_CMCS_D.dDeform). Length unit per active unit system.",
+          "type": "number"
+        },
+        "USER": {
+          "description": "User-defined camber value for the element (T_CMCS_D.dUser). Length unit per active unit system.",
+          "type": "number"
+        }
+      },
+      "required": [
+        "DEFORM",
+        "USER"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "23": {
+        "DEFORM": 0,
+        "USER": 0
+      },
+      "25": {
+        "DEFORM": 0.1,
+        "USER": 0.17
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "_group": "db",
+  "_name": "PZEF",
+  "uri": "db/PZEF",
+  "methods": "POST, GET, PUT",
+  "schema": {
+    "PZEF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Panel Zone Effect (PZEF). A single-key (id \"1\") global setting controlling panel zone offset calculation; all three fields are applied together on OnSet.",
+      "properties": {
+        "OPT_OFFSET": {
+          "type": "boolean",
+          "description": "Auto Calculate Panel Zone Offset Distances. true = automatically calculate the panel zone offset distances; false = do not calculate."
+        },
+        "OFFS_FACTOR": {
+          "type": "number",
+          "description": "Offset Factor applied to the calculated panel zone offset distances."
+        },
+        "OUTPUT_POSITION": {
+          "type": "integer",
+          "description": "Output Position (result-report location) for the panel zone: 1 = Panel Zone, 2 = Offset Position."
+        }
+      },
+      "required": [
+        "OPT_OFFSET",
+        "OFFS_FACTOR",
+        "OUTPUT_POSITION"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "OPT_OFFSET": true,
+        "OFFS_FACTOR": 1.0,
+        "OUTPUT_POSITION": 1
+      }
+    }
+  }
+}

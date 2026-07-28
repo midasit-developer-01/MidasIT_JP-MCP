@@ -1,0 +1,186 @@
+{
+  "_group": "db",
+  "_name": "BTMP",
+  "uri": "db/BTMP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "BTMP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Beam Section Temperature (BTMP). Keyed by element number; ITEMS holds one temperature-load definition per element, each item's bPSC flag selecting the General (false) or PSC/Composite (true) field set inside vSECTTMP.",
+      "type": "object",
+      "properties": {
+        "ITEMS": {
+          "description": "List of beam section temperature definitions for this element key.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of this definition within the element key.",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Static load case name; must reference an existing load case.",
+                "type": "string"
+              },
+              "GROUP_NAME": {
+                "description": "Load group name; empty string means no group. If non-empty it must reference an existing load group.",
+                "type": "string",
+                "default": ""
+              },
+              "DIR": {
+                "description": "Temperature gradient direction (case-insensitive). LY = local-y, LZ = local-z.",
+                "type": "string",
+                "enum": ["LY", "LZ"],
+                "default": "LZ"
+              },
+              "REF": {
+                "description": "Reference position for the section temperature (case-insensitive). Centroid, Top, or Bot.",
+                "type": "string",
+                "enum": ["Centroid", "Top", "Bot"],
+                "default": "Centroid"
+              },
+              "NUM": {
+                "description": "Number of section-temperature entries in vSECTTMP that are processed (the handler iterates j from 0 to NUM-1).",
+                "type": "integer"
+              },
+              "bPSC": {
+                "description": "Section type flag. false = General section, true = PSC/Composite section. Determines which vSECTTMP fields are applied.",
+                "type": "boolean",
+                "default": false
+              },
+              "vSECTTMP": {
+                "description": "Section temperature list. Only the first NUM entries are applied.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "TYPE": {
+                      "description": "Material source (case-insensitive). ELEMENT = take modulus/thermal coefficient from the element's material; INPUT = use the ELAST and THERMAL values given below.",
+                      "type": "string",
+                      "enum": ["ELEMENT", "INPUT"],
+                      "default": "ELEMENT"
+                    },
+                    "ELAST": {
+                      "description": "[TYPE=INPUT] Modulus of elasticity used when TYPE is INPUT.",
+                      "type": "number"
+                    },
+                    "THERMAL": {
+                      "description": "[TYPE=INPUT] Thermal expansion coefficient used when TYPE is INPUT.",
+                      "type": "number"
+                    },
+                    "REF": {
+                      "description": "[bPSC=true] Reference edge (top or bottom) for the temperature block. Applied only for PSC/Composite sections.",
+                      "type": "integer",
+                      "default": 0
+                    },
+                    "OPT_B": {
+                      "description": "[bPSC=true] B-type check option. Applied only for PSC/Composite sections.",
+                      "type": "integer",
+                      "default": 1
+                    },
+                    "VAL_B": {
+                      "description": "B value (width) of the temperature block.",
+                      "type": "number",
+                      "default": 0.0
+                    },
+                    "OPT_H1": {
+                      "description": "[bPSC=true] H1-type check option. Applied only for PSC/Composite sections.",
+                      "type": "integer",
+                      "default": 3
+                    },
+                    "OPT_H2": {
+                      "description": "[bPSC=true] H2-type check option. Applied only for PSC/Composite sections.",
+                      "type": "integer",
+                      "default": 3
+                    },
+                    "VAL_H1": {
+                      "description": "H1 value (height of first block).",
+                      "type": "number",
+                      "default": 0.0
+                    },
+                    "VAL_H2": {
+                      "description": "H2 value (height of second block).",
+                      "type": "number",
+                      "default": 0.0
+                    },
+                    "VAL_T1": {
+                      "description": "T1 value (temperature at first block).",
+                      "type": "number",
+                      "default": 0.0
+                    },
+                    "VAL_T2": {
+                      "description": "T2 value (temperature at second block).",
+                      "type": "number",
+                      "default": 0.0
+                    }
+                  },
+                  "required": []
+                }
+              }
+            },
+            "required": ["LCNAME", "NUM", "vSECTTMP"]
+          }
+        }
+      },
+      "required": ["ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "51": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "Temp(+)",
+            "GROUP_NAME": "",
+            "DIR": "LZ",
+            "REF": "Centroid",
+            "NUM": 1,
+            "bPSC": false,
+            "vSECTTMP": [
+              {
+                "TYPE": "ELEMENT",
+                "VAL_B": 0.2,
+                "VAL_H1": 0.1,
+                "VAL_H2": 0.2,
+                "VAL_T1": 3.0,
+                "VAL_T2": 12.4
+              }
+            ]
+          }
+        ]
+      },
+      "52": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "Temp(+)",
+            "GROUP_NAME": "",
+            "DIR": "LZ",
+            "REF": "Top",
+            "NUM": 1,
+            "bPSC": true,
+            "vSECTTMP": [
+              {
+                "TYPE": "INPUT",
+                "ELAST": 210000.0,
+                "THERMAL": 0.00001,
+                "REF": 0,
+                "OPT_B": 1,
+                "VAL_B": 0.3,
+                "OPT_H1": 3,
+                "OPT_H2": 3,
+                "VAL_H1": 0.15,
+                "VAL_H2": 0.25,
+                "VAL_T1": 5.0,
+                "VAL_T2": 10.0
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

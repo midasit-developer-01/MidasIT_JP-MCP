@@ -1,0 +1,111 @@
+{
+  "_group": "db",
+  "_name": "PSLT",
+  "uri": "db/PSLT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PSLT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Pressure Load Type (PSLT). Defines a named pressure-load type bound to an element geometry (ELEM_TYPE) plus a list of per-load-case pressure entries (PRESSURE_LOAD_ITEMS), each with a load distribution type and up to four pressure magnitudes.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Pressure Load Type name.",
+          "type": "string"
+        },
+        "DESC": {
+          "description": "Description of the pressure load type.",
+          "type": "string"
+        },
+        "ELEM_TYPE": {
+          "description": "Element geometry the pressure load applies to. Case-insensitive; value must be one of the listed wire strings.",
+          "type": "string",
+          "enum": [
+            "Plate/Plane Stress (Face)",
+            "Plate/Plane Stress (Edge)",
+            "Solid (Face)",
+            "Plane Strain (Edge)",
+            "Axisymmetric (Edge)",
+            "Wall (Edge)"
+          ]
+        },
+        "PRESSURE_LOAD_ITEMS": {
+          "description": "List of pressure load entries, one per static load case. The handler accepts at most 8 entries (size must be < 9).",
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "properties": {
+              "LOADCASENAME": {
+                "description": "Static load case name (must match an existing STLD load case); resolved to its load-case key.",
+                "type": "string"
+              },
+              "LOADTYPE": {
+                "description": "Pressure distribution type. Case-insensitive. Uniform: single magnitude in LOAD_P1. Linear: four corner/end magnitudes in LOAD_P1..LOAD_P4.",
+                "type": "string",
+                "enum": [
+                  "Uniform",
+                  "Linear"
+                ]
+              },
+              "LOAD_P1": {
+                "description": "Pressure magnitude P1. For Uniform, the single applied pressure; for Linear, the first node/end value.",
+                "type": "number"
+              },
+              "LOAD_P2": {
+                "description": "Pressure magnitude P2 (Linear only; second value). Ignored for Uniform.",
+                "type": "number",
+                "default": 0
+              },
+              "LOAD_P3": {
+                "description": "Pressure magnitude P3 (Linear only; third value). Ignored for Uniform.",
+                "type": "number",
+                "default": 0
+              },
+              "LOAD_P4": {
+                "description": "Pressure magnitude P4 (Linear only; fourth value). Ignored for Uniform.",
+                "type": "number",
+                "default": 0
+              }
+            },
+            "required": [
+              "LOADCASENAME",
+              "LOADTYPE",
+              "LOAD_P1"
+            ]
+          }
+        }
+      },
+      "required": [
+        "NAME",
+        "DESC",
+        "ELEM_TYPE",
+        "PRESSURE_LOAD_ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Element_Type1",
+        "DESC": "Plate/Plane Stress (Face) pressure load",
+        "ELEM_TYPE": "Plate/Plane Stress (Face)",
+        "PRESSURE_LOAD_ITEMS": [
+          {
+            "LOADCASENAME": "DC",
+            "LOADTYPE": "Uniform",
+            "LOAD_P1": -20
+          },
+          {
+            "LOADCASENAME": "DW",
+            "LOADTYPE": "Linear",
+            "LOAD_P1": -1,
+            "LOAD_P2": -2,
+            "LOAD_P3": -3,
+            "LOAD_P4": 4
+          }
+        ]
+      }
+    }
+  }
+}

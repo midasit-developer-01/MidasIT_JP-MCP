@@ -1,0 +1,58 @@
+{
+  "_group": "db",
+  "_name": "DYNF",
+  "uri": "db/DYNF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DYNF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Railway Dynamic Factor by Element (DYNF). INPUT_TYPE selects which fields apply: 0 uses LENGTH/MAINTAIN_TYPE/OPT_REDUCE_EFF (and HEIGHT_COVER when reduced effect is on); 1 uses DYN_FACTOR. Keyed by element number.",
+      "properties": {
+        "INPUT_TYPE": {
+          "description": "Dynamic factor input method. 0 = Auto (compute from determinant length and track maintenance); 1 = User Input (directly specify the dynamic factor).",
+          "type": "integer"
+        },
+        "LENGTH": {
+          "description": "[INPUT_TYPE=0] Determinant length Lφ used to compute the dynamic factor.",
+          "type": "number"
+        },
+        "MAINTAIN_TYPE": {
+          "description": "[INPUT_TYPE=0] Quality of track maintenance. 0 = Carefully maintained; 1 = Standard maintenance.",
+          "type": "integer"
+        },
+        "OPT_REDUCE_EFF": {
+          "description": "[INPUT_TYPE=0] Whether to consider the reduced dynamic effect. When true, HEIGHT_COVER is required.",
+          "type": "boolean",
+          "default": false
+        },
+        "HEIGHT_COVER": {
+          "description": "[INPUT_TYPE=0, OPT_REDUCE_EFF=true] Height of cover h used to reduce the dynamic effect.",
+          "type": "number"
+        },
+        "DYN_FACTOR": {
+          "description": "[INPUT_TYPE=1] User-specified dynamic factor φ applied directly.",
+          "type": "number"
+        }
+      },
+      "required": [
+        "INPUT_TYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "INPUT_TYPE": 0,
+        "LENGTH": 12.0,
+        "MAINTAIN_TYPE": 1,
+        "OPT_REDUCE_EFF": true,
+        "HEIGHT_COVER": 1.0
+      },
+      "2": {
+        "INPUT_TYPE": 1,
+        "DYN_FACTOR": 1.25
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "_group": "db",
+  "_name": "PLCB",
+  "uri": "db/PLCB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PLCB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Pre-Combined Load Case (PLCB). A single global record (key is always 1) holding the list of static load cases combined into the pre-combined load; the LCNAME_ITEM array of static load case names drives the whole record.",
+      "properties": {
+        "LCNAME_ITEM": {
+          "description": "List of static load case names to include in the pre-combined load. Each name is resolved to an existing static load case (STLD) by the handler; supplying a non-empty list replaces the current set of load cases.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "LCNAME_ITEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME_ITEM": [
+          "DL(BC)1",
+          "DL(BC)3"
+        ]
+      }
+    }
+  }
+}

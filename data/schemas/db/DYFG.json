@@ -1,0 +1,59 @@
+{
+  "_group": "db",
+  "_name": "DYFG",
+  "uri": "db/DYFG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DYFG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Railway Dynamic Factor (DYFG). A single global setting (key is always 1) whose fields configure how the dynamic amplification factor for railway moving loads is determined and maintained.",
+      "type": "object",
+      "properties": {
+        "INPUT_TYPE": {
+          "description": "Input type integer code controlling how the dynamic factor is obtained. 0 = program auto-computes the factor; 1 = user directly supplies DYN_FACTOR.",
+          "type": "integer"
+        },
+        "LENGTH": {
+          "description": "Determinant length Lphi used in the dynamic factor formula.",
+          "type": "number"
+        },
+        "MAINTAIN_TYPE": {
+          "description": "Quality of track maintenance integer code. 0 = carefully maintained track; 1 = standard maintenance.",
+          "type": "integer"
+        },
+        "OPT_REDUCE_EFF": {
+          "description": "Whether to consider the reduced dynamic effect (e.g. for buried structures where cover reduces the dynamic amplification). When true, HEIGHT_COVER is used.",
+          "type": "boolean",
+          "default": false
+        },
+        "HEIGHT_COVER": {
+          "description": "Height of cover h above the structure, used when computing the reduced dynamic effect.",
+          "type": "number"
+        },
+        "DYN_FACTOR": {
+          "description": "Dynamic factor phi. Used as the applied factor when INPUT_TYPE = 1 (user input).",
+          "type": "number"
+        }
+      },
+      "required": [
+        "INPUT_TYPE",
+        "LENGTH",
+        "MAINTAIN_TYPE",
+        "HEIGHT_COVER",
+        "DYN_FACTOR"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "INPUT_TYPE": 0,
+        "LENGTH": 12.0,
+        "MAINTAIN_TYPE": 0,
+        "OPT_REDUCE_EFF": false,
+        "HEIGHT_COVER": 1.0,
+        "DYN_FACTOR": 1.2
+      }
+    }
+  }
+}

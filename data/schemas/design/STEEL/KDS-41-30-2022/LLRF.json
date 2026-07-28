@@ -1,0 +1,98 @@
+{
+  "_group": "design",
+  "_name": "LLRF",
+  "uri": "design/STEEL/KDS-41-30-2022/LLRF",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "LLRF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Live Load Reduction Factor (LLRF). Fields are driven by the reduction calculation rule (CALC_RULE): the RANGE_MAX/RANGE_MIN per-story bounds apply only when CALC_RULE is 0.",
+      "properties": {
+        "CALC_RULE": {
+          "type": "integer",
+          "enum": [0, 1],
+          "description": "Calculation Rule. 0 = user-defined reduction range (Rmax/Rmin per story); 1 = code-based calculation. Must be 0 or 1."
+        },
+        "APPLIED_COMP": {
+          "type": "array",
+          "description": "Applied Components: force components the live load reduction is applied to. Enum values are case-insensitive.",
+          "items": {
+            "type": "string",
+            "enum": ["ALL", "AXIAL", "MOMENTS", "SHEAR"]
+          }
+        },
+        "LIVE_LOAD_CASES": {
+          "type": "array",
+          "description": "Live Load Case Names. Each name must reference an existing static load case; at most 5 cases are used.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "REDUCTION_DATA": {
+          "type": "array",
+          "description": "Reduction Data Table: per-story reduction definition rows.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "STORY": {
+                "type": "string",
+                "description": "Story name. Must reference an existing story."
+              },
+              "XMIN": {
+                "type": "number",
+                "description": "X Min: lower X-range bound for the story."
+              },
+              "XMAX": {
+                "type": "number",
+                "description": "X Max: upper X-range bound for the story."
+              },
+              "YMIN": {
+                "type": "number",
+                "description": "Y Min: lower Y-range bound for the story."
+              },
+              "YMAX": {
+                "type": "number",
+                "description": "Y Max: upper Y-range bound for the story."
+              },
+              "RANGE_MAX": {
+                "type": "number",
+                "default": 1.0,
+                "enum": [1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5],
+                "description": "[CALC_RULE=0] Max reduction factor (Rmax). Applied only when CALC_RULE is 0; must be one of 1, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5 and be >= RANGE_MIN. Defaults to 1.0."
+              },
+              "RANGE_MIN": {
+                "type": "number",
+                "default": 0.5,
+                "enum": [1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5],
+                "description": "[CALC_RULE=0] Min reduction factor (Rmin). Applied only when CALC_RULE is 0; must be one of 1, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5 and be <= RANGE_MAX. Defaults to 0.5."
+              }
+            },
+            "required": ["STORY", "XMIN", "XMAX", "YMIN", "YMAX"]
+          }
+        }
+      },
+      "required": ["CALC_RULE", "APPLIED_COMP", "LIVE_LOAD_CASES", "REDUCTION_DATA"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "CALC_RULE": 0,
+        "APPLIED_COMP": ["ALL"],
+        "LIVE_LOAD_CASES": ["Live Load"],
+        "REDUCTION_DATA": [
+          {
+            "STORY": "1F",
+            "XMIN": 0.0,
+            "XMAX": 10.0,
+            "YMIN": 0.0,
+            "YMAX": 10.0,
+            "RANGE_MAX": 1.0,
+            "RANGE_MIN": 0.5
+          }
+        ]
+      }
+    }
+  }
+}

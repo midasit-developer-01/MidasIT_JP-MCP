@@ -1,0 +1,99 @@
+{
+  "_group": "design",
+  "_name": "LLRF",
+  "uri": "design/RC/KDS-41-20-2022/LLRF",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "LLRF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Live Load Reduction Factor (LLRF). Fields are driven by the calculation rule (CALC_RULE): rule 0 uses the per-story reduction range (RANGE_MAX/RANGE_MIN), while the applied components and live load cases define which forces are reduced.",
+      "properties": {
+        "CALC_RULE": {
+          "type": "integer",
+          "enum": [0, 1],
+          "description": "Calculation Rule. Must be 0 or 1 (values outside this range are rejected). 0: reduction uses the per-story RANGE_MAX/RANGE_MIN limits; 1: reduction range fields are ignored."
+        },
+        "APPLIED_COMP": {
+          "type": "array",
+          "description": "Applied Components: force components to which the reduction is applied. Enum values are case-insensitive. Use ALL for all components, or any combination of AXIAL, MOMENTS, SHEAR.",
+          "items": {
+            "type": "string",
+            "enum": ["ALL", "AXIAL", "MOMENTS", "SHEAR"]
+          }
+        },
+        "LIVE_LOAD_CASES": {
+          "type": "array",
+          "description": "Live Load Case Names. Each name must match an existing load case; at most 5 are used.",
+          "maxItems": 5,
+          "items": {
+            "type": "string"
+          }
+        },
+        "REDUCTION_DATA": {
+          "type": "array",
+          "description": "Reduction Data Table: one entry per story defining the tributary area bounds and (for CALC_RULE=0) the reduction range.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "STORY": {
+                "type": "string",
+                "description": "Story name. Must match an existing story."
+              },
+              "XMIN": {
+                "type": "number",
+                "description": "X Min: minimum X coordinate of the reduction area."
+              },
+              "XMAX": {
+                "type": "number",
+                "description": "X Max: maximum X coordinate of the reduction area."
+              },
+              "YMIN": {
+                "type": "number",
+                "description": "Y Min: minimum Y coordinate of the reduction area."
+              },
+              "YMAX": {
+                "type": "number",
+                "description": "Y Max: maximum Y coordinate of the reduction area."
+              },
+              "RANGE_MAX": {
+                "type": "number",
+                "default": 1.0,
+                "enum": [1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5],
+                "description": "[CALC_RULE=0] Max(Rmax): upper reduction limit. One of 1, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5. Must be greater than or equal to RANGE_MIN."
+              },
+              "RANGE_MIN": {
+                "type": "number",
+                "default": 0.5,
+                "enum": [1.0, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5],
+                "description": "[CALC_RULE=0] Min(Rmin): lower reduction limit. One of 1, 0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5. Must be less than or equal to RANGE_MAX."
+              }
+            },
+            "required": ["STORY", "XMIN", "XMAX", "YMIN", "YMAX"]
+          }
+        }
+      },
+      "required": ["CALC_RULE", "APPLIED_COMP", "LIVE_LOAD_CASES", "REDUCTION_DATA"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "CALC_RULE": 0,
+        "APPLIED_COMP": ["AXIAL", "MOMENTS"],
+        "LIVE_LOAD_CASES": ["LL"],
+        "REDUCTION_DATA": [
+          {
+            "STORY": "1F",
+            "XMIN": -10.0,
+            "XMAX": 10.0,
+            "YMIN": -5.0,
+            "YMAX": 5.0,
+            "RANGE_MAX": 1.0,
+            "RANGE_MIN": 0.5
+          }
+        ]
+      }
+    }
+  }
+}

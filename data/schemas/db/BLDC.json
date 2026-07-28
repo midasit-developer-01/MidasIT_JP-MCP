@@ -1,0 +1,130 @@
+{
+  "_group": "db",
+  "_name": "BLDC",
+  "uri": "db/BLDC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "BLDC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Building Control Data (BLDC). A single-instance (key = 1) definition; the bSTORY_CENTER flag plus USE_OPTION drive which story-shear-ratio load-case fields apply, and bSTORY_RESPONSE_THRS drives the story-center method.",
+      "properties": {
+        "bBASE_LEVEL": {
+          "type": "boolean",
+          "default": false,
+          "description": "Consider Ground Level. When true, BASE_LEVEL, bBEDROCK_LEVEL and bINCLUDE_BASE_MASS become meaningful."
+        },
+        "BASE_LEVEL": {
+          "type": "number",
+          "description": "[bBASE_LEVEL=true] Ground Level elevation."
+        },
+        "bBEDROCK_LEVEL": {
+          "type": "boolean",
+          "default": false,
+          "description": "[bBASE_LEVEL=true] Consider Underground Seismic Loads. When true, BEDROCK_LEVEL becomes meaningful."
+        },
+        "BEDROCK_LEVEL": {
+          "type": "number",
+          "description": "[bBASE_LEVEL=true, bBEDROCK_LEVEL=true] Bedrock Level elevation."
+        },
+        "bINCLUDE_BASE_MASS": {
+          "type": "boolean",
+          "default": true,
+          "description": "[bBASE_LEVEL=true] Consider Mass below Ground Level for Eigenvalue Analysis."
+        },
+        "bSTORY_SHEAR_RATIO": {
+          "type": "boolean",
+          "default": true,
+          "description": "Seismic Accidental Eccentricity / story shear ratio flag."
+        },
+        "bCONSIDER_WIND_SEIS_FOR_FLEX": {
+          "type": "boolean",
+          "default": true,
+          "description": "Consider Wind and Seismic Loads for Flexible Floors."
+        },
+        "bSTORY_CENTER": {
+          "type": "boolean",
+          "default": false,
+          "description": "Consider Story Shear Force Ratio (story-center evaluation). When true, USE_OPTION, STSF_LCNAME_X, STSF_LCNAME_Y and the USE_OPTION-dependent load-case fields become meaningful."
+        },
+        "USE_OPTION": {
+          "type": "string",
+          "enum": ["MASS", "AXIAL", "SHEAR"],
+          "default": "AXIAL",
+          "description": "[bSTORY_CENTER=true] Use Mass / Use Axial Force / Use Shear Force. Case-insensitive. AXIAL uses BLDC_CASE_ITEMS; SHEAR uses SEIS_LCNAME_X/Y."
+        },
+        "BLDC_CASE_ITEMS": {
+          "type": "array",
+          "description": "[bSTORY_CENTER=true, USE_OPTION=AXIAL] Building Control Cases. Must contain at least one item; each LCNAME must reference an existing static load case.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LCNAME": {
+                "type": "string",
+                "description": "Load Case name (must reference an existing static load case)."
+              },
+              "SCALE_FACTOR": {
+                "type": "number",
+                "description": "Scale Factor applied to the load case."
+              }
+            },
+            "required": ["LCNAME", "SCALE_FACTOR"]
+          }
+        },
+        "SEIS_LCNAME_X": {
+          "type": "string",
+          "description": "[bSTORY_CENTER=true, USE_OPTION=SHEAR] Seismic Load Case name, X-Dir (must reference an existing load case)."
+        },
+        "SEIS_LCNAME_Y": {
+          "type": "string",
+          "description": "[bSTORY_CENTER=true, USE_OPTION=SHEAR] Seismic Load Case name, Y-Dir (must reference an existing load case)."
+        },
+        "STSF_LCNAME_X": {
+          "type": "string",
+          "description": "[bSTORY_CENTER=true] Story Stiffness Center Load Case name, X-Dir (must reference an existing load case)."
+        },
+        "STSF_LCNAME_Y": {
+          "type": "string",
+          "description": "[bSTORY_CENTER=true] Story Stiffness Center Load Case name, Y-Dir (must reference an existing load case)."
+        },
+        "bSTORY_RESPONSE_THRS": {
+          "type": "boolean",
+          "default": false,
+          "description": "Consider Story Response of Time History Results. When true, STORY_CENTER_METHOD becomes meaningful."
+        },
+        "STORY_CENTER_METHOD": {
+          "type": "string",
+          "enum": ["Story Center", "Story Average", "Story Drift by Maximum of Vertical Elements"],
+          "default": "Story Drift by Maximum of Vertical Elements",
+          "description": "[bSTORY_RESPONSE_THRS=true] Story Center Method. Case-insensitive; wire values (with spaces) are enforced at runtime."
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bBASE_LEVEL": true,
+        "BASE_LEVEL": 0.0,
+        "bBEDROCK_LEVEL": true,
+        "BEDROCK_LEVEL": -10.0,
+        "bINCLUDE_BASE_MASS": true,
+        "bSTORY_SHEAR_RATIO": true,
+        "bCONSIDER_WIND_SEIS_FOR_FLEX": true,
+        "bSTORY_CENTER": true,
+        "USE_OPTION": "AXIAL",
+        "STSF_LCNAME_X": "EX",
+        "STSF_LCNAME_Y": "EY",
+        "BLDC_CASE_ITEMS": [
+          {
+            "LCNAME": "DL",
+            "SCALE_FACTOR": 1.0
+          }
+        ],
+        "bSTORY_RESPONSE_THRS": true,
+        "STORY_CENTER_METHOD": "Story Drift by Maximum of Vertical Elements"
+      }
+    }
+  }
+}

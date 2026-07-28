@@ -1,0 +1,190 @@
+{
+  "_group": "ope",
+  "_name": "USLC",
+  "uri": "ope/USLC",
+  "methods": "POST",
+  "schema": {
+    "USLC": {
+      "type": "object",
+      "description": "Make Load Cases by Load Combination (USLC). Generates unit load cases from selected load combinations of a given design position; the fields drive which combinations are converted and which load components are copied.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body describing the load combinations to convert into load cases and which load components to copy.",
+          "properties": {
+            "PREFIX": {
+              "type": "string",
+              "description": "Optional prefix prepended to the names of the generated load cases.",
+              "default": ""
+            },
+            "POSITION": {
+              "type": "string",
+              "description": "Design position (load combination category) that the selected combinations belong to and that the new load cases are created under. Case-insensitive enum.",
+              "enum": [
+                "GEN",
+                "STEEL",
+                "CONC",
+                "FDN",
+                "SRC",
+                "ALU",
+                "STLCOMP",
+                "CFSTEEL",
+                "SEISMIC",
+                "LINEAR_EVAL"
+              ]
+            },
+            "LCOM_LIST": {
+              "type": "array",
+              "description": "List of selected load combinations to convert into load cases. Each entry identifies a combination by its position type and name.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "TYPE": {
+                    "type": "string",
+                    "description": "Design position (category) of this load combination. Case-insensitive enum.",
+                    "enum": [
+                      "GEN",
+                      "STEEL",
+                      "CONC",
+                      "FDN",
+                      "SRC",
+                      "ALU",
+                      "STLCOMP",
+                      "CFSTEEL",
+                      "SEISMIC",
+                      "LINEAR_EVAL"
+                    ]
+                  },
+                  "NAME": {
+                    "type": "string",
+                    "description": "Name of the load combination to convert."
+                  }
+                },
+                "required": [
+                  "TYPE",
+                  "NAME"
+                ]
+              }
+            },
+            "LOADS": {
+              "type": "object",
+              "description": "Selection of which load components are copied into the generated load cases. Each flag defaults to true (copied).",
+              "properties": {
+                "SELF_WEIGHT": {
+                  "type": "boolean",
+                  "description": "Copy self weight (body force) loads.",
+                  "default": true
+                },
+                "NODAL_BODY_FORCE": {
+                  "type": "boolean",
+                  "description": "Copy nodal body force loads.",
+                  "default": true
+                },
+                "NODAL_LOAD": {
+                  "type": "boolean",
+                  "description": "Copy nodal loads.",
+                  "default": true
+                },
+                "SPECIFIED_DISPLACEMENT": {
+                  "type": "boolean",
+                  "description": "Copy specified displacement loads.",
+                  "default": true
+                },
+                "BEAM_LOAD": {
+                  "type": "boolean",
+                  "description": "Copy beam loads.",
+                  "default": true
+                },
+                "FLOOR_LOAD": {
+                  "type": "boolean",
+                  "description": "Copy floor loads.",
+                  "default": true
+                },
+                "FINISHING_MATERIAL_LOAD": {
+                  "type": "boolean",
+                  "description": "Copy finishing material loads.",
+                  "default": true
+                },
+                "PRESSURE_LOAD": {
+                  "type": "boolean",
+                  "description": "Copy pressure loads.",
+                  "default": true
+                },
+                "PLANE_LOAD": {
+                  "type": "boolean",
+                  "description": "Copy plane loads.",
+                  "default": true
+                },
+                "SYSTEM_TEMPERATURE": {
+                  "type": "boolean",
+                  "description": "Copy system temperature loads.",
+                  "default": true
+                },
+                "NODAL_TEMPERATURE": {
+                  "type": "boolean",
+                  "description": "Copy nodal temperature loads.",
+                  "default": true
+                },
+                "ELEMENT_TEMPERATURE": {
+                  "type": "boolean",
+                  "description": "Copy element temperature loads.",
+                  "default": true
+                },
+                "TEMPERATURE_GRADIENT": {
+                  "type": "boolean",
+                  "description": "Copy temperature gradient loads.",
+                  "default": true
+                },
+                "BEAM_SECTION_TEMPERATURE": {
+                  "type": "boolean",
+                  "description": "Copy beam section temperature loads.",
+                  "default": true
+                },
+                "PRESTRESS_LOAD": {
+                  "type": "boolean",
+                  "description": "Copy prestress loads.",
+                  "default": true
+                },
+                "PRETENSION_LOAD": {
+                  "type": "boolean",
+                  "description": "Copy pretension loads.",
+                  "default": true
+                },
+                "TENDON_PRESTRESS_LOAD": {
+                  "type": "boolean",
+                  "description": "Copy tendon prestress loads.",
+                  "default": true
+                }
+              }
+            }
+          },
+          "required": [
+            "POSITION",
+            "LCOM_LIST"
+          ]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "PREFIX": "UL_",
+      "POSITION": "STEEL",
+      "LCOM_LIST": [
+        {
+          "TYPE": "STEEL",
+          "NAME": "cLCB1"
+        },
+        {
+          "TYPE": "STEEL",
+          "NAME": "cLCB2"
+        }
+      ],
+      "LOADS": {
+        "SELF_WEIGHT": true,
+        "NODAL_LOAD": true,
+        "BEAM_LOAD": false
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "_group": "design",
+  "_name": "WMAK",
+  "uri": "design/RC/KDS-41-20-2022/WMAK",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "WMAK": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Wall Mark (WMAK). Fields are driven by the wall mark name and the list of wall IDs grouped under that mark.",
+      "properties": {
+        "MARKNAME": {
+          "type": "string",
+          "description": "Wall Mark Name. Trailing whitespace is trimmed; name must be unique among wall marks."
+        },
+        "WID_LIST": {
+          "type": "array",
+          "description": "Wall ID List. User wall IDs assigned to this wall mark.",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "required": [
+        "MARKNAME",
+        "WID_LIST"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "MARKNAME": "W1",
+        "WID_LIST": [
+          101,
+          102,
+          103
+        ]
+      }
+    }
+  }
+}

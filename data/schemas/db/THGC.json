@@ -1,0 +1,206 @@
+{
+  "_group": "db",
+  "_name": "THGC",
+  "uri": "db/THGC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THGC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Time History Global Control (THGC). Singleton nonlinear time-history analysis global control; there is exactly one THGC record (key 1) whose fields set geometry nonlinearity, initial-load handling, iteration/convergence parameters, result selection flags, and the initial load list.",
+      "properties": {
+        "ENERGYRESULT": {
+          "description": "Output time history energy result.",
+          "type": "boolean",
+          "default": true
+        },
+        "SDVI": {
+          "description": "Output viscous damper / oil damper result.",
+          "type": "boolean",
+          "default": true
+        },
+        "SDVE": {
+          "description": "Output viscoelastic damper result.",
+          "type": "boolean",
+          "default": true
+        },
+        "SDST": {
+          "description": "Output steel damper result.",
+          "type": "boolean",
+          "default": true
+        },
+        "SDHY": {
+          "description": "Output hysteretic isolator result.",
+          "type": "boolean",
+          "default": true
+        },
+        "SDIS": {
+          "description": "Output isolator result.",
+          "type": "boolean",
+          "default": true
+        },
+        "bMSSSTATUS": {
+          "description": "Output MSS (multi-shear-spring) model yield status.",
+          "type": "boolean",
+          "default": true
+        },
+        "GNT": {
+          "description": "Geometry nonlinearity type. Integer code; typical values: 0 = None, 1 = Large Displacements, 2 = P-Delta.",
+          "type": "integer"
+        },
+        "ILT": {
+          "description": "Initial load type. Integer code; typical values: 0 = Perform nonlinear static analysis for initial load, 1 = Import static analysis / construction stage analysis result.",
+          "type": "integer"
+        },
+        "IEPI": {
+          "description": "Consider 'Ignore Elements for NL. Analysis Initial Load' option.",
+          "type": "boolean",
+          "default": true
+        },
+        "NSTEP": {
+          "description": "Increment step count [nstep].",
+          "type": "integer",
+          "default": 1
+        },
+        "bROT": {
+          "description": "Result output type. false = final step only, true = output every SNIO step increment.",
+          "type": "boolean",
+          "default": false
+        },
+        "SNIO": {
+          "description": "Step number increment for output (used when bROT is true).",
+          "type": "integer",
+          "default": 1
+        },
+        "bPCF": {
+          "description": "Permit convergence failure.",
+          "type": "boolean"
+        },
+        "MAXNS": {
+          "description": "Maximum number of sub-steps.",
+          "type": "integer"
+        },
+        "MAXIT": {
+          "description": "Maximum iteration count.",
+          "type": "integer"
+        },
+        "bDN": {
+          "description": "Use displacement norm for convergence.",
+          "type": "boolean",
+          "default": true
+        },
+        "bFN": {
+          "description": "Use force norm for convergence.",
+          "type": "boolean",
+          "default": false
+        },
+        "bEN": {
+          "description": "Use energy norm for convergence.",
+          "type": "boolean",
+          "default": false
+        },
+        "DN": {
+          "description": "Displacement norm convergence tolerance value.",
+          "type": "number",
+          "default": 0.001
+        },
+        "FN": {
+          "description": "Force norm convergence tolerance value.",
+          "type": "number",
+          "default": 0
+        },
+        "EN": {
+          "description": "Energy norm convergence tolerance value.",
+          "type": "number",
+          "default": 0
+        },
+        "bULSM": {
+          "description": "Use line search method.",
+          "type": "boolean",
+          "default": false
+        },
+        "ULSM": {
+          "description": "Number of iterations to start line search.",
+          "type": "integer",
+          "default": 5
+        },
+        "aILL": {
+          "description": "Initial load list. Each item references a load case by name (SLC), a scale factor (SF), and the load case type (LCT). If non-empty on write, the existing initial load list is replaced.",
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "SLC": {
+                "description": "Load case name. Resolved as a static load case when LCT = 1, otherwise as a construction-stage load case; the name must already exist.",
+                "type": "string"
+              },
+              "SF": {
+                "description": "Scale factor applied to the initial load case.",
+                "type": "number"
+              },
+              "LCT": {
+                "description": "Load case type. 1 = Static load case (D_LOADCASE_STATIC), 18 = Construction stage load case (D_LOADCASE_STAGE).",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "SLC",
+              "SF",
+              "LCT"
+            ]
+          }
+        }
+      },
+      "required": [
+        "GNT",
+        "ILT",
+        "bPCF",
+        "MAXNS",
+        "MAXIT"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ENERGYRESULT": true,
+        "SDVI": true,
+        "SDVE": true,
+        "SDST": true,
+        "SDHY": true,
+        "SDIS": true,
+        "bMSSSTATUS": true,
+        "GNT": 0,
+        "ILT": 0,
+        "IEPI": true,
+        "NSTEP": 1,
+        "bROT": false,
+        "SNIO": 1,
+        "bPCF": true,
+        "MAXNS": 10,
+        "MAXIT": 10,
+        "bDN": true,
+        "bFN": false,
+        "bEN": false,
+        "DN": 0.001,
+        "FN": 0,
+        "EN": 0,
+        "bULSM": false,
+        "ULSM": 5,
+        "aILL": [
+          {
+            "SLC": "Pretension",
+            "SF": 1,
+            "LCT": 1
+          },
+          {
+            "SLC": "Stage1",
+            "SF": 1.2,
+            "LCT": 18
+          }
+        ]
+      }
+    }
+  }
+}

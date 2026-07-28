@@ -1,0 +1,83 @@
+{
+  "_group": "db",
+  "_name": "THRE",
+  "uri": "db/THRE",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THRE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Time History Analysis Results - Element Force (THRE). TYPE_ELEMENT (0:Beam, 1:Truss, 2:Wall) selects the element category; PROPERTY_KEY identifies the element and LOCATION/COMP select the result location and component, while STORY_NAME applies only to Wall elements.",
+      "type": "object",
+      "properties": {
+        "THIS_NAME": {
+          "description": "Name of the Time History Load Case whose element-force results are graphed.",
+          "type": "string"
+        },
+        "TYPE_ELEMENT": {
+          "description": "Type of Element. 0:Beam, 1:Truss, 2:Wall. Hard-validated against the element type of PROPERTY_KEY: 0 requires a beam element, 1 requires a truss element.",
+          "type": "integer"
+        },
+        "PROPERTY_KEY": {
+          "description": "Element identifier. For TYPE_ELEMENT 0 (Beam) and 1 (Truss) this is the element number; for TYPE_ELEMENT 2 (Wall) this is the User Wall ID. Must reference an existing element.",
+          "type": "integer"
+        },
+        "STORY_NAME": {
+          "description": "[TYPE_ELEMENT=2 Wall] Name of the Story. Used only when TYPE_ELEMENT is 2 (Wall); ignored otherwise.",
+          "type": "string",
+          "default": ""
+        },
+        "TYPE_RES": {
+          "description": "Type of Result. 0:Force (only supported value).",
+          "type": "integer",
+          "default": 0
+        },
+        "LOCATION": {
+          "description": "Result location along the element. 0:I-end/Node, 1:J-end/Node.",
+          "type": "integer",
+          "default": 0
+        },
+        "COMP": {
+          "description": "Force component. 0:Axial (Fx), 1:Shear-y (Fy), 2:Shear-z (Fz), 3:Torsion (Mx), 4:Moment-y (My), 5:Moment-z (Mz). For TYPE_ELEMENT=1 (Truss) COMP must be 0 (hard-validated).",
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "required": [
+        "THIS_NAME",
+        "TYPE_ELEMENT",
+        "PROPERTY_KEY"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "THIS_NAME": "HIST1",
+        "TYPE_ELEMENT": 0,
+        "PROPERTY_KEY": 102,
+        "STORY_NAME": "",
+        "TYPE_RES": 0,
+        "LOCATION": 0,
+        "COMP": 4
+      },
+      "2": {
+        "THIS_NAME": "HIST1",
+        "TYPE_ELEMENT": 1,
+        "PROPERTY_KEY": 205,
+        "STORY_NAME": "",
+        "TYPE_RES": 0,
+        "LOCATION": 0,
+        "COMP": 0
+      },
+      "3": {
+        "THIS_NAME": "HIST1",
+        "TYPE_ELEMENT": 2,
+        "PROPERTY_KEY": 3,
+        "STORY_NAME": "1F",
+        "TYPE_RES": 0,
+        "LOCATION": 1,
+        "COMP": 1
+      }
+    }
+  }
+}

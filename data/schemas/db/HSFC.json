@@ -1,0 +1,122 @@
+{
+  "_group": "db",
+  "_name": "HSFC",
+  "uri": "db/HSFC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "HSFC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Heat Source Function (HSFC). The TYPE field selects which fields apply: CONST uses TEMP_CONST; FUNC uses OPT_USE_CONC_DATA to switch between (K, ALPHA) and (CEMENT_TYPE, TEMP_FUNC, CEMENT_CONT); USER uses IS_ADIABATIC_TEMP, SCALE_FACTOR and the ITEM time-value function data.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Function name.",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Heat source function type (case-insensitive). CONST = constant heat source; FUNC = code-based adiabatic temperature rise function; USER = user-defined function data.",
+          "type": "string",
+          "enum": ["CONST", "FUNC", "USER"]
+        },
+        "TEMP_CONST": {
+          "description": "[TYPE=CONST] Constant heat source temperature.",
+          "type": "number",
+          "default": 0
+        },
+        "OPT_USE_CONC_DATA": {
+          "description": "[TYPE=FUNC] Whether to use concrete data. false = specify K and ALPHA directly; true = specify CEMENT_TYPE, TEMP_FUNC and CEMENT_CONT.",
+          "type": "boolean",
+          "default": false
+        },
+        "K": {
+          "description": "[TYPE=FUNC, OPT_USE_CONC_DATA=false] Maximum adiabatic temperature rise (K).",
+          "type": "number",
+          "default": 0
+        },
+        "ALPHA": {
+          "description": "[TYPE=FUNC, OPT_USE_CONC_DATA=false] Reactive velocity coefficient (alpha).",
+          "type": "number",
+          "default": 0
+        },
+        "CEMENT_TYPE": {
+          "description": "[TYPE=FUNC, OPT_USE_CONC_DATA=true] Cement type code. 0 = Normal Portland Cement; 1 = Moderate Heat Portland Cement; 2 = High-early-strength Portland Cement; 3 = Blast-furnace Slag Cement; 4 = Fly Ash Cement.",
+          "type": "integer",
+          "default": 0
+        },
+        "TEMP_FUNC": {
+          "description": "[TYPE=FUNC, OPT_USE_CONC_DATA=true] Temperature code. 0 = 10 deg; 1 = 20 deg; 2 = 30 deg.",
+          "type": "integer",
+          "default": 0
+        },
+        "CEMENT_CONT": {
+          "description": "[TYPE=FUNC, OPT_USE_CONC_DATA=true] Cement content.",
+          "type": "number",
+          "default": 0
+        },
+        "IS_ADIABATIC_TEMP": {
+          "description": "[TYPE=USER] Data type flag. true = data values are Temperature (adiabatic temperature); false = data values are Heat Source.",
+          "type": "boolean",
+          "default": true
+        },
+        "SCALE_FACTOR": {
+          "description": "[TYPE=USER] Scale factor applied to the function data.",
+          "type": "number"
+        },
+        "ITEM": {
+          "description": "[TYPE=USER] Function data table (time-value pairs). Must contain at least one entry when TYPE=USER.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "TIME": {
+                "description": "Time.",
+                "type": "number"
+              },
+              "VALUE": {
+                "description": "Value at the given time (heat source or temperature depending on IS_ADIABATIC_TEMP).",
+                "type": "number"
+              }
+            },
+            "required": ["TIME", "VALUE"]
+          }
+        }
+      },
+      "required": ["NAME", "TYPE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "F1",
+        "TYPE": "USER",
+        "IS_ADIABATIC_TEMP": false,
+        "SCALE_FACTOR": 1,
+        "ITEM": [
+          { "TIME": 0, "VALUE": 0 },
+          { "TIME": 1, "VALUE": 5 },
+          { "TIME": 2, "VALUE": 10 }
+        ]
+      },
+      "2": {
+        "NAME": "F2",
+        "TYPE": "CONST",
+        "TEMP_CONST": 10
+      },
+      "3": {
+        "NAME": "F3",
+        "TYPE": "FUNC",
+        "OPT_USE_CONC_DATA": false,
+        "K": 20,
+        "ALPHA": 0
+      },
+      "4": {
+        "NAME": "F4",
+        "TYPE": "FUNC",
+        "OPT_USE_CONC_DATA": true,
+        "CEMENT_TYPE": 0,
+        "TEMP_FUNC": 1,
+        "CEMENT_CONT": 2400
+      }
+    }
+  }
+}

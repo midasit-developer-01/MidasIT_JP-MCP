@@ -1,0 +1,169 @@
+{
+  "_group": "db",
+  "_name": "HHCT",
+  "uri": "db/HHCT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "HHCT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Heat of Hydration Control Data (HHCT). Single-instance control record (key 1); FINAL_STAGE, OPT_IS_CREEP_SHRINKAGE and (inside ITEM) TYPE/CREEP_CALC_METHOD drive which fields apply.",
+      "type": "object",
+      "properties": {
+        "FINAL_STAGE": {
+          "description": "Whether the hydration analysis final stage is the model's last construction stage. true = use the last stage (STAGE_NAME ignored). false = use a specific stage named in STAGE_NAME (STAGE_NAME then required).",
+          "type": "boolean",
+          "default": false
+        },
+        "STAGE_NAME": {
+          "description": "[FINAL_STAGE=false] Name of the construction stage used for hydration. Required and must be an existing stage name when FINAL_STAGE is false; ignored when FINAL_STAGE is true.",
+          "type": "string"
+        },
+        "THETA": {
+          "description": "Integration factor (time integration parameter, theta method).",
+          "type": "number",
+          "default": 0
+        },
+        "INIT_TEMP": {
+          "description": "Initial temperature.",
+          "type": "number",
+          "default": 0
+        },
+        "EVAL": {
+          "description": "Element stress evaluation location. CENTER = element center, GAUSS = Gauss points, NODAL = nodal points. Case-insensitive.",
+          "type": "string",
+          "enum": ["CENTER", "GAUSS", "NODAL"],
+          "default": "CENTER"
+        },
+        "OPT_USE_EQUI_AGE": {
+          "description": "Use equivalent age by time and temperature.",
+          "type": "boolean",
+          "default": false
+        },
+        "OPT_INCL_SELF_WEIGHT": {
+          "description": "Include self-weight load in the analysis.",
+          "type": "boolean",
+          "default": false
+        },
+        "SELF_WEIGHT_FACTOR": {
+          "description": "Self-weight scale factor.",
+          "type": "number",
+          "default": 0
+        },
+        "OPT_IS_CREEP_SHRINKAGE": {
+          "description": "Consider creep and shrinkage. When true, the ITEM object is required.",
+          "type": "boolean",
+          "default": false
+        },
+        "ITEM": {
+          "description": "[OPT_IS_CREEP_SHRINKAGE=true] Creep & shrinkage settings. Required when OPT_IS_CREEP_SHRINKAGE is true.",
+          "type": "object",
+          "properties": {
+            "TYPE": {
+              "description": "Creep/shrinkage item type. CREEP = creep only, SHRINK = shrinkage only, BOTH = creep and shrinkage. Case-insensitive.",
+              "type": "string",
+              "enum": ["CREEP", "SHRINK", "BOTH"],
+              "default": "CREEP"
+            },
+            "CREEP_CALC_METHOD": {
+              "description": "Creep calculation method. 0 = General (uses M_GENERAL), 1 = Effective Modulus (uses M_EFF_MOD).",
+              "type": "integer",
+              "default": 0
+            },
+            "M_GENERAL": {
+              "description": "[CREEP_CALC_METHOD=0] General-method convergence settings.",
+              "type": "object",
+              "properties": {
+                "ITER": {
+                  "description": "Number of iterations.",
+                  "type": "integer",
+                  "default": 0
+                },
+                "TOL": {
+                  "description": "Convergence tolerance.",
+                  "type": "number",
+                  "default": 0
+                }
+              }
+            },
+            "M_EFF_MOD": {
+              "description": "[CREEP_CALC_METHOD=1] Effective-modulus method parameters. All four fields required when this object is provided.",
+              "type": "object",
+              "properties": {
+                "PHI1": {
+                  "description": "Creep coefficient Phi1 at Day1.",
+                  "type": "number"
+                },
+                "DAY1": {
+                  "description": "Day1 (age in days corresponding to Phi1).",
+                  "type": "integer"
+                },
+                "PHI2": {
+                  "description": "Creep coefficient Phi2 at Day2.",
+                  "type": "number"
+                },
+                "DAY2": {
+                  "description": "Day2 (age in days corresponding to Phi2).",
+                  "type": "integer"
+                }
+              },
+              "required": ["PHI1", "DAY1", "PHI2", "DAY2"]
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FINAL_STAGE": true,
+        "THETA": 1,
+        "INIT_TEMP": 20,
+        "EVAL": "GAUSS",
+        "OPT_USE_EQUI_AGE": true,
+        "OPT_INCL_SELF_WEIGHT": false,
+        "SELF_WEIGHT_FACTOR": -1,
+        "OPT_IS_CREEP_SHRINKAGE": true,
+        "ITEM": {
+          "TYPE": "BOTH",
+          "CREEP_CALC_METHOD": 0,
+          "M_GENERAL": {
+            "ITER": 20,
+            "TOL": 0.001
+          }
+        }
+      },
+      "2": {
+        "FINAL_STAGE": false,
+        "STAGE_NAME": "CS1",
+        "THETA": 0.5,
+        "INIT_TEMP": 15,
+        "EVAL": "CENTER",
+        "OPT_USE_EQUI_AGE": false,
+        "OPT_INCL_SELF_WEIGHT": true,
+        "SELF_WEIGHT_FACTOR": 1,
+        "OPT_IS_CREEP_SHRINKAGE": true,
+        "ITEM": {
+          "TYPE": "CREEP",
+          "CREEP_CALC_METHOD": 1,
+          "M_EFF_MOD": {
+            "PHI1": 1.5,
+            "DAY1": 7,
+            "PHI2": 2.0,
+            "DAY2": 28
+          }
+        }
+      },
+      "3": {
+        "FINAL_STAGE": true,
+        "THETA": 1,
+        "INIT_TEMP": 20,
+        "EVAL": "NODAL",
+        "OPT_USE_EQUI_AGE": false,
+        "OPT_INCL_SELF_WEIGHT": false,
+        "SELF_WEIGHT_FACTOR": 0,
+        "OPT_IS_CREEP_SHRINKAGE": false
+      }
+    }
+  }
+}

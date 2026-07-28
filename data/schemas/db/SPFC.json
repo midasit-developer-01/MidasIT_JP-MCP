@@ -1,0 +1,735 @@
+{
+  "_group": "db",
+  "_name": "SPFC",
+  "uri": "db/SPFC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SPFC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Response Spectrum Function (SPFC). The design code selected in STR.SPEC_CODE (default 'USER') decides which STR/OPT/VAL/VA2 sub-fields are consumed; for the USER code supply the period-value list in aFUNC, while for a design code the code-specific factors are taken from STR/OPT/VAL (and VA2 for RUS SP14-2018). iTYPE sets how VALUE is interpreted and iMETHOD selects whether SCALE is a scale factor or a maximum value.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "RS (response spectrum) function name.",
+          "type": "string"
+        },
+        "iTYPE": {
+          "description": "Spectral data type: 1 = Normalized Acceleration, 2 = Acceleration, 3 = Velocity, 4 = Displacement. Determines the meaning of each aFUNC VALUE.",
+          "type": "integer"
+        },
+        "iMETHOD": {
+          "description": "Scaling method: 0 = Scale Factor (SCALE is a multiplier), 1 = Maximum Value (SCALE is the spectrum maximum). Controls how SCALE is applied.",
+          "type": "integer",
+          "default": 0
+        },
+        "SCALE": {
+          "description": "Scale factor when iMETHOD=0, or maximum value when iMETHOD=1.",
+          "type": "number"
+        },
+        "GRAV": {
+          "description": "Gravitational acceleration used for a Normalized Acceleration spectrum.",
+          "type": "number"
+        },
+        "DRATIO": {
+          "description": "Damping ratio of the spectrum.",
+          "type": "number",
+          "default": 0
+        },
+        "DESC": {
+          "description": "Free-text description.",
+          "type": "string",
+          "default": ""
+        },
+        "RMF": {
+          "description": "Response modification factor. Only meaningful/stored for the design codes that expose it; ignored otherwise.",
+          "type": "number"
+        },
+        "STR": {
+          "description": "String data by code. Provide when using a design code; SPEC_CODE selects the code and the remaining string fields apply only to specific codes.",
+          "type": "object",
+          "properties": {
+            "SPEC_CODE": {
+              "description": "Design spectrum code (case-insensitive). 'USER' means a user-defined spectrum given via aFUNC. Common wire values include: USER, KS, KS2000, KS_BRG, UBC88, UBC97, EURO1996, CH2001, IBC2000, JPN2000, CH_BRG89, CH_GBJ111_87, NBC95, EURO1996_ELA, IS2002, TAIWAN99H, TAIWAN99V, TAIWAN89H_BRG, TAIWAN89V_BRG, JP_BRG2002, KBC2005, CHSH2003, EURO2004, TAIWAN06, GB50111_2006, 'JTG/T B02-01-2008', KBC2009, 'P100-1(2013)', 'CJJ 166-2011', IBC2009, IBC2012, 'AASHTO-LRFD12', 'NSR-10', KBC2016, 'IS1893(2016)', 'KDS(17-10-00:2018)', NTC2018, 'DPWH-LRFD BSDS(2013)', 'KDS(41-17-00:2019)', 'AS 5100.2(2017)', 'China(GB50011-2019)', 'IRC:SP:114-2018', 'JTG/T 2231-01-2020'. Unknown values are treated as USER.",
+              "type": "string"
+            },
+            "SFI": {
+              "description": "[SPEC_CODE=CH2001/CH2010/CHSH2003/GB50111_2006/China(GB50011-2019)] Seismic fortification. Accepts g-values such as '0.05g','0.10g','0.15g','0.20g','0.30g','0.40g' (CHSH2003 only 0.05g/0.10g/0.20g).",
+              "type": "string"
+            },
+            "SC_": {
+              "description": "[design-code specific] Site class or seismic criterion string, e.g. CH2001 site class I/II/III/IV, CH2010 I0/I1/II/III/IV, or the JTG/CJJ seismic criterion.",
+              "type": "string"
+            },
+            "EQ_": {
+              "description": "[SPEC_CODE=CH2001/CH2010/China(GB50011-2019)] Earthquake response level (FREQUENT/DESIGN/SCARCE or FREQUENT/MIDDLE/SCARCE).",
+              "type": "string"
+            },
+            "DIV": {
+              "description": "[SPEC_CODE=GB50111_2006] Division / site type ('1'..'5').",
+              "type": "string",
+              "default": "1"
+            },
+            "BT": {
+              "description": "[SPEC_CODE=JTG/T B02-01-2008 (bridge type) or CJJ 166-2011 (seismic type)] Bridge type. Case-insensitive.",
+              "type": "string",
+              "enum": ["A", "B", "C", "D"],
+              "default": "A"
+            },
+            "ZM": {
+              "description": "[SPEC_CODE=JTG/T B02-01-2008 / CJJ 166-2011] Zoning map peak ground acceleration. Case-insensitive.",
+              "type": "string",
+              "enum": ["0.35", "0.4", "0.45"],
+              "default": "0.35"
+            },
+            "ST": {
+              "description": "[SPEC_CODE=JTG/T B02-01-2008 (site type) / CJJ 166-2011 (site class)]. Case-insensitive.",
+              "type": "string",
+              "enum": ["1", "2", "3", "4", "5"],
+              "default": "1"
+            },
+            "SI": {
+              "description": "[SPEC_CODE=JTG/T B02-01-2008 (seismic intensity) / CJJ 166-2011 (seismic fortification)]. Case-insensitive.",
+              "type": "string",
+              "enum": ["6(0.05g)", "7(0.10g)", "7(0.15g)", "8(0.20g)", "8(0.30g)", "9(0.40g)"],
+              "default": "6(0.05g)"
+            },
+            "SPECTYPE": {
+              "description": "[SPEC_CODE=EURO2004/P100-1(2013)/NTC2018/IS1893(2016 SI413)] Spectrum type string.",
+              "type": "string"
+            },
+            "GROUTYPE": {
+              "description": "[SPEC_CODE=EURO2004/NTC2018/SI413] Ground type string.",
+              "type": "string"
+            },
+            "PARATYPE": {
+              "description": "[SPEC_CODE=EURO2004/P100-1(2013)/NTC2018] Parameter type string.",
+              "type": "string"
+            },
+            "RESIONTYPE": {
+              "description": "[SPEC_CODE=EURO2004] Region type. Case-insensitive.",
+              "type": "string",
+              "enum": ["RG1", "RG2", "RG3"],
+              "default": "RG1"
+            },
+            "NATIONALANNEX": {
+              "description": "[SPEC_CODE=EURO2004] National annex. Case-insensitive.",
+              "type": "string",
+              "enum": ["Recommended", "Singapole", "Malaysia"]
+            },
+            "REGION": {
+              "description": "Region string (code specific; used by regionalized codes).",
+              "type": "string"
+            },
+            "METHOD": {
+              "description": "Method string (code specific).",
+              "type": "string"
+            },
+            "SPEC": {
+              "description": "[SPEC_CODE=SI413/IS1893(2016)] Spectrum type. Case-insensitive.",
+              "type": "string",
+              "enum": ["HORI_ELASTIC", "HORI_DESIGN", "VERT_DESIGN"],
+              "default": "HORI_DESIGN"
+            },
+            "GROUND": {
+              "description": "[SPEC_CODE=SI413] Site class A-F. Case-insensitive.",
+              "type": "string",
+              "enum": ["A", "B", "C", "D", "E", "F"],
+              "default": "D"
+            }
+          },
+          "required": ["SPEC_CODE"]
+        },
+        "OPT": {
+          "description": "Type or option (integer/boolean) data by code. Each field is read only for the design codes that use it (see field tags).",
+          "type": "object",
+          "properties": {
+            "NSC": {
+              "description": "[SPEC_CODE=CH2001/CH2010/China(GB50011-2019)] Seismic design category.",
+              "type": "integer",
+              "default": 0
+            },
+            "nLForce": {
+              "description": "[SPEC_CODE=CH2010/China(GB50011-2019)] Number of lateral force option.",
+              "type": "integer",
+              "default": 0
+            },
+            "LARGEBRIDGE": {
+              "description": "[SPEC_CODE=JTG/T B02-01-2008] Large bridge flag.",
+              "type": "boolean"
+            },
+            "bVACC": {
+              "description": "[SPEC_CODE=JTG/T B02-01-2008 / CJJ 166-2011] Consider vertical acceleration spectrum.",
+              "type": "boolean",
+              "default": false
+            },
+            "iVACC": {
+              "description": "[SPEC_CODE=JTG/T B02-01-2008] Vertical acceleration spectrum type.",
+              "type": "integer",
+              "default": 0
+            },
+            "bE2_005": {
+              "description": "[SPEC_CODE=CJJ 166-2011] Consider E2 0.05 flag.",
+              "type": "boolean",
+              "default": false
+            },
+            "SCCOPT": {
+              "description": "[SPEC_CODE=UBC97] Seismic coefficients calculation option.",
+              "type": "integer",
+              "default": 0
+            },
+            "iSPTYPE": {
+              "description": "[SPEC_CODE=UBC97] Soil profile type.",
+              "type": "integer",
+              "default": 0
+            },
+            "iSEISZONEFACTOR": {
+              "description": "[SPEC_CODE=UBC97/JPN2000] Seismic zone factor (Z) index.",
+              "type": "integer",
+              "default": 0
+            },
+            "iSEISSOURCETYPE": {
+              "description": "[SPEC_CODE=UBC97] Seismic source type.",
+              "type": "integer",
+              "default": 0
+            },
+            "SOILCLASS": {
+              "description": "[SPEC_CODE=EURO1996/JPN2000/IS2002/TAIWAN*/TAIWAN06/IS1893(2016)/AS 5100.2(2017)/IRC:SP:114-2018] Soil class/type index.",
+              "type": "integer",
+              "default": 0
+            },
+            "KD": {
+              "description": "[SPEC_CODE=EURO1996] Ductility class.",
+              "type": "integer",
+              "default": 0
+            },
+            "KR": {
+              "description": "[SPEC_CODE=EURO1996] Structural regularity in elevation (Kr).",
+              "type": "integer",
+              "default": 0
+            },
+            "SC_": {
+              "description": "[SPEC_CODE=IBC2000/IBC2009/IBC2012/NSCP2024/CH_BRG89/CH_GBJ111_87/EURO1996_ELA/KBC*/KDS*/AASHTO-LRFD12/NSR-10/KSCE2019] Site class index.",
+              "type": "integer",
+              "default": 0
+            },
+            "SFI": {
+              "description": "[SPEC_CODE=CH_BRG89/CH_GBJ111_87] Seismic fortification intensity index.",
+              "type": "integer"
+            },
+            "ZA": {
+              "description": "[SPEC_CODE=NBC95] Acceleration zone (Za).",
+              "type": "integer",
+              "default": 0
+            },
+            "ZV": {
+              "description": "[SPEC_CODE=NBC95] Velocity zone (Zv).",
+              "type": "integer",
+              "default": 0
+            },
+            "iSEISZONE": {
+              "description": "[SPEC_CODE=IS2002/TAIWAN*/JP_BRG2002/KBC*/KDS*/KSCE2019/IS1893(2016)/IRC:SP:114-2018] Seismic zone index.",
+              "type": "integer",
+              "default": 0
+            },
+            "iEQMETHOD": {
+              "description": "[SPEC_CODE=JP_BRG2002/KBC2005] Earthquake input method.",
+              "type": "integer",
+              "default": 0
+            },
+            "bRELIEVE": {
+              "description": "[SPEC_CODE=KBC2005] Relieve flag.",
+              "type": "boolean",
+              "default": false
+            },
+            "iSPECTYPE": {
+              "description": "[SPEC_CODE=TAIWAN06/TAIWANBRG98] Spectrum type.",
+              "type": "integer",
+              "default": 0
+            },
+            "iSPECUSE": {
+              "description": "[SPEC_CODE=TAIWAN06/TAIWANBRG98] Spectrum use type.",
+              "type": "integer",
+              "default": 0
+            },
+            "iSUBZONE": {
+              "description": "[SPEC_CODE=TAIWAN06/TAIWANBRG98/TAIWAN(2022)] Sub zone.",
+              "type": "integer",
+              "default": 0
+            },
+            "iGROUTYPE": {
+              "description": "[SPEC_CODE=DPWH-LRFD BSDS(2013)] Ground type.",
+              "type": "integer",
+              "default": 0
+            },
+            "IMPORTANT_BRIDGE": {
+              "description": "[SPEC_CODE=GB50111_2006] Important bridge flag.",
+              "type": "boolean",
+              "default": false
+            },
+            "RESION_SEISMICITY": {
+              "description": "[SPEC_CODE=SP 268.1325800.2016 (RUS SP2016)] Region seismicity.",
+              "type": "integer",
+              "default": 0
+            },
+            "SOIL_CATEGORY": {
+              "description": "[SPEC_CODE=RUS SP2016 / RUS SP14-2018] Soil category.",
+              "type": "integer",
+              "default": 0
+            },
+            "BYCODE": {
+              "description": "By-code calculation flag.",
+              "type": "boolean",
+              "default": false
+            },
+            "RISK_CATEGORY": {
+              "description": "Risk category (code specific).",
+              "type": "integer",
+              "default": 0
+            },
+            "RET_PERIOD": {
+              "description": "Return period (code specific).",
+              "type": "integer",
+              "default": 0
+            }
+          }
+        },
+        "VAL": {
+          "description": "Factor or value (double / fixed-length array) data by code. Each field is read only for the design codes that use it. Array fields carry the ordered components named in their descriptions.",
+          "type": "object",
+          "properties": {
+            "aTG": {
+              "description": "Design characteristic period of ground motion, ordered [TG, TG1, TG2]. TG used by CH2001/CH2010/CHSH2003/GB50111_2006/JTG/CJJ/CH_BRG89; TG1/TG2 used by CH_GBJ111_87.",
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "aIF": {
+              "description": "Importance factor, ordered [Ci, Cs, Cd]. Ci/Cs/Cd used by JTG/T B02-01-2008; Ci only by CJJ 166-2011 and CH_BRG89.",
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "aSRA": {
+              "description": "Spectral response acceleration, ordered [Sds, Sd1, Sms, Sm1]. Used by KBC*/TAIWAN06/TAIWANBRG98/IBC*/NSCP2024/AASHTO-LRFD12/KDS2019 (Sds/Sd1 minimum).",
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "aSRA_T": {
+              "description": "Spectral response acceleration (target), ordered [Sds_t, Sd1_t, Sms_t, Sm1_t]. Used by TAIWAN06/TAIWANBRG98/TAIWAN(2022).",
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "aNSF": {
+              "description": "Near source factor, ordered [Nda, Ndv, Nma, Nmv]. Used by TAIWAN06/TAIWANBRG98.",
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "aSC": {
+              "description": "Seismic coefficient, ordered [Ca, Cv]. Used by UBC97.",
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "aMSRACC": {
+              "description": "Mapped spectral response acceleration at short periods, ordered [Ss, S1]. Used by IBC2000/IBC2009/IBC2012/NSCP2024/DPWH-LRFD BSDS(2013).",
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "aSMF": {
+              "description": "Site magnify factor, ordered [Fda, Fdv, Fma, Fmv]. Used by TAIWAN06/TAIWANBRG98/TAIWAN(2022).",
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "aSCP": {
+              "description": "Site coefficient at short/1sec period, ordered [Fa, Fv]. Used by KBC2009/KBC2016/IBC2009/IBC2012/NSCP2024/NSR-10/KDS2019/KSCE2019.",
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "aEP": {
+              "description": "Effective peak acceleration/velocity, ordered [Aa, Av]. Used by NSR-10.",
+              "type": "array",
+              "items": {"type": "number"},
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "DP": {
+              "description": "Damping ratio (code value). Used by CH*/EURO1996_ELA/IS2002/TAIWAN*/TAIWAN06/IRC:SP:114-2018.",
+              "type": "number"
+            },
+            "MaxEQ": {
+              "description": "Maximum effect coefficient. Used by CH2001/CH2010/CHSH2003/China(GB50011-2019).",
+              "type": "number"
+            },
+            "G": {
+              "description": "Basic horizontal seismic acceleration alpha (g). Used by GB50111_2006.",
+              "type": "number"
+            },
+            "EPA": {
+              "description": "Earthquake peak/area value. Used by KS/KS2000/KS_BRG/UBC88/JTG/T B02-01-2008.",
+              "type": "number"
+            },
+            "SMAX": {
+              "description": "Maximum spectrum value. Used by JTG/T B02-01-2008 / CJJ 166-2011.",
+              "type": "number"
+            },
+            "PERIOD": {
+              "description": "Maximum period (sec) of the generated spectrum. Used by most design codes.",
+              "type": "number"
+            },
+            "DP2": {
+              "description": "Damping ratio (by code). Used by JTG/T B02-01-2008 / CJJ 166-2011.",
+              "type": "number"
+            },
+            "ETA1": {
+              "description": "Eta1. Used by CJJ 166-2011.",
+              "type": "number"
+            },
+            "ETA2": {
+              "description": "Eta2. Used by CJJ 166-2011.",
+              "type": "number"
+            },
+            "GAMMA": {
+              "description": "Gamma. Used by CJJ 166-2011.",
+              "type": "number"
+            },
+            "A": {
+              "description": "Area / A coefficient. Used by CJJ 166-2011.",
+              "type": "number"
+            },
+            "SOILFACTOR": {
+              "description": "Soil factor (S). Used by EURO2004/NTC2018.",
+              "type": "number"
+            },
+            "TB": {
+              "description": "Tb corner period. Used by EURO2004/P100-1(2013)/NTC2018.",
+              "type": "number"
+            },
+            "TC": {
+              "description": "Tc corner period. Used by EURO2004/P100-1(2013)/NTC2018.",
+              "type": "number"
+            },
+            "TD": {
+              "description": "Td corner period. Used by EURO2004/P100-1(2013)/NTC2018/SI413.",
+              "type": "number"
+            },
+            "AGR": {
+              "description": "Design ground acceleration (Agr). Used by EURO2004/P100-1(2013).",
+              "type": "number"
+            },
+            "I_": {
+              "description": "Importance factor (I). Used by EURO2004/P100-1(2013).",
+              "type": "number"
+            },
+            "XI": {
+              "description": "Viscous damping ratio (Xi). Used by EURO2004/P100-1(2013)/NTC2018.",
+              "type": "number"
+            },
+            "Q": {
+              "description": "Behavior factor (q). Used by EURO2004/P100-1(2013)/NTC2018/SI413.",
+              "type": "number"
+            },
+            "B": {
+              "description": "Lower bound factor (beta). Used by EURO2004.",
+              "type": "number"
+            },
+            "TS": {
+              "description": "Site natural period. (Code value, UI-unsupported in some codes.)",
+              "type": "number"
+            },
+            "SPTYPE": {
+              "description": "Soil profile value. Used by KS/KS2000/KS_BRG/UBC88.",
+              "type": "number"
+            },
+            "IE": {
+              "description": "Importance factor (Ie). Used by KS*/IS2002/TAIWAN*/KBC*/IBC*/NSCP2024/NSR-10/KDS*/KSCE2019/IS1893(2016)/IRC:SP:114-2018.",
+              "type": "number"
+            },
+            "R_": {
+              "description": "Response modification coefficient (R). Used by KS*/IS2002/TAIWAN*/KBC*/IBC*/NSCP2024/NSR-10/KDS*/AASHTO-LRFD12/DPWH-LRFD/IS1893(2016)/IRC:SP:114-2018.",
+              "type": "number"
+            },
+            "CDISTANCE": {
+              "description": "Closest distance to known seismic source (km). Used by UBC97.",
+              "type": "number"
+            },
+            "Q0": {
+              "description": "Basic behavior factor (Q0). Used by EURO1996.",
+              "type": "number"
+            },
+            "KW": {
+              "description": "Failure mode factor (Kw). Used by EURO1996.",
+              "type": "number"
+            },
+            "ALPHA": {
+              "description": "Ratio of design ground acceleration to gravity. Used by EURO1996/TAIWAN99H/TAIWAN99V/TAIWAN89*.",
+              "type": "number"
+            },
+            "CO": {
+              "description": "Base shear factor (Co). Used by JPN2000.",
+              "type": "number"
+            },
+            "KH": {
+              "description": "Horizontal seismic coefficient (Kh). Used by CH_BRG89/CH_GBJ111_87.",
+              "type": "number"
+            },
+            "CZ": {
+              "description": "General effect factor (Cz). Used by CH_BRG89/CH_GBJ111_87/JP_BRG2002.",
+              "type": "number"
+            },
+            "V": {
+              "description": "Zonal velocity ratio (V). Used by NBC95.",
+              "type": "number"
+            },
+            "AG": {
+              "description": "Design ground acceleration (g). Used by EURO1996_ELA/NTC2018.",
+              "type": "number"
+            },
+            "DPFAC": {
+              "description": "Damping multiplying factor. Used by IS2002/IS1893(2016)/IRC:SP:114-2018.",
+              "type": "number"
+            },
+            "IF": {
+              "description": "Importance factor. Used by TAIWAN06/TAIWANBRG98/TAIWAN(2022).",
+              "type": "number"
+            },
+            "SMFACTOR": {
+              "description": "Seismic magnify factor. Used by TAIWAN06/TAIWANBRG98/TAIWAN(2022).",
+              "type": "number"
+            },
+            "RMFACTOR": {
+              "description": "Response modify factor. Used by TAIWAN06/TAIWANBRG98/TAIWAN(2022).",
+              "type": "number"
+            },
+            "ZONEFACTOR": {
+              "description": "Zone factor (S). Used by KBC2009/KBC2016/KDS2019.",
+              "type": "number"
+            },
+            "TL": {
+              "description": "Long transition period (TL). Used by IBC2009/IBC2012/NSCP2024.",
+              "type": "number"
+            },
+            "PGA": {
+              "description": "Peak ground acceleration. Used by AASHTO-LRFD12/DPWH-LRFD BSDS(2013).",
+              "type": "number"
+            },
+            "PHI": {
+              "description": "Phi factor. Used by NSR-10.",
+              "type": "number"
+            },
+            "DEPTH": {
+              "description": "Depth to bedrock (MR). Used by KBC2016.",
+              "type": "number"
+            },
+            "FO": {
+              "description": "Amplification factor (Fo). Used by NTC2018.",
+              "type": "number"
+            },
+            "TCSTAR": {
+              "description": "Period of constant horizontal acceleration (Tc*). Used by NTC2018.",
+              "type": "number"
+            },
+            "KP": {
+              "description": "kp factor. Used by AS 5100.2(2017).",
+              "type": "number"
+            },
+            "Z": {
+              "description": "Z factor. Used by AS 5100.2(2017)/SI413.",
+              "type": "number"
+            },
+            "MU": {
+              "description": "Mu factor. Used by AS 5100.2(2017).",
+              "type": "number"
+            },
+            "USERDEFSEISZONE": {
+              "description": "User-defined seismic zone. Used by IRC:SP:114-2018.",
+              "type": "number"
+            },
+            "FUNDAMENTAL_PERIOD": {
+              "description": "Fundamental period (T1). Used by TAIWAN(2022).",
+              "type": "number"
+            },
+            "K1": {
+              "description": "K1 factor. Used by RUS SP2016 / RUS SP14-2018.",
+              "type": "number"
+            },
+            "K2": {
+              "description": "K2 factor. Used by RUS SP2016.",
+              "type": "number"
+            },
+            "K3": {
+              "description": "K3 factor. Used by RUS SP2016.",
+              "type": "number"
+            },
+            "K4": {
+              "description": "K4 factor. Used by RUS SP2016.",
+              "type": "number"
+            },
+            "KPSI": {
+              "description": "KPsi factor. Used by RUS SP2016 / RUS SP14-2018.",
+              "type": "number"
+            },
+            "SS": {
+              "description": "Ss value. Used by SI413.",
+              "type": "number"
+            },
+            "S1": {
+              "description": "S1 value. Used by SI413.",
+              "type": "number"
+            },
+            "FA": {
+              "description": "Fa value. Used by SI413.",
+              "type": "number"
+            },
+            "FV": {
+              "description": "Fv value. Used by SI413.",
+              "type": "number"
+            },
+            "BETA": {
+              "description": "Beta value. Used by SI413.",
+              "type": "number"
+            },
+            "DAMPING": {
+              "description": "Damping value. Used by SI413.",
+              "type": "number"
+            },
+            "MAX_PERIOD": {
+              "description": "Maximum period (sec). Used by SI413.",
+              "type": "number"
+            }
+          }
+        },
+        "VA2": {
+          "description": "[SPEC_CODE=RUS SP14-2018 (SP 14.13330.2018)] Additional factor/value data.",
+          "type": "object",
+          "properties": {
+            "K0": {
+              "description": "K0 factor.",
+              "type": "number"
+            },
+            "ACCE": {
+              "description": "Ground acceleration at foundation level.",
+              "type": "number"
+            },
+            "bNLDS": {
+              "description": "Consider nonlinear deformation of soils.",
+              "type": "boolean"
+            }
+          },
+          "required": ["K0", "ACCE", "bNLDS"]
+        },
+        "aFUNC": {
+          "description": "Function data list of period/value points. Required in practice for the USER code (and used whenever the spectrum is not auto-calculated).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "PERIOD": {
+                "description": "Period (sec).",
+                "type": "number"
+              },
+              "VALUE": {
+                "description": "Spectral value at PERIOD; interpreted per iTYPE.",
+                "type": "number"
+              }
+            },
+            "required": ["PERIOD", "VALUE"]
+          }
+        },
+        "CALC_OPT": {
+          "description": "Auto-calculation flag. Currently forced to false by the server, so the aFUNC points are always used as provided.",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": ["NAME", "iTYPE", "SCALE", "GRAV"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "RS_User",
+        "iTYPE": 1,
+        "iMETHOD": 0,
+        "SCALE": 1,
+        "GRAV": 9.806,
+        "DRATIO": 0.05,
+        "DESC": "User-defined response spectrum",
+        "STR": {
+          "SPEC_CODE": "USER"
+        },
+        "aFUNC": [
+          {"PERIOD": 0, "VALUE": 0.11},
+          {"PERIOD": 0.3, "VALUE": 0.308},
+          {"PERIOD": 0.6, "VALUE": 0.154},
+          {"PERIOD": 1.2, "VALUE": 0.077},
+          {"PERIOD": 3, "VALUE": 0.0308},
+          {"PERIOD": 6, "VALUE": 0.0077}
+        ]
+      },
+      "2": {
+        "NAME": "RS_KDS2019",
+        "iTYPE": 1,
+        "iMETHOD": 0,
+        "SCALE": 1,
+        "GRAV": 9.806,
+        "DRATIO": 0.05,
+        "DESC": "KDS(41-17-00:2019) design spectrum",
+        "STR": {
+          "SPEC_CODE": "KDS(41-17-00:2019)"
+        },
+        "OPT": {
+          "iSEISZONE": 0,
+          "SC_": 2
+        },
+        "VAL": {
+          "ZONEFACTOR": 0.11,
+          "aSCP": [1.4, 2.1],
+          "aSRA": [0.385, 0.231, 0, 0],
+          "IE": 1.0,
+          "R_": 3.0,
+          "PERIOD": 4.0
+        }
+      },
+      "3": {
+        "NAME": "RS_RUS_SP14",
+        "iTYPE": 2,
+        "iMETHOD": 0,
+        "SCALE": 1,
+        "GRAV": 9.806,
+        "DRATIO": 0.05,
+        "DESC": "RUS SP14-2018 design spectrum",
+        "STR": {
+          "SPEC_CODE": "SP 14.13330.2018"
+        },
+        "OPT": {
+          "SOIL_CATEGORY": 1
+        },
+        "VAL": {
+          "K1": 0.4,
+          "KPSI": 1.0,
+          "PERIOD": 4.0
+        },
+        "VA2": {
+          "K0": 1.0,
+          "ACCE": 0.2,
+          "bNLDS": false
+        }
+      }
+    }
+  }
+}

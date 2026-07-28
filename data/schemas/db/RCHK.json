@@ -1,0 +1,368 @@
+{
+  "_group": "db",
+  "_name": "RCHK",
+  "uri": "db/RCHK",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "RCHK": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Rebar for Checking (RCHK). MEMBTYPE selects the member kind and drives which sub-object is used: BEAM populates the BEAM object, COLUMN populates the COLM object.",
+      "properties": {
+        "MEMBTYPE": {
+          "description": "Member type. Selects which sub-object (BEAM or COLM) is read. Case-insensitive. BEAM = beam member, COLUMN = column member.",
+          "type": "string",
+          "enum": ["BEAM", "COLUMN"]
+        },
+        "ENVTYPE": {
+          "description": "Environment (exposure) type integer code used for crack checking, e.g. 0 = Class 1 exposure condition, 1 = Class 2 exposure condition.",
+          "type": "integer"
+        },
+        "BEAM": {
+          "description": "[MEMBTYPE=BEAM] Rebar information for a beam member. Must be supplied when MEMBTYPE is BEAM.",
+          "type": "object",
+          "properties": {
+            "OPTION_IMJSAME": {
+              "description": "[MEMBTYPE=BEAM] If assigned (field present), the I-End input alone is copied to the M and J sectors. When set, vMAIN and vSUB_BAR must each contain exactly one entry whose SECTOR is I.",
+              "type": "boolean",
+              "default": false
+            },
+            "vMAIN": {
+              "description": "[MEMBTYPE=BEAM] Main (longitudinal) rebar data, one entry per sector (I, M, J).",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "SECTOR": {
+                    "description": "Beam sector. Case-insensitive. I = i-end, M = mid, J = j-end.",
+                    "type": "string",
+                    "enum": ["I", "M", "J"]
+                  },
+                  "POS_TOP_LAYERS": {
+                    "description": "Top main rebar layers for this sector.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "LAYER": {
+                          "description": "1-based layer index.",
+                          "type": "integer"
+                        },
+                        "dD": {
+                          "description": "Cover distance from surface to center of the rebars in this layer.",
+                          "type": "number"
+                        },
+                        "BAR_NUM": {
+                          "description": "Number of rebars in this layer.",
+                          "type": "integer"
+                        },
+                        "BAR_NAME1": {
+                          "description": "Size/name of primary rebar.",
+                          "type": "string"
+                        },
+                        "BAR_NAME2": {
+                          "description": "Size/name of secondary rebar (optional).",
+                          "type": "string",
+                          "default": ""
+                        }
+                      },
+                      "required": ["LAYER", "dD", "BAR_NUM", "BAR_NAME1"]
+                    }
+                  },
+                  "POS_BOT_LAYERS": {
+                    "description": "Bottom main rebar layers for this sector.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "LAYER": {
+                          "description": "1-based layer index.",
+                          "type": "integer"
+                        },
+                        "dD": {
+                          "description": "Cover distance from surface to center of the rebars in this layer.",
+                          "type": "number"
+                        },
+                        "BAR_NUM": {
+                          "description": "Number of rebars in this layer.",
+                          "type": "integer"
+                        },
+                        "BAR_NAME1": {
+                          "description": "Size/name of primary rebar.",
+                          "type": "string"
+                        },
+                        "BAR_NAME2": {
+                          "description": "Size/name of secondary rebar (optional).",
+                          "type": "string",
+                          "default": ""
+                        }
+                      },
+                      "required": ["LAYER", "dD", "BAR_NUM", "BAR_NAME1"]
+                    }
+                  }
+                },
+                "required": ["SECTOR", "POS_TOP_LAYERS", "POS_BOT_LAYERS"]
+              }
+            },
+            "vSUB_BAR": {
+              "description": "[MEMBTYPE=BEAM] Sub (transverse/stirrup) rebar data, one entry per sector (I, M, J).",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "SECTOR": {
+                    "description": "Beam sector. Case-insensitive. I = i-end, M = mid, J = j-end.",
+                    "type": "string",
+                    "enum": ["I", "M", "J"]
+                  },
+                  "dSUB_BARNUM": {
+                    "description": "Number of sub-bars (stored as a real value).",
+                    "type": "number"
+                  },
+                  "SUB_BARNAME": {
+                    "description": "Size/name of the sub-bar.",
+                    "type": "string"
+                  },
+                  "dSUB_BARDIST": {
+                    "description": "Sub-bar spacing/distance.",
+                    "type": "number"
+                  },
+                  "dSUB_BARANGLE": {
+                    "description": "Sub-bar angle (degrees).",
+                    "type": "number"
+                  },
+                  "bTORSIONAL_BAR": {
+                    "description": "Torsional bar flag. Applied by the handler only when the design code is Russian (SNIP 2.05.03-84 or SP 35.13330.2011, incl. MKS variants); otherwise ignored.",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "sTRTORBARNA": {
+                    "description": "Torsional bar size/name. Applied only for Russian design codes (SNIP/SP); otherwise ignored.",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "dTORBAR_SPACING": {
+                    "description": "Torsional bar spacing. Applied only for Russian design codes (SNIP/SP); otherwise ignored.",
+                    "type": "number",
+                    "default": 0
+                  },
+                  "bBUNDLEDBAR": {
+                    "description": "Bundled bar flag. Applied only for Russian design codes (SNIP/SP); otherwise ignored.",
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "dBUNDLEDBARNUM": {
+                    "description": "Number of bundled bars. Applied only for Russian design codes (SNIP/SP); otherwise ignored.",
+                    "type": "number",
+                    "default": 0
+                  },
+                  "LONGIBARNA": {
+                    "description": "Longitudinal bar size/name (Russian codes). Applied only for Russian design codes (SNIP/SP); otherwise ignored.",
+                    "type": "string",
+                    "default": ""
+                  },
+                  "dLONGIBARNUM": {
+                    "description": "Number of longitudinal bars (Russian codes). Applied only for Russian design codes (SNIP/SP); otherwise ignored.",
+                    "type": "number",
+                    "default": 0
+                  }
+                },
+                "required": ["SECTOR", "dSUB_BARNUM", "SUB_BARNAME", "dSUB_BARDIST", "dSUB_BARANGLE"]
+              }
+            }
+          },
+          "required": ["vMAIN", "vSUB_BAR"]
+        },
+        "COLM": {
+          "description": "[MEMBTYPE=COLUMN] Rebar information for a column member. Must be supplied when MEMBTYPE is COLUMN.",
+          "type": "object",
+          "properties": {
+            "vLAYER": {
+              "description": "[MEMBTYPE=COLUMN] Main (longitudinal) rebar layers.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "INDEX": {
+                    "description": "1-based layer index.",
+                    "type": "integer"
+                  },
+                  "dDc": {
+                    "description": "Cover distance from surface to center of the layer's rebars.",
+                    "type": "number"
+                  },
+                  "vPOSITION": {
+                    "description": "Rebar positions within this layer, one entry per surface position (P1, P2, P3).",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "POSITION": {
+                          "description": "Surface position. Case-insensitive. P1, P2, P3 (P1 for circular sections; P1/P2/P3 for rectangular).",
+                          "type": "string",
+                          "enum": ["P1", "P2", "P3"]
+                        },
+                        "BAR_NUM": {
+                          "description": "Number of rebars at this position.",
+                          "type": "integer"
+                        },
+                        "BAR_NAME1": {
+                          "description": "Size/name of primary rebar.",
+                          "type": "string"
+                        },
+                        "BAR_NAME2": {
+                          "description": "Size/name of secondary rebar (optional).",
+                          "type": "string",
+                          "default": ""
+                        }
+                      },
+                      "required": ["POSITION", "BAR_NUM", "BAR_NAME1"]
+                    }
+                  }
+                },
+                "required": ["INDEX", "dDc", "vPOSITION"]
+              }
+            },
+            "SUB_BAR": {
+              "description": "[MEMBTYPE=COLUMN] Sub (transverse/tie) rebar data for the column.",
+              "type": "object",
+              "properties": {
+                "SUBBAR_NAME": {
+                  "description": "Size/name of the tie sub-bar.",
+                  "type": "string"
+                },
+                "SUBBAR_DIST": {
+                  "description": "Tie sub-bar spacing/distance.",
+                  "type": "number"
+                },
+                "SUBBAR_NUM": {
+                  "description": "Number of tie sub-bars (stored as a real value).",
+                  "type": "number"
+                },
+                "SUBBAR_NAME_Y": {
+                  "description": "Size/name of the tie sub-bar in the Y direction.",
+                  "type": "string"
+                },
+                "SUBBAR_NAME_Z": {
+                  "description": "Size/name of the tie sub-bar in the Z direction.",
+                  "type": "string"
+                },
+                "SUBBAR_NUM_Y": {
+                  "description": "Number of tie sub-bars in the Y direction (stored as a real value).",
+                  "type": "number"
+                },
+                "SUBBAR_NUM_Z": {
+                  "description": "Number of tie sub-bars in the Z direction (stored as a real value).",
+                  "type": "number"
+                }
+              },
+              "required": ["SUBBAR_NAME", "SUBBAR_DIST", "SUBBAR_NUM", "SUBBAR_NAME_Y", "SUBBAR_NAME_Z", "SUBBAR_NUM_Y", "SUBBAR_NUM_Z"]
+            }
+          },
+          "required": ["vLAYER", "SUB_BAR"]
+        }
+      },
+      "required": ["MEMBTYPE", "ENVTYPE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "MEMBTYPE": "COLUMN",
+        "ENVTYPE": 0,
+        "COLM": {
+          "vLAYER": [
+            {
+              "INDEX": 1,
+              "dDc": 0.1,
+              "vPOSITION": [
+                {
+                  "POSITION": "P1",
+                  "BAR_NUM": 8,
+                  "BAR_NAME1": "#6",
+                  "BAR_NAME2": ""
+                },
+                {
+                  "POSITION": "P2",
+                  "BAR_NUM": 12,
+                  "BAR_NAME1": "#6",
+                  "BAR_NAME2": ""
+                }
+              ]
+            }
+          ],
+          "SUB_BAR": {
+            "SUBBAR_NAME": "#5",
+            "SUBBAR_DIST": 0.1,
+            "SUBBAR_NUM": 2,
+            "SUBBAR_NAME_Y": "#5",
+            "SUBBAR_NAME_Z": "#5",
+            "SUBBAR_NUM_Y": 10,
+            "SUBBAR_NUM_Z": 8
+          }
+        }
+      },
+      "2": {
+        "MEMBTYPE": "BEAM",
+        "ENVTYPE": 1,
+        "BEAM": {
+          "vMAIN": [
+            {
+              "SECTOR": "I",
+              "POS_TOP_LAYERS": [
+                { "LAYER": 1, "dD": 0.1, "BAR_NUM": 12, "BAR_NAME1": "#5", "BAR_NAME2": "" }
+              ],
+              "POS_BOT_LAYERS": [
+                { "LAYER": 1, "dD": 0.1, "BAR_NUM": 12, "BAR_NAME1": "#7", "BAR_NAME2": "" }
+              ]
+            },
+            {
+              "SECTOR": "M",
+              "POS_TOP_LAYERS": [
+                { "LAYER": 1, "dD": 0.1, "BAR_NUM": 12, "BAR_NAME1": "#5", "BAR_NAME2": "" }
+              ],
+              "POS_BOT_LAYERS": [
+                { "LAYER": 1, "dD": 0.1, "BAR_NUM": 12, "BAR_NAME1": "#7", "BAR_NAME2": "" }
+              ]
+            },
+            {
+              "SECTOR": "J",
+              "POS_TOP_LAYERS": [
+                { "LAYER": 1, "dD": 0.1, "BAR_NUM": 12, "BAR_NAME1": "#5", "BAR_NAME2": "" }
+              ],
+              "POS_BOT_LAYERS": [
+                { "LAYER": 1, "dD": 0.1, "BAR_NUM": 12, "BAR_NAME1": "#7", "BAR_NAME2": "" }
+              ]
+            }
+          ],
+          "vSUB_BAR": [
+            { "SECTOR": "I", "dSUB_BARNUM": 2, "SUB_BARNAME": "#6", "dSUB_BARDIST": 0.1, "dSUB_BARANGLE": 90 },
+            { "SECTOR": "M", "dSUB_BARNUM": 2, "SUB_BARNAME": "#6", "dSUB_BARDIST": 0.1, "dSUB_BARANGLE": 90 },
+            { "SECTOR": "J", "dSUB_BARNUM": 2, "SUB_BARNAME": "#6", "dSUB_BARDIST": 0.1, "dSUB_BARANGLE": 90 }
+          ]
+        }
+      },
+      "3": {
+        "MEMBTYPE": "BEAM",
+        "ENVTYPE": 0,
+        "BEAM": {
+          "OPTION_IMJSAME": true,
+          "vMAIN": [
+            {
+              "SECTOR": "I",
+              "POS_TOP_LAYERS": [
+                { "LAYER": 1, "dD": 0.1, "BAR_NUM": 10, "BAR_NAME1": "#5", "BAR_NAME2": "" }
+              ],
+              "POS_BOT_LAYERS": [
+                { "LAYER": 1, "dD": 0.1, "BAR_NUM": 10, "BAR_NAME1": "#7", "BAR_NAME2": "" }
+              ]
+            }
+          ],
+          "vSUB_BAR": [
+            { "SECTOR": "I", "dSUB_BARNUM": 2, "SUB_BARNAME": "#6", "dSUB_BARDIST": 0.12, "dSUB_BARANGLE": 90 }
+          ]
+        }
+      }
+    }
+  }
+}

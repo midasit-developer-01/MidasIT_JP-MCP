@@ -1,0 +1,40 @@
+{
+  "_group": "design",
+  "_name": "KFAC",
+  "uri": "design/STEEL/KDS-41-30-2022/KFAC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "KFAC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Effective Length Factor (KFAC). Effective length factors applied about the member's major (Ky), minor (Kz), and torsional (Kt) axes for design.",
+      "properties": {
+        "Ky": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor about the major (y) axis."
+        },
+        "Kz": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor about the minor (z) axis."
+        },
+        "Kt": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor for torsional buckling."
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "Ky": 1.0,
+        "Kz": 1.0,
+        "Kt": 1.0
+      }
+    }
+  }
+}

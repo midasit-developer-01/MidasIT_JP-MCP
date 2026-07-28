@@ -1,0 +1,94 @@
+{
+  "_group": "db",
+  "_name": "STYP-M1",
+  "uri": "db/STYP-M1",
+  "methods": "GET, PUT",
+  "schema": {
+    "STYP-M1": {
+      "type": "object",
+      "description": "Structure Type (STYP-M1). Global structure-type/gravity/temperature settings plus the MASS_CONTROL sub-object whose MASS_TYPE and SELFWEIGHT drive which mass fields apply. Singleton record (only key 1 exists).",
+      "properties": {
+        "STYPE": {
+          "type": "string",
+          "enum": ["3D", "XZ", "YZ", "XY", "RZ"],
+          "description": "Structure type (case-insensitive). 3D = 3-D, XZ = X-Z plane, YZ = Y-Z plane, XY = X-Y plane, RZ = constrain RZ."
+        },
+        "GRAV": {
+          "type": "number",
+          "description": "Gravitational acceleration. If omitted the system/model default value is kept."
+        },
+        "TEMP": {
+          "type": "number",
+          "default": 0,
+          "description": "Initial temperature of the structure."
+        },
+        "ALIGNBEAM": {
+          "type": "boolean",
+          "default": false,
+          "description": "Align top of beam section with the center line (X-Y plane) for display."
+        },
+        "ALIGNSLAB": {
+          "type": "boolean",
+          "default": false,
+          "description": "Align top of slab (plate) section with the center line (X-Y plane) for display."
+        },
+        "MASS_CONTROL": {
+          "type": "object",
+          "description": "Mass control parameter. Although optional in the struct, the write path (PUT) rejects the request if this object is missing, so it must be supplied when setting the structure type.",
+          "properties": {
+            "MASS_TYPE": {
+              "type": "string",
+              "enum": ["LUMPED", "CONSISTENT"],
+              "description": "Mass type (case-insensitive). LUMPED = lumped mass, CONSISTENT = consistent mass. Drives applicability of MASS_POS and the allowed MASS_AXIS values."
+            },
+            "MASS_POS": {
+              "type": "string",
+              "enum": ["CENTROID", "OFFSET"],
+              "description": "[MASS_TYPE=LUMPED] Mass position; required by the handler when MASS_TYPE is LUMPED, unused (ignored) when MASS_TYPE is CONSISTENT. CENTROID = mass at section centroid, OFFSET = mass at offset position. Case-insensitive."
+            },
+            "SELFWEIGHT": {
+              "type": "boolean",
+              "description": "Convert self-weight into masses."
+            },
+            "MASS_AXIS": {
+              "type": "string",
+              "enum": ["XYZ", "XY", "Z"],
+              "description": "[SELFWEIGHT=true] Axes to which self-weight mass is converted; required by the handler when SELFWEIGHT is true. XYZ = X, Y, Z; XY = X, Y; Z = Z. When MASS_TYPE is CONSISTENT the handler hard-enforces MASS_AXIS = XYZ. Case-insensitive."
+            }
+          },
+          "required": ["MASS_TYPE", "SELFWEIGHT"]
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "STYPE": "3D",
+        "GRAV": 9.806,
+        "TEMP": 0,
+        "ALIGNBEAM": false,
+        "ALIGNSLAB": false,
+        "MASS_CONTROL": {
+          "MASS_TYPE": "LUMPED",
+          "MASS_POS": "CENTROID",
+          "SELFWEIGHT": true,
+          "MASS_AXIS": "XYZ"
+        }
+      },
+      "2": {
+        "STYPE": "XZ",
+        "GRAV": 9.806,
+        "TEMP": 20,
+        "ALIGNBEAM": true,
+        "ALIGNSLAB": false,
+        "MASS_CONTROL": {
+          "MASS_TYPE": "CONSISTENT",
+          "SELFWEIGHT": true,
+          "MASS_AXIS": "XYZ"
+        }
+      }
+    }
+  }
+}

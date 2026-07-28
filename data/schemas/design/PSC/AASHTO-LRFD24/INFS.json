@@ -1,0 +1,89 @@
+{
+  "_group": "design",
+  "_name": "INFS",
+  "uri": "design/PSC/AASHTO-LRFD24/INFS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "INFS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Interface Shear (INFS). Surface-classification data at the I and J ends of a PSC design element; each end carries the interfacial section width, crossing reinforcement area, and its yield strength. If the J end is omitted it is copied from the I end.",
+      "properties": {
+        "SURFACE_CLASSIFICATION_I": {
+          "type": "object",
+          "description": "Interface shear parameters at the I end of the element.",
+          "properties": {
+            "SURFACE_CLASSIFICATION": {
+              "type": "integer",
+              "description": "Surface classification code: 0=Roughened (CIP slab), 1=Monolithically, 2=Intentionally roughened (LWC), 3=Intentionally roughened (NWC), 4=Not intentionally roughened, 5=Anchored. Must be between 0 and 5.",
+              "minimum": 0,
+              "maximum": 5,
+              "default": 0
+            },
+            "BVI": {
+              "type": "number",
+              "description": "Width of the interfacial cross-section.",
+              "default": 0.0
+            },
+            "AVF": {
+              "type": "number",
+              "description": "Area of reinforcement crossing the plane.",
+              "default": 0.0
+            },
+            "FY": {
+              "type": "number",
+              "description": "Yield strength of reinforcement.",
+              "default": 0.0
+            }
+          }
+        },
+        "SURFACE_CLASSIFICATION_J": {
+          "type": "object",
+          "description": "Interface shear parameters at the J end of the element. If omitted, the I-end values are used.",
+          "properties": {
+            "SURFACE_CLASSIFICATION": {
+              "type": "integer",
+              "description": "Surface classification code: 0=Roughened (CIP slab), 1=Monolithically, 2=Intentionally roughened (LWC), 3=Intentionally roughened (NWC), 4=Not intentionally roughened, 5=Anchored. Must be between 0 and 5.",
+              "minimum": 0,
+              "maximum": 5,
+              "default": 0
+            },
+            "BVI": {
+              "type": "number",
+              "description": "Width of the interfacial cross-section.",
+              "default": 0.0
+            },
+            "AVF": {
+              "type": "number",
+              "description": "Area of reinforcement crossing the plane.",
+              "default": 0.0
+            },
+            "FY": {
+              "type": "number",
+              "description": "Yield strength of reinforcement.",
+              "default": 0.0
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SURFACE_CLASSIFICATION_I": {
+          "SURFACE_CLASSIFICATION": 0,
+          "BVI": 400.0,
+          "AVF": 200.0,
+          "FY": 400.0
+        },
+        "SURFACE_CLASSIFICATION_J": {
+          "SURFACE_CLASSIFICATION": 3,
+          "BVI": 450.0,
+          "AVF": 250.0,
+          "FY": 420.0
+        }
+      }
+    }
+  }
+}

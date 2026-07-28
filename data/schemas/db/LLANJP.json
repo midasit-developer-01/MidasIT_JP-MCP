@@ -1,0 +1,157 @@
+{
+  "_group": "db",
+  "_name": "LLANJP",
+  "uri": "db/LLANJP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LLANJP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Traffic Line Lane - Japan (LLANjp). Defines a moving-load traffic lane (Japan) with common lane settings plus a list of lane element data; LOAD_DIST drives whether GROUP_NAME is used.",
+      "properties": {
+        "COMMON": {
+          "type": "object",
+          "description": "Common lane settings shared by the whole lane definition.",
+          "properties": {
+            "LL_NAME": {
+              "type": "string",
+              "description": "Name of the line lane."
+            },
+            "LOAD_DIST": {
+              "type": "string",
+              "enum": [
+                "LANE",
+                "CROSS"
+              ],
+              "description": "Load distribution method (case-insensitive). LANE = distribute along the lane (index 1); CROSS = cross-beam distribution (index 2). GROUP_NAME is used only when LOAD_DIST = CROSS."
+            },
+            "GROUP_NAME": {
+              "type": "string",
+              "description": "[LOAD_DIST=CROSS] Name of the structure/element group used for cross-beam load distribution. Ignored when LOAD_DIST = LANE."
+            },
+            "SKEW_START": {
+              "type": "number",
+              "description": "Skew angle at the start of the lane."
+            },
+            "SKEW_END": {
+              "type": "number",
+              "description": "Skew angle at the end of the lane."
+            },
+            "MOVING": {
+              "type": "string",
+              "enum": [
+                "FORWARD",
+                "BACKWARD",
+                "BOTH"
+              ],
+              "description": "Moving direction of the load along the lane (case-insensitive)."
+            },
+            "LANE_WIDTH": {
+              "type": "number",
+              "description": "Lane width."
+            },
+            "OPT_CENTRIFUGAL": {
+              "type": "boolean",
+              "description": "Whether centrifugal force is considered for the lane."
+            }
+          },
+          "required": [
+            "LL_NAME",
+            "LOAD_DIST",
+            "GROUP_NAME",
+            "SKEW_START",
+            "SKEW_END",
+            "MOVING",
+            "LANE_WIDTH",
+            "OPT_CENTRIFUGAL"
+          ]
+        },
+        "LANE_ITEMS": {
+          "type": "array",
+          "description": "Lane element data (Japan): one entry per lane element defining eccentricity, speed and radius.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ELEM": {
+                "type": "integer",
+                "description": "Key element number for this lane data row."
+              },
+              "ECC": {
+                "type": "number",
+                "description": "Eccentricity of the load relative to the element."
+              },
+              "SPEED": {
+                "type": "number",
+                "description": "Speed used for the centrifugal force calculation (dCF_s)."
+              },
+              "RADIUS": {
+                "type": "number",
+                "description": "Radius used for the centrifugal force calculation (dCF_r)."
+              }
+            },
+            "required": [
+              "ELEM",
+              "ECC",
+              "SPEED",
+              "RADIUS"
+            ]
+          }
+        }
+      },
+      "required": [
+        "COMMON",
+        "LANE_ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "COMMON": {
+          "LL_NAME": "Lane-1",
+          "LOAD_DIST": "LANE",
+          "GROUP_NAME": "",
+          "SKEW_START": 0.0,
+          "SKEW_END": 0.0,
+          "MOVING": "BOTH",
+          "LANE_WIDTH": 3.0,
+          "OPT_CENTRIFUGAL": false
+        },
+        "LANE_ITEMS": [
+          {
+            "ELEM": 1,
+            "ECC": 0.0,
+            "SPEED": 0.0,
+            "RADIUS": 0.0
+          }
+        ]
+      },
+      "2": {
+        "COMMON": {
+          "LL_NAME": "Lane-2",
+          "LOAD_DIST": "CROSS",
+          "GROUP_NAME": "CrossGroup",
+          "SKEW_START": 5.0,
+          "SKEW_END": 5.0,
+          "MOVING": "FORWARD",
+          "LANE_WIDTH": 3.5,
+          "OPT_CENTRIFUGAL": true
+        },
+        "LANE_ITEMS": [
+          {
+            "ELEM": 10,
+            "ECC": 0.25,
+            "SPEED": 80.0,
+            "RADIUS": 400.0
+          },
+          {
+            "ELEM": 11,
+            "ECC": 0.25,
+            "SPEED": 80.0,
+            "RADIUS": 400.0
+          }
+        ]
+      }
+    }
+  }
+}

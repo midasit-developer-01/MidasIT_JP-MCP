@@ -1,0 +1,324 @@
+{
+  "_group": "design",
+  "_name": "REBR",
+  "uri": "design/RC/KDS-41-20-2022/REBR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "REBR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Concrete Brace Rebar (REBR). Fields are driven by DTO_REBR: a list of brace rebar items, each carrying a main bar, end/center shear (hoop) bars, concrete cover, hoop type, and optional sub-section element selection.",
+      "properties": {
+        "ITEMS": {
+          "type": "array",
+          "description": "Concrete brace rebar items. Each item defines the rebar arrangement for the brace section (or an optional sub-section).",
+          "items": {
+            "type": "object",
+            "properties": {
+              "CREATE_SUB_SECTION": {
+                "type": "boolean",
+                "default": false,
+                "description": "When true, the item targets a sub-section and ELEMS is required to select the member elements."
+              },
+              "ID": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Sub Section ID (subSectK). Applies when CREATE_SUB_SECTION=true. Omit to auto-generate the next available sub-section id; provide to target a specific sub-section."
+              },
+              "ELEMS": {
+                "type": "object",
+                "description": "Element selection for the sub-section. Required when CREATE_SUB_SECTION=true. Provide exactly one of KEYS, TO, or STRUCTURE_GROUP_NAME.",
+                "properties": {
+                  "KEYS": {
+                    "type": "array",
+                    "description": "Specify each element ID explicitly.",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "TO": {
+                    "type": "string",
+                    "description": "Specify an element ID range (e.g. \"1to10\")."
+                  },
+                  "STRUCTURE_GROUP_NAME": {
+                    "type": "string",
+                    "description": "Select elements by structure group name."
+                  }
+                },
+                "oneOf": [
+                  {
+                    "required": [
+                      "KEYS"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "TO"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "STRUCTURE_GROUP_NAME"
+                    ]
+                  }
+                ],
+                "additionalProperties": false
+              },
+              "MAIN_BAR": {
+                "type": "object",
+                "description": "Brace main rebar (single-layer).",
+                "properties": {
+                  "NAME": {
+                    "type": "string",
+                    "description": "Main rebar size.",
+                    "enum": [
+                      "D4",
+                      "D5",
+                      "D6",
+                      "D7",
+                      "D8",
+                      "D10",
+                      "D13",
+                      "D16",
+                      "D19",
+                      "D22",
+                      "D25",
+                      "D29",
+                      "D32",
+                      "D35",
+                      "D38",
+                      "D41",
+                      "D43",
+                      "D51",
+                      "D57"
+                    ]
+                  },
+                  "NUM": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Total number of rebars."
+                  },
+                  "ROW": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Number of rows."
+                  }
+                },
+                "required": [
+                  "NAME",
+                  "NUM",
+                  "ROW"
+                ]
+              },
+              "SHEAR_BAR_END": {
+                "type": "object",
+                "description": "Shear (hoop) bar at the ends (I & J).",
+                "properties": {
+                  "NAME": {
+                    "type": "string",
+                    "description": "Hoop rebar size.",
+                    "enum": [
+                      "D4",
+                      "D5",
+                      "D6",
+                      "D7",
+                      "D8",
+                      "D10",
+                      "D13",
+                      "D16",
+                      "D19",
+                      "D22",
+                      "D25",
+                      "D29",
+                      "D32",
+                      "D35",
+                      "D38",
+                      "D41",
+                      "D43",
+                      "D51",
+                      "D57"
+                    ]
+                  },
+                  "LEG_Y": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Number of legs in the local Y direction (must be positive)."
+                  },
+                  "LEG_Z": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Number of legs in the local Z direction (must be positive)."
+                  },
+                  "DIST": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "description": "Distance between rebars (must be positive; supports non-SI unit conversion)."
+                  }
+                },
+                "required": [
+                  "NAME",
+                  "LEG_Y",
+                  "LEG_Z",
+                  "DIST"
+                ]
+              },
+              "SHEAR_BAR_CEN": {
+                "type": "object",
+                "description": "Shear (hoop) bar at the center (M).",
+                "properties": {
+                  "NAME": {
+                    "type": "string",
+                    "description": "Hoop rebar size.",
+                    "enum": [
+                      "D4",
+                      "D5",
+                      "D6",
+                      "D7",
+                      "D8",
+                      "D10",
+                      "D13",
+                      "D16",
+                      "D19",
+                      "D22",
+                      "D25",
+                      "D29",
+                      "D32",
+                      "D35",
+                      "D38",
+                      "D41",
+                      "D43",
+                      "D51",
+                      "D57"
+                    ]
+                  },
+                  "LEG_Y": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Number of legs in the local Y direction (must be positive)."
+                  },
+                  "LEG_Z": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Number of legs in the local Z direction (must be positive)."
+                  },
+                  "DIST": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "description": "Distance between rebars (must be positive; supports non-SI unit conversion)."
+                  }
+                },
+                "required": [
+                  "NAME",
+                  "LEG_Y",
+                  "LEG_Z",
+                  "DIST"
+                ]
+              },
+              "DO": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "description": "Concrete face to center of rebar (do). Must be positive."
+              },
+              "HOOP_TYPE": {
+                "type": "string",
+                "default": "Ties",
+                "description": "Type of hoop rebar (case-insensitive). Defaults to \"Ties\".",
+                "enum": [
+                  "Ties",
+                  "Spirals"
+                ]
+              }
+            },
+            "required": [
+              "MAIN_BAR",
+              "SHEAR_BAR_END",
+              "SHEAR_BAR_CEN",
+              "DO"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "CREATE_SUB_SECTION": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "CREATE_SUB_SECTION"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "ELEMS"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "MAIN_BAR": {
+              "NAME": "D22",
+              "NUM": 8,
+              "ROW": 2
+            },
+            "SHEAR_BAR_END": {
+              "NAME": "D13",
+              "LEG_Y": 2,
+              "LEG_Z": 2,
+              "DIST": 100.0
+            },
+            "SHEAR_BAR_CEN": {
+              "NAME": "D13",
+              "LEG_Y": 2,
+              "LEG_Z": 2,
+              "DIST": 150.0
+            },
+            "DO": 50.0,
+            "HOOP_TYPE": "Ties"
+          },
+          {
+            "CREATE_SUB_SECTION": true,
+            "ELEMS": {
+              "KEYS": [
+                11,
+                12,
+                13
+              ]
+            },
+            "MAIN_BAR": {
+              "NAME": "D25",
+              "NUM": 12,
+              "ROW": 3
+            },
+            "SHEAR_BAR_END": {
+              "NAME": "D16",
+              "LEG_Y": 3,
+              "LEG_Z": 3,
+              "DIST": 80.0
+            },
+            "SHEAR_BAR_CEN": {
+              "NAME": "D16",
+              "LEG_Y": 3,
+              "LEG_Z": 3,
+              "DIST": 120.0
+            },
+            "DO": 60.0,
+            "HOOP_TYPE": "Spirals"
+          }
+        ]
+      }
+    }
+  }
+}

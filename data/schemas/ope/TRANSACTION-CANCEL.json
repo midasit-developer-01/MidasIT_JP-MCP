@@ -1,0 +1,22 @@
+{
+  "_group": "ope",
+  "_name": "TRANSACTION-CANCEL",
+  "uri": "ope/TRANSACTION-CANCEL",
+  "methods": "POST",
+  "schema": {
+    "TRANSACTION-CANCEL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Transaction Cancel (TRANSACTION-CANCEL). Cancels the active API super-transaction, discarding its pending changes; the request takes an empty body (DTO_EMPTY) and no fields drive it.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body. This operation takes no input fields."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

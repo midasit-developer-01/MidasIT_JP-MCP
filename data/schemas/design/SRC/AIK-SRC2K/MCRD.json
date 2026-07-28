@@ -1,0 +1,151 @@
+{
+  "_group": "design",
+  "_name": "MCRD",
+  "uri": "design/SRC/AIK-SRC2K/MCRD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MCRD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Modify SRC Column Section Rebar Data (MCRD). Defines the main (longitudinal) and shear (hoop/tie) rebar arrangement for an SRC column section under the AIK-SRC2K design code.",
+      "additionalProperties": false,
+      "required": [
+        "MAIN_BAR",
+        "SHEAR_BAR"
+      ],
+      "properties": {
+        "MAIN_BAR": {
+          "type": "object",
+          "description": "Main (longitudinal) rebar arrangement.",
+          "additionalProperties": false,
+          "required": [
+            "NUM",
+            "NAME",
+            "ROW",
+            "DO"
+          ],
+          "properties": {
+            "USE_REBAR_SPACE": {
+              "type": "boolean",
+              "description": "Auto-calculated Rebar Spacing. When false, REBAR_SPACE must be provided (>= 0).",
+              "default": true
+            },
+            "NUM": {
+              "type": "integer",
+              "description": "Total Number of Main Rebars. Must be >= 4 and a multiple of 4."
+            },
+            "NAME": {
+              "type": "string",
+              "description": "Main Rebar Size (case-insensitive).",
+              "enum": [
+                "D4",
+                "D5",
+                "D6",
+                "D7",
+                "D8",
+                "D10",
+                "D13",
+                "D16",
+                "D19",
+                "D22",
+                "D25",
+                "D29",
+                "D32",
+                "D35",
+                "D38",
+                "D41",
+                "D43",
+                "D51",
+                "D57"
+              ]
+            },
+            "ROW": {
+              "type": "integer",
+              "description": "Number of Rebar Rows. Must be >= 2 and a multiple of 2."
+            },
+            "DO": {
+              "type": "number",
+              "description": "Concrete Cover / Center Distance d0 (>= 0)."
+            },
+            "REBAR_SPACE": {
+              "type": "number",
+              "description": "Main Rebar Spacing, used when USE_REBAR_SPACE=false (>= 0).",
+              "default": 0.0
+            }
+          }
+        },
+        "SHEAR_BAR": {
+          "type": "object",
+          "description": "Shear (hoop/tie) rebar arrangement.",
+          "additionalProperties": false,
+          "required": [
+            "NAME",
+            "DIST"
+          ],
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Hoop/Tie Rebar Size (case-insensitive).",
+              "enum": [
+                "D4",
+                "D5",
+                "D6",
+                "D7",
+                "D8",
+                "D10",
+                "D13",
+                "D16",
+                "D19",
+                "D22",
+                "D25",
+                "D29",
+                "D32",
+                "D35",
+                "D38",
+                "D41",
+                "D43",
+                "D51",
+                "D57"
+              ]
+            },
+            "DIST": {
+              "type": "number",
+              "description": "Hoop/Tie Rebar Spacing (> 0)."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "MAIN_BAR": {
+          "USE_REBAR_SPACE": true,
+          "NUM": 8,
+          "NAME": "D22",
+          "ROW": 2,
+          "DO": 40.0
+        },
+        "SHEAR_BAR": {
+          "NAME": "D10",
+          "DIST": 150.0
+        }
+      },
+      "2": {
+        "MAIN_BAR": {
+          "USE_REBAR_SPACE": false,
+          "NUM": 12,
+          "NAME": "D25",
+          "ROW": 4,
+          "DO": 50.0,
+          "REBAR_SPACE": 100.0
+        },
+        "SHEAR_BAR": {
+          "NAME": "D13",
+          "DIST": 200.0
+        }
+      }
+    }
+  }
+}

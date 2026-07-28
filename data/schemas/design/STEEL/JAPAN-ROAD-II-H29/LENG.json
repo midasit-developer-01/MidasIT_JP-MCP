@@ -1,0 +1,59 @@
+{
+  "_group": "design",
+  "_name": "LENG",
+  "uri": "design/STEEL/JAPAN-ROAD-II-H29/LENG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LENG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Unbraced Length (LENG). Member unbraced-length data for Japan Road (Steel, Part II) steel design; all fields are optional overrides of the element's computed unbraced lengths.",
+      "properties": {
+        "LY": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced length Ly for buckling about the y-axis (weak-axis)."
+        },
+        "LZ": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced length Lz for buckling about the z-axis (strong-axis)."
+        },
+        "LB": {
+          "type": "number",
+          "default": 0,
+          "description": "Laterally unbraced length Lb used for lateral-torsional buckling checks."
+        },
+        "bNOTUSE": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, the laterally unbraced length is not considered."
+        },
+        "bAUTOCALC": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, the unbraced lengths are calculated automatically by the design code."
+        },
+        "LT": {
+          "type": "number",
+          "default": 0,
+          "description": "Torsional unbraced length Lt used for torsional buckling checks."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LY": 3.5,
+        "LZ": 3.5,
+        "LB": 3.5,
+        "bNOTUSE": false,
+        "bAUTOCALC": false,
+        "LT": 3.5
+      }
+    }
+  }
+}

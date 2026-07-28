@@ -1,0 +1,38 @@
+{
+  "_group": "ope",
+  "_name": "BOM",
+  "uri": "ope/BOM",
+  "methods": "POST",
+  "schema": {
+    "BOM": {
+      "type": "object",
+      "description": "Bill of Material (BOM). Computes bill-of-material tables from the selected BOM item titles; the SELECTS list drives which structural quantities are aggregated and returned.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body for BOM computation.",
+          "properties": {
+            "SELECTS": {
+              "type": "array",
+              "description": "Select Title List: list of BOM item titles to include in the calculation. An empty list requests the default/all available BOM types. Each entry is a title string identifying a BOM group/section/material selection.",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "SELECTS"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "SELECTS": []
+    }
+  }
+}

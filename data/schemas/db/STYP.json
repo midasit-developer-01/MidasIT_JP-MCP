@@ -1,0 +1,78 @@
+{
+  "_group": "db",
+  "_name": "STYP",
+  "uri": "db/STYP",
+  "methods": "GET, PUT",
+  "schema": {
+    "STYP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Structure Type (STYP). Single project-wide record (key is always 1) defining the analysis structure type, mass control, gravity, initial temperature, and section alignment options.",
+      "type": "object",
+      "properties": {
+        "STYP": {
+          "description": "Structure type code. 3-D: 0, X-Z Plane: 1, Y-Z Plane: 2, X-Y Plane: 3, Constraint RZ (X-Y Plane): 4.",
+          "type": "integer"
+        },
+        "MASS": {
+          "description": "Mass type code. Lumped Mass: 1, Consistent Mass: 2.",
+          "type": "integer"
+        },
+        "GRAV": {
+          "description": "Gravitational acceleration.",
+          "type": "number"
+        },
+        "TEMP": {
+          "description": "Initial temperature.",
+          "type": "number",
+          "default": 0
+        },
+        "bALIGNBEAM": {
+          "description": "Align top of beam section.",
+          "type": "boolean",
+          "default": false
+        },
+        "bALIGNSLAB": {
+          "description": "Align top of slab (plate).",
+          "type": "boolean",
+          "default": false
+        },
+        "bMASSOFFSET": {
+          "description": "[MASS=1] Consider off-diagonal/offset masses (applies to Lumped Mass).",
+          "type": "boolean",
+          "default": false
+        },
+        "bROTRIGID": {
+          "description": "[MASS=1] Consider rotational rigid body mode for modal participation factor (applies to Lumped Mass).",
+          "type": "boolean",
+          "default": false
+        },
+        "bSELFWEIGHT": {
+          "description": "[MASS=1] Convert self-weight into masses (applies to Lumped Mass).",
+          "type": "boolean",
+          "default": false
+        },
+        "SMASS": {
+          "description": "[bSELFWEIGHT=true] Structure mass conversion type. Convert to X, Y, Z: 1, Convert to X, Y: 2, Convert to Z: 3.",
+          "type": "integer",
+          "default": 1
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "STYP": 0,
+        "MASS": 1,
+        "GRAV": 9.806,
+        "TEMP": 0,
+        "bALIGNBEAM": false,
+        "bALIGNSLAB": false,
+        "bMASSOFFSET": false,
+        "bROTRIGID": false,
+        "bSELFWEIGHT": false,
+        "SMASS": 1
+      }
+    }
+  }
+}

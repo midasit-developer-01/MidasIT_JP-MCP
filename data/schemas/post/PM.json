@@ -1,0 +1,21 @@
+{
+  "_group": "post",
+  "_name": "PM",
+  "uri": "post/PM",
+  "methods": "POST",
+  "schema": {
+    "PM": {
+      "type": "object",
+      "description": "P-M Interaction Curve (PM). Computes the design axial-moment (Phi*Pn, Phi*Mn) interaction data per element from the analysis and RC design results; the request body carries only an optional output file path.",
+      "properties": {
+        "Argument": {
+          "type": "string",
+          "description": "Optional absolute file path to export the computed PM interaction result as a JSON file. If empty, no file is exported and the result is only returned in the response."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": ""
+  }
+}

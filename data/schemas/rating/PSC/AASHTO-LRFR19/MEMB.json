@@ -1,0 +1,42 @@
+{
+  "_group": "rating",
+  "_name": "MEMB",
+  "uri": "rating/PSC/AASHTO-LRFR19/MEMB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MEMB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Member Assignment (MEMB). Groups a connected chain of elements into a single design/rating member; fields are the element list and an optional local-direction reversal flag.",
+      "properties": {
+        "AELEM": {
+          "type": "array",
+          "description": "Element list forming the member. Must be a set of connected elements (the handler rejects a selection whose elements do not form a single connected member).",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "bREVERSE": {
+          "type": "boolean",
+          "description": "Reverse the member local direction.",
+          "default": false
+        }
+      },
+      "required": [
+        "AELEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "AELEM": [
+          1,
+          2,
+          3
+        ],
+        "bREVERSE": false
+      }
+    }
+  }
+}

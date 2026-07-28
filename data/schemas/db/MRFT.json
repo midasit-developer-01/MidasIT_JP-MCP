@@ -1,0 +1,28 @@
+{
+  "_group": "db",
+  "_name": "MRFT",
+  "uri": "db/MRFT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MRFT": {
+      "type": "object",
+      "description": "Moment Redistribution Factor (MRFT). Keyed by element id; can only be assigned to BEAM-type elements, and the single FACTOR value scales the redistributed design moment for that beam.",
+      "properties": {
+        "FACTOR": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Moment reduction (redistribution) factor applied to the beam element. Applies to BEAM-type elements only. For the Eurocode2:04 concrete design code the value is clamped to a lower bound of 0.7 on write (values below 0.7 are raised to 0.7)."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FACTOR": 0.85
+      }
+    }
+  }
+}

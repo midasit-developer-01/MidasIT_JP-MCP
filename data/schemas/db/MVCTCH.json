@@ -1,0 +1,615 @@
+{
+  "_group": "db",
+  "_name": "MVCTCH",
+  "uri": "db/MVCTCH",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVCTCH": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Analysis Control Data - China (MVCTCH). Only a single record (id \"1\") exists; the impact-factor block is driven by iCODETYPE (0 = frequency data in FREQ, 1 = BRIDGE1, otherwise BRIDGE2) and, when iCODETYPE == 0, by the natural-frequency method iNFM.",
+      "properties": {
+        "POINT": {
+          "type": "string",
+          "enum": ["INF", "ALL"],
+          "description": "Load point selection (case-insensitive). INF = influence-line points, ALL = all points."
+        },
+        "iIGP": {
+          "type": "integer",
+          "default": 0,
+          "description": "Influence-generating-point option. When 0, UNUMT (number per line element) is used; otherwise DIST (distance between points) is used."
+        },
+        "UNUMT": {
+          "type": "integer",
+          "default": 0,
+          "description": "[iIGP=0] Number of unit-load divisions per line element."
+        },
+        "DIST": {
+          "type": "number",
+          "default": 0,
+          "description": "[iIGP!=0] Distance between influence-generating points."
+        },
+        "PLATE": {
+          "type": "string",
+          "enum": ["CENTER", "NODAL"],
+          "description": "Analysis result position for plate elements (case-insensitive)."
+        },
+        "bSTRCALC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate plate stresses."
+        },
+        "FRAME": {
+          "type": "string",
+          "enum": ["NORMAL", "AXIAL"],
+          "description": "Analysis result position for frame elements (case-insensitive)."
+        },
+        "bCSTRCALC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate combined stresses for frame elements."
+        },
+        "bREAC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include reactions in the calculation filters."
+        },
+        "bRG": {
+          "type": "boolean",
+          "default": false,
+          "description": "Reactions filter: false = All, true = Group (uses RGN)."
+        },
+        "RGN": {
+          "type": "string",
+          "description": "Structure group name for reactions; used only when bREAC and bRG are true (may be empty otherwise)."
+        },
+        "bDISP": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include displacements in the calculation filters."
+        },
+        "bDG": {
+          "type": "boolean",
+          "default": false,
+          "description": "Displacements filter: false = All, true = Group (uses DGN)."
+        },
+        "DGN": {
+          "type": "string",
+          "description": "Structure group name for displacements; used only when bDISP and bDG are true (may be empty otherwise)."
+        },
+        "bFM": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include forces / moments in the calculation filters."
+        },
+        "bFG": {
+          "type": "boolean",
+          "default": false,
+          "description": "Forces/moments filter: false = All, true = Group (uses FGN)."
+        },
+        "FGN": {
+          "type": "string",
+          "description": "Structure group name for forces / moments; used only when bFM and bFG are true (may be empty otherwise)."
+        },
+        "bL": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include elastic / general links in the calculation filters."
+        },
+        "bLG": {
+          "type": "boolean",
+          "default": false,
+          "description": "Links filter: false = All, true = Group (uses LGN, a boundary group)."
+        },
+        "LGN": {
+          "type": "string",
+          "description": "Boundary group name for elastic / general links; used only when bL and bLG are true (may be empty otherwise)."
+        },
+        "bIF": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply impact factor."
+        },
+        "iCODETYPE": {
+          "type": "integer",
+          "description": "Code type driving the impact-factor data. 0 = JTG D60-2015/JTG04 (uses FREQ and iNFM); 1 = other codes (uses BRIDGE1); otherwise (e.g. 2 = Q/CR 9300-2018, TB 10002-2017) uses BRIDGE2."
+        },
+        "iNFM": {
+          "type": "integer",
+          "description": "[iCODETYPE=0] Natural frequency method: 0 = User, 1 = Simple Beam, 2 = Continuous Beam, 3 = Arch Bridge, 4 = Cable Stayed Bridge, 5 = Suspension Bridge. Selects which FREQ fields apply."
+        },
+        "iSLCM": {
+          "type": "integer",
+          "default": 0,
+          "description": "[iCODETYPE!=0] Span length (L) code/index."
+        },
+        "bBC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply vehicle load class."
+        },
+        "iBC": {
+          "type": "integer",
+          "description": "Vehicle load class type."
+        },
+        "FREQ": {
+          "type": "object",
+          "description": "Frequency data (JTG D60-2015/JTG04). Applies when iCODETYPE == 0; which fields are set depends on iNFM.",
+          "properties": {
+            "USER_F": {
+              "type": "number",
+              "description": "[iNFM=0 User] f [Hz]."
+            },
+            "SBEM_L": {
+              "type": "number",
+              "description": "[iNFM=1 Simple Beam] L."
+            },
+            "SBEM_E": {
+              "type": "number",
+              "description": "[iNFM=1 Simple Beam] E."
+            },
+            "SBEM_IC": {
+              "type": "number",
+              "description": "[iNFM=1 Simple Beam] Ic."
+            },
+            "SBEM_MC": {
+              "type": "number",
+              "description": "[iNFM=1 Simple Beam] mc."
+            },
+            "CBEM_A": {
+              "type": "number",
+              "description": "[iNFM=2 Continuous Beam] a."
+            },
+            "CBEM_B": {
+              "type": "number",
+              "description": "[iNFM=2 Continuous Beam] b."
+            },
+            "CBEM_L": {
+              "type": "number",
+              "description": "[iNFM=2 Continuous Beam] L."
+            },
+            "CBEM_E": {
+              "type": "number",
+              "description": "[iNFM=2 Continuous Beam] E."
+            },
+            "CBEM_IC": {
+              "type": "number",
+              "description": "[iNFM=2 Continuous Beam] Ic."
+            },
+            "CBEM_MC": {
+              "type": "number",
+              "description": "[iNFM=2 Continuous Beam] mc."
+            },
+            "iARCH_TYPE": {
+              "type": "integer",
+              "description": "[iNFM=3 Arch Bridge] Arch bridge type."
+            },
+            "ARCH_N": {
+              "type": "number",
+              "description": "[iNFM=3 Arch Bridge] n."
+            },
+            "ARCH_F": {
+              "type": "number",
+              "description": "[iNFM=3 Arch Bridge] f."
+            },
+            "ARCH_L": {
+              "type": "number",
+              "description": "[iNFM=3 Arch Bridge] L."
+            },
+            "ARCH_E": {
+              "type": "number",
+              "description": "[iNFM=3 Arch Bridge] E."
+            },
+            "ARCH_IC": {
+              "type": "number",
+              "description": "[iNFM=3 Arch Bridge] Ic."
+            },
+            "ARCH_MC": {
+              "type": "number",
+              "description": "[iNFM=3 Arch Bridge] mc."
+            },
+            "CABL_A": {
+              "type": "number",
+              "description": "[iNFM=4 Cable Stayed Bridge] a."
+            },
+            "CABL_L": {
+              "type": "number",
+              "description": "[iNFM=4 Cable Stayed Bridge] L."
+            },
+            "SUSP_L": {
+              "type": "number",
+              "description": "[iNFM=5 Suspension Bridge] L."
+            },
+            "SUSP_E": {
+              "type": "number",
+              "description": "[iNFM=5 Suspension Bridge] E."
+            },
+            "SUSP_I": {
+              "type": "number",
+              "description": "[iNFM=5 Suspension Bridge] I."
+            },
+            "SUSP_HG": {
+              "type": "number",
+              "description": "[iNFM=5 Suspension Bridge] Hg."
+            },
+            "SUSP_M": {
+              "type": "number",
+              "description": "[iNFM=5 Suspension Bridge] m."
+            }
+          }
+        },
+        "BRIDGE1": {
+          "type": "object",
+          "description": "Bridge data for other codes. Applies when iCODETYPE == 1; which fields are set depends on BTYPE.",
+          "properties": {
+            "BTYPE": {
+              "type": "string",
+              "enum": ["RC", "STEEL", "MBRG", "TRAIN"],
+              "description": "Bridge type (case-insensitive). RC, STEEL (steel), MBRG (municipal bridge), TRAIN (train/subway)."
+            },
+            "RC_C1L1": {
+              "type": "number",
+              "description": "[BTYPE=RC] Case1 - L1."
+            },
+            "RC_C1F1": {
+              "type": "number",
+              "description": "[BTYPE=RC] Case1 - F1."
+            },
+            "RC_C1L2": {
+              "type": "number",
+              "description": "[BTYPE=RC] Case1 - L2."
+            },
+            "RC_C1F2": {
+              "type": "number",
+              "description": "[BTYPE=RC] Case1 - F2."
+            },
+            "RC_bCASE2": {
+              "type": "boolean",
+              "default": false,
+              "description": "[BTYPE=RC] Case2 check box; when true the RC_C2* fields and RC_GROUP apply."
+            },
+            "RC_C2L1": {
+              "type": "number",
+              "description": "[BTYPE=RC, RC_bCASE2=true] Case2 - L1."
+            },
+            "RC_C2F1": {
+              "type": "number",
+              "description": "[BTYPE=RC, RC_bCASE2=true] Case2 - F1."
+            },
+            "RC_C2L2": {
+              "type": "number",
+              "description": "[BTYPE=RC, RC_bCASE2=true] Case2 - L2."
+            },
+            "RC_C2F2": {
+              "type": "number",
+              "description": "[BTYPE=RC, RC_bCASE2=true] Case2 - F2."
+            },
+            "RC_GROUP": {
+              "type": "string",
+              "default": "",
+              "description": "[BTYPE=RC, RC_bCASE2=true] Structure group name."
+            },
+            "STL_C1V1": {
+              "type": "number",
+              "description": "[BTYPE=STEEL] Case1 - Value1."
+            },
+            "STL_C1V2": {
+              "type": "number",
+              "description": "[BTYPE=STEEL] Case1 - Value2."
+            },
+            "STL_bCASE2": {
+              "type": "boolean",
+              "default": false,
+              "description": "[BTYPE=STEEL] Case2 check box; when true the STL_C2* fields and STL_GROUP apply."
+            },
+            "STL_C2V1": {
+              "type": "number",
+              "description": "[BTYPE=STEEL, STL_bCASE2=true] Case2 - Value1."
+            },
+            "STL_C2V2": {
+              "type": "number",
+              "description": "[BTYPE=STEEL, STL_bCASE2=true] Case2 - Value2."
+            },
+            "STL_GROUP": {
+              "type": "string",
+              "description": "[BTYPE=STEEL, STL_bCASE2=true] Structure group name."
+            },
+            "MBRG_RL1": {
+              "type": "number",
+              "description": "[BTYPE=MBRG] Impact factor of lane loads - L1 value."
+            },
+            "MBRG_RF1": {
+              "type": "number",
+              "description": "[BTYPE=MBRG] Impact factor of lane loads - F1 value."
+            },
+            "MBRG_RL2": {
+              "type": "number",
+              "description": "[BTYPE=MBRG] Impact factor of lane loads - L2 value."
+            },
+            "MBRG_RF2": {
+              "type": "number",
+              "description": "[BTYPE=MBRG] Impact factor of lane loads - F2 value."
+            },
+            "MBRG_RF3": {
+              "type": "number",
+              "description": "[BTYPE=MBRG] Impact factor of lane loads - F3 value."
+            },
+            "MBRG_RF4": {
+              "type": "number",
+              "description": "[BTYPE=MBRG] Impact factor of lane loads - F4 value."
+            },
+            "MBRG_CF1": {
+              "type": "number",
+              "description": "[BTYPE=MBRG] Impact factor of vehicle loads - Value1."
+            },
+            "MBRG_CF2": {
+              "type": "number",
+              "description": "[BTYPE=MBRG] Impact factor of vehicle loads - Value2."
+            },
+            "MBRG_CF3": {
+              "type": "number",
+              "description": "[BTYPE=MBRG] Impact factor of vehicle loads - Value3."
+            },
+            "TRAIN_SUB_TYPE": {
+              "type": "string",
+              "enum": ["SIMPLE", "COMPOSITE", "RCCONC", "RCARCH"],
+              "description": "[BTYPE=TRAIN] Sub type (case-insensitive) selecting the train/subway method: SIMPLE (simple support), COMPOSITE (composite bridge), RCCONC (RC concrete), RCARCH (arch bridge)."
+            },
+            "TRAIN_NUMERATOR": {
+              "type": "number",
+              "description": "[BTYPE=TRAIN] Value1 (numerator) for the selected TRAIN_SUB_TYPE."
+            },
+            "TRAIN_DENOMINATOR": {
+              "type": "number",
+              "description": "[BTYPE=TRAIN] Value2 (denominator) for the selected TRAIN_SUB_TYPE."
+            },
+            "TRAIN_H": {
+              "type": "number",
+              "description": "[BTYPE=TRAIN, TRAIN_SUB_TYPE=RCCONC] Surcharge thickness."
+            },
+            "TRAIN_bCLSL": {
+              "type": "number",
+              "description": "[BTYPE=TRAIN, TRAIN_SUB_TYPE=RCCONC] Apply loaded span length check box; when set, TRAIN_GROUP applies."
+            },
+            "TRAIN_bALSL": {
+              "type": "number",
+              "description": "[BTYPE=TRAIN, TRAIN_SUB_TYPE=RCARCH] Apply loaded span length check box; when set, TRAIN_GROUP applies."
+            },
+            "TRAIN_LAMBDA": {
+              "type": "number",
+              "description": "[BTYPE=TRAIN, TRAIN_SUB_TYPE=RCARCH] Lambda."
+            },
+            "TRAIN_F": {
+              "type": "number",
+              "description": "[BTYPE=TRAIN, TRAIN_SUB_TYPE=RCARCH] f value."
+            },
+            "TRAIN_GROUP": {
+              "type": "string",
+              "description": "[BTYPE=TRAIN, TRAIN_SUB_TYPE=RCCONC or RCARCH with loaded-span-length check on] Structure group name."
+            }
+          },
+          "required": ["BTYPE"]
+        },
+        "BRIDGE2": {
+          "type": "object",
+          "description": "Bridge data for Q/CR 9300-2018 / TB 10002-2017. Applies when iCODETYPE is neither 0 nor 1; which fields are set depends on BTYPE and, for RAINWAY, on METHOD.",
+          "properties": {
+            "BTYPE": {
+              "type": "string",
+              "enum": ["RAINWAY", "RAINBRG", "RAINCUL"],
+              "description": "Bridge type (case-insensitive). RAINWAY = passenger/freight mixed line or heavy-haul railway bridge; RAINBRG = high-speed or intercity railway bridge; RAINCUL = high-speed or intercity railway culvert."
+            },
+            "METHOD": {
+              "type": "string",
+              "enum": ["SIMPLE", "COMPOSITE", "RCCONC", "RCARCH"],
+              "description": "[BTYPE=RAINWAY] Method (case-insensitive): SIMPLE (simple support), COMPOSITE (composite bridge), RCCONC (RC concrete), RCARCH (arch bridge)."
+            },
+            "SIMPLE_U": {
+              "type": "number",
+              "description": "[BTYPE=RAINWAY, METHOD=SIMPLE] Simple support U."
+            },
+            "SIMPLE_L": {
+              "type": "number",
+              "description": "[BTYPE=RAINWAY, METHOD=SIMPLE] Simple support L."
+            },
+            "COMPO_U": {
+              "type": "number",
+              "description": "[BTYPE=RAINWAY, METHOD=COMPOSITE] Composite bridge U."
+            },
+            "COMPO_L": {
+              "type": "number",
+              "description": "[BTYPE=RAINWAY, METHOD=COMPOSITE] Composite bridge L."
+            },
+            "CONC_U": {
+              "type": "number",
+              "description": "[BTYPE=RAINWAY, METHOD=RCCONC] RC concrete U."
+            },
+            "CONC_L": {
+              "type": "number",
+              "description": "[BTYPE=RAINWAY, METHOD=RCCONC] RC concrete L."
+            },
+            "CONC_H": {
+              "type": "number",
+              "description": "[BTYPE=RAINWAY, METHOD=RCCONC] RC concrete H."
+            },
+            "ARCH_U": {
+              "type": "number",
+              "description": "[BTYPE=RAINWAY, METHOD=RCARCH] Arch bridge U."
+            },
+            "ARCH_L": {
+              "type": "number",
+              "description": "[BTYPE=RAINWAY, METHOD=RCARCH] Arch bridge L."
+            },
+            "ARCH_LAMBDA": {
+              "type": "number",
+              "description": "[BTYPE=RAINWAY, METHOD=RCARCH] Arch bridge lambda."
+            },
+            "ARCH_F": {
+              "type": "number",
+              "description": "[BTYPE=RAINWAY, METHOD=RCARCH] Arch bridge f."
+            },
+            "bCHECK": {
+              "type": "boolean",
+              "default": false,
+              "description": "[BTYPE=RAINWAY, METHOD=RCCONC or RCARCH] Concrete loaded-length check box; when true GROUP applies."
+            },
+            "MU1": {
+              "type": "number",
+              "description": "[BTYPE=RAINBRG or RAINCUL] mu value1."
+            },
+            "MU2": {
+              "type": "number",
+              "description": "[BTYPE=RAINBRG or RAINCUL] mu value2."
+            },
+            "MU3": {
+              "type": "number",
+              "description": "[BTYPE=RAINBRG or RAINCUL] mu value3."
+            },
+            "bLFAI": {
+              "type": "boolean",
+              "default": false,
+              "description": "[BTYPE=RAINBRG or RAINCUL] Lfai automatic calculation check box."
+            },
+            "LFAI": {
+              "type": "number",
+              "description": "[BTYPE=RAINBRG or RAINCUL] Lfai."
+            },
+            "bLENGTH": {
+              "type": "boolean",
+              "default": false,
+              "description": "[BTYPE=RAINBRG or RAINCUL] Apply loaded span length check box."
+            },
+            "MUR1": {
+              "type": "number",
+              "description": "[BTYPE=RAINCUL] mu reduction value1."
+            },
+            "MUR2": {
+              "type": "number",
+              "description": "[BTYPE=RAINCUL] mu reduction value2."
+            },
+            "MUR3": {
+              "type": "number",
+              "description": "[BTYPE=RAINCUL] mu reduction value3."
+            },
+            "HC": {
+              "type": "number",
+              "description": "[BTYPE=RAINCUL] hc."
+            },
+            "GROUP": {
+              "type": "string",
+              "description": "Structure group name; applies for RAINWAY (METHOD=RCCONC or RCARCH with loaded-length check on), RAINBRG, and RAINCUL."
+            }
+          },
+          "required": ["BTYPE"]
+        }
+      },
+      "required": ["POINT", "PLATE", "FRAME", "RGN", "DGN", "FGN", "LGN", "iCODETYPE", "iNFM", "iBC", "FREQ"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "POINT": "ALL",
+        "iIGP": 0,
+        "UNUMT": 4,
+        "PLATE": "CENTER",
+        "bSTRCALC": false,
+        "FRAME": "NORMAL",
+        "bCSTRCALC": false,
+        "bREAC": true,
+        "bRG": false,
+        "RGN": "",
+        "bDISP": false,
+        "bDG": false,
+        "DGN": "",
+        "bFM": false,
+        "bFG": false,
+        "FGN": "",
+        "bL": false,
+        "bLG": false,
+        "LGN": "",
+        "bIF": true,
+        "iCODETYPE": 0,
+        "iNFM": 1,
+        "bBC": false,
+        "iBC": 0,
+        "FREQ": {
+          "SBEM_L": 30.0,
+          "SBEM_E": 2.06e8,
+          "SBEM_IC": 0.15,
+          "SBEM_MC": 2.5
+        }
+      },
+      "2": {
+        "POINT": "INF",
+        "iIGP": 1,
+        "DIST": 1.0,
+        "PLATE": "NODAL",
+        "bSTRCALC": true,
+        "FRAME": "AXIAL",
+        "bCSTRCALC": true,
+        "bREAC": false,
+        "bRG": false,
+        "RGN": "",
+        "bDISP": false,
+        "bDG": false,
+        "DGN": "",
+        "bFM": false,
+        "bFG": false,
+        "FGN": "",
+        "bL": false,
+        "bLG": false,
+        "LGN": "",
+        "bIF": true,
+        "iCODETYPE": 1,
+        "iNFM": 0,
+        "iSLCM": 1,
+        "bBC": false,
+        "iBC": 0,
+        "FREQ": {},
+        "BRIDGE1": {
+          "BTYPE": "RC",
+          "RC_C1L1": 20.0,
+          "RC_C1F1": 1.2,
+          "RC_C1L2": 40.0,
+          "RC_C1F2": 1.05,
+          "RC_bCASE2": false
+        }
+      },
+      "3": {
+        "POINT": "ALL",
+        "iIGP": 0,
+        "UNUMT": 4,
+        "PLATE": "CENTER",
+        "bSTRCALC": false,
+        "FRAME": "NORMAL",
+        "bCSTRCALC": false,
+        "bREAC": false,
+        "bRG": false,
+        "RGN": "",
+        "bDISP": false,
+        "bDG": false,
+        "DGN": "",
+        "bFM": false,
+        "bFG": false,
+        "FGN": "",
+        "bL": false,
+        "bLG": false,
+        "LGN": "",
+        "bIF": true,
+        "iCODETYPE": 2,
+        "iNFM": 0,
+        "iSLCM": 1,
+        "bBC": false,
+        "iBC": 0,
+        "FREQ": {},
+        "BRIDGE2": {
+          "BTYPE": "RAINWAY",
+          "METHOD": "SIMPLE",
+          "SIMPLE_U": 1.5,
+          "SIMPLE_L": 40.0
+        }
+      }
+    }
+  }
+}

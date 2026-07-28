@@ -1,0 +1,41 @@
+{
+  "_group": "db",
+  "_name": "CAMB",
+  "uri": "db/CAMB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CAMB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "FCM Camber Control (CAMB). A single-instance bridge specialization record identifying the three model groups by name that drive free-cantilever-method camber calculation: the body (girder) element group, the support node group, and the key-segment group.",
+      "type": "object",
+      "properties": {
+        "BODY_GROUP_NAME": {
+          "description": "Name of the structure/element group containing the bridge girder (body) elements used for camber control. Resolved to an internal group key at write time.",
+          "type": "string"
+        },
+        "SUPP_GROUP_NAME": {
+          "description": "Name of the node group holding the support (pier-table) nodes. Resolved to an internal group key at write time.",
+          "type": "string"
+        },
+        "KEYSEG_GROUP_NAME": {
+          "description": "Name of the group containing the key-segment (closure) elements. Resolved to an internal group key at write time.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "BODY_GROUP_NAME",
+        "SUPP_GROUP_NAME",
+        "KEYSEG_GROUP_NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "BODY_GROUP_NAME": "FSM",
+        "SUPP_GROUP_NAME": "PSC-BN",
+        "KEYSEG_GROUP_NAME": "Key-SegK1~K5"
+      }
+    }
+  }
+}

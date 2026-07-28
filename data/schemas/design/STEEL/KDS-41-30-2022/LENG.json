@@ -1,0 +1,59 @@
+{
+  "_group": "design",
+  "_name": "LENG",
+  "uri": "design/STEEL/KDS-41-30-2022/LENG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LENG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Member Unbraced Length (LENG). Fields set the unbraced lengths used by the steel/RC/SRC member design check for the element; all fields are optional overrides.",
+      "properties": {
+        "LY": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced Length Ly (about the y-axis)."
+        },
+        "LZ": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced Length Lz (about the z-axis)."
+        },
+        "LB": {
+          "type": "number",
+          "default": 0,
+          "description": "Laterally Unbraced Length."
+        },
+        "bNOTUSE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Do not consider the laterally unbraced length."
+        },
+        "bAUTOCALC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate the unbraced length automatically by code."
+        },
+        "LT": {
+          "type": "number",
+          "default": 0,
+          "description": "Torsional Unbraced Length."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LY": 3.5,
+        "LZ": 3.5,
+        "LB": 1.75,
+        "bNOTUSE": false,
+        "bAUTOCALC": false,
+        "LT": 3.5
+      }
+    }
+  }
+}

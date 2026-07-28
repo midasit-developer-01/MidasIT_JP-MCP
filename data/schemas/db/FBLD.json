@@ -1,0 +1,75 @@
+{
+  "_group": "db",
+  "_name": "FBLD",
+  "uri": "db/FBLD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "FBLD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Floor Load Type (FBLD). Defines a named floor load type composed of up to 8 floor load items, each tying a static load case name to a floor load magnitude.",
+      "properties": {
+        "NAME": {
+          "description": "Floor load type name.",
+          "type": "string"
+        },
+        "DESC": {
+          "description": "Description of the floor load type.",
+          "type": "string",
+          "default": ""
+        },
+        "ITEM": {
+          "description": "Floor load items. Each item pairs a static load case name with a floor load value. Only the first 8 items are used by the handler.",
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "properties": {
+              "LCNAME": {
+                "description": "Static load case name (must reference an existing STLD load case).",
+                "type": "string"
+              },
+              "FLOOR_LOAD": {
+                "description": "Floor load magnitude for this load case.",
+                "type": "number"
+              },
+              "OPT_SUB_BEAM_WEIGHT": {
+                "description": "Whether the sub beam self-weight is considered for this item.",
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "required": [
+              "LCNAME",
+              "FLOOR_LOAD"
+            ]
+          }
+        }
+      },
+      "required": [
+        "NAME",
+        "ITEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Floor_example",
+        "DESC": "",
+        "ITEM": [
+          {
+            "LCNAME": "DC",
+            "FLOOR_LOAD": 10.0,
+            "OPT_SUB_BEAM_WEIGHT": true
+          },
+          {
+            "LCNAME": "DW",
+            "FLOOR_LOAD": 20.0,
+            "OPT_SUB_BEAM_WEIGHT": false
+          }
+        ]
+      }
+    }
+  }
+}

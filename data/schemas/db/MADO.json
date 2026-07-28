@@ -1,0 +1,53 @@
+{
+  "_group": "db",
+  "_name": "MADO",
+  "uri": "db/MADO",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MADO": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Mesh Analysis Domain (MADO). Defines a named analysis domain characterized by its element type, material, property, and sub type; all keys are required and describe the domain assigned to the given key id.",
+      "properties": {
+        "NAME": {
+          "description": "Domain name (free-text label for this analysis domain).",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Element type code for the domain (integer element-type identifier).",
+          "type": "integer"
+        },
+        "MATL": {
+          "description": "Material id referenced by the domain.",
+          "type": "integer"
+        },
+        "PROP": {
+          "description": "Element property id referenced by the domain.",
+          "type": "integer"
+        },
+        "SUB_TYPE": {
+          "description": "Sub type code refining the element type of the domain.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "NAME",
+        "TYPE",
+        "MATL",
+        "PROP",
+        "SUB_TYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "DM1",
+        "TYPE": 4,
+        "MATL": 0,
+        "PROP": 0,
+        "SUB_TYPE": 2
+      }
+    }
+  }
+}

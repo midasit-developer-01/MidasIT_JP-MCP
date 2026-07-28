@@ -1,0 +1,22 @@
+{
+  "_group": "doc",
+  "_name": "CLOSE",
+  "uri": "doc/CLOSE",
+  "methods": "POST",
+  "schema": {
+    "CLOSE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Close Document (CLOSE). Closes the currently open model document; the request carries no fields (DTO_EMPTY), so the operation is driven entirely by the currently active document.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body. The CLOSE operation takes no parameters and acts on the currently open document."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

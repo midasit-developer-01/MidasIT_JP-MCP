@@ -1,0 +1,20 @@
+{
+  "_group": "ope",
+  "_name": "TRANSACTION-OPEN",
+  "uri": "ope/TRANSACTION-OPEN",
+  "methods": "POST",
+  "schema": {
+    "TRANSACTION-OPEN": {
+      "type": "object",
+      "description": "Transaction Open (TRANSACTION-OPEN). Starts an API super-transaction; the request takes no fields (DTO_EMPTY), so Argument is an empty object.",
+      "properties": {
+        "Argument": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

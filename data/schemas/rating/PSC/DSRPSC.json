@@ -1,0 +1,29 @@
+{
+  "_group": "rating",
+  "_name": "DSRPSC",
+  "uri": "rating/PSC/DSRPSC",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "DSRPSC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "PSC Rating Code (DSRPSC). A singleton database (key fixed to 1) that selects the PSC load-rating design code; the handler hard-restricts DGNCODE to \"AASHTO-LRFR19\".",
+      "properties": {
+        "DGNCODE": {
+          "type": "string",
+          "enum": ["AASHTO-LRFR19"],
+          "description": "PSC Rating Code. Currently this API only accepts \"AASHTO-LRFR19\"; any other value is rejected (LV_WRONG_FIELD)."
+        }
+      },
+      "required": ["DGNCODE"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DGNCODE": "AASHTO-LRFR19"
+      }
+    }
+  }
+}

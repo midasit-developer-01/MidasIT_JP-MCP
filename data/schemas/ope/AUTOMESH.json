@@ -1,0 +1,239 @@
+{
+  "_group": "ope",
+  "_name": "AUTOMESH",
+  "uri": "ope/AUTOMESH",
+  "methods": "POST",
+  "schema": {
+    "AUTOMESH": {
+      "type": "object",
+      "description": "Auto Mesh Generation (AUTOMESH). Generates a planar auto mesh from target nodes/line/planar elements; the request drives the mesher method, mesh size, resulting element property, domain name, projection direction and post-mesh line-element handling.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Auto-mesh request body.",
+          "properties": {
+            "MESHER": {
+              "type": "object",
+              "description": "Mesher settings: what to mesh, the seed method and the produced element topology.",
+              "properties": {
+                "METHOD": {
+                  "type": "string",
+                  "description": "Meshing method that interprets TARGETS. Enum is case-insensitive. Default 'Line Elements'.",
+                  "enum": ["Nodes", "Line Elements", "Planar Elements"],
+                  "default": "Line Elements"
+                },
+                "TARGETS": {
+                  "type": "array",
+                  "description": "List of target keys to mesh (node keys / line-element keys / planar-element keys depending on METHOD).",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "TYPE": {
+                  "type": "string",
+                  "description": "Generated element shape topology. Enum is case-insensitive. Default 'Quadrilateral'.",
+                  "enum": ["Quadrilateral", "Quad and Triangle", "Triangle"],
+                  "default": "Quadrilateral"
+                },
+                "MESH_INNER_DOMAIN": {
+                  "type": "boolean",
+                  "description": "Whether to mesh the inner domain.",
+                  "default": false
+                },
+                "INCLUDE_INTERIOR_NODES": {
+                  "type": "object",
+                  "description": "Interior-nodes inclusion option. When omitted, interior nodes are auto-included.",
+                  "properties": {
+                    "OPT_CHECK": {
+                      "type": "boolean",
+                      "description": "Enable this include-interior option.",
+                      "default": true
+                    },
+                    "OPTION": {
+                      "type": "string",
+                      "description": "Auto lets the mesher pick interior nodes; User supplies them via VALUE. Enum is case-insensitive. Default 'Auto'.",
+                      "enum": ["Auto", "User"],
+                      "default": "Auto"
+                    },
+                    "VALUE": {
+                      "type": "array",
+                      "description": "[OPTION=User] User-specified interior node keys.",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "INCLUDE_INTERIOR_LINES": {
+                  "type": "object",
+                  "description": "Interior-lines inclusion option. When omitted, interior lines are auto-included.",
+                  "properties": {
+                    "OPT_CHECK": {
+                      "type": "boolean",
+                      "description": "Enable this include-interior option.",
+                      "default": true
+                    },
+                    "OPTION": {
+                      "type": "string",
+                      "description": "Auto lets the mesher pick interior lines; User supplies them via VALUE. Enum is case-insensitive. Default 'Auto'.",
+                      "enum": ["Auto", "User"],
+                      "default": "Auto"
+                    },
+                    "VALUE": {
+                      "type": "array",
+                      "description": "[OPTION=User] User-specified interior line-element keys.",
+                      "items": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "INCLUDE_BOUNDARY_CONNECTIVITY": {
+                  "type": "boolean",
+                  "description": "Include boundary connectivity.",
+                  "default": true
+                }
+              },
+              "required": ["TARGETS"]
+            },
+            "MESH_SIZE": {
+              "type": "object",
+              "description": "Mesh size specification. Exactly one of LENGTH or DIV must be provided (they are mutually exclusive).",
+              "properties": {
+                "LENGTH": {
+                  "type": "number",
+                  "description": "Target element edge length. Provide either LENGTH or DIV, not both."
+                },
+                "DIV": {
+                  "type": "integer",
+                  "description": "Number of divisions. Provide either LENGTH or DIV, not both."
+                }
+              }
+            },
+            "PROPERTY": {
+              "type": "object",
+              "description": "Element property assigned to generated elements.",
+              "properties": {
+                "ELEMENT_TYPE": {
+                  "type": "string",
+                  "description": "Generated element type. Enum is case-insensitive. Default 'Plate'.",
+                  "enum": ["Plate", "Plane Stress", "Plane Strain", "Axisymmetric"],
+                  "default": "Plate"
+                },
+                "ELEMENT_SUB_TYPE": {
+                  "type": "object",
+                  "description": "[ELEMENT_TYPE=Plate] Sub-type detail; TYPE/WITH_DRILLING_DOF are consumed for Plate, and WITH_DRILLING_DOF also for Plane Stress.",
+                  "properties": {
+                    "TYPE": {
+                      "type": "string",
+                      "description": "[ELEMENT_TYPE=Plate] Plate formulation. Enum is case-insensitive. Default 'Thick'.",
+                      "enum": ["Thick", "Thin"],
+                      "default": "Thick"
+                    },
+                    "WITH_DRILLING_DOF": {
+                      "type": "boolean",
+                      "description": "[ELEMENT_TYPE=Plate or Plane Stress] Include drilling DOF.",
+                      "default": true
+                    }
+                  }
+                },
+                "MATERIAL": {
+                  "type": "integer",
+                  "description": "Material ID applied to generated elements."
+                },
+                "THICKNESS": {
+                  "type": "integer",
+                  "description": "[ELEMENT_TYPE=Plate or Plane Stress] Thickness ID; required by the handler when ELEMENT_TYPE is Plate (or omitted, treated as Plate) or Plane Stress."
+                }
+              },
+              "required": ["MATERIAL"]
+            },
+            "DOMAIN_NAME": {
+              "type": "object",
+              "description": "Mesh domain identification.",
+              "properties": {
+                "NAME": {
+                  "type": "string",
+                  "description": "Domain name for the generated mesh."
+                }
+              },
+              "required": ["NAME"]
+            },
+            "DIRECTION": {
+              "type": "object",
+              "description": "Projection/normal direction vector. When omitted, direction defaults to (0,0,0).",
+              "properties": {
+                "DIR_X": {
+                  "type": "number",
+                  "description": "Direction X component."
+                },
+                "DIR_Y": {
+                  "type": "number",
+                  "description": "Direction Y component."
+                },
+                "DIR_Z": {
+                  "type": "number",
+                  "description": "Direction Z component."
+                }
+              },
+              "required": ["DIR_X", "DIR_Y", "DIR_Z"]
+            },
+            "ADDITIONAL_OPTION": {
+              "type": "object",
+              "description": "Post-mesh line-element handling. When omitted, delete is off and subdivide is on.",
+              "properties": {
+                "DELETE_LINE_ELEM": {
+                  "type": "boolean",
+                  "description": "Delete the original line elements after meshing.",
+                  "default": false
+                },
+                "SUBDIVIDE_LINE_ELEM": {
+                  "type": "boolean",
+                  "description": "Subdivide the original line elements to match the mesh.",
+                  "default": true
+                }
+              }
+            }
+          },
+          "required": ["MESHER", "MESH_SIZE", "PROPERTY", "DOMAIN_NAME"]
+        }
+      },
+      "required": ["Argument"]
+    }
+  },
+  "example": {
+    "Argument": {
+      "MESHER": {
+        "METHOD": "Line Elements",
+        "TARGETS": [1, 2, 3, 4],
+        "TYPE": "Quadrilateral",
+        "MESH_INNER_DOMAIN": false,
+        "INCLUDE_BOUNDARY_CONNECTIVITY": true
+      },
+      "MESH_SIZE": {
+        "LENGTH": 0.5
+      },
+      "PROPERTY": {
+        "ELEMENT_TYPE": "Plate",
+        "ELEMENT_SUB_TYPE": {
+          "TYPE": "Thick",
+          "WITH_DRILLING_DOF": true
+        },
+        "MATERIAL": 1,
+        "THICKNESS": 1
+      },
+      "DOMAIN_NAME": {
+        "NAME": "AutoMesh Domain 1"
+      },
+      "DIRECTION": {
+        "DIR_X": 0.0,
+        "DIR_Y": 0.0,
+        "DIR_Z": 1.0
+      },
+      "ADDITIONAL_OPTION": {
+        "DELETE_LINE_ELEM": false,
+        "SUBDIVIDE_LINE_ELEM": true
+      }
+    }
+  }
+}

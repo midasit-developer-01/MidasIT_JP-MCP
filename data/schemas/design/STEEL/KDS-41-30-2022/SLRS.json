@@ -1,0 +1,49 @@
+{
+  "_group": "design",
+  "_name": "SLRS",
+  "uri": "design/STEEL/KDS-41-30-2022/SLRS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SLRS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Seismic Load Resisting System (SLRS). The frame type selects the seismic system, and the check option toggles brace-slenderness / link verification.",
+      "properties": {
+        "FRAME_TYPE": {
+          "type": "string",
+          "description": "Seismic Load Resisting System frame type (case-insensitive). Wire values from the serialized enum.",
+          "enum": [
+            "Special Moment Frames",
+            "Intermediate Moment Frames",
+            "Ordinary Moment Frames",
+            "Special Concentrically Braced Frames",
+            "Ordinary Concentrically Braced Frames",
+            "Eccentrically Braced Frames",
+            "Buckling Restrained Braced Frames",
+            "Special Plate Shear Walls"
+          ]
+        },
+        "CHECK_OPTION": {
+          "type": "boolean",
+          "description": "Check for Brace Slenderness Ratio / Check for Links. Forced to false when FRAME_TYPE is \"Buckling Restrained Braced Frames\" or \"Special Plate Shear Walls\".",
+          "default": true
+        }
+      },
+      "required": [
+        "FRAME_TYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FRAME_TYPE": "Special Moment Frames",
+        "CHECK_OPTION": true
+      },
+      "2": {
+        "FRAME_TYPE": "Buckling Restrained Braced Frames",
+        "CHECK_OPTION": false
+      }
+    }
+  }
+}

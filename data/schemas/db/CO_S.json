@@ -1,0 +1,76 @@
+{
+  "_group": "db",
+  "_name": "CO_S",
+  "uri": "db/CO_S",
+  "methods": "GET, PUT",
+  "schema": {
+    "CO_S": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Section Display Color (CO_S). Per-section display color option keyed by section id; RGB triplets (0-255) set the wire frame, hidden fill, and hidden edge colors, plus an opacity/blending toggle and factor. All fields are optional partial updates: any omitted RGB channel keeps its existing value.",
+      "properties": {
+        "W_R": {
+          "description": "Wire frame color, Red channel (0-255).",
+          "type": "integer"
+        },
+        "W_G": {
+          "description": "Wire frame color, Green channel (0-255).",
+          "type": "integer"
+        },
+        "W_B": {
+          "description": "Wire frame color, Blue channel (0-255).",
+          "type": "integer"
+        },
+        "HF_R": {
+          "description": "Hidden fill color, Red channel (0-255).",
+          "type": "integer"
+        },
+        "HF_G": {
+          "description": "Hidden fill color, Green channel (0-255).",
+          "type": "integer"
+        },
+        "HF_B": {
+          "description": "Hidden fill color, Blue channel (0-255).",
+          "type": "integer"
+        },
+        "HE_R": {
+          "description": "Hidden edge color, Red channel (0-255).",
+          "type": "integer"
+        },
+        "HE_G": {
+          "description": "Hidden edge color, Green channel (0-255).",
+          "type": "integer"
+        },
+        "HE_B": {
+          "description": "Hidden edge color, Blue channel (0-255).",
+          "type": "integer"
+        },
+        "bBLEMD": {
+          "description": "Opacity (blending) option; when true the section is rendered with the blending factor FACT.",
+          "type": "boolean"
+        },
+        "FACT": {
+          "description": "Opacity (blending) factor applied when bBLEMD is true.",
+          "type": "number"
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "2": {
+        "W_R": 111,
+        "W_G": 142,
+        "W_B": 91,
+        "HF_R": 159,
+        "HF_G": 205,
+        "HF_B": 131,
+        "HE_R": 111,
+        "HE_G": 142,
+        "HE_B": 91,
+        "bBLEMD": false,
+        "FACT": 0.5
+      }
+    }
+  }
+}

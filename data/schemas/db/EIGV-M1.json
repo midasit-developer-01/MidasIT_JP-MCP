@@ -1,0 +1,136 @@
+{
+  "_group": "db",
+  "_name": "EIGV-M1",
+  "uri": "db/EIGV-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EIGV-M1": {
+      "type": "object",
+      "description": "Eigenvalue Analysis Control (EIGV-M1). ANAL_TYPE selects the method (LANCZOS vs RITZ) and drives which fields apply: LANCZOS uses FREQ_NO/FREQ_RANGE/STURM_SEQ, RITZ uses GLINK_VECTOR/RITZ_LOAD. Only a single record exists (key must be 1).",
+      "required": [
+        "ANAL_TYPE"
+      ],
+      "properties": {
+        "ANAL_TYPE": {
+          "type": "string",
+          "enum": [
+            "RITZ",
+            "LANCZOS"
+          ],
+          "description": "Analysis (eigenvalue) method. Case-insensitive. LANCZOS = Eigen Vectors (Lanczos/Subspace Iteration); RITZ = Ritz Vectors. Determines which of the other fields are used."
+        },
+        "FREQ_NO": {
+          "type": "integer",
+          "description": "[ANAL_TYPE=LANCZOS] Number of frequencies (modes) to extract. Required for LANCZOS; not used for RITZ."
+        },
+        "FREQ_RANGE": {
+          "type": "object",
+          "description": "[ANAL_TYPE=LANCZOS] Frequency range of interest. Required for LANCZOS; not used for RITZ.",
+          "required": [
+            "OPT_USE"
+          ],
+          "properties": {
+            "OPT_USE": {
+              "type": "boolean",
+              "description": "Whether a frequency range of interest is applied. When true, FREQ_MIN and FREQ_MAX are required."
+            },
+            "FREQ_MIN": {
+              "type": "number",
+              "description": "Search From [cps]. Required when OPT_USE is true; otherwise not used."
+            },
+            "FREQ_MAX": {
+              "type": "number",
+              "description": "Search To [cps]. Required when OPT_USE is true; otherwise not used."
+            }
+          }
+        },
+        "STURM_SEQ": {
+          "type": "boolean",
+          "default": false,
+          "description": "[ANAL_TYPE=LANCZOS] Perform Sturm sequence check. Optional; defaults to false. Not used for RITZ."
+        },
+        "GLINK_VECTOR": {
+          "type": "object",
+          "description": "[ANAL_TYPE=RITZ] Include GL-link (ground-link) force vectors. Required for RITZ; not used for LANCZOS.",
+          "required": [
+            "OPT_USE"
+          ],
+          "properties": {
+            "OPT_USE": {
+              "type": "boolean",
+              "description": "Whether GL-link force vectors are included. When true, GLINK_NUMBER is required."
+            },
+            "GLINK_NUMBER": {
+              "type": "integer",
+              "description": "Number of generations for the GL-link force vectors. Required when OPT_USE is true; otherwise not used."
+            }
+          }
+        },
+        "RITZ_LOAD": {
+          "type": "array",
+          "default": [],
+          "description": "[ANAL_TYPE=RITZ] Ritz starting load vectors. Required for RITZ; must contain at least one item (max D_EIGV_NUMLC, excess is ignored). Not used for LANCZOS.",
+          "items": {
+            "type": "object",
+            "required": [
+              "TYPE",
+              "LOAD_NAME",
+              "NUM_OF_GEN"
+            ],
+            "properties": {
+              "TYPE": {
+                "type": "string",
+                "enum": [
+                  "LOAD",
+                  "GROUND"
+                ],
+                "description": "Starting load vector type. Case-insensitive. LOAD = static load case; GROUND = ground acceleration direction."
+              },
+              "LOAD_NAME": {
+                "type": "string",
+                "description": "When TYPE=LOAD: name of an existing static load case. When TYPE=GROUND: one of ACCX, ACCY, ACCZ (ground acceleration direction); other values are rejected."
+              },
+              "NUM_OF_GEN": {
+                "type": "integer",
+                "description": "Number of generations (Ritz vectors) produced from this starting load vector."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ANAL_TYPE": "LANCZOS",
+        "FREQ_NO": 10,
+        "STURM_SEQ": false,
+        "FREQ_RANGE": {
+          "OPT_USE": true,
+          "FREQ_MIN": 0.0,
+          "FREQ_MAX": 100.0
+        }
+      },
+      "2": {
+        "ANAL_TYPE": "RITZ",
+        "GLINK_VECTOR": {
+          "OPT_USE": true,
+          "GLINK_NUMBER": 2
+        },
+        "RITZ_LOAD": [
+          {
+            "TYPE": "GROUND",
+            "LOAD_NAME": "ACCX",
+            "NUM_OF_GEN": 5
+          },
+          {
+            "TYPE": "LOAD",
+            "LOAD_NAME": "Self Weight",
+            "NUM_OF_GEN": 3
+          }
+        ]
+      }
+    }
+  }
+}

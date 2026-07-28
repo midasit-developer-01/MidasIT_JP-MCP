@@ -1,0 +1,128 @@
+{
+  "_group": "ope",
+  "_name": "ELEMPAR",
+  "uri": "ope/ELEMPAR",
+  "methods": "POST",
+  "schema": {
+    "ELEMPAR": {
+      "type": "object",
+      "description": "Change Element Parameters (ELEMPAR). Modifies the local axis / beta angle of selected elements; the operation performed is driven by iMETHOD and, within LOCAL_AXIS, by iMODE and iASSIGN.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body (ELEMPAR_REQUEST). Selects elements by number and applies a parameter change.",
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Element numbers to modify. Must contain at least one element; elements not matching the target type (line elements needing a section when iELEMTYPE=1, or plate/plane-stress elements when iELEMTYPE=2) are skipped.",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "iMETHOD": {
+              "type": "integer",
+              "description": "Parameters type selector. Currently only 4 is supported (change local axis / beta angle); any other value is rejected."
+            },
+            "LOCAL_AXIS": {
+              "type": "object",
+              "description": "Element Local Axis parameters (ELEM_PAR_LOCAL_AXIS).",
+              "properties": {
+                "iELEMTYPE": {
+                  "type": "integer",
+                  "description": "Element type target. 1 = line elements that require a section; 2 = plate / plane-stress elements."
+                },
+                "iMODE": {
+                  "type": "integer",
+                  "description": "Mode. 1 = Assign (set an absolute value, further controlled by iASSIGN); 2 = Change (add an angle increment using ANGLEINCRE)."
+                },
+                "iASSIGN": {
+                  "type": "integer",
+                  "description": "Assign type (used when iMODE=1). 1 = fixed beta angle (BETAANGLE); 2 = beta reference point, orientation TRUE (BETA_WXPOS/WYPOS/WZPOS); 3 = beta reference point, orientation FALSE (BETA_WXPOS/WYPOS/WZPOS); 4 = local axis by coordinate direction (iLOCALAXIS, iCOORDIR, XPOS/YPOS/ZPOS). Range 1~4."
+                },
+                "iLOCALAXIS": {
+                  "type": "integer",
+                  "description": "[iMODE=1,iASSIGN=4] Local axis type. 1 or 2.",
+                  "default": 1
+                },
+                "iCOORDIR": {
+                  "type": "integer",
+                  "description": "[iMODE=1,iASSIGN=4] Coordinate direction type. Range 1~10.",
+                  "default": 1
+                },
+                "XPOS": {
+                  "type": "number",
+                  "description": "[iMODE=1,iASSIGN=4] Origin point X used for coordinate-direction axis definition.",
+                  "default": 0.0
+                },
+                "YPOS": {
+                  "type": "number",
+                  "description": "[iMODE=1,iASSIGN=4] Origin point Y used for coordinate-direction axis definition.",
+                  "default": 0.0
+                },
+                "ZPOS": {
+                  "type": "number",
+                  "description": "[iMODE=1,iASSIGN=4] Origin point Z used for coordinate-direction axis definition.",
+                  "default": 0.0
+                },
+                "BETA_WXPOS": {
+                  "type": "number",
+                  "description": "[iMODE=1,iASSIGN=2 or 3] Beta reference point X.",
+                  "default": 0.0
+                },
+                "BETA_WYPOS": {
+                  "type": "number",
+                  "description": "[iMODE=1,iASSIGN=2 or 3] Beta reference point Y.",
+                  "default": 0.0
+                },
+                "BETA_WZPOS": {
+                  "type": "number",
+                  "description": "[iMODE=1,iASSIGN=2 or 3] Beta reference point Z.",
+                  "default": 0.0
+                },
+                "ANGLEINCRE": {
+                  "type": "number",
+                  "description": "[iMODE=2] Angle increment added to the current beta angle.",
+                  "default": 0.0
+                },
+                "BETAANGLE": {
+                  "type": "number",
+                  "description": "[iMODE=1,iASSIGN=1] Absolute beta angle to assign.",
+                  "default": 0.0
+                }
+              },
+              "required": [
+                "iELEMTYPE",
+                "iMODE",
+                "iASSIGN"
+              ]
+            }
+          },
+          "required": [
+            "KEYS",
+            "iMETHOD",
+            "LOCAL_AXIS"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "KEYS": [
+        1,
+        2,
+        3
+      ],
+      "iMETHOD": 4,
+      "LOCAL_AXIS": {
+        "iELEMTYPE": 1,
+        "iMODE": 1,
+        "iASSIGN": 1,
+        "BETAANGLE": 30.0
+      }
+    }
+  }
+}

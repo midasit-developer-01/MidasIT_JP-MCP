@@ -1,0 +1,59 @@
+{
+  "_group": "db",
+  "_name": "NMAS",
+  "uri": "db/NMAS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "NMAS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Nodal Mass (NMAS). Assigns lumped translational and rotational masses at a node; the key equals the target node number (a node with that number must already exist).",
+      "properties": {
+        "mX": {
+          "description": "Translational lumped mass in the GCS X-direction.",
+          "type": "number"
+        },
+        "mY": {
+          "description": "Translational lumped mass in the GCS Y-direction.",
+          "type": "number",
+          "default": 0.0
+        },
+        "mZ": {
+          "description": "Translational lumped mass in the GCS Z-direction.",
+          "type": "number",
+          "default": 0.0
+        },
+        "rmX": {
+          "description": "Rotational mass moment of inertia about the GCS X-axis.",
+          "type": "number",
+          "default": 0.0
+        },
+        "rmY": {
+          "description": "Rotational mass moment of inertia about the GCS Y-axis.",
+          "type": "number",
+          "default": 0.0
+        },
+        "rmZ": {
+          "description": "Rotational mass moment of inertia about the GCS Z-axis.",
+          "type": "number",
+          "default": 0.0
+        }
+      },
+      "required": [
+        "mX"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "mX": 1.0,
+        "mY": 2.0,
+        "mZ": 3.0,
+        "rmX": 4.0,
+        "rmY": 5.0,
+        "rmZ": 6.0
+      }
+    }
+  }
+}

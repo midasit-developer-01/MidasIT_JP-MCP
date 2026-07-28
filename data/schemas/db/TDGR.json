@@ -1,0 +1,32 @@
+{
+  "_group": "db",
+  "_name": "TDGR",
+  "uri": "db/TDGR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "TDGR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Tendon Group (TDGR). A named tendon group keyed by group id; the only field is the group name.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Tendon group name (GroupName). Identifies the tendon group."
+        }
+      },
+      "required": [
+        "NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "TGR1"
+      },
+      "2": {
+        "NAME": "TGR2"
+      }
+    }
+  }
+}

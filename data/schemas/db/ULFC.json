@@ -1,0 +1,128 @@
+{
+  "_group": "db",
+  "_name": "ULFC",
+  "uri": "db/ULFC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "ULFC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Unknown Load Factor Constraint (ULFC). TYPE selects the response quantity (reaction/displacement/truss/beam) constrained on object OBJ_ID; EQ selects between an equality target (bVALUE/VALUE/OtherObject) and an inequality band (bUB/UB_VALUE + bLB/LB_VALUE).",
+      "properties": {
+        "NAME": {
+          "description": "Constraint name.",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Constraint type (case-insensitive). REAC = nodal reaction, DISP = nodal displacement, TRUSS = truss element force, BEAM = beam element force. Determines whether OBJ_ID is a node number (REAC, DISP) or an element number (TRUSS, BEAM) and the meaning of POINT and COMP.",
+          "type": "string",
+          "enum": ["REAC", "DISP", "TRUSS", "BEAM"]
+        },
+        "OBJ_ID": {
+          "description": "Object ID: node number for REAC/DISP, element number for TRUSS/BEAM.",
+          "type": "integer"
+        },
+        "POINT": {
+          "description": "Result point index. For BEAM force: I-end=0, 1/4=1, 2/4=2, 3/4=3, J-end=4. For other types typically 0.",
+          "type": "integer"
+        },
+        "COMP": {
+          "description": "Component index of the constrained quantity. Reaction/Beam force: FX=0, FY=1, FZ=2, MX=3, MY=4, MZ=5. Displacement: DX=0, DY=1, DZ=2, RX=3, RY=4, RZ=5. Truss force: axial force.",
+          "type": "integer"
+        },
+        "EQ": {
+          "description": "Condition mode. true = equality condition (uses bVALUE, VALUE, OtherObject). false = inequality condition (uses bUB/UB_VALUE and bLB/LB_VALUE).",
+          "type": "boolean",
+          "default": false
+        },
+        "bVALUE": {
+          "description": "[EQ=true] Enable/flag for the equality target value.",
+          "type": "boolean",
+          "default": false
+        },
+        "VALUE": {
+          "description": "[EQ=true] Equality target value.",
+          "type": "number",
+          "default": 0.0
+        },
+        "OtherObject": {
+          "description": "[EQ=true] Other object ID referenced by the equality condition (0 = none).",
+          "type": "integer",
+          "default": 0
+        },
+        "bUB": {
+          "description": "[EQ=false] Enable upper bound. When true, UB_VALUE is applied; when false, upper bound is stored as 0.",
+          "type": "boolean",
+          "default": false
+        },
+        "UB_VALUE": {
+          "description": "[EQ=false] Upper bound value (applied only when bUB is true).",
+          "type": "number",
+          "default": 0.0
+        },
+        "bLB": {
+          "description": "[EQ=false] Enable lower bound. When true, LB_VALUE is applied; when false, lower bound is stored as 0.",
+          "type": "boolean",
+          "default": false
+        },
+        "LB_VALUE": {
+          "description": "[EQ=false] Lower bound value (applied only when bLB is true).",
+          "type": "number",
+          "default": 0.0
+        }
+      },
+      "required": ["NAME", "TYPE", "OBJ_ID", "POINT", "COMP"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Node-07-Ry",
+        "TYPE": "REAC",
+        "OBJ_ID": 7,
+        "POINT": 0,
+        "COMP": 1,
+        "EQ": true,
+        "bVALUE": true,
+        "VALUE": 500.0,
+        "OtherObject": 0
+      },
+      "2": {
+        "NAME": "Node106-Dz",
+        "TYPE": "DISP",
+        "OBJ_ID": 106,
+        "POINT": 0,
+        "COMP": 2,
+        "EQ": false,
+        "bUB": true,
+        "UB_VALUE": 0.0001,
+        "bLB": true,
+        "LB_VALUE": -0.0001
+      },
+      "3": {
+        "NAME": "Ele-11-Axial",
+        "TYPE": "TRUSS",
+        "OBJ_ID": 11,
+        "POINT": 0,
+        "COMP": 0,
+        "EQ": false,
+        "bUB": true,
+        "UB_VALUE": 250.0,
+        "bLB": false,
+        "LB_VALUE": 0.0
+      },
+      "4": {
+        "NAME": "Ele-15-My",
+        "TYPE": "BEAM",
+        "OBJ_ID": 15,
+        "POINT": 4,
+        "COMP": 4,
+        "EQ": false,
+        "bUB": true,
+        "UB_VALUE": -240.0,
+        "bLB": true,
+        "LB_VALUE": -250.0
+      }
+    }
+  }
+}

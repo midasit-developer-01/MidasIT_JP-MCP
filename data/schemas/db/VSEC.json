@@ -1,0 +1,97 @@
+{
+  "_group": "db",
+  "_name": "VSEC",
+  "uri": "db/VSEC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "VSEC": {
+      "type": "object",
+      "description": "Virtual Section (VSEC). Defines a virtual section for a virtual beam via a centroid point, a section normal vector, and the lists of nodes and elements it spans; all fields are set unconditionally in the write path.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Name of the virtual section."
+        },
+        "CENT_CALC_TYPE": {
+          "type": "integer",
+          "description": "Centroid calculation type code (integer). Governs how the centroid point is determined; 0 is the typical value."
+        },
+        "CEN_PT_X": {
+          "type": "number",
+          "description": "Centroid X coordinate in the global coordinate system."
+        },
+        "CEN_PT_Y": {
+          "type": "number",
+          "description": "Centroid Y coordinate in the global coordinate system."
+        },
+        "CEN_PT_Z": {
+          "type": "number",
+          "description": "Centroid Z coordinate in the global coordinate system."
+        },
+        "NORMAL_X": {
+          "type": "number",
+          "description": "X component of the section normal (direction) vector."
+        },
+        "NORMAL_Y": {
+          "type": "number",
+          "description": "Y component of the section normal (direction) vector."
+        },
+        "NORMAL_Z": {
+          "type": "number",
+          "description": "Z component of the section normal (direction) vector."
+        },
+        "NODE_LIST": {
+          "type": "array",
+          "description": "List of node numbers that define the virtual section cut.",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "ELEM_LIST": {
+          "type": "array",
+          "description": "List of element numbers associated with the virtual section.",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "required": [
+        "NAME",
+        "CENT_CALC_TYPE",
+        "CEN_PT_X",
+        "CEN_PT_Y",
+        "CEN_PT_Z",
+        "NORMAL_X",
+        "NORMAL_Y",
+        "NORMAL_Z",
+        "NODE_LIST",
+        "ELEM_LIST"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Girder_1_I",
+        "CENT_CALC_TYPE": 0,
+        "CEN_PT_X": 0,
+        "CEN_PT_Y": 18.000000000000004,
+        "CEN_PT_Z": 0.9343263371699391,
+        "NORMAL_X": 1,
+        "NORMAL_Y": 0,
+        "NORMAL_Z": 0,
+        "NODE_LIST": [
+          20,
+          29,
+          26,
+          23
+        ],
+        "ELEM_LIST": [
+          18,
+          16,
+          14
+        ]
+      }
+    }
+  }
+}

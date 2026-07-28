@@ -1,0 +1,25 @@
+{
+  "_group": "doc",
+  "_name": "IMPORTMXT",
+  "uri": "doc/IMPORTMXT",
+  "methods": "POST",
+  "schema": {
+    "IMPORTMXT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Import MXT File (IMPORTMXT). The request is a single string: the full file-system path of the .mxt file to import into the currently open project.",
+      "properties": {
+        "Argument": {
+          "type": "string",
+          "description": "Absolute file-system path of the .mxt file to import. The path must exist and be readable; the handler imports it into the currently opened project (requires an open project)."
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": "C:\\Models\\bridge_model.mxt"
+  }
+}

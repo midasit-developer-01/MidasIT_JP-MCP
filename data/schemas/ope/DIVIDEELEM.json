@@ -1,0 +1,223 @@
+{
+  "_group": "ope",
+  "_name": "DIVIDEELEM",
+  "uri": "ope/DIVIDEELEM",
+  "methods": "POST",
+  "schema": {
+    "DIVIDEELEM": {
+      "type": "object",
+      "description": "Divide Element (DIVIDEELEM). Divides target elements according to the chosen element type and divide method; the request drives the starting node/element numbering, the divide option (element type, method, per-method sub-option), subdivide and merge-duplicate-node behavior.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Divide-element request body.",
+          "properties": {
+            "TARGETS": {
+              "type": "array",
+              "description": "Element numbers to divide. Used for Equal, Unequal and Parametric Unequal methods (for Parallel Bracing and Divide By Node the target elements come from the corresponding OPTION block instead).",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "START_NUMBER": {
+              "type": "object",
+              "description": "Starting-number options applied before dividing. Optionally overrides the current node/element creation numbering type.",
+              "properties": {
+                "NODE_NUMBER": {
+                  "type": "object",
+                  "description": "Numbering setting for newly created nodes. Applied only when this block is present.",
+                  "properties": {
+                    "NUMBER_OPTION": {
+                      "type": "string",
+                      "description": "Numbering type for new nodes. Enum is case-insensitive. Smallest/Largest pick the smallest/largest available number; User uses a fixed start number from USER_NUM.",
+                      "enum": ["Smallest", "Largest", "User"]
+                    },
+                    "USER_NUM": {
+                      "type": "integer",
+                      "description": "[NUMBER_OPTION=User] Start number for new nodes. Values less than 1 are clamped to 1."
+                    }
+                  }
+                },
+                "ELEM_NUMBER": {
+                  "type": "object",
+                  "description": "Numbering setting for newly created elements. Applied only when this block is present.",
+                  "properties": {
+                    "NUMBER_OPTION": {
+                      "type": "string",
+                      "description": "Numbering type for new elements. Enum is case-insensitive. Smallest/Largest pick the smallest/largest available number; User uses a fixed start number from USER_NUM.",
+                      "enum": ["Smallest", "Largest", "User"]
+                    },
+                    "USER_NUM": {
+                      "type": "integer",
+                      "description": "[NUMBER_OPTION=User] Start number for new elements. Values less than 1 are clamped to 1."
+                    }
+                  }
+                }
+              }
+            },
+            "DIVIDE": {
+              "type": "object",
+              "description": "Divide option: element type, divide method, the per-method sub-option, and subdivide/merge behavior.",
+              "properties": {
+                "ELEM_TYPE": {
+                  "type": "string",
+                  "description": "Type of element being divided. Enum is case-insensitive. For Planar, target plate/plane-stress elements must have zero beta angle. Wall reorders the X/Y/Z division inputs internally ({x,y,z} -> {z,x,y}).",
+                  "enum": ["Frame", "Planar", "Solid", "Wall"]
+                },
+                "DIV_METHOD": {
+                  "type": "string",
+                  "description": "Division method. Enum is case-insensitive. Equal/Unequal/Parametric Unequal use OPTION.EQUAL_OPTION/UNEQUAL_OPTION/PARAMETRIC_OPTION with TARGETS; Parallel Bracing uses OPTION.PARALLEL_OPTION; Divide By Node uses OPTION.BY_NODE_OPTION.",
+                  "enum": ["Equal", "Unequal", "Parametric Unequal", "Parallel Bracing", "Divide By Node"]
+                },
+                "OPTION": {
+                  "type": "object",
+                  "description": "Method-specific option. Provide the sub-block matching DIV_METHOD.",
+                  "properties": {
+                    "EQUAL_OPTION": {
+                      "type": "object",
+                      "description": "[DIV_METHOD=Equal] Equal-distance division counts.",
+                      "properties": {
+                        "NUM_X": {
+                          "type": "integer",
+                          "description": "Number of divisions in X (used for all element types)."
+                        },
+                        "NUM_Y": {
+                          "type": "integer",
+                          "description": "[ELEM_TYPE=Planar/Solid/Wall] Number of divisions in Y."
+                        },
+                        "NUM_Z": {
+                          "type": "integer",
+                          "description": "[ELEM_TYPE=Solid/Wall] Number of divisions in Z."
+                        }
+                      },
+                      "required": ["NUM_X"]
+                    },
+                    "UNEQUAL_OPTION": {
+                      "type": "object",
+                      "description": "[DIV_METHOD=Unequal] Unequal-distance division definitions (grid-define relative distance strings).",
+                      "properties": {
+                        "DIST_X": {
+                          "type": "string",
+                          "description": "Distance definition in X (used for all element types)."
+                        },
+                        "DIST_Y": {
+                          "type": "string",
+                          "description": "[ELEM_TYPE=Planar/Solid/Wall] Distance definition in Y."
+                        },
+                        "DIST_Z": {
+                          "type": "string",
+                          "description": "[ELEM_TYPE=Solid/Wall] Distance definition in Z."
+                        }
+                      },
+                      "required": ["DIST_X"]
+                    },
+                    "PARAMETRIC_OPTION": {
+                      "type": "object",
+                      "description": "[DIV_METHOD=Parametric Unequal] Parametric unequal-distance ratio definitions (grid-define absolute/ratio strings).",
+                      "properties": {
+                        "RATIO_X": {
+                          "type": "string",
+                          "description": "Ratio definition in X (used for all element types)."
+                        },
+                        "RATIO_Y": {
+                          "type": "string",
+                          "description": "[ELEM_TYPE=Planar/Solid/Wall] Ratio definition in Y."
+                        },
+                        "RATIO_Z": {
+                          "type": "string",
+                          "description": "[ELEM_TYPE=Solid/Wall] Ratio definition in Z."
+                        }
+                      },
+                      "required": ["RATIO_X"]
+                    },
+                    "PARALLEL_OPTION": {
+                      "type": "object",
+                      "description": "[DIV_METHOD=Parallel Bracing] Parallel bracing option.",
+                      "properties": {
+                        "NUM_OF_DIVISIONS": {
+                          "type": "integer",
+                          "description": "Number of divisions (the brace is split into this many segments)."
+                        },
+                        "MAIN_POST_ELEM": {
+                          "type": "array",
+                          "description": "The two main post element numbers (exactly 2 elements: first and last).",
+                          "items": {
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "required": ["NUM_OF_DIVISIONS", "MAIN_POST_ELEM"]
+                    },
+                    "BY_NODE_OPTION": {
+                      "type": "object",
+                      "description": "[DIV_METHOD=Divide By Node] Divide a single element at a node.",
+                      "properties": {
+                        "ELEM_NUM": {
+                          "type": "integer",
+                          "description": "Element number to divide."
+                        },
+                        "NODE_NUM": {
+                          "type": "integer",
+                          "description": "Node number at which the element is divided."
+                        }
+                      }
+                    }
+                  }
+                },
+                "SUBDIVIDE_ELEM": {
+                  "type": "boolean",
+                  "description": "Whether to subdivide elements. When omitted, treated as true. Used for Equal/Unequal/Parametric Unequal methods."
+                },
+                "MERGE_DUPLICATE_NODES": {
+                  "type": "object",
+                  "description": "Merge duplicate nodes option applied during division.",
+                  "properties": {
+                    "OPT_CHECK": {
+                      "type": "boolean",
+                      "description": "Whether to merge duplicate nodes. When omitted, treated as true."
+                    },
+                    "TOLERANCE": {
+                      "type": "number",
+                      "description": "Same-point tolerance used when merging duplicate nodes. When present, updates the current node-edit tolerance."
+                    }
+                  },
+                  "required": ["OPT_CHECK", "TOLERANCE"]
+                }
+              },
+              "required": ["ELEM_TYPE", "DIV_METHOD", "OPTION"]
+            }
+          },
+          "required": ["DIVIDE"]
+        }
+      },
+      "required": ["Argument"]
+    }
+  },
+  "example": {
+    "Argument": {
+      "TARGETS": [1, 2, 3],
+      "START_NUMBER": {
+        "NODE_NUMBER": {
+          "NUMBER_OPTION": "Smallest"
+        },
+        "ELEM_NUMBER": {
+          "NUMBER_OPTION": "Smallest"
+        }
+      },
+      "DIVIDE": {
+        "ELEM_TYPE": "Frame",
+        "DIV_METHOD": "Equal",
+        "OPTION": {
+          "EQUAL_OPTION": {
+            "NUM_X": 4
+          }
+        },
+        "SUBDIVIDE_ELEM": true,
+        "MERGE_DUPLICATE_NODES": {
+          "OPT_CHECK": true,
+          "TOLERANCE": 0.001
+        }
+      }
+    }
+  }
+}

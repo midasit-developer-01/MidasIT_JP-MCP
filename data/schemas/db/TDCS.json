@@ -1,0 +1,41 @@
+{
+  "_group": "db",
+  "_name": "TDCS",
+  "uri": "db/TDCS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "TDCS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Tendon Location for Composite Section (TDCS). Assigns the tendon profile, the composite section used for the construction stage, and the part number that together locate a tendon within a composite section; the id key is the TDCS entry number.",
+      "properties": {
+        "TDNA": {
+          "description": "Tendon Profile key: the id of the tendon profile (TDNA) whose geometry this entry references.",
+          "type": "integer"
+        },
+        "CSCS": {
+          "description": "Composite Section for Construction Stage key: the id of the composite section (C.S.) that the tendon is located in.",
+          "type": "integer"
+        },
+        "PART_NUM": {
+          "description": "Part Number: the index of the part within the composite section to which the tendon location applies.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "TDNA",
+        "CSCS",
+        "PART_NUM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TDNA": 1,
+        "CSCS": 1,
+        "PART_NUM": 1
+      }
+    }
+  }
+}

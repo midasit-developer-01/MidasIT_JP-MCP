@@ -1,0 +1,117 @@
+{
+  "_group": "db",
+  "_name": "FBLA",
+  "uri": "db/FBLA",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "FBLA": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Floor Load (FBLA). FLOOR_DIST_TYPE selects the distribution model and drives which fields apply: sub-beam and unit-weight fields (LOAD_ANGLE, SUB_BEAM_NUM, SUB_BEAM_ANGLE, UNIT_SELF_WEIGHT, OPT_EXCLUDE_INNER_ELEM_AREA, OPT_ALLOW_POLYGON_TYPE_UNIT_AREA) are read only for One Way (1) and Two Way (2); NODES gives the polygon vertices defining the loading area.",
+      "properties": {
+        "FLOOR_LOAD_TYPE_NAME": {
+          "description": "Name of an existing Floor Load Type (FBLD). Must reference a defined floor load type; a non-empty name that does not resolve is rejected.",
+          "type": "string"
+        },
+        "FLOOR_DIST_TYPE": {
+          "description": "Distribution Type. 1 = One Way, 2 = Two Way, 3 = Polygon-Centroid, 4 = Polygon-Length. Values 1 and 2 additionally use the sub-beam / unit-weight fields.",
+          "type": "integer",
+          "enum": [1, 2, 3, 4]
+        },
+        "LOAD_ANGLE": {
+          "description": "[FLOOR_DIST_TYPE=1|2] Load Angle A1 (degrees). Applied only for One Way / Two Way distribution.",
+          "type": "number",
+          "default": 0
+        },
+        "SUB_BEAM_NUM": {
+          "description": "[FLOOR_DIST_TYPE=1|2] Number of sub beams. Applied only for One Way / Two Way distribution.",
+          "type": "integer",
+          "default": 0
+        },
+        "SUB_BEAM_ANGLE": {
+          "description": "[FLOOR_DIST_TYPE=1|2] Sub-Beam Angle A2 (degrees). Applied only for One Way / Two Way distribution.",
+          "type": "number",
+          "default": 0
+        },
+        "UNIT_SELF_WEIGHT": {
+          "description": "[FLOOR_DIST_TYPE=1|2] Unit self weight of the sub beams. Applied only for One Way / Two Way distribution.",
+          "type": "number",
+          "default": 0
+        },
+        "DIR": {
+          "description": "Load Direction. Case-insensitive. LX/LY/LZ = local axes, GX/GY/GZ = global axes.",
+          "type": "string",
+          "enum": ["LX", "LY", "LZ", "GX", "GY", "GZ"],
+          "default": "LX"
+        },
+        "OPT_PROJECTION": {
+          "description": "Whether the load is applied on the projected area (true) rather than the actual area.",
+          "type": "boolean",
+          "default": false
+        },
+        "DESC": {
+          "description": "Free-text description of the floor load.",
+          "type": "string",
+          "default": ""
+        },
+        "OPT_EXCLUDE_INNER_ELEM_AREA": {
+          "description": "[FLOOR_DIST_TYPE=1|2] Exclude inner elements of the loading area. Applied only for One Way / Two Way distribution.",
+          "type": "boolean",
+          "default": false
+        },
+        "OPT_ALLOW_POLYGON_TYPE_UNIT_AREA": {
+          "description": "[FLOOR_DIST_TYPE=1|2] Allow polygon-type unit area. Applied only for One Way / Two Way distribution.",
+          "type": "boolean",
+          "default": false
+        },
+        "GROUP_NAME": {
+          "description": "Name of an existing Load Group (LDGR). A non-empty name that does not resolve to a defined load group is rejected; empty string means no group.",
+          "type": "string",
+          "default": ""
+        },
+        "NODES": {
+          "description": "Node numbers defining the vertices of the loading area polygon, in order. Only the first 32 (D_FBLA_MAXNOD) are used; at least 3 vertices are expected.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 3,
+          "maxItems": 32
+        }
+      },
+      "required": [
+        "FLOOR_LOAD_TYPE_NAME",
+        "FLOOR_DIST_TYPE",
+        "NODES"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FLOOR_LOAD_TYPE_NAME": "Floor_example",
+        "FLOOR_DIST_TYPE": 1,
+        "LOAD_ANGLE": 0,
+        "SUB_BEAM_NUM": 2,
+        "SUB_BEAM_ANGLE": 90,
+        "UNIT_SELF_WEIGHT": 10,
+        "DIR": "GZ",
+        "OPT_PROJECTION": false,
+        "DESC": "One-way floor load",
+        "OPT_EXCLUDE_INNER_ELEM_AREA": true,
+        "OPT_ALLOW_POLYGON_TYPE_UNIT_AREA": false,
+        "GROUP_NAME": "",
+        "NODES": [508, 509, 511, 510]
+      },
+      "2": {
+        "FLOOR_LOAD_TYPE_NAME": "Floor_example",
+        "FLOOR_DIST_TYPE": 3,
+        "DIR": "GZ",
+        "OPT_PROJECTION": false,
+        "DESC": "Polygon-centroid floor load",
+        "GROUP_NAME": "",
+        "NODES": [601, 602, 603, 604]
+      }
+    }
+  }
+}

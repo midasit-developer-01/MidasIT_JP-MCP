@@ -1,0 +1,250 @@
+{
+  "_group": "design",
+  "_name": "DCRM",
+  "uri": "design/RC/KDS-41-20-2022/DCRM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DCRM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Criteria for Rebar per Member (DCRM). Each element key optionally carries one or more member-type criteria blocks (BEAM, COLUMN, BRACE, WALL); at least one block must be assigned, and each assigned block writes its own rebar-design table (Dcbb/Dcbc/Dcbr/Dcbw).",
+      "properties": {
+        "BEAM": {
+          "type": "object",
+          "description": "Beam rebar design criteria; when assigned, writes the beam rebar table for this element.",
+          "properties": {
+            "MAIN_REBAR": {
+              "type": "string",
+              "description": "Main rebar designation for the beam."
+            },
+            "STIRRUPS": {
+              "type": "string",
+              "description": "Stirrup rebar designation for the beam."
+            },
+            "STIRRUP_ARRANGEMENT": {
+              "type": "integer",
+              "description": "Stirrup arrangement (number of sub-rebars).",
+              "default": 2
+            },
+            "SIDE_BAR": {
+              "type": "string",
+              "description": "Side bar designation for the beam.",
+              "default": ""
+            },
+            "DT": {
+              "type": "number",
+              "description": "Cover distance at top (dT).",
+              "default": 0.0
+            },
+            "DB": {
+              "type": "number",
+              "description": "Cover distance at bottom (dB).",
+              "default": 0.0
+            },
+            "DOUBLY_REBAR": {
+              "type": "boolean",
+              "description": "Whether doubly reinforced beam design is applied.",
+              "default": true
+            },
+            "DOUBLY_K": {
+              "type": "number",
+              "description": "Doubly reinforced factor.",
+              "default": 1.0
+            },
+            "SPACING_LIMIT": {
+              "type": "boolean",
+              "description": "Whether rebar spacing is checked.",
+              "default": true
+            },
+            "SPLICED_BARS": {
+              "type": "string",
+              "description": "Spliced bars ratio (case-insensitive).",
+              "enum": ["None", "50%", "100%"],
+              "default": "50%"
+            }
+          },
+          "required": ["MAIN_REBAR", "STIRRUPS"]
+        },
+        "COLUMN": {
+          "type": "object",
+          "description": "Column rebar design criteria; when assigned, writes the column rebar table for this element.",
+          "properties": {
+            "MAIN_REBAR": {
+              "type": "string",
+              "description": "Main rebar designation for the column."
+            },
+            "TIES_SPIRALS": {
+              "type": "string",
+              "description": "Ties/spirals rebar designation for the column."
+            },
+            "ARRANGEMENT_Y": {
+              "type": "integer",
+              "description": "Rebar arrangement (number of sub-rebars) in the Y direction.",
+              "default": 2
+            },
+            "ARRANGEMENT_Z": {
+              "type": "integer",
+              "description": "Rebar arrangement (number of sub-rebars) in the Z direction.",
+              "default": 2
+            },
+            "COVER": {
+              "type": "number",
+              "description": "Cover distance.",
+              "default": 0.0
+            },
+            "SPLICE": {
+              "type": "string",
+              "description": "Splice ratio (case-insensitive).",
+              "enum": ["None", "50%", "100%"],
+              "default": "50%"
+            },
+            "SPACING_LIMIT": {
+              "type": "boolean",
+              "description": "Whether rebar spacing is checked.",
+              "default": true
+            }
+          },
+          "required": ["MAIN_REBAR", "TIES_SPIRALS"]
+        },
+        "BRACE": {
+          "type": "object",
+          "description": "Brace rebar design criteria; when assigned, writes the brace rebar table for this element.",
+          "properties": {
+            "MAIN_REBAR": {
+              "type": "string",
+              "description": "Main rebar designation for the brace."
+            },
+            "TIES_SPIRALS": {
+              "type": "string",
+              "description": "Ties/spirals rebar designation for the brace."
+            },
+            "ARRANGEMENT_Y": {
+              "type": "integer",
+              "description": "Rebar arrangement (number of sub-rebars) in the Y direction.",
+              "default": 2
+            },
+            "ARRANGEMENT_Z": {
+              "type": "integer",
+              "description": "Rebar arrangement (number of sub-rebars) in the Z direction.",
+              "default": 2
+            },
+            "COVER": {
+              "type": "number",
+              "description": "Cover distance.",
+              "default": 0.0
+            },
+            "SPLICE": {
+              "type": "string",
+              "description": "Splice ratio (case-insensitive).",
+              "enum": ["None", "50%", "100%"],
+              "default": "50%"
+            },
+            "SPACING_LIMIT": {
+              "type": "boolean",
+              "description": "Whether rebar spacing is checked.",
+              "default": true
+            }
+          },
+          "required": ["MAIN_REBAR", "TIES_SPIRALS"]
+        },
+        "WALL": {
+          "type": "object",
+          "description": "Wall rebar design criteria; when assigned, writes the wall rebar table for this element (resolved via internal wall id).",
+          "properties": {
+            "VERTICAL_REBAR": {
+              "type": "string",
+              "description": "Vertical rebar designation for the wall."
+            },
+            "HORIZONTAL_REBAR": {
+              "type": "string",
+              "description": "Horizontal rebar designation for the wall."
+            },
+            "END_REBAR": {
+              "type": "string",
+              "description": "End rebar designation for the wall.",
+              "default": ""
+            },
+            "VERTICAL_SPACING": {
+              "type": "number",
+              "description": "Vertical rebar spacing.",
+              "default": 0.0
+            },
+            "HORIZONTAL_SPACING": {
+              "type": "number",
+              "description": "Horizontal rebar spacing.",
+              "default": 0.0
+            },
+            "DBE_HORIZONTAL_REBAR": {
+              "type": "string",
+              "description": "DBE (boundary element) horizontal rebar designation.",
+              "default": ""
+            },
+            "DBE_HORIZONTAL_SPACING": {
+              "type": "number",
+              "description": "DBE (boundary element) horizontal rebar spacing.",
+              "default": 0.0
+            },
+            "DBE_VERTICAL_SPACING": {
+              "type": "number",
+              "description": "DBE (boundary element) vertical rebar spacing.",
+              "default": 0.0
+            }
+          },
+          "required": ["VERTICAL_REBAR", "HORIZONTAL_REBAR"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "BEAM": {
+          "MAIN_REBAR": "HD25",
+          "STIRRUPS": "HD10",
+          "STIRRUP_ARRANGEMENT": 2,
+          "SIDE_BAR": "HD13",
+          "DT": 40.0,
+          "DB": 40.0,
+          "DOUBLY_REBAR": true,
+          "DOUBLY_K": 1.0,
+          "SPACING_LIMIT": true,
+          "SPLICED_BARS": "50%"
+        }
+      },
+      "2": {
+        "COLUMN": {
+          "MAIN_REBAR": "HD25",
+          "TIES_SPIRALS": "HD10",
+          "ARRANGEMENT_Y": 3,
+          "ARRANGEMENT_Z": 3,
+          "COVER": 40.0,
+          "SPLICE": "100%",
+          "SPACING_LIMIT": true
+        }
+      },
+      "3": {
+        "BRACE": {
+          "MAIN_REBAR": "HD22",
+          "TIES_SPIRALS": "HD10",
+          "ARRANGEMENT_Y": 2,
+          "ARRANGEMENT_Z": 2,
+          "COVER": 40.0,
+          "SPLICE": "None",
+          "SPACING_LIMIT": true
+        }
+      },
+      "4": {
+        "WALL": {
+          "VERTICAL_REBAR": "HD13",
+          "HORIZONTAL_REBAR": "HD13",
+          "END_REBAR": "HD16",
+          "VERTICAL_SPACING": 200.0,
+          "HORIZONTAL_SPACING": 200.0,
+          "DBE_HORIZONTAL_REBAR": "HD16",
+          "DBE_HORIZONTAL_SPACING": 150.0,
+          "DBE_VERTICAL_SPACING": 150.0
+        }
+      }
+    }
+  }
+}

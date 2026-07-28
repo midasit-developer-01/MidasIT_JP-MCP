@@ -1,0 +1,32 @@
+{
+  "_group": "db",
+  "_name": "LDGR",
+  "uri": "db/LDGR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LDGR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Load Group (LDGR). Each entry is keyed by a load group id and carries only the group name; the name is the sole field written on set.",
+      "properties": {
+        "NAME": {
+          "description": "Load group name. Assigned to the load group's GroupName on set.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "SW"
+      },
+      "2": {
+        "NAME": "WetConcrete"
+      }
+    }
+  }
+}

@@ -1,0 +1,270 @@
+{
+  "_group": "rating",
+  "_name": "MATD",
+  "uri": "rating/PSC/AASHTO-LRFR19/MATD",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "MATD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Prestressed Concrete Material Design (MATD). Girder concrete/rebar always apply; slab concrete/rebar apply only when the section is a PSC composite section and SLAB_PROP is true.",
+      "additionalProperties": false,
+      "required": [
+        "GIRDER_MATL_PROP",
+        "GIRDER_REBAR_PROP"
+      ],
+      "definitions": {
+        "MATL_PROP": {
+          "type": "object",
+          "description": "Concrete material property (girder or slab).",
+          "additionalProperties": false,
+          "required": [
+            "CODE"
+          ],
+          "properties": {
+            "CODE": {
+              "type": "string",
+              "description": "Concrete design code. 'None' = custom material. Case-insensitive on input. When CODE is 'None', NAME and COMP_STRENGTH are required; otherwise GRADE is required and must be a valid grade for the selected code (f'c is then looked up from the DB).",
+              "enum": [
+                "None",
+                "ASTM19(RC)",
+                "ASTM(RC)",
+                "U.S.C(US)(RC)",
+                "U.S.C(SI)(RC)",
+                "NMX2023(RC)",
+                "NMX2023(MKS)(RC)",
+                "NMX NTC-2017(RC)",
+                "CSA(RC)",
+                "BS(RC)",
+                "EN04(RC)",
+                "EN(RC)",
+                "NTC08(RC)",
+                "NTC12(RC)",
+                "NTC18(RC)",
+                "UNI(RC)",
+                "SS(RC)",
+                "GOST-SP(RC)",
+                "GOST-SNIP(RC)",
+                "JIS(RC)",
+                "JIS-Civil(RC)",
+                "JTJ023-85(RC)",
+                "Q/CR 9300-18(RC)",
+                "GB 50917-13(RC)",
+                "GB/T10(RC)",
+                "GB(RC)",
+                "GB-Civil(RC)",
+                "TB10092-17(RC)",
+                "JTG3362-18(RC)",
+                "JTG04(RC)",
+                "TB05(RC)",
+                "KS19(RC)",
+                "KS01(RC)",
+                "KS(RC)",
+                "KSCE-LSD15(RC)",
+                "KS01-Civil(RC)",
+                "KS-Civil(RC)",
+                "PNS49(RC)",
+                "SNI(RC)",
+                "TIS(RC)",
+                "TIS(MKS)(RC)",
+                "IRC(RC)",
+                "IRS(RC)",
+                "IS(RC)",
+                "CNS560-18(RC)",
+                "CNS560(RC)",
+                "CNS(RC)",
+                "AS17(RC)",
+                "TMH7(RC)",
+                "SP63.2018(RC)",
+                "TS(RC)",
+                "NBR 6118(RC)"
+              ]
+            },
+            "LIGHT_WEIGHT_FACTOR": {
+              "type": "boolean",
+              "description": "Light weight concrete factor flag.",
+              "default": false
+            },
+            "NAME": {
+              "type": "string",
+              "description": "[CODE=None] Custom material name (required when CODE is 'None')."
+            },
+            "COMP_STRENGTH": {
+              "type": "number",
+              "description": "[CODE=None] Specified compressive strength f'c (kN/m2) (required when CODE is 'None'; ignored otherwise, f'c auto-looked up from GRADE)."
+            },
+            "GRADE": {
+              "type": "string",
+              "description": "[CODE!=None] Concrete grade (required when CODE is not 'None'; must be a valid grade for the selected code)."
+            },
+            "FACTOR_VALUE": {
+              "type": "number",
+              "description": "Light weight factor value (required when LIGHT_WEIGHT_FACTOR is true). Must be between 0.75 and 1.0.",
+              "minimum": 0.75,
+              "maximum": 1.0
+            }
+          }
+        },
+        "REBAR_PROP": {
+          "type": "object",
+          "description": "Rebar property (girder or slab).",
+          "additionalProperties": false,
+          "required": [
+            "CODE"
+          ],
+          "properties": {
+            "CODE": {
+              "type": "string",
+              "description": "Rebar design code. 'None' = custom rebar. Case-insensitive on input. When CODE is 'None', NAME_MAIN_REBAR, NAME_SUB_REBAR, Fy and Fys are required; otherwise GRADE_MAIN_REBAR and GRADE_SUB_REBAR are required and must be valid grades for the selected code.",
+              "enum": [
+                "None",
+                "ASTM19(RC)",
+                "ASTM(RC)",
+                "U.S.C(US)(RC)",
+                "U.S.C(SI)(RC)",
+                "NMX2023(RC)",
+                "NMX2023(MKS)(RC)",
+                "NMX NTC-2017(RC)",
+                "CSA(RC)",
+                "BS(RC)",
+                "EN04(RC)",
+                "EN(RC)",
+                "NTC08(RC)",
+                "NTC12(RC)",
+                "NTC18(RC)",
+                "UNI(RC)",
+                "SS(RC)",
+                "GOST-SP(RC)",
+                "GOST-SNIP(RC)",
+                "JIS(RC)",
+                "JIS-Civil(RC)",
+                "JTJ023-85(RC)",
+                "Q/CR 9300-18(RC)",
+                "GB 50917-13(RC)",
+                "GB/T10(RC)",
+                "GB(RC)",
+                "GB-Civil(RC)",
+                "TB10092-17(RC)",
+                "JTG3362-18(RC)",
+                "JTG04(RC)",
+                "TB05(RC)",
+                "KS19(RC)",
+                "KS01(RC)",
+                "KS(RC)",
+                "KSCE-LSD15(RC)",
+                "KS01-Civil(RC)",
+                "KS-Civil(RC)",
+                "PNS49(RC)",
+                "SNI(RC)",
+                "TIS(RC)",
+                "TIS(MKS)(RC)",
+                "IRC(RC)",
+                "IRS(RC)",
+                "IS(RC)",
+                "CNS560-18(RC)",
+                "CNS560(RC)",
+                "CNS(RC)",
+                "AS17(RC)",
+                "TMH7(RC)",
+                "SP63.2018(RC)",
+                "TS(RC)",
+                "NBR 6118(RC)"
+              ]
+            },
+            "GRADE_MAIN_REBAR": {
+              "type": "string",
+              "description": "[CODE!=None] Main rebar grade (required when CODE is not 'None')."
+            },
+            "GRADE_SUB_REBAR": {
+              "type": "string",
+              "description": "[CODE!=None] Sub-rebar grade (required when CODE is not 'None')."
+            },
+            "NAME_MAIN_REBAR": {
+              "type": "string",
+              "description": "[CODE=None] Custom main rebar name (required when CODE is 'None')."
+            },
+            "NAME_SUB_REBAR": {
+              "type": "string",
+              "description": "[CODE=None] Custom sub-rebar name (required when CODE is 'None')."
+            },
+            "Fy": {
+              "type": "number",
+              "description": "[CODE=None] Main rebar yield strength Fy (required when CODE is 'None')."
+            },
+            "Fys": {
+              "type": "number",
+              "description": "[CODE=None] Sub-rebar yield strength Fys (required when CODE is 'None')."
+            }
+          }
+        }
+      },
+      "properties": {
+        "GIRDER_MATL_PROP": {
+          "description": "Girder concrete material property.",
+          "$ref": "#/definitions/MATL_PROP"
+        },
+        "GIRDER_REBAR_PROP": {
+          "description": "Girder rebar property.",
+          "$ref": "#/definitions/REBAR_PROP"
+        },
+        "SLAB_PROP": {
+          "type": "boolean",
+          "description": "Slab property flag. When true and the section is a PSC composite section, SLAB_MATL_PROP and SLAB_REBAR_PROP are required.",
+          "default": false
+        },
+        "SLAB_MATL_PROP": {
+          "description": "Slab concrete material property (optional, keeps existing if omitted; required when SLAB_PROP is true on a PSC composite section).",
+          "$ref": "#/definitions/MATL_PROP"
+        },
+        "SLAB_REBAR_PROP": {
+          "description": "Slab rebar property (optional, keeps existing if omitted; required when SLAB_PROP is true on a PSC composite section).",
+          "$ref": "#/definitions/REBAR_PROP"
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "GIRDER_MATL_PROP": {
+          "CODE": "None",
+          "NAME": "C40 Custom",
+          "COMP_STRENGTH": 40000.0,
+          "LIGHT_WEIGHT_FACTOR": false
+        },
+        "GIRDER_REBAR_PROP": {
+          "CODE": "None",
+          "NAME_MAIN_REBAR": "Main-500",
+          "NAME_SUB_REBAR": "Sub-400",
+          "Fy": 500000.0,
+          "Fys": 400000.0
+        },
+        "SLAB_PROP": false
+      },
+      "2": {
+        "GIRDER_MATL_PROP": {
+          "CODE": "ASTM19(RC)",
+          "GRADE": "C4000",
+          "LIGHT_WEIGHT_FACTOR": true,
+          "FACTOR_VALUE": 0.85
+        },
+        "GIRDER_REBAR_PROP": {
+          "CODE": "ASTM19(RC)",
+          "GRADE_MAIN_REBAR": "Grade 60",
+          "GRADE_SUB_REBAR": "Grade 40"
+        },
+        "SLAB_PROP": true,
+        "SLAB_MATL_PROP": {
+          "CODE": "ASTM19(RC)",
+          "GRADE": "C3500",
+          "LIGHT_WEIGHT_FACTOR": false
+        },
+        "SLAB_REBAR_PROP": {
+          "CODE": "ASTM19(RC)",
+          "GRADE_MAIN_REBAR": "Grade 60",
+          "GRADE_SUB_REBAR": "Grade 40"
+        }
+      }
+    }
+  }
+}

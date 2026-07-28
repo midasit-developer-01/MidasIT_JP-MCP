@@ -1,0 +1,237 @@
+{
+  "_group": "db",
+  "_name": "LLANCH",
+  "uri": "db/LLANCH",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LLANCH": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Traffic Line Lane - China (LLANCH). Defines a moving-load traffic line lane; COMMON holds the lane header and either LANE_ITEMS (per-element rows) or SPECIAL_LANE_ITEMS (bulk import) supplies the lane elements (the two are mutually exclusive).",
+      "additionalProperties": false,
+      "required": [
+        "COMMON"
+      ],
+      "properties": {
+        "COMMON": {
+          "type": "object",
+          "description": "Common lane header data.",
+          "additionalProperties": false,
+          "required": [
+            "LL_NAME",
+            "LOAD_DIST",
+            "MOVING",
+            "WIDTH"
+          ],
+          "properties": {
+            "LL_NAME": {
+              "type": "string",
+              "description": "Name of the line lane."
+            },
+            "LOAD_DIST": {
+              "type": "string",
+              "description": "Load distribution method (case-insensitive). LANE applies the load along the lane; CROSS distributes across a load group (GROUP_NAME is used only for CROSS).",
+              "enum": [
+                "LANE",
+                "CROSS"
+              ]
+            },
+            "GROUP_NAME": {
+              "type": "string",
+              "description": "[LOAD_DIST=CROSS] Name of the load (element) group used to distribute the load. Ignored when LOAD_DIST=LANE.",
+              "default": ""
+            },
+            "SKEW_START": {
+              "type": "number",
+              "description": "Skew angle at the start of the lane.",
+              "default": 0
+            },
+            "SKEW_END": {
+              "type": "number",
+              "description": "Skew angle at the end of the lane.",
+              "default": 0
+            },
+            "MOVING": {
+              "type": "string",
+              "description": "Moving direction of the load (case-insensitive).",
+              "enum": [
+                "FORWARD",
+                "BACKWARD",
+                "BOTH"
+              ]
+            },
+            "WHEEL_SPACE": {
+              "type": "number",
+              "description": "Wheel spacing.",
+              "default": 0
+            },
+            "WIDTH": {
+              "type": "number",
+              "description": "Width of the line lane."
+            },
+            "OPT_AUTO_LANE": {
+              "type": "boolean",
+              "description": "Whether to auto-optimize the lane.",
+              "default": false
+            },
+            "ALLOW_WIDTH": {
+              "type": "number",
+              "description": "Allowable width.",
+              "default": 0
+            }
+          }
+        },
+        "LANE_ITEMS": {
+          "type": "array",
+          "description": "Per-element lane data rows (China). Cannot be used together with SPECIAL_LANE_ITEMS.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "ELEM"
+            ],
+            "properties": {
+              "ELEM": {
+                "type": "integer",
+                "description": "Key element number for this lane row."
+              },
+              "ECC": {
+                "type": "number",
+                "description": "Eccentricity.",
+                "default": 0.0
+              },
+              "SPAN": {
+                "type": "number",
+                "description": "Span.",
+                "default": 0.0
+              },
+              "SPAN_START": {
+                "type": "boolean",
+                "description": "Whether this element is a span start.",
+                "default": false
+              },
+              "SCALE_FACTOR": {
+                "type": "number",
+                "description": "Scale factor.",
+                "default": 0.0
+              }
+            }
+          }
+        },
+        "SPECIAL_LANE_ITEMS": {
+          "type": "array",
+          "description": "Bulk-input lane data, used only when importing. Each item applies a consistent set of values to a list of key elements; SPAN_START_NO_LIST marks which of those elements are span starts. Cannot be used together with LANE_ITEMS.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "ELEMS",
+              "SPAN_START_NO_LIST"
+            ],
+            "properties": {
+              "ELEMS": {
+                "type": "array",
+                "description": "Key element numbers to which this row's values are applied.",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "ECC": {
+                "type": "number",
+                "description": "Eccentricity applied to all listed elements.",
+                "default": 0
+              },
+              "SPAN": {
+                "type": "number",
+                "description": "Span applied to all listed elements.",
+                "default": 0
+              },
+              "SCALE_FACTOR": {
+                "type": "number",
+                "description": "Scale factor applied to all listed elements.",
+                "default": 0
+              },
+              "SPAN_START": {
+                "type": "boolean",
+                "description": "Span-start flag assigned to the elements listed in SPAN_START_NO_LIST.",
+                "default": false
+              },
+              "SPAN_START_NO_LIST": {
+                "type": "array",
+                "description": "Element numbers (from ELEMS) that are span starts; each gets the SPAN_START flag.",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "COMMON": {
+          "LL_NAME": "Lane-1",
+          "LOAD_DIST": "LANE",
+          "SKEW_START": 0,
+          "SKEW_END": 0,
+          "MOVING": "BOTH",
+          "WHEEL_SPACE": 1.8,
+          "WIDTH": 3.5,
+          "OPT_AUTO_LANE": false,
+          "ALLOW_WIDTH": 0
+        },
+        "LANE_ITEMS": [
+          {
+            "ELEM": 101,
+            "ECC": 0.0,
+            "SPAN": 10.0,
+            "SPAN_START": true,
+            "SCALE_FACTOR": 1.0
+          },
+          {
+            "ELEM": 102,
+            "ECC": 0.0,
+            "SPAN": 10.0,
+            "SPAN_START": false,
+            "SCALE_FACTOR": 1.0
+          }
+        ]
+      },
+      "2": {
+        "COMMON": {
+          "LL_NAME": "Lane-2",
+          "LOAD_DIST": "CROSS",
+          "GROUP_NAME": "Deck",
+          "SKEW_START": 0,
+          "SKEW_END": 0,
+          "MOVING": "FORWARD",
+          "WHEEL_SPACE": 1.8,
+          "WIDTH": 3.5,
+          "OPT_AUTO_LANE": true,
+          "ALLOW_WIDTH": 0.5
+        },
+        "SPECIAL_LANE_ITEMS": [
+          {
+            "ELEMS": [
+              201,
+              202,
+              203
+            ],
+            "ECC": 0.0,
+            "SPAN": 12.0,
+            "SCALE_FACTOR": 1.0,
+            "SPAN_START": true,
+            "SPAN_START_NO_LIST": [
+              201
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

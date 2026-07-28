@@ -1,0 +1,20 @@
+{
+  "_group": "requestinfo",
+  "_name": "TABLE",
+  "uri": "requestinfo/POST/TABLE",
+  "methods": "GET",
+  "schema": {
+    "TABLE": {
+      "type": "object",
+      "description": "Table Request Info (TABLE). Returns a description of the request body accepted by POST/TABLE; the request itself takes no fields (DTO_EMPTY), so Argument is an empty object.",
+      "properties": {
+        "Argument": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

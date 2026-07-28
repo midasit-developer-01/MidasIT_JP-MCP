@@ -1,0 +1,40 @@
+{
+  "_group": "db",
+  "_name": "KFAC",
+  "uri": "db/KFAC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "KFAC": {
+      "type": "object",
+      "description": "Effective Length Factor (KFAC). Each entry is keyed by an integer id and holds the effective length factors used in steel/RC/SRC member design; all three factors default to 1.0 when omitted.",
+      "properties": {
+        "Ky": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor about the member's local y-axis (weak-axis buckling). Optional; defaults to 1.0."
+        },
+        "Kz": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor about the member's local z-axis (strong-axis buckling). Optional; defaults to 1.0."
+        },
+        "Kt": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor for torsional/lateral-torsional buckling. Optional; defaults to 1.0."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "Ky": 1.0,
+        "Kz": 1.0,
+        "Kt": 0.85
+      }
+    }
+  }
+}

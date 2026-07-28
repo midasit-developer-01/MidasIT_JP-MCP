@@ -1,0 +1,67 @@
+{
+  "_group": "db",
+  "_name": "PDEL",
+  "uri": "db/PDEL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PDEL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "P-Delta Analysis Control (PDEL). A single-instance (key 1) analysis control defined by the iteration count, convergence tolerance, and a list of load cases each with a scale factor.",
+      "properties": {
+        "ITER": {
+          "description": "Number of iterations for the P-Delta analysis.",
+          "type": "integer"
+        },
+        "TOL": {
+          "description": "Convergence tolerance for the P-Delta analysis.",
+          "type": "number",
+          "default": 0
+        },
+        "PDEL_CASES": {
+          "description": "List of load cases included in the P-Delta analysis. Each LCNAME must reference an existing static load case (STLD) name, otherwise the request is rejected.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LCNAME": {
+                "description": "Load case name; must match an existing static load case (STLD) name.",
+                "type": "string"
+              },
+              "FACTOR": {
+                "description": "Scale factor applied to this load case in the P-Delta analysis.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "LCNAME",
+              "FACTOR"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITER",
+        "PDEL_CASES"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITER": 5,
+        "TOL": 1e-05,
+        "PDEL_CASES": [
+          {
+            "LCNAME": "DL",
+            "FACTOR": 1
+          },
+          {
+            "LCNAME": "LL",
+            "FACTOR": 1
+          }
+        ]
+      }
+    }
+  }
+}

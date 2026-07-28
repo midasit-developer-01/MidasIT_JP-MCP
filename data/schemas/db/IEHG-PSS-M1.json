@@ -1,0 +1,28 @@
+{
+  "_group": "db",
+  "_name": "IEHG-PSS-M1",
+  "uri": "db/IEHG-PSS-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "IEHG-PSS-M1": {
+      "type": "object",
+      "description": "Inelastic Hinge Property Assignment - Pushover Shell/PSS (IEHG-PSS-M1). Links a model object (keyed by id) to a previously defined inelastic hinge property by its name; the named property must already exist in the model.",
+      "properties": {
+        "INEL_PROP_NAME": {
+          "type": "string",
+          "description": "Name of the inelastic hinge property to assign. Must reference an existing Inelastic Hinge Property in the model, otherwise the request is rejected with a wrong-data error."
+        }
+      },
+      "required": [
+        "INEL_PROP_NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "INEL_PROP_NAME": "PSS_Hinge_1"
+      }
+    }
+  }
+}

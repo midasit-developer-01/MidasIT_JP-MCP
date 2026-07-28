@@ -1,0 +1,21 @@
+{
+  "_group": "ope",
+  "_name": "API-RECORDER-RESET",
+  "uri": "ope/API-RECORDER-RESET",
+  "methods": "POST",
+  "schema": {
+    "API-RECORDER-RESET": {
+      "type": "object",
+      "description": "API Recorder Reset (API-RECORDER-RESET). Takes no input; the handler resets the API request recorder buffer and requires no request fields.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "No request body. The recorder reset is triggered by the POST call itself; send an empty object."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

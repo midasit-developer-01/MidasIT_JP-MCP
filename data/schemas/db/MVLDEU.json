@@ -1,0 +1,289 @@
+{
+  "_group": "db",
+  "_name": "MVLDEU",
+  "uri": "db/MVLDEU",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVLDEU": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Case - Eurocode (MVLDEU). Fields are driven by TYPE_LOADMODEL (1=LM1 Type1, 2=LM Type2, 3=LM3 Type3, 4=LM1&3 Multi/Straddling, 5=Railway Bridge) and by OPT_AUTO_OPTIMIZE, which selects between the optimize (OPTIMIZE_LIST) and manual (SUB_LOAD_LIST) sub-load definitions.",
+      "properties": {
+        "LCNAME": {
+          "type": "string",
+          "description": "Load case name."
+        },
+        "OPT_AUTO_OPTIMIZE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auto optimize lane loading. When true, OPTIMIZE_LANE_NAME and MINVHLDIST apply; for TYPE_LOADMODEL 1/3/4 also LOADEDLANE, and for 2/5 also MIN_NUM_VHL, MAX_NUM_VHL and OPTIMIZE_LIST. When false for 2/5, SUB_LOAD_LIST applies instead."
+        },
+        "TYPE_LOADMODEL": {
+          "type": "integer",
+          "enum": [1, 2, 3, 4, 5],
+          "description": "Load model type: 1=LM1 (Type 1, uses VHLNAME1 vehicle and optional VHLNAME2 footway), 2=LM (Type 2), 3=LM3 (Type 3, uses VHLNAME1 and optional VHLNAME2), 4=LM1 & 3 Multi / Straddling (uses VHLNAME1, VHLNAME2 and STL_LIST), 5=Railway Bridge. Other values are rejected."
+        },
+        "DESC": {
+          "type": "string",
+          "default": "",
+          "description": "Description."
+        },
+        "OPT_COMB": {
+          "type": "integer",
+          "description": "[TYPE_LOADMODEL=2 or 5] Combination option."
+        },
+        "VHLNAME1": {
+          "type": "string",
+          "default": "",
+          "description": "[TYPE_LOADMODEL=1, 3 or 4] Primary vehicle moving load name (must be an existing vehicle). Required for these types."
+        },
+        "VHLNAME2": {
+          "type": "string",
+          "default": "",
+          "description": "[TYPE_LOADMODEL=1] Footway vehicle name; [TYPE_LOADMODEL=3 or 4] special/second vehicle name. Empty string means none."
+        },
+        "OPT_LEADING": {
+          "type": "boolean",
+          "description": "[TYPE_LOADMODEL=1, 2, 3 or 4] Ignore psi factor (leading option)."
+        },
+        "MINVHLDIST": {
+          "type": "number",
+          "description": "[OPT_AUTO_OPTIMIZE=true] Minimum vehicle distance."
+        },
+        "OPTIMIZE_LANE_NAME": {
+          "type": "string",
+          "description": "[OPT_AUTO_OPTIMIZE=true] Optimize lane name (must be an existing lane)."
+        },
+        "MIN_NUM_VHL": {
+          "type": "integer",
+          "description": "[TYPE_LOADMODEL=2 or 5, OPT_AUTO_OPTIMIZE=true] Minimum vehicle number."
+        },
+        "MAX_NUM_VHL": {
+          "type": "integer",
+          "description": "[TYPE_LOADMODEL=2 or 5, OPT_AUTO_OPTIMIZE=true] Maximum vehicle number."
+        },
+        "LOADEDLANE": {
+          "type": "integer",
+          "description": "[TYPE_LOADMODEL=1, 3 or 4, OPT_AUTO_OPTIMIZE=true] Number of loaded lanes."
+        },
+        "SCALE_FACTOR1": {
+          "type": "number",
+          "description": "[TYPE_LOADMODEL=5] Scale factor 1."
+        },
+        "SCALE_FACTOR2": {
+          "type": "number",
+          "description": "[TYPE_LOADMODEL=5] Scale factor 2."
+        },
+        "SCALE_FACTOR3": {
+          "type": "number",
+          "description": "[TYPE_LOADMODEL=5] Scale factor 3."
+        },
+        "OPT_PSI_FACTOR": {
+          "type": "boolean",
+          "description": "[TYPE_LOADMODEL=5] Psi1 factor option."
+        },
+        "MULTI_FACTOR1": {
+          "type": "number",
+          "description": "[TYPE_LOADMODEL=5] Multiple factor 1."
+        },
+        "MULTI_FACTOR2": {
+          "type": "number",
+          "description": "[TYPE_LOADMODEL=5] Multiple factor 2."
+        },
+        "MULTI_FACTOR3": {
+          "type": "number",
+          "description": "[TYPE_LOADMODEL=5] Multiple factor 3."
+        },
+        "OPTIMIZE_LIST": {
+          "type": "array",
+          "description": "[TYPE_LOADMODEL=2 or 5, OPT_AUTO_OPTIMIZE=true] Optimize vehicle list.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "TYPE": {
+                "type": "integer",
+                "description": "Optimize vehicle load type."
+              },
+              "NAME": {
+                "type": "string",
+                "description": "Optimize vehicle load name (must be an existing vehicle; for TYPE_LOADMODEL=5 must be a rail traffic load)."
+              },
+              "SCALE_FACTOR": {
+                "type": "number",
+                "description": "Optimize scale factor."
+              }
+            },
+            "required": ["TYPE", "NAME", "SCALE_FACTOR"]
+          }
+        },
+        "SUB_LOAD_LIST": {
+          "type": "array",
+          "description": "[TYPE_LOADMODEL=2 or 5, OPT_AUTO_OPTIMIZE=false] Sub load data list.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "TYPE": {
+                "type": "integer",
+                "description": "Sub load data vehicle load type."
+              },
+              "NAME": {
+                "type": "string",
+                "description": "Sub load data vehicle load name (must be an existing vehicle; for TYPE_LOADMODEL=5 must be a rail traffic load)."
+              },
+              "SCALE_FACTOR": {
+                "type": "number",
+                "description": "Sub load data vehicle scale factor."
+              },
+              "MIN_LOAD_LANE_TYPE": {
+                "type": "integer",
+                "description": "Sub load data minimum loaded lane type."
+              },
+              "MAX_LOAD_LANE_TYPE": {
+                "type": "integer",
+                "description": "Sub load data maximum loaded lane type."
+              },
+              "SLN_LIST": {
+                "type": "array",
+                "description": "Selected lane name list for this sub load.",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["TYPE", "NAME", "SCALE_FACTOR"]
+          }
+        },
+        "SLN_LIST": {
+          "type": "array",
+          "description": "[TYPE_LOADMODEL=1, 3 or 4] Selected lane name list (each must be an existing lane; must not duplicate SRA_LIST/FLN_LIST).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "SRA_LIST": {
+          "type": "array",
+          "description": "[TYPE_LOADMODEL=1, 3 or 4] Selected remaining area name list (each must be an existing lane).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "FLN_LIST": {
+          "type": "array",
+          "description": "[TYPE_LOADMODEL=1] Footway lane name list (each must be an existing lane).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "STL_LIST": {
+          "type": "array",
+          "description": "[TYPE_LOADMODEL=4] Straddling lane name pairs.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "NAME1": {
+                "type": "string",
+                "description": "Straddling lane name 1 (must be an existing lane)."
+              },
+              "NAME2": {
+                "type": "string",
+                "description": "Straddling lane name 2 (must be an existing lane)."
+              }
+            },
+            "required": ["NAME1", "NAME2"]
+          }
+        }
+      },
+      "required": ["LCNAME", "TYPE_LOADMODEL"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "LM1 Case",
+        "TYPE_LOADMODEL": 1,
+        "OPT_AUTO_OPTIMIZE": false,
+        "DESC": "Load Model 1",
+        "VHLNAME1": "LM1",
+        "VHLNAME2": "",
+        "OPT_LEADING": false,
+        "SLN_LIST": ["Lane1", "Lane2"],
+        "SRA_LIST": ["Lane3"],
+        "FLN_LIST": ["Footway1"]
+      },
+      "2": {
+        "LCNAME": "LM2 Case",
+        "TYPE_LOADMODEL": 2,
+        "OPT_AUTO_OPTIMIZE": false,
+        "DESC": "Load Model 2",
+        "OPT_COMB": 0,
+        "OPT_LEADING": false,
+        "SUB_LOAD_LIST": [
+          {
+            "TYPE": 0,
+            "NAME": "TS",
+            "SCALE_FACTOR": 1.0,
+            "MIN_LOAD_LANE_TYPE": 1,
+            "MAX_LOAD_LANE_TYPE": 3,
+            "SLN_LIST": ["Lane1", "Lane2"]
+          }
+        ]
+      },
+      "3": {
+        "LCNAME": "LM3 Case",
+        "TYPE_LOADMODEL": 3,
+        "OPT_AUTO_OPTIMIZE": true,
+        "DESC": "Load Model 3",
+        "VHLNAME1": "LM3",
+        "VHLNAME2": "Special",
+        "OPT_LEADING": true,
+        "MINVHLDIST": 5.0,
+        "OPTIMIZE_LANE_NAME": "OptLane",
+        "LOADEDLANE": 2,
+        "SLN_LIST": ["Lane1"],
+        "SRA_LIST": ["Lane2"]
+      },
+      "4": {
+        "LCNAME": "LM1&3 Straddling",
+        "TYPE_LOADMODEL": 4,
+        "OPT_AUTO_OPTIMIZE": false,
+        "DESC": "Straddling",
+        "VHLNAME1": "LM1",
+        "VHLNAME2": "LM3",
+        "OPT_LEADING": false,
+        "SLN_LIST": ["Lane1", "Lane2"],
+        "SRA_LIST": ["Lane3"],
+        "STL_LIST": [
+          {
+            "NAME1": "Lane1",
+            "NAME2": "Lane2"
+          }
+        ]
+      },
+      "5": {
+        "LCNAME": "Railway Case",
+        "TYPE_LOADMODEL": 5,
+        "OPT_AUTO_OPTIMIZE": true,
+        "DESC": "Railway Bridge",
+        "OPT_COMB": 0,
+        "SCALE_FACTOR1": 1.0,
+        "SCALE_FACTOR2": 1.0,
+        "SCALE_FACTOR3": 1.0,
+        "OPT_PSI_FACTOR": true,
+        "MULTI_FACTOR1": 1.0,
+        "MULTI_FACTOR2": 0.9,
+        "MULTI_FACTOR3": 0.8,
+        "MINVHLDIST": 5.0,
+        "OPTIMIZE_LANE_NAME": "OptLane",
+        "MIN_NUM_VHL": 1,
+        "MAX_NUM_VHL": 2,
+        "OPTIMIZE_LIST": [
+          {
+            "TYPE": 0,
+            "NAME": "Load Model 71",
+            "SCALE_FACTOR": 1.0
+          }
+        ]
+      }
+    }
+  }
+}

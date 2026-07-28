@@ -1,0 +1,68 @@
+{
+  "_group": "design",
+  "_name": "DCREM",
+  "uri": "design/RC/KDS-41-20-2022/DCREM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DCREM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Consideration of Rebar at Equalized Members (DCREM). Fields are driven by SELECT_ALL: when true the entire model is auto-scanned and SELECTED_MEMBERS is ignored; when false SELECTED_MEMBERS maps each Node ID to the elements to be equalized. The URL key is the Node ID (NodeK).",
+      "properties": {
+        "SELECT_ALL": {
+          "type": "boolean",
+          "description": "Select All. When true, all existing DCREM records are deleted and the whole model is auto-scanned to group compatible beams; SELECTED_MEMBERS is ignored. When false, SELECTED_MEMBERS must be provided."
+        },
+        "SELECTED_MEMBERS": {
+          "type": "object",
+          "description": "[SELECT_ALL=false] Selected Members. Object keyed by Node ID (string); each value lists the elements connected at that node to be equalized.",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "ELEM_LIST": {
+                "type": "array",
+                "description": "Element list of exactly 2 element numbers connected at the node.",
+                "items": {
+                  "type": "integer"
+                },
+                "minItems": 2,
+                "maxItems": 2
+              }
+            },
+            "required": [
+              "ELEM_LIST"
+            ]
+          }
+        },
+        "ELEM_LIST": {
+          "type": "array",
+          "description": "GET response only. Element list of the equalized members for this Node ID.",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "required": [
+        "SELECT_ALL"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SELECT_ALL": true
+      },
+      "2": {
+        "SELECT_ALL": false,
+        "SELECTED_MEMBERS": {
+          "12": {
+            "ELEM_LIST": [
+              3,
+              4
+            ]
+          }
+        }
+      }
+    }
+  }
+}

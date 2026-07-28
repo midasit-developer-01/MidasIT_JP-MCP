@@ -1,0 +1,20 @@
+{
+  "_group": "doc",
+  "_name": "NEW",
+  "uri": "doc/NEW",
+  "methods": "POST",
+  "schema": {
+    "NEW": {
+      "type": "object",
+      "description": "New Document (NEW). Creates a new empty MIDAS document; the request takes no meaningful body (DTO_EMPTY), so Argument is an empty object.",
+      "properties": {
+        "Argument": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

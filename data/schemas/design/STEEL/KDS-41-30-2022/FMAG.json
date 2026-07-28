@@ -1,0 +1,47 @@
+{
+  "_group": "design",
+  "_name": "FMAG",
+  "uri": "design/STEEL/KDS-41-30-2022/FMAG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "FMAG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moment Magnification Factor (FMAG). Fields hold the moment magnification factors applied to first- and second-order moments about the local y and z axes; each factor must satisfy 1.0 <= value < 100.0.",
+      "properties": {
+        "B1Y_DELTA_BY": {
+          "type": "number",
+          "description": "B1y - Delta by (First Order Moment Y). Must satisfy 1.0 <= value < 100.0.",
+          "default": 1.0
+        },
+        "B1Z_DELTA_BZ": {
+          "type": "number",
+          "description": "B1z - Delta bz (First Order Moment Z). Must satisfy 1.0 <= value < 100.0.",
+          "default": 1.0
+        },
+        "B2Y_DELTA_SY": {
+          "type": "number",
+          "description": "B2y - Delta sy (Second Order Moment Y). Must satisfy 1.0 <= value < 100.0.",
+          "default": 1.0
+        },
+        "B2Z_DELTA_SZ": {
+          "type": "number",
+          "description": "B2z - Delta sz (Second Order Moment Z). Must satisfy 1.0 <= value < 100.0.",
+          "default": 1.0
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "B1Y_DELTA_BY": 1.2,
+        "B1Z_DELTA_BZ": 1.15,
+        "B2Y_DELTA_SY": 1.05,
+        "B2Z_DELTA_SZ": 1.1
+      }
+    }
+  }
+}

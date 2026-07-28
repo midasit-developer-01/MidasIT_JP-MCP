@@ -1,0 +1,42 @@
+{
+  "_group": "design",
+  "_name": "SLCT",
+  "uri": "design/PSC/AASHTO-LRFD24/SLCT",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "SLCT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Serviceability Load Combination Type Selection (SLCT). Assigns the serviceability load type to an existing concrete service load combination (nActive==2); LC_NAME must match the existing combination name and SL_TYPE selects the limit-state category.",
+      "properties": {
+        "LC_NAME": {
+          "type": "string",
+          "description": "Serviceability Load Combination Name. Must exactly match the name of an existing concrete service load combination; a mismatch is rejected."
+        },
+        "SL_TYPE": {
+          "type": "integer",
+          "enum": [0, 1, 2],
+          "default": 0,
+          "description": "Serviceability Load Type: 0=Service Limit, 1=Strength Limit1, 2=Strength Limit3. Values outside 0-2 are rejected. Maps internally to nServLcomType (0->0, 1->1, 2->3)."
+        }
+      },
+      "required": ["LC_NAME"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LC_NAME": "cLCB1",
+        "SL_TYPE": 0
+      },
+      "2": {
+        "LC_NAME": "cLCB2",
+        "SL_TYPE": 1
+      },
+      "3": {
+        "LC_NAME": "cLCB3",
+        "SL_TYPE": 2
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "_group": "design",
+  "_name": "ULCT",
+  "uri": "design/STEEL/KDS-41-30-2022/ULCT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "ULCT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Underground Load Combination Type (ULCT). The single boolean field flags whether the load combination is treated as an underground load type.",
+      "properties": {
+        "bUNDERLOADTYPE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Underground Loads. When true the load combination type is EN_ULCT_UNDERGROUND; when false it is EN_ULCT_NONE_UNDERGROUND."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bUNDERLOADTYPE": true
+      }
+    }
+  }
+}

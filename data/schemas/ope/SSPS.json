@@ -1,0 +1,143 @@
+{
+  "_group": "ope",
+  "_name": "SSPS",
+  "uri": "ope/SSPS",
+  "methods": "POST",
+  "schema": {
+    "SSPS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Surface Spring Support (SSPS). Converts selected element faces/nodes into nodal point springs or elastic links; which Boundary fields are used is driven by CONVERT_TO and BOUNDARY.TYPE, and the element filtering is driven by ELEMENT.TYPE.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Surface spring support request.",
+          "properties": {
+            "CONVERT_TO": {
+              "type": "string",
+              "enum": ["POINT_SPRING", "ELASTIC_LINK"],
+              "description": "Convert selected surface to nodal spring type (case-insensitive). POINT_SPRING = generate nodal point springs; ELASTIC_LINK = generate elastic links."
+            },
+            "GROUP_NAME": {
+              "type": "string",
+              "default": "",
+              "description": "Boundary group name to assign the generated springs/links to."
+            },
+            "NODE_ELEMS": {
+              "type": "object",
+              "description": "Selected node or element list used as the source of the surface spring. For ELEMENT.TYPE=SOLID_NODE the keys are node keys; otherwise they are element keys.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "items": {"type": "integer"},
+                  "description": "Explicit list of node or element ids."
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Range-style selection method (e.g. \"1to5\")."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure group name selection method."
+                }
+              }
+            },
+            "ELEMENT": {
+              "type": "object",
+              "description": "Element selection type and geometry parameters.",
+              "properties": {
+                "TYPE": {
+                  "type": "string",
+                  "enum": ["FRAME", "PLANAR", "SOLID_FACE", "SOLID_NODE"],
+                  "description": "Element type to filter the selection by (case-insensitive). FRAME = frame elements; PLANAR = planar elements; SOLID_FACE = solid element face (uses FACE); SOLID_NODE = solid faces resolved from selected nodes (treated as SOLID_FACE internally)."
+                },
+                "FACE": {
+                  "type": "integer",
+                  "description": "[TYPE=SOLID_FACE] Face number of the solid element on which the surface spring is applied."
+                },
+                "WIDTH": {
+                  "type": "number",
+                  "description": "[TYPE=FRAME] Tributary width used for a frame element surface spring."
+                }
+              },
+              "required": ["TYPE"]
+            },
+            "BOUNDARY": {
+              "type": "object",
+              "description": "Spring/link boundary definition. Which fields are consumed depends on CONVERT_TO and TYPE.",
+              "properties": {
+                "TYPE": {
+                  "type": "string",
+                  "enum": ["LINEAR", "COMP", "TENS", "MULTI"],
+                  "description": "Spring behavior type (case-insensitive). LINEAR = linear; COMP = compression-only; TENS = tension-only; MULTI = multi-linear."
+                },
+                "DIR": {
+                  "type": "integer",
+                  "default": 0,
+                  "description": "Nonlinear/elastic-link direction. Used when CONVERT_TO=ELASTIC_LINK, or when CONVERT_TO=POINT_SPRING with TYPE in (COMP, TENS). 0=Normal(+), 1=Normal(-), 2=UCS X(+), 3=UCS X(-), 4=UCS Y(+), 5=UCS Y(-), 6=UCS Z(+), 7=UCS Z(-)."
+                },
+                "STIFF": {
+                  "type": "array",
+                  "items": {"type": "number"},
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "default": [0.0, 0.0, 0.0],
+                  "description": "[CONVERT_TO=POINT_SPRING, TYPE in (LINEAR, MULTI)] Node local axis stiffness (Sx, Sy, Sz) of the point spring."
+                },
+                "PHU": {
+                  "type": "number",
+                  "default": 0.0,
+                  "description": "Multi-linear function parameter. Used only when TYPE=MULTI (POINT_SPRING) or for a multi-linear elastic link."
+                },
+                "SUBGRADE": {
+                  "type": "number",
+                  "default": 0.0,
+                  "description": "Modulus of subgrade reaction. Used for nonlinear point springs (TYPE in COMP, TENS, MULTI) and for elastic links (CONVERT_TO=ELASTIC_LINK)."
+                },
+                "LENGTH": {
+                  "type": "number",
+                  "default": 0.0,
+                  "description": "[CONVERT_TO=ELASTIC_LINK] Length of the elastic link."
+                },
+                "bDAMP": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "[CONVERT_TO=POINT_SPRING, TYPE in (LINEAR, MULTI)] Use damping constant/area."
+                },
+                "DAMP": {
+                  "type": "array",
+                  "items": {"type": "number"},
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "default": [0.0, 0.0, 0.0],
+                  "description": "[CONVERT_TO=POINT_SPRING, TYPE in (LINEAR, MULTI)] Damping constant/area (Cx, Cy, Cz), applied when bDAMP is true."
+                }
+              },
+              "required": ["TYPE"]
+            }
+          },
+          "required": ["CONVERT_TO", "NODE_ELEMS", "ELEMENT", "BOUNDARY"]
+        }
+      },
+      "required": ["Argument"]
+    }
+  },
+  "example": {
+    "Argument": {
+      "CONVERT_TO": "POINT_SPRING",
+      "GROUP_NAME": "SurfSpring",
+      "NODE_ELEMS": {
+        "KEYS": [1, 2, 3, 4]
+      },
+      "ELEMENT": {
+        "TYPE": "PLANAR"
+      },
+      "BOUNDARY": {
+        "TYPE": "LINEAR",
+        "STIFF": [1000.0, 1000.0, 5000.0],
+        "bDAMP": false,
+        "DAMP": [0.0, 0.0, 0.0]
+      }
+    }
+  }
+}

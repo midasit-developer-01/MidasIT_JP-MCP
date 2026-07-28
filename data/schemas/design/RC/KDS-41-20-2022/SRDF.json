@@ -1,0 +1,46 @@
+{
+  "_group": "design",
+  "_name": "SRDF",
+  "uri": "design/RC/KDS-41-20-2022/SRDF",
+  "methods": "GET, PUT",
+  "schema": {
+    "SRDF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Strength Reduction Factor (SRDF). All fields are optional strength reduction factors (phi) stored in the design condition (Dcon) record; each maps to a distinct limit-state action.",
+      "properties": {
+        "PHI_T": {
+          "type": "number",
+          "default": 0.85,
+          "description": "Strength Reduction Factor - Tension."
+        },
+        "PHI_C1": {
+          "type": "number",
+          "default": 0.85,
+          "description": "Strength Reduction Factor - Compression 1."
+        },
+        "PHI_C2": {
+          "type": "number",
+          "default": 0.85,
+          "description": "Strength Reduction Factor - Compression 2."
+        },
+        "PHI_V": {
+          "type": "number",
+          "default": 0.75,
+          "description": "Strength Reduction Factor - Shear."
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "PHI_T": 0.85,
+        "PHI_C1": 0.85,
+        "PHI_C2": 0.85,
+        "PHI_V": 0.75
+      }
+    }
+  }
+}

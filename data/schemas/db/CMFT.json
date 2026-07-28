@@ -1,0 +1,46 @@
+{
+  "_group": "db",
+  "_name": "CMFT",
+  "uri": "db/CMFT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CMFT": {
+      "type": "object",
+      "description": "Equivalent Moment Correction Factor Cm (CMFT). Keyed per element (integer id); OPT_AUTO decides whether Cm is auto-calculated or taken from the CMY/CMZ values provided.",
+      "properties": {
+        "OPT_AUTO": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auto-calculate the equivalent moment correction factor. When true the program computes Cm automatically and CMY/CMZ are ignored (OnGet does not return them); when false the user-supplied CMY/CMZ are used."
+        },
+        "CMY": {
+          "type": "number",
+          "default": 0.0,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Equivalent moment correction factor about the y-axis (Cmy). Hard-validated at OnSet: must satisfy 0.0 <= value <= 1.0. Used when OPT_AUTO is false."
+        },
+        "CMZ": {
+          "type": "number",
+          "default": 0.0,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Equivalent moment correction factor about the z-axis (Cmz). Hard-validated at OnSet: must satisfy 0.0 <= value <= 1.0. Used when OPT_AUTO is false."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "OPT_AUTO": true
+      },
+      "2": {
+        "OPT_AUTO": false,
+        "CMY": 0.85,
+        "CMZ": 0.6
+      }
+    }
+  }
+}

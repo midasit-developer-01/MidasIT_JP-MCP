@@ -1,0 +1,253 @@
+{
+  "_group": "db",
+  "_name": "REBW",
+  "uri": "db/REBW",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "REBW": {
+      "type": "object",
+      "description": "Rebar Input for Wall Section (REBW). The key is the Wall element ID (1..9999); ITEMS holds one or more rebar entries whose applicable fields depend on CREATE_SUB_WALL_ID, USE_END_REBAR and USE_MODEL_THICKNESS flags.",
+      "additionalProperties": false,
+      "required": [
+        "ITEMS"
+      ],
+      "properties": {
+        "ITEMS": {
+          "type": "array",
+          "description": "Wall rebar entries. Each item defines vertical/horizontal (and optional end / boundary-element) rebar for the wall keyed by Wall ID.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "VERTICAL_REBAR",
+              "HORIZONTAL_REBAR",
+              "CONCRETE_FACE_TO_CENTER_OF_REBAR"
+            ],
+            "properties": {
+              "CREATE_SUB_WALL_ID": {
+                "type": "boolean",
+                "default": false,
+                "description": "When true, this item targets a sub-wall spanning a story range; STORY becomes required and the entry is stored under a sub-wall (story) sub-key. When false the entry applies to the whole wall."
+              },
+              "SUB_WALL_ID": {
+                "type": "integer",
+                "description": "[CREATE_SUB_WALL_ID=true] Sub-wall (story) sub-key to target. If omitted (or <=0) the first story in the resolved range is used. Ignored when CREATE_SUB_WALL_ID=false.",
+                "minimum": 1
+              },
+              "STORY": {
+                "type": "object",
+                "description": "[CREATE_SUB_WALL_ID=true] Story range (by story name) the sub-wall spans; required when CREATE_SUB_WALL_ID=true. FROM/TO story names are resolved to story keys and the full level range between them is expanded.",
+                "additionalProperties": false,
+                "required": [
+                  "FROM",
+                  "TO"
+                ],
+                "properties": {
+                  "FROM": {
+                    "type": "string",
+                    "description": "Start story name of the range."
+                  },
+                  "TO": {
+                    "type": "string",
+                    "description": "End story name of the range."
+                  }
+                }
+              },
+              "VERTICAL_REBAR": {
+                "type": "object",
+                "description": "Vertical rebar (NAME + spacing). Rebar NAME is validated against the model rebar material DB; DIST must be > 0.",
+                "additionalProperties": false,
+                "required": [
+                  "NAME",
+                  "DIST"
+                ],
+                "properties": {
+                  "NAME": {
+                    "type": "string",
+                    "description": "Rebar size name (e.g. D10..D57); must be a valid rebar kind registered in the model material DB."
+                  },
+                  "DIST": {
+                    "type": "number",
+                    "description": "Rebar spacing; must be positive. Supports non-SI unit conversion.",
+                    "exclusiveMinimum": 0
+                  }
+                }
+              },
+              "HORIZONTAL_REBAR": {
+                "type": "object",
+                "description": "Horizontal rebar (NAME + spacing). Rebar NAME is validated against the model rebar material DB; DIST must be > 0.",
+                "additionalProperties": false,
+                "required": [
+                  "NAME",
+                  "DIST"
+                ],
+                "properties": {
+                  "NAME": {
+                    "type": "string",
+                    "description": "Rebar size name; must be a valid rebar kind registered in the model material DB."
+                  },
+                  "DIST": {
+                    "type": "number",
+                    "description": "Rebar spacing; must be positive. Supports non-SI unit conversion.",
+                    "exclusiveMinimum": 0
+                  }
+                }
+              },
+              "USE_END_REBAR": {
+                "type": "boolean",
+                "default": false,
+                "description": "When true, END_REBAR becomes required and end (edge) rebar is applied."
+              },
+              "END_REBAR": {
+                "type": "object",
+                "description": "[USE_END_REBAR=true] End (edge) rebar; required when USE_END_REBAR=true. NUM must be an even integer >= 2 and DIST must be > 0.",
+                "additionalProperties": false,
+                "required": [
+                  "NAME",
+                  "NUM",
+                  "DIST"
+                ],
+                "properties": {
+                  "NAME": {
+                    "type": "string",
+                    "description": "End rebar size name; must be a valid rebar kind registered in the model material DB."
+                  },
+                  "NUM": {
+                    "type": "integer",
+                    "description": "Number of end rebars; must be an even number >= 2 (odd values or values < 2 are rejected).",
+                    "minimum": 2
+                  },
+                  "DIST": {
+                    "type": "number",
+                    "description": "End rebar spacing; must be positive. Supports non-SI unit conversion.",
+                    "exclusiveMinimum": 0
+                  }
+                }
+              },
+              "BE_HORIZONTAL_REBAR": {
+                "type": "object",
+                "description": "Boundary-element horizontal rebar (optional). When provided, NAME is validated against the rebar material DB and DIST must be > 0.",
+                "additionalProperties": false,
+                "required": [
+                  "NAME",
+                  "DIST"
+                ],
+                "properties": {
+                  "NAME": {
+                    "type": "string",
+                    "description": "Boundary-element horizontal rebar size name; must be a valid rebar kind registered in the model material DB."
+                  },
+                  "DIST": {
+                    "type": "number",
+                    "description": "Rebar spacing; must be positive. Supports non-SI unit conversion.",
+                    "exclusiveMinimum": 0
+                  }
+                }
+              },
+              "BOUNDARY_ELEMENT_LENGTH": {
+                "type": "number",
+                "default": 0.0,
+                "description": "Boundary element length; must be >= 0.",
+                "minimum": 0
+              },
+              "CONCRETE_FACE_TO_CENTER_OF_REBAR": {
+                "type": "object",
+                "description": "Concrete face to rebar center distances (dw for vertical rebar, de for boundary-element rebar). Both must be >= 0.",
+                "additionalProperties": false,
+                "required": [
+                  "DW",
+                  "DE"
+                ],
+                "properties": {
+                  "DW": {
+                    "type": "number",
+                    "description": "Concrete face to center of vertical rebar (dw); must be >= 0.",
+                    "minimum": 0
+                  },
+                  "DE": {
+                    "type": "number",
+                    "description": "Concrete face to center of boundary-element rebar (de); must be >= 0.",
+                    "minimum": 0
+                  }
+                }
+              },
+              "USE_MODEL_THICKNESS": {
+                "type": "boolean",
+                "default": true,
+                "description": "When true, the wall's model thickness is used. When false, THICKNESS becomes required and must be > 0."
+              },
+              "THICKNESS": {
+                "type": "number",
+                "description": "[USE_MODEL_THICKNESS=false] Wall thickness override; required and must be positive when USE_MODEL_THICKNESS=false.",
+                "exclusiveMinimum": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "CREATE_SUB_WALL_ID": false,
+            "VERTICAL_REBAR": {
+              "NAME": "D13",
+              "DIST": 200.0
+            },
+            "HORIZONTAL_REBAR": {
+              "NAME": "D13",
+              "DIST": 200.0
+            },
+            "USE_END_REBAR": false,
+            "BOUNDARY_ELEMENT_LENGTH": 0.0,
+            "CONCRETE_FACE_TO_CENTER_OF_REBAR": {
+              "DW": 40.0,
+              "DE": 40.0
+            },
+            "USE_MODEL_THICKNESS": true
+          }
+        ]
+      },
+      "2": {
+        "ITEMS": [
+          {
+            "CREATE_SUB_WALL_ID": true,
+            "SUB_WALL_ID": 1,
+            "STORY": {
+              "FROM": "1F",
+              "TO": "3F"
+            },
+            "VERTICAL_REBAR": {
+              "NAME": "D16",
+              "DIST": 150.0
+            },
+            "HORIZONTAL_REBAR": {
+              "NAME": "D13",
+              "DIST": 150.0
+            },
+            "USE_END_REBAR": true,
+            "END_REBAR": {
+              "NAME": "D22",
+              "NUM": 4,
+              "DIST": 100.0
+            },
+            "BE_HORIZONTAL_REBAR": {
+              "NAME": "D13",
+              "DIST": 120.0
+            },
+            "BOUNDARY_ELEMENT_LENGTH": 500.0,
+            "CONCRETE_FACE_TO_CENTER_OF_REBAR": {
+              "DW": 40.0,
+              "DE": 50.0
+            },
+            "USE_MODEL_THICKNESS": false,
+            "THICKNESS": 300.0
+          }
+        ]
+      }
+    }
+  }
+}

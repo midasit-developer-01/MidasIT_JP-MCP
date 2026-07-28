@@ -1,0 +1,50 @@
+{
+  "_group": "view",
+  "_name": "PRECAPTURE",
+  "uri": "view/PRECAPTURE",
+  "methods": "POST",
+  "schema": {
+    "PRECAPTURE": {
+      "type": "object",
+      "description": "Preview Capture (PRECAPTURE). Exports a preview capture of the current model view; the fields are driven by the requested view type.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Preview capture request.",
+          "properties": {
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Output Path. Destination file path where the capture is exported."
+            },
+            "VIEW_TYPE": {
+              "type": "string",
+              "description": "View Type. Selects which preview capture view is produced. Only FIBR is handled; any other value is rejected. Case-insensitive.",
+              "enum": ["FIBR"]
+            },
+            "OPTION": {
+              "type": "object",
+              "description": "Precapture Option. Options consumed together with the view type; ID is used as the capture key.",
+              "properties": {
+                "ID": {
+                  "type": "integer",
+                  "description": "key. Capture option key/identifier."
+                }
+              },
+              "required": ["ID"]
+            }
+          },
+          "required": ["EXPORT_PATH", "VIEW_TYPE", "OPTION"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "EXPORT_PATH": "C:/Temp/precapture.png",
+      "VIEW_TYPE": "FIBR",
+      "OPTION": {
+        "ID": 1
+      }
+    }
+  }
+}

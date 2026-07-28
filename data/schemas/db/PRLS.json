@@ -1,0 +1,99 @@
+{
+  "_group": "db",
+  "_name": "PRLS",
+  "uri": "db/PRLS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PRLS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Plate End Release (PRLS). The entity key is the plate element number; ITEMS is a list of release definitions for that element, each optionally tied to a boundary group by GROUP_NAME and carrying per-node DOF release flags N1..N4.",
+      "properties": {
+        "ITEMS": {
+          "description": "List of plate end release definitions for the element key. Each item sets the DOF release state at the plate's four node positions (N1..N4).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the release definition within this element. If a definition already exists for the resolved boundary group, that existing serial is reused.",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Boundary group name this release belongs to. Empty string means no group (group key 0). If non-empty it must be an existing boundary group name, otherwise the request is rejected.",
+                "type": "string",
+                "default": ""
+              },
+              "N1": {
+                "description": "DOF release flags at plate node position 1. Five entries, each 1 = released, 0 = connected. Any non-zero value is treated as released. Order corresponds to the five plate DOF components (e.g. Fx, Fy, Fz, Mx, My).",
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "enum": [0, 1]
+                },
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "N2": {
+                "description": "DOF release flags at plate node position 2. Five entries, each 1 = released, 0 = connected. Any non-zero value is treated as released. Order corresponds to the five plate DOF components (e.g. Fx, Fy, Fz, Mx, My).",
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "enum": [0, 1]
+                },
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "N3": {
+                "description": "DOF release flags at plate node position 3. Five entries, each 1 = released, 0 = connected. Any non-zero value is treated as released. Order corresponds to the five plate DOF components (e.g. Fx, Fy, Fz, Mx, My).",
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "enum": [0, 1]
+                },
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "N4": {
+                "description": "DOF release flags at plate node position 4. Five entries, each 1 = released, 0 = connected. Any non-zero value is treated as released. Order corresponds to the five plate DOF components (e.g. Fx, Fy, Fz, Mx, My).",
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "enum": [0, 1]
+                },
+                "minItems": 5,
+                "maxItems": 5
+              }
+            },
+            "required": [
+              "N1",
+              "N2",
+              "N3",
+              "N4"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "21": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "N1": [1, 0, 1, 0, 1],
+            "N2": [0, 1, 0, 1, 0],
+            "N3": [1, 1, 1, 1, 1],
+            "N4": [0, 0, 1, 0, 0]
+          }
+        ]
+      }
+    }
+  }
+}

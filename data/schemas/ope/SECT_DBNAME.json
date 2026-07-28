@@ -1,0 +1,22 @@
+{
+  "_group": "ope",
+  "_name": "SECT_DBNAME",
+  "uri": "ope/SECT_DBNAME",
+  "methods": "GET",
+  "schema": {
+    "SECT_DBNAME": {
+      "type": "object",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Section DB Name (SECT_DBNAME). Retrieves the list of available DB (standard database) names for a given section shape; the request carries no body and the shape is supplied as a path parameter.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body. This endpoint takes no fields; the target section shape name is passed as the {shape} path parameter."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

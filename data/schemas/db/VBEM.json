@@ -1,0 +1,35 @@
+{
+  "_group": "db",
+  "_name": "VBEM",
+  "uri": "db/VBEM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "VBEM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Virtual Beam (VBEM). Each key is a virtual beam id whose two virtual section ids (VSEC1 at end i, VSEC2 at end j) define the beam's cross-sections.",
+      "properties": {
+        "VSEC1": {
+          "description": "Virtual section id at end i (start) of the virtual beam.",
+          "type": "integer"
+        },
+        "VSEC2": {
+          "description": "Virtual section id at end j (end) of the virtual beam.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "VSEC1",
+        "VSEC2"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "VSEC1": 1,
+        "VSEC2": 2
+      }
+    }
+  }
+}

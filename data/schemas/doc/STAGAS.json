@@ -1,0 +1,42 @@
+{
+  "_group": "doc",
+  "_name": "STAGAS",
+  "uri": "doc/STAGAS",
+  "methods": "POST",
+  "schema": {
+    "STAGAS": {
+      "type": "object",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Save Stage As (STAGAS). Exports the model at a specified construction stage to a new file; the fields specify the export file path and the target stage step.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request payload driving the save-stage-as operation.",
+          "properties": {
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Full export file path including file name and extension. Must be non-empty and use a supported extension (.mgb/.mgbx for GEN, .mcb for CIVIL). The parent folder is created automatically if it does not exist."
+            },
+            "STAGE_STEP": {
+              "type": "string",
+              "description": "Name of the construction stage step to export. In post-processing mode the special names 'PostCS' (final stage) and 'Min/Max' are also accepted. Must resolve to a valid stage; otherwise the request fails."
+            }
+          },
+          "required": [
+            "EXPORT_PATH",
+            "STAGE_STEP"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "EXPORT_PATH": "C:/Exports/model_stage1.mcb",
+      "STAGE_STEP": "CS1"
+    }
+  }
+}

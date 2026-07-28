@@ -1,0 +1,22 @@
+{
+  "_group": "view",
+  "_name": "SELECT",
+  "uri": "view/SELECT",
+  "methods": "GET",
+  "schema": {
+    "SELECT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Select (SELECT). Retrieves the currently selected nodes and elements in the active model view; the request takes no body fields (DTO_EMPTY), so the handler simply reads the current selection state.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "No request fields. The endpoint returns the current view selection based on the active document state."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

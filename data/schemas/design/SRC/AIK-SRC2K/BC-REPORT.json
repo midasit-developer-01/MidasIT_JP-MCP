@@ -1,0 +1,113 @@
+{
+  "_group": "design",
+  "_name": "BC-REPORT",
+  "uri": "design/SRC/AIK-SRC2K/BC-REPORT",
+  "methods": "POST",
+  "schema": {
+    "BC-REPORT": {
+      "type": "object",
+      "description": "SRC Beam Check Report (BC-REPORT). Fields come from the REPORT_REQUEST DTO: report type/mode, export destination, and the element/section/position selections that drive the generated design report.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "REPORT_REQUEST body describing how to generate the SRC beam check design report.",
+          "properties": {
+            "REPORT_TYPE": {
+              "type": "string",
+              "enum": ["MEMB", "PROP"],
+              "description": "Report Type: MEMB or PROP. Case-insensitive."
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Export Path (e.g. C:\\MIDAS\\Report\\)."
+            },
+            "OUTPUT_NAME": {
+              "type": "string",
+              "description": "Output File Name."
+            },
+            "CURRENT_MODE": {
+              "type": "string",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"],
+              "description": "Report Mode. Case-insensitive."
+            },
+            "CURRENT_MODE_MEMB": {
+              "type": "string",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"],
+              "description": "Report Mode (MEMB). Case-insensitive."
+            },
+            "CURRENT_MODE_PROP": {
+              "type": "string",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"],
+              "description": "Report Mode (PROP). Case-insensitive."
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "Element Numbers selection.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "items": {"type": "integer"},
+                  "description": "Specify Each ID - Element No."
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "items": {"type": "integer"},
+              "description": "Section Numbers."
+            },
+            "DETAIL_POSITIONS": {
+              "type": "object",
+              "description": "Detail Print Positions (for RC Beam Design MEMB mode).",
+              "properties": {
+                "END_I": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Include End I position."
+                },
+                "MID": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Include Mid position."
+                },
+                "END_J": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Include End J position."
+                }
+              }
+            }
+          },
+          "required": ["REPORT_TYPE", "EXPORT_PATH", "OUTPUT_NAME"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "REPORT_TYPE": "MEMB",
+      "EXPORT_PATH": "C:\\MIDAS\\Report\\",
+      "OUTPUT_NAME": "SRC_BeamCheck",
+      "CURRENT_MODE": "Detail",
+      "ELEMS": {
+        "KEYS": [1, 2, 3],
+        "TO": "1-10",
+        "STRUCTURE_GROUP_NAME": "Beam Group"
+      },
+      "SECTIONS": [1, 2],
+      "DETAIL_POSITIONS": {
+        "END_I": true,
+        "MID": false,
+        "END_J": true
+      }
+    }
+  }
+}

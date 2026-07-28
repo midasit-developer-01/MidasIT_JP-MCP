@@ -1,0 +1,113 @@
+{
+  "_group": "db",
+  "_name": "SECP",
+  "uri": "db/SECP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SECP": {
+      "type": "object",
+      "description": "Composite Section for PSC Design (SECP). Per section key, defines whether the composite section is used for PSC design and the two-part (index 0 = pre-composite/part I, index 1 = post-composite/part J) geometry values Z1/Z2/Z3, t1/t2/t3 and total thickness.",
+      "additionalProperties": false,
+      "required": [
+        "bCompPSC",
+        "Z1_0",
+        "Z2_0",
+        "Z3_0",
+        "t1_0",
+        "t2_0",
+        "t3_0",
+        "TotT_0",
+        "Z1_1",
+        "Z2_1",
+        "Z3_1",
+        "t1_1",
+        "t2_1",
+        "t3_1",
+        "TotT_1"
+      ],
+      "properties": {
+        "bCompPSC": {
+          "type": "number",
+          "description": "Use Composite Section for PSC Design flag (stored as a double; use 0 for off, 1 for on)."
+        },
+        "Z1_0": {
+          "type": "number",
+          "description": "Z1 value for part index 0 (pre-composite section)."
+        },
+        "Z2_0": {
+          "type": "number",
+          "description": "Z2 value for part index 0 (pre-composite section)."
+        },
+        "Z3_0": {
+          "type": "number",
+          "description": "Z3 value for part index 0 (pre-composite section)."
+        },
+        "t1_0": {
+          "type": "number",
+          "description": "t1 thickness value for part index 0 (pre-composite section)."
+        },
+        "t2_0": {
+          "type": "number",
+          "description": "t2 thickness value for part index 0 (pre-composite section)."
+        },
+        "t3_0": {
+          "type": "number",
+          "description": "t3 thickness value for part index 0 (pre-composite section)."
+        },
+        "TotT_0": {
+          "type": "number",
+          "description": "Total thickness (TorT) for part index 0 (pre-composite section)."
+        },
+        "Z1_1": {
+          "type": "number",
+          "description": "Z1 value for part index 1 (post-composite section)."
+        },
+        "Z2_1": {
+          "type": "number",
+          "description": "Z2 value for part index 1 (post-composite section)."
+        },
+        "Z3_1": {
+          "type": "number",
+          "description": "Z3 value for part index 1 (post-composite section)."
+        },
+        "t1_1": {
+          "type": "number",
+          "description": "t1 thickness value for part index 1 (post-composite section)."
+        },
+        "t2_1": {
+          "type": "number",
+          "description": "t2 thickness value for part index 1 (post-composite section)."
+        },
+        "t3_1": {
+          "type": "number",
+          "description": "t3 thickness value for part index 1 (post-composite section)."
+        },
+        "TotT_1": {
+          "type": "number",
+          "description": "Total thickness (TorT) for part index 1 (post-composite section)."
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bCompPSC": 1,
+        "Z1_0": 0.3,
+        "Z2_0": 0.3,
+        "Z3_0": 0.3,
+        "t1_0": 0.2,
+        "t2_0": 0.2,
+        "t3_0": 0.2,
+        "TotT_0": 0.6,
+        "Z1_1": 0.3,
+        "Z2_1": 0.3,
+        "Z3_1": 0.3,
+        "t1_1": 0.2,
+        "t2_1": 0.2,
+        "t3_1": 0.2,
+        "TotT_1": 0.6
+      }
+    }
+  }
+}

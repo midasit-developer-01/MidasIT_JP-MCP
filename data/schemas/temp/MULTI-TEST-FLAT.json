@@ -1,0 +1,276 @@
+{
+  "_group": "temp",
+  "_name": "MULTI_TEST_FLAT",
+  "uri": "temp/MULTI-TEST-FLAT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MULTI_TEST_FLAT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Multi Test Flat (MULTI_TEST_FLAT). DGNCODE selects the design-code variant, and that variant's per-code INPUTS payload is flattened to the top level (ADD_FLATTEN_MULTI_FIELD); DESC and the GET-only PROFILE are sibling optionals shared by every variant. Only KDS(41-12:2022), AIK2K and KCI have implemented variants.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "KDS(41-12:2022) variant: two required scale factors plus a required nested PARAMETERS object; ADDITIONAL_LOAD is an optional list.",
+          "required": [
+            "DGNCODE",
+            "SCALE_FACTOR_X",
+            "SCALE_FACTOR_Y",
+            "PARAMETERS"
+          ],
+          "properties": {
+            "DGNCODE": {
+              "type": "string",
+              "enum": [
+                "KDS(41-12:2022)"
+              ],
+              "description": "Design code (case-insensitive). Wire string for this variant is exactly \"KDS(41-12:2022)\"."
+            },
+            "DESC": {
+              "type": "string",
+              "default": "",
+              "description": "Optional description."
+            },
+            "SCALE_FACTOR_X": {
+              "type": "number",
+              "description": "Scale factor in the X direction."
+            },
+            "SCALE_FACTOR_Y": {
+              "type": "number",
+              "description": "Scale factor in the Y direction."
+            },
+            "PARAMETERS": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "KDS2022 parameters (nested required DTO). GUST_FACTOR is required; EXPOSURE is optional.",
+              "required": [
+                "GUST_FACTOR"
+              ],
+              "properties": {
+                "GUST_FACTOR": {
+                  "type": "number",
+                  "description": "Gust factor."
+                },
+                "EXPOSURE": {
+                  "type": "number",
+                  "default": 1.0,
+                  "description": "Exposure coefficient. Optional; defaults to 1.0."
+                }
+              }
+            },
+            "ADDITIONAL_LOAD": {
+              "type": "array",
+              "minItems": 1,
+              "description": "Additional loads. Optional, but if present must contain at least one item.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "LOAD_NAME"
+                ],
+                "properties": {
+                  "LOAD_NAME": {
+                    "type": "string",
+                    "description": "Load name."
+                  },
+                  "FACTOR": {
+                    "type": "number",
+                    "default": 1.0,
+                    "description": "Load factor. Optional; defaults to 1.0."
+                  }
+                }
+              }
+            },
+            "PROFILE": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "GET-only: computed profile (filled by the handler on read). Do not send on write.",
+              "properties": {
+                "TOTAL": {
+                  "type": "number",
+                  "default": 0.0,
+                  "description": "GET-only: computed total."
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "AIK2K variant: a single required scale factor (minimal payload).",
+          "required": [
+            "DGNCODE",
+            "SCALE_FACTOR"
+          ],
+          "properties": {
+            "DGNCODE": {
+              "type": "string",
+              "enum": [
+                "AIK2K"
+              ],
+              "description": "Design code (case-insensitive). Wire string for this variant is exactly \"AIK2K\"."
+            },
+            "DESC": {
+              "type": "string",
+              "default": "",
+              "description": "Optional description."
+            },
+            "SCALE_FACTOR": {
+              "type": "number",
+              "description": "Scale factor."
+            },
+            "PROFILE": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "GET-only: computed profile (filled by the handler on read). Do not send on write.",
+              "properties": {
+                "TOTAL": {
+                  "type": "number",
+                  "default": 0.0,
+                  "description": "GET-only: computed total."
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "KCI variant: a required STORY_PRESSURE list; ECCEN_X/ECCEN_Y and ADDITIONAL_LOAD are optional.",
+          "required": [
+            "DGNCODE",
+            "STORY_PRESSURE"
+          ],
+          "properties": {
+            "DGNCODE": {
+              "type": "string",
+              "enum": [
+                "KCI"
+              ],
+              "description": "Design code (case-insensitive). Wire string for this variant is exactly \"KCI\"."
+            },
+            "DESC": {
+              "type": "string",
+              "default": "",
+              "description": "Optional description."
+            },
+            "ECCEN_X": {
+              "type": "integer",
+              "description": "Eccentricity X: 0=Pos, 1=Neg, 2=None. Optional."
+            },
+            "ECCEN_Y": {
+              "type": "integer",
+              "description": "Eccentricity Y: 0=Pos, 1=Neg, 2=None. Optional."
+            },
+            "STORY_PRESSURE": {
+              "type": "array",
+              "minItems": 1,
+              "description": "Story pressures (at least one item).",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "STORY",
+                  "PRESSURE"
+                ],
+                "properties": {
+                  "STORY": {
+                    "type": "integer",
+                    "description": "Story index."
+                  },
+                  "PRESSURE": {
+                    "type": "number",
+                    "description": "Pressure."
+                  }
+                }
+              }
+            },
+            "ADDITIONAL_LOAD": {
+              "type": "array",
+              "minItems": 1,
+              "description": "Additional loads. Optional, but if present must contain at least one item.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "LOAD_NAME"
+                ],
+                "properties": {
+                  "LOAD_NAME": {
+                    "type": "string",
+                    "description": "Load name."
+                  },
+                  "FACTOR": {
+                    "type": "number",
+                    "default": 1.0,
+                    "description": "Load factor. Optional; defaults to 1.0."
+                  }
+                }
+              }
+            },
+            "PROFILE": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "GET-only: computed profile (filled by the handler on read). Do not send on write.",
+              "properties": {
+                "TOTAL": {
+                  "type": "number",
+                  "default": 0.0,
+                  "description": "GET-only: computed total."
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DGNCODE": "KDS(41-12:2022)",
+        "DESC": "KDS2022 flattened inputs",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "PARAMETERS": {
+          "GUST_FACTOR": 0.9,
+          "EXPOSURE": 1.0
+        },
+        "ADDITIONAL_LOAD": [
+          {
+            "LOAD_NAME": "Extra 1",
+            "FACTOR": 1.2
+          }
+        ]
+      },
+      "2": {
+        "DGNCODE": "AIK2K",
+        "DESC": "AIK2K minimal payload",
+        "SCALE_FACTOR": 1.0
+      },
+      "3": {
+        "DGNCODE": "KCI",
+        "DESC": "KCI story pressures",
+        "ECCEN_X": 0,
+        "ECCEN_Y": 2,
+        "STORY_PRESSURE": [
+          {
+            "STORY": 1,
+            "PRESSURE": 1.5
+          },
+          {
+            "STORY": 2,
+            "PRESSURE": 1.2
+          }
+        ],
+        "ADDITIONAL_LOAD": [
+          {
+            "LOAD_NAME": "Extra load"
+          }
+        ]
+      }
+    }
+  }
+}

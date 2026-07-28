@@ -1,0 +1,36 @@
+{
+  "_group": "db",
+  "_name": "CRGR",
+  "uri": "db/CRGR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CRGR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Concurrent Reaction Group (CRGR). A single global entry (key 1) whose GROUPS list selects the structure groups whose support reactions are combined concurrently for moving-load analysis.",
+      "properties": {
+        "GROUPS": {
+          "description": "Set of structure group names whose reactions are treated as concurrent. Each entry must match an existing structure group name (validated at runtime; an unknown name is rejected). On PUT the previously selected set is fully replaced by this list.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "GROUPS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "GROUPS": [
+          "Main3",
+          "Main4",
+          "Main5"
+        ]
+      }
+    }
+  }
+}

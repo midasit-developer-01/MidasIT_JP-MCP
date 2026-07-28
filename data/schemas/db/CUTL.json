@@ -1,0 +1,96 @@
+{
+  "_group": "db",
+  "_name": "CUTL",
+  "uri": "db/CUTL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CUTL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Cutting Line (CUTL). Defines a cutting line for extracting analysis results along a plane; the two endpoints (PT1*, PT2*) and DIR set the line geometry and orientation, with all fields applying uniformly (no TYPE-driven branching).",
+      "properties": {
+        "NAME": {
+          "description": "Name of the cutting line.",
+          "type": "string"
+        },
+        "DIR": {
+          "description": "Cutting line direction mode (case-insensitive). \"NORMAL\" = normal direction; \"DIR\" = in-plane direction.",
+          "type": "string",
+          "enum": ["NORMAL", "DIR"]
+        },
+        "PT1X": {
+          "description": "Point 1 X coordinate.",
+          "type": "number"
+        },
+        "PT1Y": {
+          "description": "Point 1 Y coordinate.",
+          "type": "number"
+        },
+        "PT1Z": {
+          "description": "Point 1 Z coordinate.",
+          "type": "number"
+        },
+        "PT2X": {
+          "description": "Point 2 X coordinate.",
+          "type": "number"
+        },
+        "PT2Y": {
+          "description": "Point 2 Y coordinate.",
+          "type": "number"
+        },
+        "PT2Z": {
+          "description": "Point 2 Z coordinate.",
+          "type": "number"
+        },
+        "R": {
+          "description": "Line color red channel (0-255); combined with G and B into the RGB line color.",
+          "type": "integer",
+          "default": 0
+        },
+        "G": {
+          "description": "Line color green channel (0-255); combined with R and B into the RGB line color.",
+          "type": "integer",
+          "default": 0
+        },
+        "B": {
+          "description": "Line color blue channel (0-255); combined with R and G into the RGB line color.",
+          "type": "integer",
+          "default": 0
+        },
+        "TYPE": {
+          "description": "Cutting line type code (stored as-is; 0 is the default type).",
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "required": [
+        "NAME",
+        "DIR",
+        "PT1X",
+        "PT1Y",
+        "PT1Z",
+        "PT2X",
+        "PT2Y",
+        "PT2Z"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Cut-Line#1",
+        "DIR": "NORMAL",
+        "PT1X": 8.95,
+        "PT1Y": 11.0725,
+        "PT1Z": 1.205,
+        "PT2X": 8.95,
+        "PT2Y": -1.0725,
+        "PT2Z": 1.205,
+        "R": 255,
+        "G": 0,
+        "B": 0,
+        "TYPE": 0
+      }
+    }
+  }
+}

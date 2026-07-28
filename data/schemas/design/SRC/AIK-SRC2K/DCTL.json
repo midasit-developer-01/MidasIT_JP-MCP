@@ -1,0 +1,50 @@
+{
+  "_group": "design",
+  "_name": "DCTL",
+  "uri": "design/SRC/AIK-SRC2K/DCTL",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "DCTL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Control Data (DCTL). Fields set the frame sway classification per direction, effective length factor auto-calculation, and the design type dimension.",
+      "properties": {
+        "FRAMEX": {
+          "type": "string",
+          "enum": ["Braced Non-sway", "Unbraced Sway"],
+          "default": "Braced Non-sway",
+          "description": "X-Direction of Frame. Sway classification of the frame along the X direction. Enum values are case-insensitive."
+        },
+        "FRAMEY": {
+          "type": "string",
+          "enum": ["Braced Non-sway", "Unbraced Sway"],
+          "default": "Braced Non-sway",
+          "description": "Y-Direction of Frame. Sway classification of the frame along the Y direction. Enum values are case-insensitive."
+        },
+        "bAUTOKF": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auto Calculate Effective Length Factor."
+        },
+        "DT": {
+          "type": "string",
+          "enum": ["3D", "XZ", "YZ", "XY"],
+          "default": "3D",
+          "description": "Design Type. Dimensional design type. Enum values are case-insensitive."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FRAMEX": "Braced Non-sway",
+        "FRAMEY": "Unbraced Sway",
+        "bAUTOKF": true,
+        "DT": "3D"
+      }
+    }
+  }
+}

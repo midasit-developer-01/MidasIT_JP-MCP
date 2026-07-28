@@ -1,0 +1,182 @@
+{
+  "_group": "ope",
+  "_name": "GUSTFACTOR",
+  "uri": "ope/GUSTFACTOR",
+  "methods": "POST",
+  "schema": {
+    "GUSTFACTOR": {
+      "type": "object",
+      "description": "Gust Effect Factor Calculation (GUSTFACTOR). Computes the along-wind gust effect factors in the X and Y directions per the KDS wind code; the request drives the wind design code, whether the structure is treated as rigid or flexible, and the corresponding rigid/flexible parameter set.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Gust-factor calculation request body.",
+          "properties": {
+            "WIND_CODE": {
+              "type": "string",
+              "description": "Wind design code. Enum is case-insensitive. Although the DTO defines many codes, the handler only supports KDS_2022 and throws a wrong-field error for any other value, so this is a hard constraint.",
+              "enum": ["KDS_2022"]
+            },
+            "STRUCTURE_TYPE": {
+              "type": "string",
+              "description": "Structure classification that selects which parameter block is consumed: RIGID uses RIGID_PARAM, FLEXIBLE uses FLEXIBLE_PARAM. Enum is case-insensitive.",
+              "enum": ["RIGID", "FLEXIBLE"]
+            },
+            "RIGID_PARAM": {
+              "type": "object",
+              "description": "[STRUCTURE_TYPE=RIGID] Rigid-structure parameters. Required by the handler when STRUCTURE_TYPE is RIGID (a wrong-field error is thrown if omitted).",
+              "properties": {
+                "EXP_CATEGORY": {
+                  "type": "string",
+                  "description": "Exposure category (A=1, B=2, C=3, D=4). Enum is case-insensitive.",
+                  "enum": ["A", "B", "C", "D"]
+                },
+                "ROOF_HEIGHT": {
+                  "type": "number",
+                  "description": "Average roof height H (m)."
+                },
+                "BREADTH_X": {
+                  "type": "number",
+                  "description": "X-direction breadth (m)."
+                },
+                "BREADTH_Y": {
+                  "type": "number",
+                  "description": "Y-direction breadth (m)."
+                }
+              },
+              "required": ["EXP_CATEGORY", "ROOF_HEIGHT", "BREADTH_X", "BREADTH_Y"]
+            },
+            "FLEXIBLE_PARAM": {
+              "type": "object",
+              "description": "[STRUCTURE_TYPE=FLEXIBLE] Flexible-structure parameters. Required by the handler when STRUCTURE_TYPE is FLEXIBLE (a wrong-field error is thrown if omitted).",
+              "properties": {
+                "EXP_CATEGORY": {
+                  "type": "string",
+                  "description": "Exposure category (A=1, B=2, C=3, D=4). Enum is case-insensitive.",
+                  "enum": ["A", "B", "C", "D"]
+                },
+                "BASIC_WIND_SPEED": {
+                  "type": "number",
+                  "description": "Basic wind speed (m/sec)."
+                },
+                "IMPORTANCE_FACTOR": {
+                  "type": "number",
+                  "description": "Importance factor."
+                },
+                "TOPOGRAPHIC_EFFECT": {
+                  "type": "object",
+                  "description": "Topographic effect option. When omitted, the effect is disabled (OPT_USE=false) and the topographic factor Kzt defaults to 1.0.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Whether to apply the topographic effect."
+                    },
+                    "KZT": {
+                      "type": "number",
+                      "description": "Topographic factor Kzt. Required when OPT_USE is true; defaults to 1.0 when not provided."
+                    }
+                  },
+                  "required": ["OPT_USE"]
+                },
+                "DIRECTION_FACTOR_X": {
+                  "type": "number",
+                  "description": "X-directional factor Kdx. Must be between 0.85 and 1.0."
+                },
+                "DIRECTION_FACTOR_Y": {
+                  "type": "number",
+                  "description": "Y-directional factor Kdy. Must be between 0.85 and 1.0."
+                },
+                "BREADTH_X": {
+                  "type": "number",
+                  "description": "X-direction breadth (m)."
+                },
+                "BREADTH_Y": {
+                  "type": "number",
+                  "description": "Y-direction breadth (m)."
+                },
+                "STORY_HEIGHT_MAX": {
+                  "type": "number",
+                  "description": "Maximum story height (m)."
+                },
+                "FREQUENCY_X": {
+                  "type": "number",
+                  "description": "Natural frequency in X (Hz). Must be greater than 0."
+                },
+                "FREQUENCY_Y": {
+                  "type": "number",
+                  "description": "Natural frequency in Y (Hz). Must be greater than 0."
+                },
+                "DAMPING": {
+                  "type": "number",
+                  "description": "Damping ratio. Must be greater than 0."
+                },
+                "TOTAL_MASS": {
+                  "type": "number",
+                  "description": "Total mass (kg). Must be greater than 0."
+                },
+                "MX": {
+                  "type": "number",
+                  "description": "Effective mass in X (kg). Must be greater than 0."
+                },
+                "MY": {
+                  "type": "number",
+                  "description": "Effective mass in Y (kg). Must be greater than 0."
+                },
+                "VIBRATION": {
+                  "type": "number",
+                  "description": "Vibration exponent. Must be between 0.5 and 2.0."
+                }
+              },
+              "required": [
+                "EXP_CATEGORY",
+                "BASIC_WIND_SPEED",
+                "IMPORTANCE_FACTOR",
+                "DIRECTION_FACTOR_X",
+                "DIRECTION_FACTOR_Y",
+                "BREADTH_X",
+                "BREADTH_Y",
+                "STORY_HEIGHT_MAX",
+                "FREQUENCY_X",
+                "FREQUENCY_Y",
+                "DAMPING",
+                "TOTAL_MASS",
+                "MX",
+                "MY",
+                "VIBRATION"
+              ]
+            }
+          },
+          "required": ["WIND_CODE", "STRUCTURE_TYPE"]
+        }
+      },
+      "required": ["Argument"]
+    }
+  },
+  "example": {
+    "Argument": {
+      "WIND_CODE": "KDS_2022",
+      "STRUCTURE_TYPE": "FLEXIBLE",
+      "FLEXIBLE_PARAM": {
+        "EXP_CATEGORY": "C",
+        "BASIC_WIND_SPEED": 30.0,
+        "IMPORTANCE_FACTOR": 1.0,
+        "TOPOGRAPHIC_EFFECT": {
+          "OPT_USE": false,
+          "KZT": 1.0
+        },
+        "DIRECTION_FACTOR_X": 0.9,
+        "DIRECTION_FACTOR_Y": 0.9,
+        "BREADTH_X": 40.0,
+        "BREADTH_Y": 30.0,
+        "STORY_HEIGHT_MAX": 3.5,
+        "FREQUENCY_X": 0.5,
+        "FREQUENCY_Y": 0.6,
+        "DAMPING": 0.02,
+        "TOTAL_MASS": 5000000.0,
+        "MX": 3000000.0,
+        "MY": 3000000.0,
+        "VIBRATION": 1.0
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "_group": "rating",
+  "_name": "LTSR",
+  "uri": "rating/PSC/AASHTO-LRFR19/LTSR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LTSR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Load Test Stress Ratio (PSCLTSR). Fields set the allowable compression/tension stress limits used when the stress check is enabled.",
+      "properties": {
+        "bNOTCHECK": {
+          "type": "boolean",
+          "default": false,
+          "description": "Do not check. When true the allowable stress limits are not applied."
+        },
+        "COMP": {
+          "type": "number",
+          "default": 200,
+          "description": "Compression stress limit."
+        },
+        "TENS": {
+          "type": "number",
+          "default": 300,
+          "description": "Tension stress limit."
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bNOTCHECK": false,
+        "COMP": 200,
+        "TENS": 300
+      }
+    }
+  }
+}

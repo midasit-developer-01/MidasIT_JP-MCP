@@ -1,0 +1,612 @@
+{
+  "_group": "db",
+  "_name": "SWIND",
+  "uri": "db/SWIND",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SWIND": {
+      "type": "object",
+      "description": "Story Wind Load (SWIND). WIND_CODE selects the wind code variant and its per-code inputs are flattened to the top level; only KDS(41-12:2022) and USER TYPE are currently implemented (any other code is rejected). The key must reference an existing static load case (STLD).",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "KDS(41-12:2022) variant: SCALE_FACTOR_X/Y + PARAMETERS drive the load; PARAMETERS.INPUT_METHOD (0=Simplified, 1=General, 2=Vortex Shedding) selects the active PARAMETERS fields.",
+          "required": [
+            "WIND_CODE",
+            "SCALE_FACTOR_X",
+            "SCALE_FACTOR_Y",
+            "PARAMETERS"
+          ],
+          "properties": {
+            "WIND_CODE": {
+              "type": "string",
+              "enum": [
+                "KDS(41-12:2022)"
+              ],
+              "description": "Wind code (case-insensitive). Wire string for this variant is exactly \"KDS(41-12:2022)\"."
+            },
+            "DESC": {
+              "type": "string",
+              "default": "",
+              "description": "Description of the wind load case."
+            },
+            "SCALE_FACTOR_X": {
+              "type": "number",
+              "description": "Scale factor in the X direction."
+            },
+            "SCALE_FACTOR_Y": {
+              "type": "number",
+              "description": "Scale factor in the Y direction."
+            },
+            "PARAMETERS": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "KDS2022 wind parameters. INPUT_METHOD (0=Simplified, 1=General, 2=Vortex Shedding) decides which fields are required/used; INPUT_METHOD is the only unconditionally required field.",
+              "required": [
+                "INPUT_METHOD"
+              ],
+              "properties": {
+                "INPUT_METHOD": {
+                  "type": "integer",
+                  "enum": [
+                    0,
+                    1,
+                    2
+                  ],
+                  "description": "Input method: 0=Simplified, 1=General, 2=Vortex Shedding. Determines which of the fields below apply."
+                },
+                "EXP_CATEGORY": {
+                  "type": "integer",
+                  "enum": [
+                    0,
+                    1,
+                    2,
+                    3
+                  ],
+                  "description": "[INPUT_METHOD=1 required] Exposure category: 0=A, 1=B, 2=C, 3=D (stored internally as 1..4)."
+                },
+                "WIND_SPEED": {
+                  "type": "number",
+                  "description": "[INPUT_METHOD=0,1 required] Basic wind speed."
+                },
+                "IMPORTANCE_FACTOR": {
+                  "type": "number",
+                  "description": "[INPUT_METHOD=1 required] Importance factor."
+                },
+                "ROOF_HEIGHT": {
+                  "type": "number",
+                  "description": "Roof height. Optional; if omitted the handler uses the system (model) value. For INPUT_METHOD=0 it must be less than sqrt(minWidthX*minWidthY) (simplified-method limit) or the request is rejected."
+                },
+                "CE": {
+                  "type": "number",
+                  "description": "[INPUT_METHOD=0 only] Exposure coefficient. If omitted the handler applies 1.0; supplying it for INPUT_METHOD=1 or 2 is a wrong-field error."
+                },
+                "BL_X_MIN": {
+                  "type": "number",
+                  "description": "GET-only (response, INPUT_METHOD=0): minimum building length X. Do not send on write."
+                },
+                "BL_Y_MIN": {
+                  "type": "number",
+                  "description": "GET-only (response, INPUT_METHOD=0): minimum building length Y. Do not send on write."
+                },
+                "TOPOGRAPHIC_EFFECT": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "[INPUT_METHOD=1] Topographic effect. Omit the object to behave as OPT_USE=false.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Use topographic effect (omit = false)."
+                    },
+                    "KZT": {
+                      "type": "number",
+                      "description": "Topographic factor Kzt. Required when OPT_USE=true."
+                    }
+                  }
+                },
+                "DIRECTION_FACTOR_X": {
+                  "type": "number",
+                  "description": "[INPUT_METHOD=1 required] Wind directionality factor X."
+                },
+                "DIRECTION_FACTOR_Y": {
+                  "type": "number",
+                  "description": "[INPUT_METHOD=1 required] Wind directionality factor Y."
+                },
+                "RIGIDITY": {
+                  "type": "integer",
+                  "description": "[INPUT_METHOD=1 required] Rigidity classification."
+                },
+                "GUST_FACTOR_X": {
+                  "type": "number",
+                  "description": "[INPUT_METHOD=1 required] Gust factor X."
+                },
+                "GUST_FACTOR_Y": {
+                  "type": "number",
+                  "description": "[INPUT_METHOD=1 required] Gust factor Y."
+                },
+                "FORCE_COEF": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "[INPUT_METHOD=1] User-defined force coefficient. Omit the object to behave as OPT_USE=false. When OPT_USE=true, BUILDING_TYPE/VIBRATION_PARAMS are ignored.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Use user-defined force coefficient (omit = false)."
+                    },
+                    "FORCE_COEF": {
+                      "type": "number",
+                      "description": "Force coefficient value. Required when OPT_USE=true."
+                    }
+                  }
+                },
+                "BUILDING_TYPE": {
+                  "type": "integer",
+                  "enum": [
+                    0,
+                    1
+                  ],
+                  "description": "[INPUT_METHOD=1 required unless FORCE_COEF.OPT_USE=true] Building type: 0=Middle/Low Rise, 1=High Rise. For 0 the handler fixes ACROSS_WIND=true, TORSIONAL_WIND=false."
+                },
+                "VIBRATION_PARAMS": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "description": "[INPUT_METHOD=1, used only when FORCE_COEF.OPT_USE is not true] Vibration parameters. Conditional requirements depend on BUILDING_TYPE, ACROSS_WIND/TORSIONAL_WIND and WIND_RESPONSE.",
+                  "required": [
+                    "WIND_RESPONSE"
+                  ],
+                  "properties": {
+                    "WIND_RESPONSE": {
+                      "type": "boolean",
+                      "description": "Wind response option."
+                    },
+                    "ACROSS_WIND": {
+                      "type": "boolean",
+                      "description": "Across-wind vibration. Required when BUILDING_TYPE=1; for BUILDING_TYPE=0 the handler fixes it to true."
+                    },
+                    "TORSIONAL_WIND": {
+                      "type": "boolean",
+                      "description": "Torsional-wind vibration. Required when BUILDING_TYPE=1; for BUILDING_TYPE=0 the handler fixes it to false."
+                    },
+                    "BL_X": {
+                      "type": "number",
+                      "description": "Building length X. Optional; default = system value."
+                    },
+                    "BL_Y": {
+                      "type": "number",
+                      "description": "Building length Y. Optional; default = system value."
+                    },
+                    "NO_X": {
+                      "type": "number",
+                      "description": "Natural frequency X. Required when (BUILDING_TYPE=1 and ACROSS_WIND=true) or WIND_RESPONSE=true."
+                    },
+                    "NO_Y": {
+                      "type": "number",
+                      "description": "Natural frequency Y. Required when (BUILDING_TYPE=1 and ACROSS_WIND=true) or WIND_RESPONSE=true."
+                    },
+                    "NO_T": {
+                      "type": "number",
+                      "description": "Torsional natural frequency. Required when TORSIONAL_WIND=true."
+                    },
+                    "M": {
+                      "type": "number",
+                      "description": "Total mass. Optional; default = system value."
+                    },
+                    "MX": {
+                      "type": "number",
+                      "description": "First-mode mass X. Optional; default = system value."
+                    },
+                    "MY": {
+                      "type": "number",
+                      "description": "First-mode mass Y. Optional; default = system value."
+                    },
+                    "MI": {
+                      "type": "number",
+                      "description": "First-mode mass moment of inertia. Optional; default = system value."
+                    },
+                    "ZF": {
+                      "type": "number",
+                      "description": "Damping ratio. Required when across-wind (or WIND_RESPONSE) or torsional vibration is active."
+                    },
+                    "VIBRATION_MODE": {
+                      "type": "number",
+                      "description": "Vibration mode coefficient. Required when across-wind (or WIND_RESPONSE) or torsional vibration is active."
+                    }
+                  }
+                },
+                "DM": {
+                  "type": "number",
+                  "description": "[INPUT_METHOD=2 required] Vortex-shedding DM."
+                },
+                "DB": {
+                  "type": "number",
+                  "description": "[INPUT_METHOD=2 required] Vortex-shedding DB."
+                },
+                "N": {
+                  "type": "number",
+                  "description": "[INPUT_METHOD=2 required] Vortex-shedding natural frequency N."
+                },
+                "M": {
+                  "type": "number",
+                  "description": "[INPUT_METHOD=2] Mass M. Optional; default = system value."
+                },
+                "ZF": {
+                  "type": "number",
+                  "description": "[INPUT_METHOD=2 required] Damping ratio."
+                }
+              }
+            },
+            "ADDITIONAL_LOAD": {
+              "type": "array",
+              "minItems": 1,
+              "description": "Additional story-level wind loads. Optional, but if present must contain at least one item (empty array is rejected). Each STORY_NAME must reference an existing story.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "STORY_NAME",
+                  "ALONG_X",
+                  "ALONG_Y"
+                ],
+                "properties": {
+                  "STORY_NAME": {
+                    "type": "string",
+                    "description": "Story name (must exist in the model)."
+                  },
+                  "ALONG_X": {
+                    "type": "number",
+                    "description": "Along-wind load X."
+                  },
+                  "ALONG_Y": {
+                    "type": "number",
+                    "description": "Along-wind load Y."
+                  },
+                  "TORSIONAL_RZ": {
+                    "type": "number",
+                    "description": "[INPUT_METHOD=2 required; INPUT_METHOD=0 optional] Torsional wind load RZ."
+                  },
+                  "ACROSS_X": {
+                    "type": "number",
+                    "description": "[INPUT_METHOD=1 and ACROSS_WIND=true required] Across-wind load X."
+                  },
+                  "ACROSS_Y": {
+                    "type": "number",
+                    "description": "[INPUT_METHOD=1 and ACROSS_WIND=true required] Across-wind load Y."
+                  },
+                  "TORSIONAL_RZ_X": {
+                    "type": "number",
+                    "description": "[INPUT_METHOD=1 and TORSIONAL_WIND=true required] Torsional RZ X."
+                  },
+                  "TORSIONAL_RZ_Y": {
+                    "type": "number",
+                    "description": "[INPUT_METHOD=1 and TORSIONAL_WIND=true required] Torsional RZ Y."
+                  }
+                }
+              }
+            },
+            "PROFILE": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "GET-only: calculated wind load profile (computed by the handler on read). Do not send on write.",
+              "properties": {
+                "X_DIR": {
+                  "type": "array",
+                  "description": "Along-wind profile X (per story).",
+                  "items": {
+                    "$ref": "#/profileItem"
+                  }
+                },
+                "Y_DIR": {
+                  "type": "array",
+                  "description": "Along-wind profile Y (per story).",
+                  "items": {
+                    "$ref": "#/profileItem"
+                  }
+                },
+                "SRSS": {
+                  "type": "array",
+                  "description": "SRSS-combined profile (per story).",
+                  "items": {
+                    "$ref": "#/profileItem"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "USER TYPE variant: user-defined story wind pressures. Requires a building model with stories; each STORY_NAME must be an existing wind-load story.",
+          "required": [
+            "WIND_CODE",
+            "SCALE_FACTOR_X",
+            "SCALE_FACTOR_Y",
+            "STORY_WIND_PRESSURE"
+          ],
+          "properties": {
+            "WIND_CODE": {
+              "type": "string",
+              "enum": [
+                "USER TYPE"
+              ],
+              "description": "Wind code (case-insensitive). Wire string for this variant is exactly \"USER TYPE\"."
+            },
+            "DESC": {
+              "type": "string",
+              "default": "",
+              "description": "Description of the wind load case."
+            },
+            "WIND_ECCEN_X": {
+              "type": "integer",
+              "enum": [
+                0,
+                1,
+                2
+              ],
+              "description": "Wind eccentricity X: 0=Pos, 1=Neg, 2=None. Optional; defaults to 2 (None)."
+            },
+            "WIND_ECCEN_Y": {
+              "type": "integer",
+              "enum": [
+                0,
+                1,
+                2
+              ],
+              "description": "Wind eccentricity Y: 0=Pos, 1=Neg, 2=None. Optional; defaults to 2 (None)."
+            },
+            "SCALE_FACTOR_X": {
+              "type": "number",
+              "description": "Scale factor in the X direction."
+            },
+            "SCALE_FACTOR_Y": {
+              "type": "number",
+              "description": "Scale factor in the Y direction."
+            },
+            "STORY_WIND_PRESSURE": {
+              "type": "array",
+              "minItems": 1,
+              "description": "Story wind pressure (at least one item; empty array rejected). Each STORY_NAME must be an existing wind-load story.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "STORY_NAME",
+                  "PRESS_X",
+                  "PRESS_Y"
+                ],
+                "properties": {
+                  "STORY_NAME": {
+                    "type": "string",
+                    "description": "Story name (must exist and be a wind-load story)."
+                  },
+                  "PRESS_X": {
+                    "type": "number",
+                    "description": "User-defined wind pressure X."
+                  },
+                  "PRESS_Y": {
+                    "type": "number",
+                    "description": "User-defined wind pressure Y."
+                  },
+                  "ELEV": {
+                    "type": "number",
+                    "description": "GET-only: story elevation (auto-computed from the model). Do not send on write."
+                  },
+                  "LOAD_H": {
+                    "type": "number",
+                    "description": "GET-only: loaded height length (auto-computed). Do not send on write."
+                  },
+                  "LOAD_BX": {
+                    "type": "number",
+                    "description": "GET-only: loaded breadth X (auto-computed). Do not send on write."
+                  },
+                  "LOAD_BY": {
+                    "type": "number",
+                    "description": "GET-only: loaded breadth Y (auto-computed). Do not send on write."
+                  }
+                }
+              }
+            },
+            "ADDITIONAL_LOAD": {
+              "type": "array",
+              "minItems": 1,
+              "description": "Additional story-level wind loads. Optional, but if present must contain at least one item (empty array rejected). USER TYPE uses ALONG_X/Y and TORSIONAL_RZ only.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "STORY_NAME",
+                  "ALONG_X",
+                  "ALONG_Y"
+                ],
+                "properties": {
+                  "STORY_NAME": {
+                    "type": "string",
+                    "description": "Story name (must exist in the model)."
+                  },
+                  "ALONG_X": {
+                    "type": "number",
+                    "description": "Along-wind load X."
+                  },
+                  "ALONG_Y": {
+                    "type": "number",
+                    "description": "Along-wind load Y."
+                  },
+                  "TORSIONAL_RZ": {
+                    "type": "number",
+                    "description": "Torsional wind load RZ. Optional (defaults to 0)."
+                  }
+                }
+              }
+            },
+            "PROFILE": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "GET-only: calculated wind load profile (computed by the handler on read). Do not send on write.",
+              "properties": {
+                "X_DIR": {
+                  "type": "array",
+                  "description": "Along-wind profile X (per story).",
+                  "items": {
+                    "$ref": "#/profileItem"
+                  }
+                },
+                "Y_DIR": {
+                  "type": "array",
+                  "description": "Along-wind profile Y (per story).",
+                  "items": {
+                    "$ref": "#/profileItem"
+                  }
+                },
+                "SRSS": {
+                  "type": "array",
+                  "description": "SRSS-combined profile (per story).",
+                  "items": {
+                    "$ref": "#/profileItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "profileItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "GET-only per-story profile row (all values are pre-formatted strings).",
+        "properties": {
+          "STORY_NAME": {
+            "type": "string",
+            "description": "Story name."
+          },
+          "STORY_LEVEL": {
+            "type": "string",
+            "description": "Story level."
+          },
+          "PRESSURE": {
+            "type": "string",
+            "description": "Wind pressure."
+          },
+          "LOADED_H": {
+            "type": "string",
+            "description": "Loaded height."
+          },
+          "LOADED_B": {
+            "type": "string",
+            "description": "Loaded breadth (\"-\" for SRSS rows)."
+          },
+          "WIND_FORCE": {
+            "type": "string",
+            "description": "Wind force."
+          },
+          "ADDED_FORCE": {
+            "type": "string",
+            "description": "Added force."
+          },
+          "STORY_FORCE": {
+            "type": "string",
+            "description": "Story force (\"-\" on the last/top row)."
+          },
+          "STORY_SHEAR": {
+            "type": "string",
+            "description": "Story shear."
+          },
+          "OVERTURN_MOMENT": {
+            "type": "string",
+            "description": "Overturning moment."
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "WIND_CODE": "KDS(41-12:2022)",
+        "DESC": "KDS2022 simplified method",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "PARAMETERS": {
+          "INPUT_METHOD": 0,
+          "WIND_SPEED": 30.0,
+          "ROOF_HEIGHT": 12.0,
+          "CE": 1.0
+        }
+      },
+      "2": {
+        "WIND_CODE": "KDS(41-12:2022)",
+        "DESC": "KDS2022 general method",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "PARAMETERS": {
+          "INPUT_METHOD": 1,
+          "WIND_SPEED": 30.0,
+          "EXP_CATEGORY": 1,
+          "IMPORTANCE_FACTOR": 1.0,
+          "ROOF_HEIGHT": 40.0,
+          "DIRECTION_FACTOR_X": 1.0,
+          "DIRECTION_FACTOR_Y": 1.0,
+          "RIGIDITY": 0,
+          "GUST_FACTOR_X": 2.0,
+          "GUST_FACTOR_Y": 2.0,
+          "BUILDING_TYPE": 0,
+          "VIBRATION_PARAMS": {
+            "WIND_RESPONSE": false
+          }
+        },
+        "ADDITIONAL_LOAD": [
+          {
+            "STORY_NAME": "3F",
+            "ALONG_X": 5.0,
+            "ALONG_Y": 5.0
+          }
+        ]
+      },
+      "3": {
+        "WIND_CODE": "KDS(41-12:2022)",
+        "DESC": "KDS2022 vortex shedding method",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "PARAMETERS": {
+          "INPUT_METHOD": 2,
+          "DM": 20.0,
+          "DB": 10.0,
+          "N": 0.5,
+          "M": 1000.0,
+          "ZF": 0.02,
+          "ROOF_HEIGHT": 80.0
+        }
+      },
+      "4": {
+        "WIND_CODE": "USER TYPE",
+        "DESC": "User-defined story wind pressures",
+        "WIND_ECCEN_X": 2,
+        "WIND_ECCEN_Y": 2,
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "STORY_WIND_PRESSURE": [
+          {
+            "STORY_NAME": "1F",
+            "PRESS_X": 1.2,
+            "PRESS_Y": 1.0
+          },
+          {
+            "STORY_NAME": "2F",
+            "PRESS_X": 1.5,
+            "PRESS_Y": 1.3
+          }
+        ],
+        "ADDITIONAL_LOAD": [
+          {
+            "STORY_NAME": "2F",
+            "ALONG_X": 3.0,
+            "ALONG_Y": 2.5,
+            "TORSIONAL_RZ": 0.5
+          }
+        ]
+      }
+    }
+  }
+}

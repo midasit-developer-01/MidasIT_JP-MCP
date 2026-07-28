@@ -1,0 +1,126 @@
+{
+  "_group": "db",
+  "_name": "IEHC",
+  "uri": "db/IEHC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "IEHC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Inelastic Hinge Control Data (IEHC). A single model-wide record (always key 1) controlling fiber-section discretization for beam-column and wall inelastic hinges; the fields have no per-TYPE switching, so all are supplied together.",
+      "properties": {
+        "BEAM_LOC": {
+          "description": "Reference location for distributed hinges: 0 = I-End, 1 = Center, 2 = J-End.",
+          "type": "integer"
+        },
+        "OPT_ConsiderRebarArea1D": {
+          "description": "Beam-Column: consider reinforcement (rebar) area in the fiber section.",
+          "type": "boolean"
+        },
+        "FAreaSizeCore": {
+          "description": "Fiber beam areas, Core region sizing: 0 = Auto Size, 1 = Equal-Size.",
+          "type": "integer"
+        },
+        "BeamDivNumNy": {
+          "description": "Number of fiber divisions (Beam-Column), Ny (y-direction), Core region.",
+          "type": "integer"
+        },
+        "BeamDivNumNz": {
+          "description": "Number of fiber divisions (Beam-Column), Nz (z-direction), Core region.",
+          "type": "integer"
+        },
+        "FAreaSizeCover": {
+          "description": "Fiber beam areas, Cover region sizing: 0 = Auto Size, 1 = Equal-Size.",
+          "type": "integer"
+        },
+        "BeamDivNumNyCover": {
+          "description": "Number of fiber divisions (Beam-Column), Ny (y-direction), Cover region.",
+          "type": "integer"
+        },
+        "BeamDivNumNzCover": {
+          "description": "Number of fiber divisions (Beam-Column), Nz (z-direction), Cover region.",
+          "type": "integer"
+        },
+        "WallConsOut": {
+          "description": "Consider out-of-plane nonlinearity of plate-type (wall) elements.",
+          "type": "boolean"
+        },
+        "WAreaSize": {
+          "description": "Fiber wall areas, Core region sizing. Case-insensitive: AUTO = auto size, EQUAL = equal size.",
+          "type": "string",
+          "enum": ["AUTO", "EQUAL"]
+        },
+        "WallDivNumZ": {
+          "description": "Number of fiber divisions, z-direction, wall Core region.",
+          "type": "integer"
+        },
+        "WallDivNumY": {
+          "description": "Number of fiber divisions, y-direction, wall Core region.",
+          "type": "integer"
+        },
+        "WAreaSizeCover": {
+          "description": "Fiber wall areas, Cover region sizing: 0 = Auto Size, 1 = Equal-Size.",
+          "type": "integer"
+        },
+        "WallDivNumZCover": {
+          "description": "Number of fiber divisions, z-direction, wall Cover region.",
+          "type": "integer"
+        },
+        "WallDivNumYCover": {
+          "description": "Number of fiber divisions, y-direction, wall Cover region.",
+          "type": "integer"
+        },
+        "OPT_ConsiderRebarAreaWall": {
+          "description": "Wall: consider reinforcement (rebar) area in the fiber section.",
+          "type": "boolean"
+        },
+        "dR": {
+          "description": "Shear spring location r (relative position along the wall).",
+          "type": "number"
+        }
+      },
+      "required": [
+        "BEAM_LOC",
+        "OPT_ConsiderRebarArea1D",
+        "FAreaSizeCore",
+        "BeamDivNumNy",
+        "BeamDivNumNz",
+        "FAreaSizeCover",
+        "BeamDivNumNyCover",
+        "BeamDivNumNzCover",
+        "WallConsOut",
+        "WAreaSize",
+        "WallDivNumZ",
+        "WallDivNumY",
+        "WAreaSizeCover",
+        "WallDivNumZCover",
+        "WallDivNumYCover",
+        "OPT_ConsiderRebarAreaWall",
+        "dR"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "BEAM_LOC": 1,
+        "OPT_ConsiderRebarArea1D": false,
+        "FAreaSizeCore": 1,
+        "BeamDivNumNy": 15,
+        "BeamDivNumNz": 20,
+        "FAreaSizeCover": 1,
+        "BeamDivNumNyCover": 20,
+        "BeamDivNumNzCover": 15,
+        "WallConsOut": false,
+        "WAreaSize": "AUTO",
+        "WallDivNumZ": 8,
+        "WallDivNumY": 1,
+        "WAreaSizeCover": 1,
+        "WallDivNumZCover": 8,
+        "WallDivNumYCover": 1,
+        "OPT_ConsiderRebarAreaWall": false,
+        "dR": 0.4
+      }
+    }
+  }
+}

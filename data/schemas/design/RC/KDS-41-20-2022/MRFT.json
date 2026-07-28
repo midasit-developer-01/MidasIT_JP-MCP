@@ -1,0 +1,29 @@
+{
+  "_group": "design",
+  "_name": "MRFT",
+  "uri": "design/RC/KDS-41-20-2022/MRFT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MRFT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moment Redistribution Factor (MRFT). Assigned per BEAM-type element to define the moment reduction (redistribution) factor used in RC design; can only be assigned to BEAM members.",
+      "properties": {
+        "FACTOR": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Moment Reduction Factor applied in moment redistribution. For the Eurocode2:04 concrete code a lower bound of 0.7 is enforced (values below 0.7 are clamped to 0.7)."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FACTOR": 0.85
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "_group": "ope",
+  "_name": "MATL_STANDARD",
+  "uri": "ope/MATL_STANDARD",
+  "methods": "GET",
+  "schema": {
+    "MATL_STANDARD": {
+      "type": "object",
+      "description": "Material Standard List (MATL_STANDARD). Returns the list of available material design-standard names for a given material type; the request carries no fields (DTO_EMPTY) and the material type is supplied via the URL parameter, so the response is driven entirely by that type.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "No request body; DTO_EMPTY takes no fields. The material type is passed as the URL parameter, not in the body."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

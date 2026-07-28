@@ -1,0 +1,29 @@
+{
+  "_group": "db",
+  "_name": "DSTL",
+  "uri": "db/DSTL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DSTL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Steel Data (DSTL). A single-instance record (key is always 1) holding the steel design code; the DGNCODE string is matched (case- and space-insensitively) against the program's registered steel code name list and converted to the canonical code name.",
+      "properties": {
+        "DGNCODE": {
+          "type": "string",
+          "description": "Steel design code name. Matched against the program's registered steel code list ignoring case and spaces, then stored as the canonical name (e.g. 'Eurocode3-2:05', 'AISC-LRFD05'). Changing an existing code resets previously stored design code data."
+        }
+      },
+      "required": [
+        "DGNCODE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DGNCODE": "Eurocode3-2:05"
+      }
+    }
+  }
+}

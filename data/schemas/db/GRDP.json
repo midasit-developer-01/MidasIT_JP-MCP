@@ -1,0 +1,323 @@
+{
+  "_group": "db",
+  "_name": "GRDP",
+  "uri": "db/GRDP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "GRDP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Group Damping (GRDP). A single global record (key is always 1) holding default Rayleigh/damping settings plus per-group damping coefficients (GROUP_DAMPING_ITEMS) and per-group strain-energy damping ratios (STRAIN_GROUP_ITEMS); each item's GROUP_TYPE selects how its GROUP_NAME is interpreted.",
+      "type": "object",
+      "properties": {
+        "STIFF_COEF_DEFAULT": {
+          "description": "Stiffness proportional coefficient for unspecified nodes/elements/boundaries. Direct Specification: user input; Calculate from Modal Damping: auto-calculated.",
+          "type": "number"
+        },
+        "MASS_COEF_DEFAULT": {
+          "description": "Mass proportional coefficient for unspecified nodes/elements/boundaries. Direct Specification: user input; Calculate from Modal Damping: auto-calculated.",
+          "type": "number"
+        },
+        "OPT_CALC_WHEN_USED": {
+          "description": "Calculate only when used flag for the default group-damping data.",
+          "type": "boolean"
+        },
+        "OPT_MASS_PROP_DEFAULT": {
+          "description": "Mass proportional option for the default (unspecified) group-damping data.",
+          "type": "boolean",
+          "default": false
+        },
+        "OPT_STIFF_PROP_DEFAULT": {
+          "description": "Stiffness proportional option for the default (unspecified) group-damping data.",
+          "type": "boolean",
+          "default": false
+        },
+        "DIRECT_CALC_MODE_DEFAULT": {
+          "description": "Default coefficient source. Direct Specification: 0; Calculate from Modal Damping: 1.",
+          "type": "integer"
+        },
+        "FREQ_PERIOD_MODE_DEFAULT": {
+          "description": "Default coefficient calculation basis. Frequency: 0; Period: 1.",
+          "type": "integer"
+        },
+        "FREQ_MODE_1_DEFAULT": {
+          "description": "Default frequency for mode 1 (used when FREQ_PERIOD_MODE_DEFAULT = 0).",
+          "type": "number"
+        },
+        "FREQ_MODE_2_DEFAULT": {
+          "description": "Default frequency for mode 2 (used when FREQ_PERIOD_MODE_DEFAULT = 0).",
+          "type": "number"
+        },
+        "PERIOD_MODE_1_DEFAULT": {
+          "description": "Default period for mode 1 (used when FREQ_PERIOD_MODE_DEFAULT = 1).",
+          "type": "number"
+        },
+        "PERIOD_MODE_2_DEFAULT": {
+          "description": "Default period for mode 2 (used when FREQ_PERIOD_MODE_DEFAULT = 1).",
+          "type": "number"
+        },
+        "DAMPING_MODE_1_DEFAULT": {
+          "description": "Default damping ratio for mode 1.",
+          "type": "number"
+        },
+        "DAMPING_MODE_2_DEFAULT": {
+          "description": "Default damping ratio for mode 2.",
+          "type": "number"
+        },
+        "bExistElement": {
+          "description": "Whether element mass & stiffness proportional group damping data exists (GROUP_DAMPING_ITEMS is active).",
+          "type": "boolean"
+        },
+        "bExistStrain": {
+          "description": "Whether strain-energy proportional group damping data exists (STRAIN_GROUP_ITEMS is active).",
+          "type": "boolean"
+        },
+        "GROUP_DAMPING_ITEMS": {
+          "description": "Mass & stiffness proportional damping coefficients for specified material data / structure groups / boundary groups.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "GROUP_TYPE": {
+                "description": "Target type (case-insensitive). STRUCTURE: structure group; BOUNDARY: boundary group; MATERIAL: material data. Determines how GROUP_NAME is interpreted.",
+                "type": "string",
+                "enum": ["STRUCTURE", "BOUNDARY", "MATERIAL"]
+              },
+              "GROUP_NAME": {
+                "description": "[GROUP_TYPE=STRUCTURE] structure group name; [GROUP_TYPE=BOUNDARY] boundary group name; [GROUP_TYPE=MATERIAL] material ID as a numeric string.",
+                "type": "string"
+              },
+              "STIFF_COEF": {
+                "description": "Stiffness proportional coefficient for this group.",
+                "type": "number"
+              },
+              "OPT_STIFF_PROP": {
+                "description": "Stiffness proportional option for this group.",
+                "type": "boolean",
+                "default": false
+              },
+              "MASS_COEF": {
+                "description": "Mass proportional coefficient for this group.",
+                "type": "number"
+              },
+              "OPT_MASS_PROP": {
+                "description": "Mass proportional option for this group.",
+                "type": "boolean",
+                "default": false
+              },
+              "DIRECT_CALC_MODE": {
+                "description": "Coefficient source. Direct Specification: 0; Calculate from Modal Damping: 1.",
+                "type": "integer",
+                "default": 0
+              },
+              "FREQ_PERIOD_MODE": {
+                "description": "Coefficient calculation basis. Frequency: 0; Period: 1.",
+                "type": "integer",
+                "default": 0
+              },
+              "FREQ_MODE_1": {
+                "description": "Frequency for mode 1 (used when FREQ_PERIOD_MODE = 0).",
+                "type": "number"
+              },
+              "FREQ_MODE_2": {
+                "description": "Frequency for mode 2 (used when FREQ_PERIOD_MODE = 0).",
+                "type": "number"
+              },
+              "PERIOD_MODE_1": {
+                "description": "Period for mode 1 (used when FREQ_PERIOD_MODE = 1).",
+                "type": "number"
+              },
+              "PERIOD_MODE_2": {
+                "description": "Period for mode 2 (used when FREQ_PERIOD_MODE = 1).",
+                "type": "number"
+              },
+              "DAMPING_RATIO_MODE": {
+                "description": "Damping ratio source. Using Material Data: 0; Direct Define: 1.",
+                "type": "integer",
+                "default": 0
+              },
+              "DAMPING_RATIO_MODE_1": {
+                "description": "Damping ratio for mode 1.",
+                "type": "number"
+              },
+              "DAMPING_RATIO_MODE_2": {
+                "description": "Damping ratio for mode 2.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "GROUP_TYPE",
+              "GROUP_NAME",
+              "STIFF_COEF",
+              "MASS_COEF",
+              "FREQ_MODE_1",
+              "FREQ_MODE_2",
+              "PERIOD_MODE_1",
+              "PERIOD_MODE_2",
+              "DAMPING_RATIO_MODE_1",
+              "DAMPING_RATIO_MODE_2"
+            ]
+          }
+        },
+        "STRAIN_GROUP_ITEMS": {
+          "description": "Strain-energy proportional damping ratios for specified elements and boundaries, per material data / structure group / boundary group.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "GROUP_TYPE": {
+                "description": "Target type (case-insensitive). STRUCTURE: structure group; BOUNDARY: boundary group; MATERIAL: material data. Determines how GROUP_NAME is interpreted.",
+                "type": "string",
+                "enum": ["STRUCTURE", "BOUNDARY", "MATERIAL"]
+              },
+              "GROUP_NAME": {
+                "description": "[GROUP_TYPE=STRUCTURE] structure group name; [GROUP_TYPE=BOUNDARY] boundary group name; [GROUP_TYPE=MATERIAL] material ID as a numeric string.",
+                "type": "string"
+              },
+              "DAMPING_RATIO": {
+                "description": "Strain-energy proportional damping ratio for this group.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "GROUP_TYPE",
+              "GROUP_NAME",
+              "DAMPING_RATIO"
+            ]
+          }
+        },
+        "ELEM_GROUP_PRIORITY": {
+          "description": "Element damping priority between material data and structure group. Material Data: 0; Structure Group: 1.",
+          "type": "integer"
+        },
+        "ELEM_VALUE_PRIORITY": {
+          "description": "Element damping priority between overlapping structure groups. Smallest Damping Ratio: 0; Largest Damping Ratio: 1.",
+          "type": "integer"
+        },
+        "STRAIN_GROUP_PRIORITY": {
+          "description": "Strain-energy damping priority between material data and structure group. Material Data: 0; Structure Group: 1.",
+          "type": "integer"
+        },
+        "STRAIN_VALUE_PRIORITY": {
+          "description": "Strain-energy damping priority between overlapping structure groups. Smallest Damping Ratio: 0; Largest Damping Ratio: 1.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "STIFF_COEF_DEFAULT",
+        "MASS_COEF_DEFAULT",
+        "OPT_CALC_WHEN_USED",
+        "DIRECT_CALC_MODE_DEFAULT",
+        "FREQ_PERIOD_MODE_DEFAULT",
+        "FREQ_MODE_1_DEFAULT",
+        "FREQ_MODE_2_DEFAULT",
+        "PERIOD_MODE_1_DEFAULT",
+        "PERIOD_MODE_2_DEFAULT",
+        "DAMPING_MODE_1_DEFAULT",
+        "DAMPING_MODE_2_DEFAULT",
+        "bExistElement",
+        "bExistStrain",
+        "GROUP_DAMPING_ITEMS",
+        "STRAIN_GROUP_ITEMS",
+        "ELEM_GROUP_PRIORITY",
+        "ELEM_VALUE_PRIORITY",
+        "STRAIN_GROUP_PRIORITY",
+        "STRAIN_VALUE_PRIORITY"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "STIFF_COEF_DEFAULT": 0.0848826377636192,
+        "MASS_COEF_DEFAULT": 0.04188790133333333,
+        "OPT_CALC_WHEN_USED": true,
+        "OPT_MASS_PROP_DEFAULT": true,
+        "OPT_STIFF_PROP_DEFAULT": true,
+        "DIRECT_CALC_MODE_DEFAULT": 1,
+        "FREQ_PERIOD_MODE_DEFAULT": 0,
+        "FREQ_MODE_1_DEFAULT": 0.1,
+        "FREQ_MODE_2_DEFAULT": 0.2,
+        "PERIOD_MODE_1_DEFAULT": 0.0,
+        "PERIOD_MODE_2_DEFAULT": 0.0,
+        "DAMPING_MODE_1_DEFAULT": 0.06,
+        "DAMPING_MODE_2_DEFAULT": 0.07,
+        "bExistElement": true,
+        "bExistStrain": true,
+        "GROUP_DAMPING_ITEMS": [
+          {
+            "GROUP_TYPE": "MATERIAL",
+            "GROUP_NAME": "1",
+            "STIFF_COEF": 0.005787452574792216,
+            "OPT_STIFF_PROP": true,
+            "MASS_COEF": 0.06854383854545451,
+            "OPT_MASS_PROP": true,
+            "DIRECT_CALC_MODE": 1,
+            "FREQ_PERIOD_MODE": 0,
+            "FREQ_MODE_1": 0.5,
+            "FREQ_MODE_2": 0.6,
+            "PERIOD_MODE_1": 0.0,
+            "PERIOD_MODE_2": 0.0,
+            "DAMPING_RATIO_MODE": 0,
+            "DAMPING_RATIO_MODE_1": 0.02,
+            "DAMPING_RATIO_MODE_2": 0.02
+          },
+          {
+            "GROUP_TYPE": "STRUCTURE",
+            "GROUP_NAME": "VBGirder",
+            "STIFF_COEF": 0.00106103297204524,
+            "OPT_STIFF_PROP": true,
+            "MASS_COEF": 3.3510321066666675,
+            "OPT_MASS_PROP": true,
+            "DIRECT_CALC_MODE": 1,
+            "FREQ_PERIOD_MODE": 1,
+            "FREQ_MODE_1": 0.5,
+            "FREQ_MODE_2": 0.6,
+            "PERIOD_MODE_1": 0.1,
+            "PERIOD_MODE_2": 0.2,
+            "DAMPING_RATIO_MODE": 1,
+            "DAMPING_RATIO_MODE_1": 0.06,
+            "DAMPING_RATIO_MODE_2": 0.07
+          },
+          {
+            "GROUP_TYPE": "BOUNDARY",
+            "GROUP_NAME": "Service",
+            "STIFF_COEF": 0.00106103297204524,
+            "OPT_STIFF_PROP": true,
+            "MASS_COEF": 3.3510321066666675,
+            "OPT_MASS_PROP": true,
+            "DIRECT_CALC_MODE": 1,
+            "FREQ_PERIOD_MODE": 1,
+            "FREQ_MODE_1": 0.5,
+            "FREQ_MODE_2": 0.6,
+            "PERIOD_MODE_1": 0.1,
+            "PERIOD_MODE_2": 0.2,
+            "DAMPING_RATIO_MODE": 1,
+            "DAMPING_RATIO_MODE_1": 0.06,
+            "DAMPING_RATIO_MODE_2": 0.07
+          }
+        ],
+        "STRAIN_GROUP_ITEMS": [
+          {
+            "GROUP_TYPE": "MATERIAL",
+            "GROUP_NAME": "1",
+            "DAMPING_RATIO": 0.02
+          },
+          {
+            "GROUP_TYPE": "STRUCTURE",
+            "GROUP_NAME": "VBGirder",
+            "DAMPING_RATIO": 0.05
+          },
+          {
+            "GROUP_TYPE": "BOUNDARY",
+            "GROUP_NAME": "Service",
+            "DAMPING_RATIO": 0.05
+          }
+        ],
+        "ELEM_GROUP_PRIORITY": 0,
+        "ELEM_VALUE_PRIORITY": 0,
+        "STRAIN_GROUP_PRIORITY": 0,
+        "STRAIN_VALUE_PRIORITY": 0
+      }
+    }
+  }
+}

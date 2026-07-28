@@ -1,0 +1,363 @@
+{
+  "_group": "db",
+  "_name": "SDVE",
+  "uri": "db/SDVE",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SDVE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Viscoelastic Damper (SDVE). One entry per damper id; MATERIAL_TYPE and DIR select the viscoelastic material and acting direction, while the mechanical fields describe the damper's stiffness/damping behavior.",
+      "type": "object",
+      "properties": {
+        "COMMON": {
+          "description": "Common seismic device data (name, description, input method, product identification).",
+          "type": "object",
+          "properties": {
+            "NAME": {
+              "description": "Damper name.",
+              "type": "string"
+            },
+            "DESC": {
+              "description": "Description.",
+              "type": "string",
+              "default": ""
+            },
+            "INPUT_METHOD": {
+              "description": "Input method - User Input: 0, Import Reference Database: 1.",
+              "type": "integer"
+            },
+            "COMPANY": {
+              "description": "Manufacturer/company name.",
+              "type": "string",
+              "default": ""
+            },
+            "PRODUCT_NAME": {
+              "description": "Product name.",
+              "type": "string",
+              "default": ""
+            },
+            "TYPE_NUMBER": {
+              "description": "Product type number.",
+              "type": "string",
+              "default": ""
+            }
+          },
+          "required": [
+            "NAME",
+            "INPUT_METHOD"
+          ]
+        },
+        "MATERIAL_TYPE": {
+          "description": "Viscoelastic material type. Case-insensitive. Hard-validated at runtime.",
+          "type": "string",
+          "enum": [
+            "GR100",
+            "GR300",
+            "SR05",
+            "GR400",
+            "ISD111",
+            "ISD111H",
+            "CST",
+            "TRC"
+          ]
+        },
+        "SHEAR_AREA": {
+          "description": "Shear area of the viscoelastic material.",
+          "type": "number"
+        },
+        "THICKNESS": {
+          "description": "Thickness of the viscoelastic material layer.",
+          "type": "number"
+        },
+        "MULTIPL": {
+          "description": "Multiplier (number of viscoelastic layers/units).",
+          "type": "number"
+        },
+        "DIR": {
+          "description": "Acting direction of the damper. Case-insensitive. Hard-validated at runtime.",
+          "type": "string",
+          "enum": [
+            "Dx",
+            "Dy",
+            "Dz"
+          ]
+        },
+        "FREQ": {
+          "description": "Reference frequency.",
+          "type": "number"
+        },
+        "STIFF_FACTOR": {
+          "description": "Stiffness (scale) factor.",
+          "type": "number"
+        },
+        "DAMP_FACTOR": {
+          "description": "Damping factor.",
+          "type": "number"
+        },
+        "REF_T": {
+          "description": "Reference temperature.",
+          "type": "number"
+        },
+        "LIMIT_DEF": {
+          "description": "Limit deformation.",
+          "type": "number"
+        },
+        "EFF_STIFF": {
+          "description": "Effective stiffness.",
+          "type": "number"
+        },
+        "EQUI_DAMP": {
+          "description": "Equivalent damping.",
+          "type": "number"
+        },
+        "OPT_MOUNT_STIFF": {
+          "description": "Use mount stiffness. When false, MOUNT_STIFF is forced to 0 on write.",
+          "type": "boolean"
+        },
+        "MOUNT_STIFF": {
+          "description": "[OPT_MOUNT_STIFF=true] Mount stiffness value (ignored/zeroed when OPT_MOUNT_STIFF is false).",
+          "type": "number"
+        },
+        "OPT_KINETIC_FRIC": {
+          "description": "Use kinetic friction. When false, KINETIC_FRIC is forced to 0 on write.",
+          "type": "boolean"
+        },
+        "KINETIC_FRIC": {
+          "description": "[OPT_KINETIC_FRIC=true] Kinetic friction value (ignored/zeroed when OPT_KINETIC_FRIC is false).",
+          "type": "number"
+        }
+      },
+      "required": [
+        "COMMON",
+        "MATERIAL_TYPE",
+        "SHEAR_AREA",
+        "THICKNESS",
+        "MULTIPL",
+        "DIR",
+        "FREQ",
+        "STIFF_FACTOR",
+        "DAMP_FACTOR",
+        "REF_T",
+        "LIMIT_DEF",
+        "EFF_STIFF",
+        "EQUI_DAMP",
+        "OPT_MOUNT_STIFF",
+        "MOUNT_STIFF",
+        "OPT_KINETIC_FRIC",
+        "KINETIC_FRIC"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "COMMON": {
+          "NAME": "Viscoelastic01",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "MATERIAL_TYPE": "GR100",
+        "SHEAR_AREA": 0.2,
+        "THICKNESS": 0.02,
+        "MULTIPL": 1,
+        "DIR": "Dx",
+        "FREQ": 0,
+        "STIFF_FACTOR": 1,
+        "DAMP_FACTOR": 1,
+        "REF_T": 20,
+        "LIMIT_DEF": 0.3,
+        "EFF_STIFF": 0,
+        "EQUI_DAMP": 0,
+        "OPT_MOUNT_STIFF": true,
+        "MOUNT_STIFF": 1200,
+        "OPT_KINETIC_FRIC": false,
+        "KINETIC_FRIC": 0
+      },
+      "2": {
+        "COMMON": {
+          "NAME": "Viscoelastic02",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "MATERIAL_TYPE": "GR300",
+        "SHEAR_AREA": 0.2,
+        "THICKNESS": 0.02,
+        "MULTIPL": 1,
+        "DIR": "Dy",
+        "FREQ": 0,
+        "STIFF_FACTOR": 1,
+        "DAMP_FACTOR": 1,
+        "REF_T": 20,
+        "LIMIT_DEF": 0.03,
+        "EFF_STIFF": 0,
+        "EQUI_DAMP": 0,
+        "OPT_MOUNT_STIFF": true,
+        "MOUNT_STIFF": 12000,
+        "OPT_KINETIC_FRIC": false,
+        "KINETIC_FRIC": 0
+      },
+      "3": {
+        "COMMON": {
+          "NAME": "Viscoelastic03",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "MATERIAL_TYPE": "SR05",
+        "SHEAR_AREA": 0.2,
+        "THICKNESS": 0.02,
+        "MULTIPL": 1,
+        "DIR": "Dz",
+        "FREQ": 0,
+        "STIFF_FACTOR": 1,
+        "DAMP_FACTOR": 1,
+        "REF_T": 20,
+        "LIMIT_DEF": 0.03,
+        "EFF_STIFF": 0,
+        "EQUI_DAMP": 0,
+        "OPT_MOUNT_STIFF": false,
+        "MOUNT_STIFF": 0,
+        "OPT_KINETIC_FRIC": true,
+        "KINETIC_FRIC": 0.15
+      },
+      "4": {
+        "COMMON": {
+          "NAME": "Viscoelastic04",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "MATERIAL_TYPE": "GR400",
+        "SHEAR_AREA": 0.2,
+        "THICKNESS": 0.02,
+        "MULTIPL": 1,
+        "DIR": "Dy",
+        "FREQ": 1,
+        "STIFF_FACTOR": 1,
+        "DAMP_FACTOR": 1,
+        "REF_T": 20,
+        "LIMIT_DEF": 0.03,
+        "EFF_STIFF": 0,
+        "EQUI_DAMP": 0,
+        "OPT_MOUNT_STIFF": true,
+        "MOUNT_STIFF": 12000,
+        "OPT_KINETIC_FRIC": false,
+        "KINETIC_FRIC": 0
+      },
+      "5": {
+        "COMMON": {
+          "NAME": "Viscoelastic05",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "MATERIAL_TYPE": "ISD111",
+        "SHEAR_AREA": 0.2,
+        "THICKNESS": 0.02,
+        "MULTIPL": 1,
+        "DIR": "Dx",
+        "FREQ": 1,
+        "STIFF_FACTOR": 1,
+        "DAMP_FACTOR": 1,
+        "REF_T": 20,
+        "LIMIT_DEF": 0.03,
+        "EFF_STIFF": 0,
+        "EQUI_DAMP": 0,
+        "OPT_MOUNT_STIFF": true,
+        "MOUNT_STIFF": 12000,
+        "OPT_KINETIC_FRIC": false,
+        "KINETIC_FRIC": 0
+      },
+      "6": {
+        "COMMON": {
+          "NAME": "Viscoelastic06",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "MATERIAL_TYPE": "ISD111H",
+        "SHEAR_AREA": 0.2,
+        "THICKNESS": 0.02,
+        "MULTIPL": 1,
+        "DIR": "Dy",
+        "FREQ": 1,
+        "STIFF_FACTOR": 1,
+        "DAMP_FACTOR": 1,
+        "REF_T": 20,
+        "LIMIT_DEF": 0.03,
+        "EFF_STIFF": 0,
+        "EQUI_DAMP": 0,
+        "OPT_MOUNT_STIFF": true,
+        "MOUNT_STIFF": 12000,
+        "OPT_KINETIC_FRIC": false,
+        "KINETIC_FRIC": 0
+      },
+      "7": {
+        "COMMON": {
+          "NAME": "Viscoelastic07",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "MATERIAL_TYPE": "CST",
+        "SHEAR_AREA": 0.2,
+        "THICKNESS": 0.02,
+        "MULTIPL": 1,
+        "DIR": "Dy",
+        "FREQ": 1,
+        "STIFF_FACTOR": 1,
+        "DAMP_FACTOR": 1,
+        "REF_T": 20,
+        "LIMIT_DEF": 0.03,
+        "EFF_STIFF": 0,
+        "EQUI_DAMP": 0,
+        "OPT_MOUNT_STIFF": true,
+        "MOUNT_STIFF": 12000,
+        "OPT_KINETIC_FRIC": false,
+        "KINETIC_FRIC": 0
+      },
+      "8": {
+        "COMMON": {
+          "NAME": "Viscoelastic08",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "MATERIAL_TYPE": "TRC",
+        "SHEAR_AREA": 0.2,
+        "THICKNESS": 0.02,
+        "MULTIPL": 1,
+        "DIR": "Dy",
+        "FREQ": 1,
+        "STIFF_FACTOR": 1,
+        "DAMP_FACTOR": 1,
+        "REF_T": 20,
+        "LIMIT_DEF": 0.03,
+        "EFF_STIFF": 0,
+        "EQUI_DAMP": 0,
+        "OPT_MOUNT_STIFF": true,
+        "MOUNT_STIFF": 12000,
+        "OPT_KINETIC_FRIC": false,
+        "KINETIC_FRIC": 0
+      }
+    }
+  }
+}

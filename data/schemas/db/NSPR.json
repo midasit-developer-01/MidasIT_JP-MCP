@@ -1,0 +1,234 @@
+{
+  "_group": "db",
+  "_name": "NSPR",
+  "uri": "db/NSPR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "NSPR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Point Spring (NSPR). Each Assign key is a node number whose ITEMS list holds one or more spring definitions; per-item field applicability is driven by TYPE (LINEAR / COMP / TENS / MULTI) and by FormType (0 = point spring function, 1 = surface spring function).",
+      "properties": {
+        "ITEMS": {
+          "description": "Array of point-spring item objects assigned to the node. Each object carries its own TYPE and stiffness data.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "TYPE"
+            ],
+            "properties": {
+              "ID": {
+                "description": "Item serial number within this node. Leave 0 to auto-assign a new serial.",
+                "type": "integer",
+                "default": 0
+              },
+              "TYPE": {
+                "description": "Spring type (case-insensitive). LINEAR = 6-DOF linear spring; COMP = compression-only; TENS = tension-only; MULTI = multi-linear (function-based). Determines which of the fields below are used.",
+                "type": "string",
+                "enum": [
+                  "LINEAR",
+                  "COMP",
+                  "TENS",
+                  "MULTI"
+                ]
+              },
+              "GROUP_NAME": {
+                "description": "Boundary group name. Empty string = no group. Must reference an existing boundary group.",
+                "type": "string",
+                "default": ""
+              },
+              "FormType": {
+                "description": "Creation function type. 0 = point spring function; 1 = surface spring function (then EFFAREA and DK apply).",
+                "type": "integer",
+                "default": 0
+              },
+              "SDR": {
+                "description": "[TYPE=LINEAR] Spring stiffness [SDx, SDy, SDz, SRx, SRy, SRz]. Required when TYPE=LINEAR.",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 6,
+                "maxItems": 6
+              },
+              "F_S": {
+                "description": "[TYPE=LINEAR] Fixed option [F_SDx, F_SDy, F_SDz, F_SRx, F_SRy, F_SRz]. true = rigidly fixed in that DOF.",
+                "type": "array",
+                "items": {
+                  "type": "boolean"
+                },
+                "minItems": 6,
+                "maxItems": 6,
+                "default": [
+                  false,
+                  false,
+                  false,
+                  false,
+                  false,
+                  false
+                ]
+              },
+              "DAMPING": {
+                "description": "[TYPE=LINEAR] Use damping constants (Cr).",
+                "type": "boolean",
+                "default": false
+              },
+              "Cr": {
+                "description": "[TYPE=LINEAR] Damping constants [Cx, Cy, Cz, CRx, CRy, CRz], used when DAMPING=true.",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 6,
+                "maxItems": 6,
+                "default": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "DIR": {
+                "description": "[TYPE=COMP, TENS or MULTI] Spring direction code. Typical codes: 0=Dx(+), 1=Dx(-), 2=Dy(+), 3=Dy(-), 4=Dz(+), 5=Dz(-), 6=Vector (then set DV).",
+                "type": "integer"
+              },
+              "DV": {
+                "description": "[TYPE=COMP, TENS or MULTI] Direction vector [Vx, Vy, Vz], used when DIR selects a vector direction.",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3,
+                "default": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "STIFF": {
+                "description": "[TYPE=COMP or TENS] Spring stiffness value.",
+                "type": "number"
+              },
+              "FUNCTION": {
+                "description": "[TYPE=MULTI] Force-deformation function ID number.",
+                "type": "integer"
+              },
+              "EFFAREA": {
+                "description": "[FormType=1] Effective area (frame width) for surface spring.",
+                "type": "number",
+                "default": 0.0
+              },
+              "DK": {
+                "description": "[FormType=1] Modulus of subgrade reaction [dKx, dKy, dKz].",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3,
+                "default": [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "2": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "TYPE": "LINEAR",
+            "GROUP_NAME": "Service",
+            "F_S": [
+              false,
+              false,
+              false,
+              false,
+              false,
+              false
+            ],
+            "SDR": [
+              33000,
+              34000,
+              35000,
+              33000000,
+              34000000,
+              35000000
+            ],
+            "DAMPING": true,
+            "Cr": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          }
+        ]
+      },
+      "4": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "TYPE": "COMP",
+            "GROUP_NAME": "Service",
+            "DIR": 4,
+            "DV": [
+              0,
+              0,
+              0
+            ],
+            "STIFF": 1000000
+          }
+        ]
+      },
+      "6": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "TYPE": "TENS",
+            "GROUP_NAME": "Service",
+            "DIR": 6,
+            "DV": [
+              0,
+              -1,
+              -1
+            ],
+            "STIFF": 1000000
+          }
+        ]
+      },
+      "8": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "TYPE": "MULTI",
+            "GROUP_NAME": "Service",
+            "DIR": 4,
+            "DV": [
+              0,
+              0,
+              0
+            ],
+            "FUNCTION": 1
+          }
+        ]
+      }
+    }
+  }
+}

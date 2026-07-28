@@ -1,0 +1,194 @@
+{
+  "_group": "design",
+  "_name": "CODE-TABLE",
+  "uri": "design/STEEL/KDS-41-30-2022/CODE-TABLE",
+  "methods": "POST",
+  "schema": {
+    "CODE-TABLE": {
+      "type": "object",
+      "description": "Steel Code Checking Result Table (CODE-TABLE). Fields are driven by the D_TABLE_REQUEST DTO, which selects the steel beam/brace/column code-check result table and its formatting and element/section filters.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Steel code-check table request DTO (D_TABLE_REQUEST).",
+          "properties": {
+            "TABLE_TYPE": {
+              "type": "string",
+              "description": "Table Type: MEMB or PROP (case-insensitive).",
+              "enum": [
+                "MEMB",
+                "PROP"
+              ]
+            },
+            "RESULT": {
+              "type": "integer",
+              "description": "Result View Option: 0=All 1=OK 2=NG.",
+              "default": 0
+            },
+            "TABLE_NAME": {
+              "type": "string",
+              "description": "Output table title in response.",
+              "default": ""
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Save results to file path.",
+              "default": ""
+            },
+            "UNIT": {
+              "type": "object",
+              "description": "Unit Settings.",
+              "properties": {
+                "FORCE": {
+                  "type": "string",
+                  "description": "Force unit (case-insensitive).",
+                  "enum": [
+                    "KGF",
+                    "TONF",
+                    "N",
+                    "KN",
+                    "LBF",
+                    "KIPS"
+                  ]
+                },
+                "DIST": {
+                  "type": "string",
+                  "description": "Distance unit (case-insensitive).",
+                  "enum": [
+                    "MM",
+                    "CM",
+                    "M",
+                    "IN",
+                    "FT"
+                  ]
+                },
+                "HEAT": {
+                  "type": "string",
+                  "description": "Heat unit (case-insensitive).",
+                  "enum": [
+                    "CAL",
+                    "KCAL",
+                    "J",
+                    "BTU",
+                    "KJ"
+                  ]
+                },
+                "TEMP": {
+                  "type": "string",
+                  "description": "Temperature unit (case-insensitive).",
+                  "enum": [
+                    "C",
+                    "F"
+                  ]
+                }
+              }
+            },
+            "STYLES": {
+              "type": "object",
+              "description": "Number Format Settings.",
+              "properties": {
+                "FORMAT": {
+                  "type": "string",
+                  "description": "Style Format (case-insensitive).",
+                  "enum": [
+                    "DEFAULT",
+                    "SCIENTIFIC",
+                    "FIXED",
+                    "GENERAL"
+                  ]
+                },
+                "PLACE": {
+                  "type": "integer",
+                  "description": "Style Place (number of decimal places)."
+                }
+              }
+            },
+            "COMPONENTS": {
+              "type": "array",
+              "description": "Column filter list. Column names must belong to THIS endpoint's header set (defined in wg_db/DesignTableHeader.h); an unknown name ABORTS the request with \"'<name>' is not a valid COMPONENTS name\" — it is not silently ignored.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "Element Numbers.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "description": "Specify Each ID - Element No.",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10).",
+                  "default": ""
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name.",
+                  "default": ""
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "description": "Section No.",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "PRI_SORT": {
+              "type": "integer",
+              "description": "Primary sort: 0=SECT 1=MEMB.",
+              "default": 1
+            },
+            "VIEW_RATPC": {
+              "type": "boolean",
+              "description": "When true, filters OUT rows whose utilization ratio RatPc <= 0.4 (keeps only members with RatPc > 0.4). Default false = show all rows.",
+              "default": false
+            }
+          },
+          "required": [
+            "TABLE_TYPE"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "TABLE_TYPE": "MEMB",
+      "RESULT": 0,
+      "UNIT": {
+        "FORCE": "KN",
+        "DIST": "MM"
+      },
+      "STYLES": {
+        "FORMAT": "DEFAULT",
+        "PLACE": 3
+      },
+      "COMPONENTS": [
+        "Rat.(Fx)",
+        "Rat.(My)"
+      ],
+      "ELEMS": {
+        "KEYS": [
+          1,
+          2,
+          3
+        ]
+      },
+      "SECTIONS": [
+        1
+      ],
+      "PRI_SORT": 1,
+      "VIEW_RATPC": false
+    }
+  }
+}

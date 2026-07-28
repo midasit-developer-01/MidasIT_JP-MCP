@@ -1,0 +1,94 @@
+{
+  "_group": "design",
+  "_name": "WD-REPORT",
+  "uri": "design/RC/KDS-41-20-2022/WD-REPORT",
+  "methods": "POST",
+  "schema": {
+    "WD-REPORT": {
+      "type": "object",
+      "description": "Wall Design Report (WD-REPORT). Generates and exports an RC wall design report file; fields are driven by the DESIGN_WALL_REPORT_REQUEST DTO (report type, export target, per-type report mode, and optional wall/story selections).",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Wall design report request body.",
+          "properties": {
+            "REPORT_TYPE": {
+              "type": "string",
+              "enum": ["WID+STORY", "WID"],
+              "description": "Report type (case-insensitive). WID+STORY groups results by wall ID and story; WID groups by wall ID only."
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Export directory path for the generated report (e.g. C:\\MIDAS\\Report\\)."
+            },
+            "OUTPUT_NAME": {
+              "type": "string",
+              "description": "Output file name for the generated report."
+            },
+            "CURRENT_MODE_WID_STORY": {
+              "type": "string",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"],
+              "description": "[REPORT_TYPE=WID+STORY] Report mode (case-insensitive) used when REPORT_TYPE is WID+STORY."
+            },
+            "CURRENT_MODE_WID": {
+              "type": "string",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"],
+              "description": "[REPORT_TYPE=WID] Report mode (case-insensitive) used when REPORT_TYPE is WID."
+            },
+            "SELECTIONS": {
+              "type": "array",
+              "description": "List of wall and story selections to include in the report. If omitted or empty, all walls and all stories are included.",
+              "items": {
+                "type": "object",
+                "description": "One wall-ID set paired with one story set.",
+                "properties": {
+                  "WALL_IDS": {
+                    "type": "object",
+                    "description": "Wall ID object - specify each wall ID (KEYS) or a wall ID range (TO). If omitted, all walls are included.",
+                    "properties": {
+                      "KEYS": {
+                        "type": "array",
+                        "description": "Specify each wall ID.",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "TO": {
+                        "type": "string",
+                        "description": "Specify wall ID range (e.g. 1to20)."
+                      }
+                    }
+                  },
+                  "STORY": {
+                    "type": "array",
+                    "description": "Story names to filter the report. If omitted, all stories are included.",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": ["REPORT_TYPE", "EXPORT_PATH", "OUTPUT_NAME"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "REPORT_TYPE": "WID+STORY",
+      "EXPORT_PATH": "C:\\MIDAS\\Report\\",
+      "OUTPUT_NAME": "WallDesignReport",
+      "CURRENT_MODE_WID_STORY": "Detail",
+      "SELECTIONS": [
+        {
+          "WALL_IDS": {
+            "KEYS": [1, 2, 3]
+          },
+          "STORY": ["1F", "2F"]
+        }
+      ]
+    }
+  }
+}

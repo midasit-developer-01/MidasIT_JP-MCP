@@ -1,0 +1,50 @@
+{
+  "_group": "db",
+  "_name": "DYLA",
+  "uri": "db/DYLA",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DYLA": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Dynamic Load Allowance (DYLA). Each key is a dynamic-load-allowance entry id; FACTOR sets the impact/dynamic amplification factor applied to the structure groups named in ITEMS.",
+      "properties": {
+        "FACTOR": {
+          "description": "Dynamic load allowance (impact) factor applied to the listed structure groups. Stored as data.dFactor.",
+          "type": "number"
+        },
+        "ITEMS": {
+          "description": "List of structure group names the dynamic load allowance applies to. Each name is resolved to its structure-group key; passing a non-empty list replaces the existing group assignment.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "FACTOR",
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FACTOR": 15,
+        "ITEMS": [
+          "Main4",
+          "Main5",
+          "Main6"
+        ]
+      },
+      "2": {
+        "FACTOR": 10,
+        "ITEMS": [
+          "Main1",
+          "Main2",
+          "Main7"
+        ]
+      }
+    }
+  }
+}

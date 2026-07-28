@@ -1,0 +1,199 @@
+{
+  "_group": "db",
+  "_name": "LLANID",
+  "uri": "db/LLANID",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LLANID": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Traffic Line Lane - India (LLANID). Defines an India-code moving-load traffic line lane; COMMON holds lane-wide settings while lane element data comes from either LANE_ITEMS or SPECIAL_LANE_ITEMS (never both).",
+      "properties": {
+        "COMMON": {
+          "type": "object",
+          "description": "Common lane settings shared by all lane elements.",
+          "properties": {
+            "LL_NAME": {
+              "type": "string",
+              "description": "Name of the line lane."
+            },
+            "LOAD_DIST": {
+              "type": "string",
+              "enum": ["LANE", "CROSS"],
+              "description": "Load distribution method (case-insensitive). LANE = distribute along lane; CROSS = cross-beam distribution, which requires GROUP_NAME."
+            },
+            "GROUP_NAME": {
+              "type": "string",
+              "default": "",
+              "description": "[LOAD_DIST=CROSS] Name of the load (element) group used for cross distribution; ignored when LOAD_DIST=LANE.",
+              "minLength": 0
+            },
+            "SKEW_START": {
+              "type": "number",
+              "default": 0,
+              "description": "Skew angle at the start of the lane."
+            },
+            "SKEW_END": {
+              "type": "number",
+              "default": 0,
+              "description": "Skew angle at the end of the lane."
+            },
+            "MOVING": {
+              "type": "string",
+              "enum": ["FORWARD", "BACKWARD", "BOTH"],
+              "description": "Moving direction of the traffic load (case-insensitive)."
+            },
+            "WHEEL_SPACE": {
+              "type": "number",
+              "default": 0,
+              "description": "Transverse spacing between wheel lines."
+            },
+            "WIDTH": {
+              "type": "number",
+              "description": "Lane width."
+            },
+            "OPT_AUTO_LANE": {
+              "type": "boolean",
+              "default": false,
+              "description": "Automatically optimize the lane position when true."
+            },
+            "ALLOW_WIDTH": {
+              "type": "number",
+              "default": 0,
+              "description": "Allowable width for auto lane optimization."
+            }
+          },
+          "required": ["LL_NAME", "LOAD_DIST", "MOVING", "WIDTH"]
+        },
+        "LANE_ITEMS": {
+          "type": "array",
+          "description": "Lane element data (India). One entry per key element. Cannot be combined with SPECIAL_LANE_ITEMS in the same request.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ELEM": {
+                "type": "integer",
+                "description": "Key element number of this lane row."
+              },
+              "ECC": {
+                "type": "number",
+                "default": 0,
+                "description": "Eccentricity."
+              },
+              "SPAN": {
+                "type": "number",
+                "default": 0,
+                "description": "Span length."
+              },
+              "IMPACT_SPAN": {
+                "type": "integer",
+                "default": 0,
+                "description": "Impact span number."
+              },
+              "IMPACT_FACTOR": {
+                "type": "number",
+                "default": 0,
+                "description": "Impact factor."
+              }
+            },
+            "required": ["ELEM"]
+          }
+        },
+        "SPECIAL_LANE_ITEMS": {
+          "type": "array",
+          "description": "Batch lane input used only when importing; each entry expands over its ELEMS list applying the same values to every key element. Cannot be combined with LANE_ITEMS in the same request.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ELEMS": {
+                "type": "array",
+                "description": "Key element numbers that receive the shared values.",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "ECC": {
+                "type": "number",
+                "default": 0,
+                "description": "Eccentricity applied to all ELEMS."
+              },
+              "SPAN": {
+                "type": "number",
+                "default": 0,
+                "description": "Span length applied to all ELEMS."
+              },
+              "IMPACT_SPAN": {
+                "type": "integer",
+                "default": 0,
+                "description": "Impact span number applied to all ELEMS."
+              },
+              "IMPACT_FACTOR": {
+                "type": "number",
+                "default": 0,
+                "description": "Impact factor applied to all ELEMS."
+              }
+            },
+            "required": ["ELEMS"]
+          }
+        }
+      },
+      "required": ["COMMON"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "COMMON": {
+          "LL_NAME": "Lane-1",
+          "LOAD_DIST": "LANE",
+          "SKEW_START": 0,
+          "SKEW_END": 0,
+          "MOVING": "BOTH",
+          "WHEEL_SPACE": 1.8,
+          "WIDTH": 3.5,
+          "OPT_AUTO_LANE": false,
+          "ALLOW_WIDTH": 0
+        },
+        "LANE_ITEMS": [
+          {
+            "ELEM": 101,
+            "ECC": 0.5,
+            "SPAN": 20.0,
+            "IMPACT_SPAN": 1,
+            "IMPACT_FACTOR": 1.25
+          },
+          {
+            "ELEM": 102,
+            "ECC": 0.5,
+            "SPAN": 20.0,
+            "IMPACT_SPAN": 1,
+            "IMPACT_FACTOR": 1.25
+          }
+        ]
+      },
+      "2": {
+        "COMMON": {
+          "LL_NAME": "Lane-2",
+          "LOAD_DIST": "CROSS",
+          "GROUP_NAME": "LaneGroup1",
+          "SKEW_START": 0,
+          "SKEW_END": 0,
+          "MOVING": "FORWARD",
+          "WHEEL_SPACE": 1.8,
+          "WIDTH": 3.5,
+          "OPT_AUTO_LANE": true,
+          "ALLOW_WIDTH": 4.0
+        },
+        "SPECIAL_LANE_ITEMS": [
+          {
+            "ELEMS": [201, 202, 203],
+            "ECC": 0.5,
+            "SPAN": 25.0,
+            "IMPACT_SPAN": 2,
+            "IMPACT_FACTOR": 1.1
+          }
+        ]
+      }
+    }
+  }
+}

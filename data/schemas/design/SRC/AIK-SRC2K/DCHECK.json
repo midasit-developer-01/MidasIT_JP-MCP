@@ -1,0 +1,460 @@
+{
+  "_group": "design",
+  "_name": "DCHECK",
+  "uri": "design/SRC/AIK-SRC2K/DCHECK",
+  "methods": "POST",
+  "schema": {
+    "DCHECK": {
+      "type": "object",
+      "description": "Steel/SRC Displacement-Based Design Check (DCHECK). Runs the displacement-control auto-section design; the request under Argument drives displacement-control cases, per-type and per-section sizing parameters, and output options.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Displacement-based design run request.",
+          "properties": {
+            "GLOBAL_PARAM": {
+              "type": "object",
+              "description": "Global Parameters. Fallback sizing/allowable settings applied when per-section scope is Global; if omitted the handler uses built-in defaults.",
+              "properties": {
+                "ALLOW_RATIO": {
+                  "type": "number",
+                  "description": "Allowable Ratio (default=1).",
+                  "default": 1.0
+                },
+                "COLUMN_SECTION": {
+                  "type": "string",
+                  "description": "Column Section handling. Compared case-insensitively to 'Optimum' (else treated as Default).",
+                  "default": "Default"
+                },
+                "BUILTUP_JOINT": {
+                  "type": "string",
+                  "description": "Built-Up Joint handling. Compared case-insensitively to 'External' (else Internal).",
+                  "default": "Internal"
+                },
+                "PLATE_THK_LIST": {
+                  "type": "array",
+                  "description": "Plate Thickness List (m).",
+                  "items": {
+                    "type": "number"
+                  },
+                  "default": [
+                    0.01
+                  ]
+                }
+              }
+            },
+            "DISPLACEMENT_CONTROL": {
+              "type": "array",
+              "description": "Displacement Control. One entry per displacement/drift check case.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "DISP_LOADCASE": {
+                    "type": "string",
+                    "description": "Loadcase Name for max displacement check."
+                  },
+                  "DISP_LIMIT": {
+                    "type": "number",
+                    "description": "Target Displacement (m).",
+                    "default": 0.03
+                  },
+                  "DRIFT_LOADCASE": {
+                    "type": "string",
+                    "description": "Loadcase Name for story drift check."
+                  },
+                  "DRIFT_RATIO": {
+                    "type": "number",
+                    "description": "Drift Ratio Limit.",
+                    "default": 0.015
+                  },
+                  "RM_FACTOR": {
+                    "type": "number",
+                    "description": "RM Factor.",
+                    "default": 1.0
+                  },
+                  "SCALE_FACTOR": {
+                    "type": "number",
+                    "description": "Scale Factor.",
+                    "default": 1.0
+                  },
+                  "UNIT_LOADCASE": {
+                    "type": "string",
+                    "description": "Loadcase Name for user-defined unit load."
+                  },
+                  "UNIT_NODE": {
+                    "type": "integer",
+                    "description": "Node (unit load applied)."
+                  },
+                  "ANGLE_CCW": {
+                    "type": "number",
+                    "description": "Angle CCW (allowed: 0/90/180/270).",
+                    "default": 0.0
+                  }
+                },
+                "required": [
+                  "DISP_LOADCASE",
+                  "DRIFT_LOADCASE",
+                  "UNIT_LOADCASE",
+                  "UNIT_NODE"
+                ]
+              }
+            },
+            "TYPE_PARAMETERS": {
+              "type": "object",
+              "description": "Type Parameters. Per-member-type sizing parameters; each member type omitted falls back to type-specific handler defaults.",
+              "properties": {
+                "Steel_Column": {
+                  "$ref": "#/definitions/MemberParam"
+                },
+                "SRC_Column": {
+                  "$ref": "#/definitions/MemberParam"
+                },
+                "Beam": {
+                  "$ref": "#/definitions/MemberParam"
+                },
+                "Brace": {
+                  "$ref": "#/definitions/MemberParam"
+                }
+              }
+            },
+            "SECTION_LIST": {
+              "type": "array",
+              "description": "Section List. One entry per section to auto-design.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "SECTION_ID": {
+                    "type": "integer",
+                    "description": "Section ID number."
+                  },
+                  "PARAM_SCOPE": {
+                    "type": "string",
+                    "description": "Param Scope (G=Global / P=Property).",
+                    "default": "G"
+                  },
+                  "SECT_DATABASE": {
+                    "type": "array",
+                    "description": "Sect. DB List.",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "MAX_HB_DIFF": {
+                    "type": "number",
+                    "description": "Max (H-B) Difference (0 for square)."
+                  },
+                  "H_MIN": {
+                    "type": "number",
+                    "description": "H Min (min height)."
+                  },
+                  "H_MAX": {
+                    "type": "number",
+                    "description": "H Max (max height)."
+                  },
+                  "H_STEP": {
+                    "type": "number",
+                    "description": "H Inc (height step).",
+                    "default": 0.05
+                  },
+                  "B_MIN": {
+                    "type": "number",
+                    "description": "B Min.",
+                    "default": 0.0
+                  },
+                  "B_MAX": {
+                    "type": "number",
+                    "description": "B Max.",
+                    "default": 0.0
+                  },
+                  "B_STEP": {
+                    "type": "number",
+                    "description": "B Inc.",
+                    "default": 0.05
+                  },
+                  "WIDTH_LIMIT": {
+                    "type": "string",
+                    "description": "Width-Ratio Method (No Limit/User/Auto). Case-insensitive; serialized wire values.",
+                    "enum": [
+                      "Auto",
+                      "User",
+                      "No Limit"
+                    ]
+                  },
+                  "F_OUT": {
+                    "type": "number",
+                    "description": "Flange Out (required if User).",
+                    "default": 0.0
+                  },
+                  "F_IN": {
+                    "type": "number",
+                    "description": "Flange In (required if User).",
+                    "default": 0.0
+                  },
+                  "W_OUT": {
+                    "type": "number",
+                    "description": "Web Out (required if User).",
+                    "default": 0.0
+                  },
+                  "W_IN": {
+                    "type": "number",
+                    "description": "Web In (required if User).",
+                    "default": 0.0
+                  },
+                  "ALLOW_RATIO": {
+                    "type": "number",
+                    "description": "Allowable Ratio (default=1).",
+                    "default": 1.0
+                  },
+                  "SECTION_OPT": {
+                    "type": "object",
+                    "description": "Per-Section Options (Steel/SRC Column). Overrides column-section / built-up-joint handling for this section.",
+                    "properties": {
+                      "COLUMN_SECTION": {
+                        "type": "string",
+                        "description": "Column Section per-section override. Compared case-insensitively to 'Optimum'.",
+                        "default": "Optimum"
+                      },
+                      "BUILTUP_JOINT": {
+                        "type": "string",
+                        "description": "Built-Up Joint per-section override. Compared case-insensitively to 'External'.",
+                        "default": "External"
+                      },
+                      "PLATE_THK_LIST": {
+                        "type": "array",
+                        "description": "Plate Thickness List per-section (m).",
+                        "items": {
+                          "type": "number"
+                        },
+                        "default": [
+                          0.01
+                        ]
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "SECTION_ID",
+                  "SECT_DATABASE",
+                  "MAX_HB_DIFF",
+                  "H_MIN",
+                  "H_MAX",
+                  "WIDTH_LIMIT"
+                ]
+              }
+            },
+            "OUTPUT_OPTIONS": {
+              "type": "object",
+              "description": "Output Options. Result-graph exports and post-run actions.",
+              "properties": {
+                "GRAPH_WT_RATIO": {
+                  "type": "boolean",
+                  "description": "Steel Weight & Stress Ratio Graph (JPG).",
+                  "default": false
+                },
+                "GRAPH_STR_RATIO": {
+                  "type": "boolean",
+                  "description": "Strength Design Ratio Graph (JPG).",
+                  "default": false
+                },
+                "GRAPH_DISP_TREND": {
+                  "type": "boolean",
+                  "description": "Total Displacement Trend Graph (JPG).",
+                  "default": false
+                },
+                "GRAPH_PF_WEIGHT": {
+                  "type": "boolean",
+                  "description": "Disp. PF per Weight Graph (JPG).",
+                  "default": false
+                },
+                "GRAPH_PF": {
+                  "type": "boolean",
+                  "description": "Displacement Participation Factor Graph (JPG).",
+                  "default": false
+                },
+                "OUTPUT_PATH": {
+                  "type": "string",
+                  "description": "Output Save Path (folder path)."
+                },
+                "APPLY_OPTIMUM": {
+                  "type": "boolean",
+                  "description": "Apply Optimal Sections to Model.",
+                  "default": false
+                }
+              }
+            }
+          },
+          "required": [
+            "DISPLACEMENT_CONTROL",
+            "SECTION_LIST"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ],
+      "definitions": {
+        "MemberParam": {
+          "type": "object",
+          "description": "Per-member-type design parameters. Empty-defaulted bounds fall back to type-specific handler defaults.",
+          "properties": {
+            "SECT_DATABASE": {
+              "type": "array",
+              "description": "Sect. DB List.",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "KS21"
+              ]
+            },
+            "MAX_HB_DIFF": {
+              "type": "number",
+              "description": "Max (H-B) Difference."
+            },
+            "H_MIN": {
+              "type": "number",
+              "description": "Min. Height (H)."
+            },
+            "H_MAX": {
+              "type": "number",
+              "description": "Max. Height (H)."
+            },
+            "H_STEP": {
+              "type": "number",
+              "description": "Height Increment.",
+              "default": 0.05
+            },
+            "B_MIN": {
+              "type": "number",
+              "description": "Min. Width (B)."
+            },
+            "B_MAX": {
+              "type": "number",
+              "description": "Max. Width (B)."
+            },
+            "B_STEP": {
+              "type": "number",
+              "description": "Width Increment.",
+              "default": 0.05
+            },
+            "WIDTH_LIMIT": {
+              "type": "string",
+              "description": "Width-Thickness Limit. Case-insensitive; serialized wire values.",
+              "enum": [
+                "Auto",
+                "User",
+                "No Limit"
+              ],
+              "default": "Auto"
+            },
+            "F_OUT": {
+              "type": "number",
+              "description": "Flange Out.",
+              "default": 0.0
+            },
+            "F_IN": {
+              "type": "number",
+              "description": "Flange In.",
+              "default": 0.0
+            },
+            "W_OUT": {
+              "type": "number",
+              "description": "Web Out.",
+              "default": 0.0
+            },
+            "W_IN": {
+              "type": "number",
+              "description": "Web In.",
+              "default": 0.0
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "GLOBAL_PARAM": {
+        "ALLOW_RATIO": 1.0,
+        "COLUMN_SECTION": "Optimum",
+        "BUILTUP_JOINT": "Internal",
+        "PLATE_THK_LIST": [
+          0.01,
+          0.012
+        ]
+      },
+      "DISPLACEMENT_CONTROL": [
+        {
+          "DISP_LOADCASE": "EQX",
+          "DISP_LIMIT": 0.03,
+          "DRIFT_LOADCASE": "EQX",
+          "DRIFT_RATIO": 0.015,
+          "RM_FACTOR": 1.0,
+          "SCALE_FACTOR": 1.0,
+          "UNIT_LOADCASE": "UNIT_X",
+          "UNIT_NODE": 101,
+          "ANGLE_CCW": 0.0
+        }
+      ],
+      "TYPE_PARAMETERS": {
+        "Steel_Column": {
+          "SECT_DATABASE": [
+            "KS21"
+          ],
+          "H_MIN": 0.2,
+          "H_MAX": 0.35,
+          "H_STEP": 0.05,
+          "B_MIN": 0.2,
+          "B_MAX": 0.35,
+          "B_STEP": 0.05,
+          "WIDTH_LIMIT": "Auto"
+        },
+        "Beam": {
+          "SECT_DATABASE": [
+            "KS21"
+          ],
+          "MAX_HB_DIFF": 0.6,
+          "H_MIN": 0.2,
+          "H_MAX": 0.55,
+          "B_MIN": 0.1,
+          "B_MAX": 0.2,
+          "WIDTH_LIMIT": "Auto"
+        }
+      },
+      "SECTION_LIST": [
+        {
+          "SECTION_ID": 1,
+          "PARAM_SCOPE": "G",
+          "SECT_DATABASE": [
+            "KS21"
+          ],
+          "MAX_HB_DIFF": 0.0,
+          "H_MIN": 0.2,
+          "H_MAX": 0.35,
+          "H_STEP": 0.05,
+          "B_MIN": 0.2,
+          "B_MAX": 0.35,
+          "B_STEP": 0.05,
+          "WIDTH_LIMIT": "Auto",
+          "ALLOW_RATIO": 1.0,
+          "SECTION_OPT": {
+            "COLUMN_SECTION": "Optimum",
+            "BUILTUP_JOINT": "External",
+            "PLATE_THK_LIST": [
+              0.01
+            ]
+          }
+        }
+      ],
+      "OUTPUT_OPTIONS": {
+        "GRAPH_WT_RATIO": true,
+        "GRAPH_STR_RATIO": false,
+        "GRAPH_DISP_TREND": false,
+        "GRAPH_PF_WEIGHT": false,
+        "GRAPH_PF": false,
+        "OUTPUT_PATH": "C:/temp/dgn",
+        "APPLY_OPTIMUM": false
+      }
+    }
+  }
+}

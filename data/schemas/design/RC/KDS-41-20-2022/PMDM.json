@@ -1,0 +1,29 @@
+{
+  "_group": "design",
+  "_name": "PMDM",
+  "uri": "design/RC/KDS-41-20-2022/PMDM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PMDM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "P-M Interaction Curve Calculation Method (PMDM). The field is driven by the PMDM_CALC_METHOD calculation-method enum for RC column design.",
+      "properties": {
+        "CALC_METHOD": {
+          "type": "string",
+          "enum": ["P", "M/P"],
+          "description": "Calculation Method. Case-insensitive enum (PMDM_CALC_METHOD). P = axial-force-based; M/P = moment-to-axial-force-ratio-based."
+        }
+      },
+      "required": ["CALC_METHOD"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "CALC_METHOD": "M/P"
+      }
+    }
+  }
+}

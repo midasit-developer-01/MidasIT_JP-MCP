@@ -1,0 +1,60 @@
+{
+  "_group": "db",
+  "_name": "INMF",
+  "uri": "db/INMF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "INMF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Initial Element Force (INMF). Keyed by element ID; ELEM_TYPE selects the force layout, where TRUSS uses 2 axial forces (i- and j-end) and all other types use 12 forces (6 per end).",
+      "properties": {
+        "ELEM_TYPE": {
+          "description": "Element type that determines the ELEMENT_FORCES layout. Case-insensitive. \"TRUSS\": axial-only, expects 2 forces. \"BEAM\", \"E-LINK\" (elastic link), \"G-LINK\" (general link): expect 12 forces (6 components at each end).",
+          "type": "string",
+          "enum": ["TRUSS", "BEAM", "E-LINK", "G-LINK"]
+        },
+        "ELEM_KEY": {
+          "description": "Target element ID to which the initial element force is applied.",
+          "type": "integer"
+        },
+        "ELEMENT_FORCES": {
+          "description": "Initial element forces. [ELEM_TYPE=TRUSS] provide 2 values: [Axial-i, Axial-j]. [ELEM_TYPE=BEAM|E-LINK|G-LINK] provide 12 values: [Axial-i, Shear(y)-i, Shear(z)-i, Torsion-i, Moment(y)-i, Moment(z)-i, Axial-j, Shear(y)-j, Shear(z)-j, Torsion-j, Moment(y)-j, Moment(z)-j]. Non-TRUSS types are hard-rejected when fewer than 12 values are supplied.",
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [
+        "ELEM_TYPE",
+        "ELEM_KEY",
+        "ELEMENT_FORCES"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ELEM_TYPE": "BEAM",
+        "ELEM_KEY": 15,
+        "ELEMENT_FORCES": [10.0, 0.0, 0.0, 0.0, 5.0, 2.5, -10.0, 0.0, 0.0, 0.0, -5.0, -2.5]
+      },
+      "2": {
+        "ELEM_TYPE": "TRUSS",
+        "ELEM_KEY": 112,
+        "ELEMENT_FORCES": [20.0, -20.0]
+      },
+      "3": {
+        "ELEM_TYPE": "E-LINK",
+        "ELEM_KEY": 5,
+        "ELEMENT_FORCES": [8.0, 1.0, 1.0, 0.0, 3.0, 3.0, -8.0, -1.0, -1.0, 0.0, -3.0, -3.0]
+      },
+      "4": {
+        "ELEM_TYPE": "G-LINK",
+        "ELEM_KEY": 7,
+        "ELEMENT_FORCES": [12.0, 2.0, 2.0, 1.0, 4.0, 4.0, -12.0, -2.0, -2.0, -1.0, -4.0, -4.0]
+      }
+    }
+  }
+}

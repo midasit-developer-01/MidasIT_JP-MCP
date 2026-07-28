@@ -1,0 +1,29 @@
+{
+  "_group": "rating",
+  "_name": "SPLT",
+  "uri": "rating/PSC/AASHTO-LRFR19/SPLT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SPLT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Span Length (SPLT). A single span-length value stored per database key; the only field is the span length.",
+      "properties": {
+        "SPAN_LENGTH": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Span Length (>= 0)."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SPAN_LENGTH": 30.0
+      }
+    }
+  }
+}

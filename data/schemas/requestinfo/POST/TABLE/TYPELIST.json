@@ -1,0 +1,21 @@
+{
+  "_group": "requestinfo",
+  "_name": "TYPELIST",
+  "uri": "requestinfo/POST/TABLE/TYPELIST",
+  "methods": "GET",
+  "schema": {
+    "TYPELIST": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Table Type List (TYPELIST). Request takes no body (DTO_EMPTY); the handler returns the list of available table types via toJsonTableTypes().",
+      "properties": {
+        "Argument": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

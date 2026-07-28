@@ -1,0 +1,45 @@
+{
+  "_group": "db",
+  "_name": "UNIT",
+  "uri": "db/UNIT",
+  "methods": "GET, PUT",
+  "schema": {
+    "UNIT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Unit System (UNIT). The single model-wide unit system; each optional field independently overrides the current force, length, heat, or temperature unit when supplied, and any omitted field keeps its existing value.",
+      "properties": {
+        "FORCE": {
+          "type": "string",
+          "enum": ["KGF", "TONF", "N", "KN", "LBF", "KIPS"],
+          "description": "Force (mass) unit. Case-insensitive. KGF=kgf, TONF=tonf, N=N, KN=kN, LBF=lbf, KIPS=kips. If omitted, the current force unit is unchanged."
+        },
+        "DIST": {
+          "type": "string",
+          "enum": ["MM", "CM", "M", "IN", "FT"],
+          "description": "Length/distance unit. Case-insensitive. MM=mm, CM=cm, M=m, IN=in, FT=ft. If omitted, the current length unit is unchanged."
+        },
+        "HEAT": {
+          "type": "string",
+          "enum": ["CAL", "KCAL", "J", "BTU", "KJ"],
+          "description": "Heat unit. Case-insensitive. CAL=cal, KCAL=kcal, J=J, BTU=Btu, KJ=kJ. If omitted, the current heat unit is unchanged."
+        },
+        "TEMPER": {
+          "type": "string",
+          "enum": ["C", "F"],
+          "description": "Temperature unit. Case-insensitive. C=Celsius, F=Fahrenheit. If omitted, the current temperature unit is unchanged."
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FORCE": "KN",
+        "DIST": "M",
+        "HEAT": "KJ",
+        "TEMPER": "C"
+      }
+    }
+  }
+}

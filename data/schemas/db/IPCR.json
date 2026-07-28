@@ -1,0 +1,116 @@
+{
+  "_group": "db",
+  "_name": "IPCR",
+  "uri": "db/IPCR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "IPCR": {
+      "type": "object",
+      "description": "Imperfection Load (IPCR). A single imperfection-load record keyed by integer id; NATIONAL_CODE selects the code basis (0=Global, 1=China) and, for China, the CH_DATA block supplies the imperfection curvature parameters.",
+      "additionalProperties": false,
+      "required": ["NAME", "IMPNAME", "LCNAME", "ANALTYPE"],
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Imperfection load name."
+        },
+        "IMPNAME": {
+          "type": "string",
+          "description": "Imperfection load case name (source buckling/analysis load case the imperfection shape is derived from)."
+        },
+        "DESC": {
+          "type": "string",
+          "default": "",
+          "description": "Optional description."
+        },
+        "LCNAME": {
+          "type": "string",
+          "description": "Load case name resolved against ANALTYPE to look up the load case key."
+        },
+        "ANALTYPE": {
+          "type": "string",
+          "description": "Analysis type of the referenced load case. Case-insensitive.",
+          "enum": ["ST", "RS", "TH", "MV", "SM", "ENVL", "CB", "CBS", "CBC", "CBF", "CBR", "PO", "CS", "ES", "GI", "CN", "CBA", "CBSC", "CBCF", "CBSM", "CBLN", "NRS", "NES"]
+        },
+        "DIR": {
+          "type": "integer",
+          "default": 0,
+          "description": "Direction index for the imperfection load."
+        },
+        "MINMAX": {
+          "type": "string",
+          "default": "ALL",
+          "description": "Min/Max mode of the imperfection value. Case-insensitive. Stored internally as index-1: MIN=-1, ALL=0, MAX=1.",
+          "enum": ["MIN", "ALL", "MAX"]
+        },
+        "NATIONAL_CODE": {
+          "type": "integer",
+          "default": 0,
+          "description": "National code basis: 0=Global, 1=China. CH_DATA is only applied when the China code path is active."
+        },
+        "CH_DATA": {
+          "type": "object",
+          "description": "[NATIONAL_CODE=1 (China)] China-specific imperfection curvature data. Ignored on non-China builds/codes.",
+          "additionalProperties": false,
+          "properties": {
+            "bELEM": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether the imperfection is applied on an element basis."
+            },
+            "bAUTOCALK": {
+              "type": "boolean",
+              "default": true,
+              "description": "Auto-calculate the K factor; when false, dK is used."
+            },
+            "dK": {
+              "type": "number",
+              "default": 0.004,
+              "description": "Manually specified K factor (used when bAUTOCALK is false)."
+            },
+            "bAUTOE0L": {
+              "type": "boolean",
+              "default": true,
+              "description": "Auto-calculate the e0/L ratio; when false, dE0L is used."
+            },
+            "dE0L": {
+              "type": "number",
+              "default": 0.004,
+              "description": "Manually specified e0/L ratio (used when bAUTOE0L is false)."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Imperfection1",
+        "IMPNAME": "Buckling1",
+        "DESC": "Global code imperfection",
+        "LCNAME": "DL",
+        "ANALTYPE": "ST",
+        "DIR": 0,
+        "MINMAX": "ALL",
+        "NATIONAL_CODE": 0
+      },
+      "2": {
+        "NAME": "Imperfection2",
+        "IMPNAME": "Buckling2",
+        "LCNAME": "LL",
+        "ANALTYPE": "CB",
+        "DIR": 1,
+        "MINMAX": "MAX",
+        "NATIONAL_CODE": 1,
+        "CH_DATA": {
+          "bELEM": false,
+          "bAUTOCALK": false,
+          "dK": 0.004,
+          "bAUTOE0L": false,
+          "dE0L": 0.004
+        }
+      }
+    }
+  }
+}

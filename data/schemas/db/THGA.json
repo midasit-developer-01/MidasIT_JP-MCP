@@ -1,0 +1,89 @@
+{
+  "_group": "db",
+  "_name": "THGA",
+  "uri": "db/THGA",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THGA": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Time History Ground Acceleration (THGA). Defines the ground acceleration time-history loads for a time history load case, pairing X/Y/Z direction time-history function names with their scale factors and arrival times.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Time history load case name that this ground acceleration set belongs to.",
+          "type": "string"
+        },
+        "FUNCX": {
+          "description": "X-direction time-history function name. Must reference an existing time-history function whose data type is acceleration/ground-acceleration (type 1 or 2); otherwise the request is rejected.",
+          "type": "string"
+        },
+        "SCALEX": {
+          "description": "X-direction scale factor applied to the X function.",
+          "type": "number"
+        },
+        "ATIMEX": {
+          "description": "X-direction arrival time.",
+          "type": "number",
+          "default": 0
+        },
+        "FUNCY": {
+          "description": "Y-direction time-history function name. Must reference an existing time-history function whose data type is acceleration/ground-acceleration (type 1 or 2); otherwise the request is rejected.",
+          "type": "string"
+        },
+        "SCALEY": {
+          "description": "Y-direction scale factor applied to the Y function.",
+          "type": "number"
+        },
+        "ATIMEY": {
+          "description": "Y-direction arrival time.",
+          "type": "number",
+          "default": 0
+        },
+        "FUNCZ": {
+          "description": "Z-direction time-history function name. Optional (empty string means no Z-direction function). If given, must reference an existing time-history function of data type 1 or 2.",
+          "type": "string",
+          "default": ""
+        },
+        "SCALEZ": {
+          "description": "Z-direction scale factor applied to the Z function. Only used when FUNCZ references a valid function.",
+          "type": "number",
+          "default": 0
+        },
+        "ATIMEZ": {
+          "description": "Z-direction arrival time. Only used when FUNCZ references a valid function.",
+          "type": "number",
+          "default": 0
+        },
+        "ANGLE": {
+          "description": "Angle of horizontal ground acceleration (degrees).",
+          "type": "number",
+          "default": 0
+        }
+      },
+      "required": [
+        "NAME",
+        "FUNCX",
+        "SCALEX",
+        "FUNCY",
+        "SCALEY"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "TH11",
+        "FUNCX": "TF11",
+        "SCALEX": 1.1,
+        "ATIMEX": 0,
+        "FUNCY": "TF1",
+        "SCALEY": 1.2,
+        "ATIMEY": 0,
+        "FUNCZ": "Elcent_h",
+        "SCALEZ": 1.3,
+        "ATIMEZ": 0,
+        "ANGLE": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "_group": "rating",
+  "_name": "LENG",
+  "uri": "rating/PSC/AASHTO-LRFR19/LENG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LENG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Unbraced Length (LENG). Fields set the member unbraced lengths for AASHTO-LRFR19 PSC rating; LT (torsional unbraced length) is excluded from the PSC schema.",
+      "properties": {
+        "LY": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced Length Ly."
+        },
+        "LZ": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced Length Lz."
+        },
+        "LB": {
+          "type": "number",
+          "default": 0,
+          "description": "[bNOTUSE=false] Laterally Unbraced Length; applied only when 'Do not consider' is false."
+        },
+        "bNOTUSE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Do not consider the laterally unbraced length."
+        },
+        "bAUTOCALC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate by Code."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LY": 3.5,
+        "LZ": 3.5,
+        "LB": 2.0,
+        "bNOTUSE": false,
+        "bAUTOCALC": false
+      }
+    }
+  }
+}

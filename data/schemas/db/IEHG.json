@@ -1,0 +1,35 @@
+{
+  "_group": "db",
+  "_name": "IEHG",
+  "uri": "db/IEHG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "IEHG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Inelastic Hinge (IEHG). Assigns an inelastic hinge to an element by referencing an existing Inelastic Hinge Property (PROP_NAME) and a Fiber division (FIBER_NAME); the id key is the element number.",
+      "properties": {
+        "PROP_NAME": {
+          "description": "Name of the Inelastic Hinge Property to assign. Must reference an existing Inelastic Hinge Property (IEHP); the write is rejected if no property with this name exists.",
+          "type": "string"
+        },
+        "FIBER_NAME": {
+          "description": "Name of the Fiber division (Fiber & Auto) to associate with the hinge. Resolved to the fiber key by name.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "PROP_NAME",
+        "FIBER_NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "2101": {
+        "PROP_NAME": "Fiber_Auto",
+        "FIBER_NAME": "B2102_Column12"
+      }
+    }
+  }
+}

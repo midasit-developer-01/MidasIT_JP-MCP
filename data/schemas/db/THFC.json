@@ -1,0 +1,137 @@
+{
+  "_group": "db",
+  "_name": "THFC",
+  "uri": "db/THFC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THFC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Time History Function (THFC). FUNCTYPE selects the function form: 1 (Time Function) uses iMETHOD/SCALE/MAXVALUE/aFUNCDATA, 2 (Sinusoidal) uses CONS_A/CONS_C/FREQUENCY/DAMP_FACTOR/PHASE_ANGLE.",
+      "properties": {
+        "NAME": {
+          "description": "Time history function name.",
+          "type": "string"
+        },
+        "FUNCTYPE": {
+          "description": "Time history function type. 1 = Time Function, 2 = Sinusoidal. Any other value is rejected.",
+          "type": "integer",
+          "enum": [1, 2]
+        },
+        "iTYPE": {
+          "description": "Time function data type. 1 = Normalized Accel., 2 = Acceleration, 3 = Force, 4 = Moment, 5 = Normal.",
+          "type": "integer"
+        },
+        "GRAV": {
+          "description": "Gravity acceleration used to scale the function.",
+          "type": "number"
+        },
+        "DESC": {
+          "description": "Description text for the function.",
+          "type": "string",
+          "default": ""
+        },
+        "iMETHOD": {
+          "description": "[FUNCTYPE=1] Scaling method. 0 = Scale Factor (use SCALE), 1 = Maximum Value (use MAXVALUE). Any other value is rejected when FUNCTYPE=1.",
+          "type": "integer",
+          "enum": [0, 1]
+        },
+        "SCALE": {
+          "description": "[FUNCTYPE=1, iMETHOD=0] Scale factor applied to the time-value data.",
+          "type": "number"
+        },
+        "MAXVALUE": {
+          "description": "[FUNCTYPE=1, iMETHOD=1] Maximum value the data is scaled to.",
+          "type": "number",
+          "default": 0
+        },
+        "aFUNCDATA": {
+          "description": "[FUNCTYPE=1] List of time-value pairs defining the function.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "TIME": {
+                "description": "Time coordinate of the data point.",
+                "type": "number"
+              },
+              "VALUE": {
+                "description": "Function value at the given time.",
+                "type": "number"
+              }
+            }
+          }
+        },
+        "CONS_A": {
+          "description": "[FUNCTYPE=2] Sinusoidal constant A.",
+          "type": "number"
+        },
+        "CONS_C": {
+          "description": "[FUNCTYPE=2] Sinusoidal constant C.",
+          "type": "number"
+        },
+        "FREQUENCY": {
+          "description": "[FUNCTYPE=2] Sinusoidal frequency.",
+          "type": "number"
+        },
+        "DAMP_FACTOR": {
+          "description": "[FUNCTYPE=2] Sinusoidal damping factor.",
+          "type": "number"
+        },
+        "PHASE_ANGLE": {
+          "description": "[FUNCTYPE=2] Sinusoidal phase angle.",
+          "type": "number"
+        }
+      },
+      "required": [
+        "NAME",
+        "FUNCTYPE",
+        "iTYPE",
+        "GRAV"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "ElCentroSite_Scale",
+        "FUNCTYPE": 1,
+        "iTYPE": 1,
+        "GRAV": 9.806,
+        "iMETHOD": 0,
+        "SCALE": 1,
+        "aFUNCDATA": [
+          { "TIME": 0.02, "VALUE": 0.0051703039 },
+          { "TIME": 0.04, "VALUE": 0.0042117071 },
+          { "TIME": 0.06, "VALUE": 0.0032429125 }
+        ],
+        "DESC": "1940,ElCentroSite,270Deg"
+      },
+      "2": {
+        "NAME": "ElCentroSite_Max",
+        "FUNCTYPE": 1,
+        "iTYPE": 1,
+        "GRAV": 9.806,
+        "iMETHOD": 1,
+        "MAXVALUE": 0.2,
+        "aFUNCDATA": [
+          { "TIME": 0.02, "VALUE": 0.0051703039 },
+          { "TIME": 0.04, "VALUE": 0.0042117071 }
+        ],
+        "DESC": "1940,ElCentroSite,270Deg"
+      },
+      "3": {
+        "NAME": "SineWave",
+        "FUNCTYPE": 2,
+        "iTYPE": 2,
+        "GRAV": 9.806,
+        "CONS_A": 1.0,
+        "CONS_C": 0.0,
+        "FREQUENCY": 2.0,
+        "DAMP_FACTOR": 0.05,
+        "PHASE_ANGLE": 0.0,
+        "DESC": "Sinusoidal test function"
+      }
+    }
+  }
+}

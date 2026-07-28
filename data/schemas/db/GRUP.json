@@ -1,0 +1,65 @@
+{
+  "_group": "db",
+  "_name": "GRUP",
+  "uri": "db/GRUP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "GRUP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Structure Group (GRUP). Each key is a group id; NAME identifies the group, and N_LIST / E_LIST enumerate the nodes and elements assigned to it.",
+      "properties": {
+        "NAME": {
+          "description": "Structure group name.",
+          "type": "string"
+        },
+        "P_TYPE": {
+          "description": "Plane type code for the group. Default 0.",
+          "type": "integer",
+          "default": 0
+        },
+        "N_LIST": {
+          "description": "List of node numbers assigned to this group. Each entry is appended to the group's node set on set.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "E_LIST": {
+          "description": "List of element numbers assigned to this group. Each entry is appended to the group's element set on set.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "required": [
+        "NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "CENTER_",
+        "P_TYPE": 0,
+        "N_LIST": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "E_LIST": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    }
+  }
+}

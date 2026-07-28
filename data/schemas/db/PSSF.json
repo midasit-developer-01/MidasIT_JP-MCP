@@ -1,0 +1,109 @@
+{
+  "_group": "db",
+  "_name": "PSSF",
+  "uri": "db/PSSF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PSSF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Plate Stiffness Scale Factor (PSSF). Keyed by element number; the ITEMS array holds one scale-factor set per boundary group, each entry identified by its serial ID and optional boundary GROUP_NAME.",
+      "properties": {
+        "ITEMS": {
+          "description": "List of plate stiffness scale-factor entries for this element key. Each entry is matched to an existing record by ID, or by GROUP_NAME when the ID does not yet exist.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the scale-factor entry within this element key.",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Name of an existing Boundary Group. Must reference a boundary group that already exists; a non-empty name that is not found is rejected. Empty string means no boundary group.",
+                "type": "string",
+                "default": ""
+              },
+              "AXIAL_X": {
+                "description": "Axial stiffness scale factor Fxx.",
+                "type": "number",
+                "default": 1
+              },
+              "AXIAL_Y": {
+                "description": "Axial stiffness scale factor Fyy.",
+                "type": "number",
+                "default": 1
+              },
+              "SHEAR": {
+                "description": "In-plane shear stiffness scale factor Fxy.",
+                "type": "number",
+                "default": 1
+              },
+              "OUT_BENDING_X": {
+                "description": "Out-of-plane bending stiffness scale factor Mxx.",
+                "type": "number",
+                "default": 1
+              },
+              "OUT_BENDING_Y": {
+                "description": "Out-of-plane bending stiffness scale factor Myy.",
+                "type": "number",
+                "default": 1
+              },
+              "OUT_TORSION": {
+                "description": "Out-of-plane torsional bending stiffness scale factor Mxy.",
+                "type": "number",
+                "default": 1
+              },
+              "OUT_SHEAR_X": {
+                "description": "Out-of-plane shear stiffness scale factor Vxx.",
+                "type": "number",
+                "default": 1
+              },
+              "OUT_SHEAR_Y": {
+                "description": "Out-of-plane shear stiffness scale factor Vyy.",
+                "type": "number",
+                "default": 1
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "12": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "Service",
+            "AXIAL_X": 0.6,
+            "AXIAL_Y": 0.7,
+            "SHEAR": 0.8,
+            "OUT_BENDING_X": 0.9,
+            "OUT_BENDING_Y": 1,
+            "OUT_TORSION": 1.1,
+            "OUT_SHEAR_X": 1.2,
+            "OUT_SHEAR_Y": 1.3
+          },
+          {
+            "ID": 2,
+            "GROUP_NAME": "Ultimate",
+            "AXIAL_X": 1.1,
+            "AXIAL_Y": 1.2,
+            "SHEAR": 1.3,
+            "OUT_BENDING_X": 1.4,
+            "OUT_BENDING_Y": 1.5,
+            "OUT_TORSION": 1.6,
+            "OUT_SHEAR_X": 1.7,
+            "OUT_SHEAR_Y": 1.8
+          }
+        ]
+      }
+    }
+  }
+}

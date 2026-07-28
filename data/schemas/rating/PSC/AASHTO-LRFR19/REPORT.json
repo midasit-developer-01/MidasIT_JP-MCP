@@ -1,0 +1,42 @@
+{
+  "_group": "rating",
+  "_name": "REPORT",
+  "uri": "rating/PSC/AASHTO-LRFR19/REPORT",
+  "methods": "POST",
+  "schema": {
+    "REPORT": {
+      "type": "object",
+      "description": "PSC AASHTO-LRFR19 Rating Report (REPORT). Generates the PSC LRFR19 rating/design Excel report for the open project; the request fields set the export location, output file name, and image-saving option. All fields are optional and a POST with an empty body {} is valid (internal defaults applied).",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Report generation request (PSC_EXCEL_REQUEST). All fields optional.",
+          "properties": {
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Export directory path (e.g. C:\\Report\\). Empty = project file directory.",
+              "default": ""
+            },
+            "OUTPUT_NAME": {
+              "type": "string",
+              "description": "Output file name without extension. Empty = project file name.",
+              "default": ""
+            },
+            "SAVE_IMAGE_OPTION": {
+              "type": "boolean",
+              "description": "Save image option (Rating Report only). Design Report ignores this field.",
+              "default": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "EXPORT_PATH": "C:\\Report\\",
+      "OUTPUT_NAME": "PSC_LRFR19_Rating",
+      "SAVE_IMAGE_OPTION": true
+    }
+  }
+}

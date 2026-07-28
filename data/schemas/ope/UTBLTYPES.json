@@ -1,0 +1,21 @@
+{
+  "_group": "ope",
+  "_name": "UTBLTYPES",
+  "uri": "ope/UTBLTYPES",
+  "methods": "GET",
+  "schema": {
+    "UTBLTYPES": {
+      "type": "object",
+      "description": "User Table Types (UTBLTYPES). Retrieves the list of user-defined table type names available in the current project; the request takes no arguments (DTO_EMPTY).",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body. This endpoint takes no input fields."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

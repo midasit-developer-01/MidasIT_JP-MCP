@@ -1,0 +1,202 @@
+{
+  "_group": "db",
+  "_name": "SLANOP",
+  "uri": "db/SLANOP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SLANOP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Traffic Surface Lane - Moving Load Optimization (SLANOP). Defines an optimized moving-load traffic lane; the lane-item list used is driven by the model's moving-load design code (China code uses CHINA_ITEMS, otherwise ITEMS).",
+      "properties": {
+        "LANE_NAME": {
+          "type": "string",
+          "description": "Lane name."
+        },
+        "SKEW_START": {
+          "type": "number",
+          "default": 0,
+          "description": "Skew angle at the start of the lane."
+        },
+        "SKEW_END": {
+          "type": "number",
+          "default": 0,
+          "description": "Skew angle at the end of the lane."
+        },
+        "MOVING": {
+          "type": "string",
+          "enum": ["FORWARD", "BACKWARD", "BOTH"],
+          "description": "Moving direction (case-insensitive). 0:Forward (FORWARD), 1:Backward (BACKWARD), 2:Both (BOTH)."
+        },
+        "OPTIMIZE_WIDTH": {
+          "type": "number",
+          "description": "Optimized width."
+        },
+        "LANE_WIDTH": {
+          "type": "number",
+          "description": "Lane width."
+        },
+        "ANALYSIS_LANE_OFFSET": {
+          "type": "number",
+          "default": 1,
+          "description": "Analysis lane offset."
+        },
+        "WHEEL_SPACE": {
+          "type": "number",
+          "default": 0,
+          "description": "Wheel spacing."
+        },
+        "MARGIN": {
+          "type": "number",
+          "default": 0,
+          "description": "Margin."
+        },
+        "OPT_STRADD": {
+          "type": "boolean",
+          "default": false,
+          "description": "BS straddling lane option (EuroCode, BS Straddling Lane)."
+        },
+        "OFFSET_TYPE": {
+          "type": "integer",
+          "description": "Offset type. 0: use divide number (DIVIDE_NUM), 1: use analysis lane offset (ANALYSIS_LANE_OFFSET)."
+        },
+        "DIVIDE_NUM": {
+          "type": "integer",
+          "default": 1,
+          "description": "Number of divisions (used when OFFSET_TYPE=0)."
+        },
+        "CHINA_ITEMS": {
+          "type": "array",
+          "description": "Lane node items used when the model's moving-load design code is China. Takes effect only when the code is China and this list is non-empty; otherwise ITEMS is used.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "NODE_KEY": {
+                "type": "integer",
+                "description": "Node key."
+              },
+              "OFFSET": {
+                "type": "number",
+                "default": 0,
+                "description": "Offset."
+              },
+              "SPAN_LENGTH": {
+                "type": "number",
+                "default": 0,
+                "description": "Span length."
+              },
+              "SPAN_START": {
+                "type": "boolean",
+                "default": false,
+                "description": "Span start boolean."
+              }
+            },
+            "required": ["NODE_KEY"]
+          }
+        },
+        "ITEMS": {
+          "type": "array",
+          "description": "Lane node items (default, non-China code). Used unless the model's design code is China with a non-empty CHINA_ITEMS list.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "NODE_KEY": {
+                "type": "integer",
+                "description": "Node key."
+              },
+              "OFFSET": {
+                "type": "number",
+                "default": 0,
+                "description": "Offset."
+              },
+              "FACTOR": {
+                "type": "number",
+                "default": 0,
+                "description": "Factor."
+              },
+              "SPAN_START": {
+                "type": "boolean",
+                "default": false,
+                "description": "Span start boolean."
+              },
+              "CENT_F": {
+                "type": "number",
+                "default": 0.5,
+                "description": "Centrifugal factor."
+              }
+            },
+            "required": ["NODE_KEY"]
+          }
+        }
+      },
+      "required": ["LANE_NAME", "MOVING", "OPTIMIZE_WIDTH", "LANE_WIDTH", "OFFSET_TYPE", "ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LANE_NAME": "Lane1",
+        "SKEW_START": 0,
+        "SKEW_END": 0,
+        "MOVING": "BOTH",
+        "OPTIMIZE_WIDTH": 3.0,
+        "LANE_WIDTH": 3.5,
+        "ANALYSIS_LANE_OFFSET": 1,
+        "WHEEL_SPACE": 1.8,
+        "MARGIN": 0.5,
+        "OPT_STRADD": false,
+        "OFFSET_TYPE": 0,
+        "DIVIDE_NUM": 4,
+        "ITEMS": [
+          {
+            "NODE_KEY": 1,
+            "OFFSET": 0,
+            "FACTOR": 1.0,
+            "SPAN_START": true,
+            "CENT_F": 0.5
+          },
+          {
+            "NODE_KEY": 2,
+            "OFFSET": 0,
+            "FACTOR": 1.0,
+            "SPAN_START": false,
+            "CENT_F": 0.5
+          }
+        ]
+      },
+      "2": {
+        "LANE_NAME": "Lane2",
+        "SKEW_START": 0,
+        "SKEW_END": 0,
+        "MOVING": "FORWARD",
+        "OPTIMIZE_WIDTH": 3.0,
+        "LANE_WIDTH": 3.5,
+        "ANALYSIS_LANE_OFFSET": 1,
+        "OFFSET_TYPE": 1,
+        "CHINA_ITEMS": [
+          {
+            "NODE_KEY": 11,
+            "OFFSET": 0,
+            "SPAN_LENGTH": 30.0,
+            "SPAN_START": true
+          },
+          {
+            "NODE_KEY": 12,
+            "OFFSET": 0,
+            "SPAN_LENGTH": 30.0,
+            "SPAN_START": false
+          }
+        ],
+        "ITEMS": [
+          {
+            "NODE_KEY": 11,
+            "OFFSET": 0,
+            "FACTOR": 1.0,
+            "SPAN_START": true,
+            "CENT_F": 0.5
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "_group": "db",
+  "_name": "EFCT",
+  "uri": "db/EFCT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EFCT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Initial Force Control Data (EFCT). A single-instance dataset (key is always 1) defining the initial-force load case and the combination of static load cases whose element forces are treated as initial member forces.",
+      "type": "object",
+      "properties": {
+        "bADDLC": {
+          "description": "Whether to add the resulting initial force to the element force of the chosen load case (LCNAME). When true, LCNAME identifies the target static load case to store the initial force into.",
+          "type": "boolean",
+          "default": false
+        },
+        "LCNAME": {
+          "description": "Static load case name. When bADDLC is true this is the target load case that the initial force is saved to; otherwise it is retained as the reference load case name.",
+          "type": "string"
+        },
+        "bUSECOMB": {
+          "description": "Whether to use the initial-force combination defined in COMB_LIST.",
+          "type": "boolean",
+          "default": false
+        },
+        "COMB_LIST": {
+          "description": "Initial force combination: list of static load case entries and their scale factors. At most 15 entries are accepted (D_EFCT_NUMEFCT); exceeding the limit is rejected.",
+          "type": "array",
+          "maxItems": 15,
+          "items": {
+            "type": "object",
+            "description": "One initial-force combination case.",
+            "properties": {
+              "LCNAME": {
+                "description": "Static load case name for this combination entry.",
+                "type": "string"
+              },
+              "FACTOR": {
+                "description": "Scale factor applied to this load case.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "LCNAME",
+              "FACTOR"
+            ]
+          }
+        },
+        "bCHECK_GEOM_STIFF": {
+          "description": "Whether to reflect the initial axial forces into the geometric stiffness.",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "LCNAME",
+        "COMB_LIST"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bADDLC": false,
+        "LCNAME": "DL",
+        "bUSECOMB": true,
+        "COMB_LIST": [
+          {
+            "LCNAME": "DL",
+            "FACTOR": 1.2
+          },
+          {
+            "LCNAME": "LL",
+            "FACTOR": 1.0
+          }
+        ],
+        "bCHECK_GEOM_STIFF": false
+      }
+    }
+  }
+}

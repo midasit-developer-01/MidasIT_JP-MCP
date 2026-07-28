@@ -1,0 +1,352 @@
+{
+  "_group": "db",
+  "_name": "SSEIS",
+  "uri": "db/SSEIS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SSEIS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Static Seismic Load (SSEIS). SEIS_CODE selects the seismic code and, via a flattened per-code payload, which extra fields apply: KDS2019 uses PARAMETERS (+ optional ADDITIONAL_LOAD); USER TYPE uses SEISMIC_FORCE (+ optional ADDITIONAL_LOAD, INHERENT_TORSION). Each Assign key is a static-load case key that must already exist (STLD).",
+      "properties": {
+        "SEIS_CODE": {
+          "description": "Seismic design code (case-insensitive). This handler supports only \"KDS(41-17-00:2019)\" and \"USER TYPE\"; the value drives which per-code fields below are used. The enum lists the wire strings for all defined codes.",
+          "type": "string",
+          "enum": [
+            "KDS(41-17-00:2019)",
+            "KBC(2016)",
+            "KBC(2009)",
+            "KBC(2005)",
+            "KOREA(ARCH.2000)",
+            "KOREA(ARCH.1992)",
+            "IBC2024(ASCE7-22)",
+            "IBC2012(ASCE7-10)",
+            "IBC2009(ASCE7-05)",
+            "IBC2000(ASCE7-98)",
+            "UBC(1997)",
+            "UBC(1991)",
+            "ATC3-06",
+            "NBC(1995)",
+            "NTC2018",
+            "NTC2012",
+            "NTC2008",
+            "EUROCODE-8(2004)",
+            "EUROCODE-8(1996)",
+            "CHINA(GB/T50011-2010)",
+            "CHINA(GB50011-2001)",
+            "CHINA SHANGHAI(DGJ08-9-2003)",
+            "JAPAN(ARCH.2000)",
+            "IS1893(2016)",
+            "IS1893(2002)",
+            "TAIWAN(2022)",
+            "TAIWAN(2011)",
+            "TAIWAN(2006)",
+            "TAIWAN(1999)",
+            "NSR-10",
+            "P100-1(2013)",
+            "DPT.1301/1302-61:2018",
+            "USER TYPE"
+          ]
+        },
+        "DESC": {
+          "description": "Description of the seismic load case.",
+          "type": "string",
+          "default": ""
+        },
+        "SCALE_FACTOR_X": {
+          "description": "Scale factor applied to the seismic load in the global X direction.",
+          "type": "number"
+        },
+        "SCALE_FACTOR_Y": {
+          "description": "Scale factor applied to the seismic load in the global Y direction.",
+          "type": "number"
+        },
+        "ACCIDENT_ECCEN_X": {
+          "description": "Accidental eccentricity in X. 0=Positive, 1=Negative, 2=None.",
+          "type": "integer",
+          "enum": [0, 1, 2],
+          "default": 0
+        },
+        "ACCIDENT_ECCEN_Y": {
+          "description": "Accidental eccentricity in Y. 0=Positive, 1=Negative, 2=None.",
+          "type": "integer",
+          "enum": [0, 1, 2],
+          "default": 0
+        },
+        "ACCIDENT_TORSION": {
+          "description": "Consider accidental torsion amplification.",
+          "type": "boolean",
+          "default": false
+        },
+        "PARAMETERS": {
+          "description": "[SEIS_CODE=KDS(41-17-00:2019)] KDS2019 seismic parameters. Required when SEIS_CODE is KDS(41-17-00:2019); ignored otherwise.",
+          "type": "object",
+          "properties": {
+            "SEIS_ZONE": {
+              "description": "Seismic zone. 0=Zone 1, 1=Zone 2.",
+              "type": "integer",
+              "enum": [0, 1]
+            },
+            "EPA": {
+              "description": "Effective peak acceleration (zone factor, e.g. 0.14 or 0.22).",
+              "type": "number"
+            },
+            "SITE_CLASS": {
+              "description": "Site class. 0=S1, 1=S2, 2=S3, 3=S4, 4=S5, 5=S6.",
+              "type": "integer",
+              "enum": [0, 1, 2, 3, 4, 5]
+            },
+            "FA": {
+              "description": "Short-period site coefficient Fa. If omitted, auto-calculated from EPA and SITE_CLASS (S6 requires explicit input).",
+              "type": "number"
+            },
+            "FV": {
+              "description": "Long-period site coefficient Fv. If omitted, auto-calculated from EPA and SITE_CLASS (S6 requires explicit input).",
+              "type": "number"
+            },
+            "SDS": {
+              "description": "Design spectral response acceleration at short periods Sds. If omitted, auto-calculated from EPA and Fa.",
+              "type": "number"
+            },
+            "SD1": {
+              "description": "Design spectral response acceleration at 1s period Sd1. If omitted, auto-calculated from EPA and Fv.",
+              "type": "number"
+            },
+            "CU": {
+              "description": "GET-only: period coefficient Cu, computed on read from Sd1. Ignored in request.",
+              "type": "number"
+            },
+            "SEIS_USE_GROUP": {
+              "description": "Seismic use group. 0=Special, 1=I, 2=II.",
+              "type": "integer",
+              "enum": [0, 1, 2]
+            },
+            "IMPORTANCE_FACTOR": {
+              "description": "Importance factor.",
+              "type": "number"
+            },
+            "PERIOD_METHOD": {
+              "description": "Fundamental period method. 0=Analytical, 1=Approximate.",
+              "type": "integer",
+              "enum": [0, 1]
+            },
+            "PERIOD_ANALYSIS_X": {
+              "description": "[PERIOD_METHOD=0] Analytical fundamental period in X. Required when PERIOD_METHOD=0; ignored when PERIOD_METHOD=1.",
+              "type": "number"
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "description": "[PERIOD_METHOD=0] Analytical fundamental period in Y. Required when PERIOD_METHOD=0; ignored when PERIOD_METHOD=1.",
+              "type": "number"
+            },
+            "PERIOD_APPR_X": {
+              "description": "Approximate fundamental period in X. Required for both PERIOD_METHOD 0 and 1.",
+              "type": "number"
+            },
+            "PERIOD_APPR_Y": {
+              "description": "Approximate fundamental period in Y. Required for both PERIOD_METHOD 0 and 1.",
+              "type": "number"
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "description": "Response modification factor in X.",
+              "type": "number"
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "description": "Response modification factor in Y.",
+              "type": "number"
+            }
+          },
+          "required": [
+            "SEIS_ZONE",
+            "EPA",
+            "SITE_CLASS",
+            "SEIS_USE_GROUP",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_METHOD",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "SEISMIC_FORCE": {
+          "description": "[SEIS_CODE=USER TYPE] User-defined story seismic forces (>=1 item). Required when SEIS_CODE is USER TYPE. Each referenced STORY_NAME must exist as a seismic-load story in the model.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "STORY_NAME": {
+                "description": "Story name; must reference an existing story.",
+                "type": "string"
+              },
+              "FORCE_X": {
+                "description": "User-defined seismic force in X for this story.",
+                "type": "number"
+              },
+              "FORCE_Y": {
+                "description": "User-defined seismic force in Y for this story.",
+                "type": "number"
+              },
+              "WEIGHT": {
+                "description": "GET-only: story weight computed by the model. Ignored in request.",
+                "type": "number"
+              },
+              "ELEV": {
+                "description": "GET-only: story elevation computed by the model. Ignored in request.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "STORY_NAME",
+              "FORCE_X",
+              "FORCE_Y"
+            ]
+          }
+        },
+        "ADDITIONAL_LOAD": {
+          "description": "Additional story-level seismic loads, common to KDS(41-17-00:2019) and USER TYPE. Optional; if present must have >=1 item and each STORY_NAME must reference an existing story.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "STORY_NAME": {
+                "description": "Story name; must reference an existing story.",
+                "type": "string"
+              },
+              "ALONG_X": {
+                "description": "Additional seismic load in X.",
+                "type": "number"
+              },
+              "ALONG_Y": {
+                "description": "Additional seismic load in Y.",
+                "type": "number"
+              },
+              "TORSIONAL_RZ": {
+                "description": "Additional torsional load about Z (RZ).",
+                "type": "number"
+              }
+            },
+            "required": [
+              "STORY_NAME",
+              "ALONG_X",
+              "ALONG_Y",
+              "TORSIONAL_RZ"
+            ]
+          }
+        },
+        "INHERENT_TORSION": {
+          "description": "[SEIS_CODE=USER TYPE] Consider inherent torsion (USER TYPE only). Defaults to false when omitted; not used by KDS(41-17-00:2019).",
+          "type": "boolean"
+        },
+        "PROFILE": {
+          "description": "GET-only: calculated seismic load profile (X/Y/SRSS). Populated on read; ignored in request.",
+          "type": "object",
+          "properties": {
+            "X_DIR": {
+              "description": "GET-only: per-story profile rows in the X direction.",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProfileStoryItem"
+              }
+            },
+            "Y_DIR": {
+              "description": "GET-only: per-story profile rows in the Y direction.",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProfileStoryItem"
+              }
+            },
+            "SRSS": {
+              "description": "GET-only: per-story SRSS-combined profile rows.",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProfileStoryItem"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "SEIS_CODE",
+        "SCALE_FACTOR_X",
+        "SCALE_FACTOR_Y"
+      ],
+      "definitions": {
+        "ProfileStoryItem": {
+          "type": "object",
+          "description": "GET-only per-story profile row; all values are pre-formatted strings.",
+          "properties": {
+            "STORY_NAME": { "description": "Story name.", "type": "string" },
+            "STORY_WEIGHT": { "description": "Story weight.", "type": "string" },
+            "STORY_LEVEL": { "description": "Story level.", "type": "string" },
+            "SEISMIC_FORCE": { "description": "Seismic force.", "type": "string" },
+            "ADDED_FORCE": { "description": "Added force.", "type": "string" },
+            "STORY_FORCE": { "description": "Story force.", "type": "string" },
+            "STORY_SHEAR": { "description": "Story shear.", "type": "string" },
+            "OVERTURN_MOMENT": { "description": "Overturning moment.", "type": "string" },
+            "ACCIDENT_ECCENT": { "description": "Accidental eccentricity (omitted on SRSS rows).", "type": "string" },
+            "ACCIDENT_TORSION": { "description": "Accidental torsion.", "type": "string" },
+            "INHERENT_TORSION": { "description": "Inherent torsion.", "type": "string" },
+            "TOTAL_TORSION": { "description": "Total torsion.", "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SEIS_CODE": "KDS(41-17-00:2019)",
+        "DESC": "KDS2019 static seismic",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "ACCIDENT_ECCEN_X": 0,
+        "ACCIDENT_ECCEN_Y": 0,
+        "ACCIDENT_TORSION": false,
+        "PARAMETERS": {
+          "SEIS_ZONE": 0,
+          "EPA": 0.22,
+          "SITE_CLASS": 2,
+          "SEIS_USE_GROUP": 1,
+          "IMPORTANCE_FACTOR": 1.2,
+          "PERIOD_METHOD": 0,
+          "PERIOD_ANALYSIS_X": 0.5,
+          "PERIOD_ANALYSIS_Y": 0.5,
+          "PERIOD_APPR_X": 0.4,
+          "PERIOD_APPR_Y": 0.4,
+          "RESPONSE_MOD_FACTOR_X": 3.0,
+          "RESPONSE_MOD_FACTOR_Y": 3.0
+        },
+        "ADDITIONAL_LOAD": [
+          {
+            "STORY_NAME": "2F",
+            "ALONG_X": 10.0,
+            "ALONG_Y": 8.0,
+            "TORSIONAL_RZ": 2.0
+          }
+        ]
+      },
+      "2": {
+        "SEIS_CODE": "USER TYPE",
+        "DESC": "User-defined story forces",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "ACCIDENT_ECCEN_X": 0,
+        "ACCIDENT_ECCEN_Y": 0,
+        "ACCIDENT_TORSION": false,
+        "INHERENT_TORSION": false,
+        "SEISMIC_FORCE": [
+          {
+            "STORY_NAME": "2F",
+            "FORCE_X": 15.0,
+            "FORCE_Y": 12.0
+          },
+          {
+            "STORY_NAME": "3F",
+            "FORCE_X": 20.0,
+            "FORCE_Y": 16.0
+          }
+        ]
+      }
+    }
+  }
+}

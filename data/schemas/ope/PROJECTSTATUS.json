@@ -1,0 +1,21 @@
+{
+  "_group": "ope",
+  "_name": "PROJECTSTATUS",
+  "uri": "ope/PROJECTSTATUS",
+  "methods": "GET",
+  "schema": {
+    "PROJECTSTATUS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Project Status (PROJECTSTATUS). Retrieves a summary of the currently opened project's model/load database entries; the request takes no body (DTO_EMPTY), so the response is driven entirely by the open document's contents.",
+      "properties": {
+        "Argument": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

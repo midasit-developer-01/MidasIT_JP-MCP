@@ -1,0 +1,621 @@
+{
+  "_group": "db",
+  "_name": "WVLD",
+  "uri": "db/WVLD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "WVLD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Wave Load (WVLD). A miscellaneous wave load definition keyed by an integer id; the nested COEF (drag & inertia), CHAR (wave theory/characteristics), PROF (current profile) and grid objects together with the enum selectors (VERT_COORD, THEORY, CHAR_TYPE, CREST, UNIT) drive the applicable fields.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Wave load name.",
+          "type": "string"
+        },
+        "DESC": {
+          "description": "Optional description text.",
+          "type": "string",
+          "default": ""
+        },
+        "bSTLD": {
+          "description": "Generate static load from this wave load when true.",
+          "type": "boolean"
+        },
+        "bTHIS": {
+          "description": "Generate time history load from this wave load when true.",
+          "type": "boolean"
+        },
+        "NAME_THIS": {
+          "description": "Time history load case name to which the generated time history load is assigned (resolved to an internal key).",
+          "type": "string"
+        },
+        "VERT_COORD": {
+          "description": "Vertical (up) global axis of the model. Case-insensitive: \"GLOBAL_Y\" or \"GLOBAL_Z\".",
+          "type": "string",
+          "enum": ["GLOBAL_Y", "GLOBAL_Z"]
+        },
+        "DENSITY": {
+          "description": "Water weight density.",
+          "type": "number"
+        },
+        "DEPTH": {
+          "description": "Water depth (mud line elevation is stored as -DEPTH).",
+          "type": "number"
+        },
+        "COEF": {
+          "description": "Drag & inertia coefficient definition object.",
+          "type": "object",
+          "properties": {
+            "TYPE": {
+              "description": "Coefficient definition type. Case-insensitive; wire values: \"CONST\" (constant) or \"INTERPOL\" (linear interpolation by depth).",
+              "type": "string",
+              "enum": ["CONST", "INTERPOL"]
+            },
+            "COEF_S": {
+              "description": "Smooth-surface drag & inertia coefficient rows.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "GRUP": {
+                    "description": "Structure group name (resolved to an internal group key).",
+                    "type": "string"
+                  },
+                  "DIA": {
+                    "description": "Member diameter.",
+                    "type": "number"
+                  },
+                  "DRAG_COEF_X": {
+                    "description": "Tangential (x dir) drag coefficient.",
+                    "type": "number"
+                  },
+                  "DRAG_COEF_Y": {
+                    "description": "Drag coefficient in y direction.",
+                    "type": "number"
+                  },
+                  "DRAG_COEF_Z": {
+                    "description": "Drag coefficient in z direction.",
+                    "type": "number"
+                  },
+                  "INER_COEF_X": {
+                    "description": "Tangential (x dir) inertia coefficient.",
+                    "type": "number"
+                  },
+                  "INER_COEF_Y": {
+                    "description": "Inertia coefficient in y direction.",
+                    "type": "number"
+                  },
+                  "INER_COEF_Z": {
+                    "description": "Inertia coefficient in z direction.",
+                    "type": "number"
+                  }
+                },
+                "required": ["GRUP", "DIA", "DRAG_COEF_X", "DRAG_COEF_Y", "DRAG_COEF_Z", "INER_COEF_X", "INER_COEF_Y", "INER_COEF_Z"]
+              }
+            },
+            "COEF_R": {
+              "description": "Rough-surface drag & inertia coefficient rows.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "GRUP": {
+                    "description": "Structure group name (resolved to an internal group key).",
+                    "type": "string"
+                  },
+                  "DIA": {
+                    "description": "Member diameter.",
+                    "type": "number"
+                  },
+                  "DRAG_COEF_X": {
+                    "description": "Tangential (x dir) drag coefficient.",
+                    "type": "number"
+                  },
+                  "DRAG_COEF_Y": {
+                    "description": "Drag coefficient in y direction.",
+                    "type": "number"
+                  },
+                  "DRAG_COEF_Z": {
+                    "description": "Drag coefficient in z direction.",
+                    "type": "number"
+                  },
+                  "INER_COEF_X": {
+                    "description": "Tangential (x dir) inertia coefficient.",
+                    "type": "number"
+                  },
+                  "INER_COEF_Y": {
+                    "description": "Inertia coefficient in y direction.",
+                    "type": "number"
+                  },
+                  "INER_COEF_Z": {
+                    "description": "Inertia coefficient in z direction.",
+                    "type": "number"
+                  }
+                },
+                "required": ["GRUP", "DIA", "DRAG_COEF_X", "DRAG_COEF_Y", "DRAG_COEF_Z", "INER_COEF_X", "INER_COEF_Y", "INER_COEF_Z"]
+              }
+            },
+            "bOVER": {
+              "description": "Override the coefficients per structure group when true.",
+              "type": "boolean"
+            },
+            "OVER_S": {
+              "description": "Smooth-surface override coefficient rows (used when bOVER is true).",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "GRUP": {
+                    "description": "Structure group name (resolved to an internal group key).",
+                    "type": "string"
+                  },
+                  "DIA": {
+                    "description": "Member diameter.",
+                    "type": "number"
+                  },
+                  "DRAG_COEF_X": {
+                    "description": "Tangential (x dir) drag coefficient.",
+                    "type": "number"
+                  },
+                  "DRAG_COEF_Y": {
+                    "description": "Drag coefficient in y direction.",
+                    "type": "number"
+                  },
+                  "DRAG_COEF_Z": {
+                    "description": "Drag coefficient in z direction.",
+                    "type": "number"
+                  },
+                  "INER_COEF_X": {
+                    "description": "Tangential (x dir) inertia coefficient.",
+                    "type": "number"
+                  },
+                  "INER_COEF_Y": {
+                    "description": "Inertia coefficient in y direction.",
+                    "type": "number"
+                  },
+                  "INER_COEF_Z": {
+                    "description": "Inertia coefficient in z direction.",
+                    "type": "number"
+                  }
+                },
+                "required": ["GRUP", "DIA", "DRAG_COEF_X", "DRAG_COEF_Y", "DRAG_COEF_Z", "INER_COEF_X", "INER_COEF_Y", "INER_COEF_Z"]
+              }
+            },
+            "OVER_R": {
+              "description": "Rough-surface override coefficient rows (used when bOVER is true).",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "GRUP": {
+                    "description": "Structure group name (resolved to an internal group key).",
+                    "type": "string"
+                  },
+                  "DIA": {
+                    "description": "Member diameter.",
+                    "type": "number"
+                  },
+                  "DRAG_COEF_X": {
+                    "description": "Tangential (x dir) drag coefficient.",
+                    "type": "number"
+                  },
+                  "DRAG_COEF_Y": {
+                    "description": "Drag coefficient in y direction.",
+                    "type": "number"
+                  },
+                  "DRAG_COEF_Z": {
+                    "description": "Drag coefficient in z direction.",
+                    "type": "number"
+                  },
+                  "INER_COEF_X": {
+                    "description": "Tangential (x dir) inertia coefficient.",
+                    "type": "number"
+                  },
+                  "INER_COEF_Y": {
+                    "description": "Inertia coefficient in y direction.",
+                    "type": "number"
+                  },
+                  "INER_COEF_Z": {
+                    "description": "Inertia coefficient in z direction.",
+                    "type": "number"
+                  }
+                },
+                "required": ["GRUP", "DIA", "DRAG_COEF_X", "DRAG_COEF_Y", "DRAG_COEF_Z", "INER_COEF_X", "INER_COEF_Y", "INER_COEF_Z"]
+              }
+            }
+          },
+          "required": ["TYPE", "COEF_S", "COEF_R", "bOVER", "OVER_S", "OVER_R"]
+        },
+        "CHAR": {
+          "description": "Wave characteristic definition object.",
+          "type": "object",
+          "properties": {
+            "THEORY": {
+              "description": "Wave theory. Case-insensitive: \"AIRY\" (linear/Airy), \"AIRM\" (modified Airy), \"STOK\" (Stokes 5th), \"STRC\" (stream function - regular), \"STRN\" (stream function - irregular), \"CNDL\" (cnoidal), \"SLTR\" (solitary).",
+              "type": "string",
+              "enum": ["AIRY", "AIRM", "STOK", "STRC", "STRN", "CNDL", "SLTR"]
+            },
+            "FUNC": {
+              "description": "[THEORY=STRC,STRN] Stream function order.",
+              "type": "integer"
+            },
+            "DIR": {
+              "description": "Wave direction angle.",
+              "type": "number"
+            },
+            "HEIGHT": {
+              "description": "Wave height.",
+              "type": "number"
+            },
+            "CHAR_TYPE": {
+              "description": "Which characteristic defines the wave. Case-insensitive: \"LENGTH\" (use wave length) or \"PERIOD\" (use wave period).",
+              "type": "string",
+              "enum": ["LENGTH", "PERIOD"]
+            },
+            "LENGTH": {
+              "description": "[CHAR_TYPE=LENGTH] Wave length.",
+              "type": "number"
+            },
+            "PERIOD": {
+              "description": "[CHAR_TYPE=PERIOD] Wave period.",
+              "type": "number"
+            },
+            "K_FACTOR": {
+              "description": "Wave kinematics factor.",
+              "type": "number"
+            },
+            "SURFACE_V": {
+              "description": "Current surface velocity.",
+              "type": "number"
+            },
+            "BOTTOM_Y": {
+              "description": "Current bottom velocity.",
+              "type": "number"
+            }
+          },
+          "required": ["THEORY", "FUNC", "DIR", "HEIGHT", "CHAR_TYPE", "LENGTH", "PERIOD", "K_FACTOR", "SURFACE_V", "BOTTOM_Y"]
+        },
+        "PROF": {
+          "description": "Current profile definition object.",
+          "type": "object",
+          "properties": {
+            "CUR_DIR": {
+              "description": "Current direction angle.",
+              "type": "number"
+            },
+            "CUR_FACTOR": {
+              "description": "Current blockage factor.",
+              "type": "number"
+            },
+            "GRID_DATA": {
+              "description": "Current profile rows (elevation vs. velocity).",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "D": {
+                    "description": "Elevation.",
+                    "type": "number"
+                  },
+                  "V": {
+                    "description": "Current velocity at this elevation.",
+                    "type": "number"
+                  }
+                },
+                "required": ["D", "V"]
+              }
+            }
+          },
+          "required": ["CUR_DIR", "CUR_FACTOR", "GRID_DATA"]
+        },
+        "FLOOD_GRUP": {
+          "description": "Structure group names subject to the flood condition (each resolved to an internal group key).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "GROWTH": {
+          "description": "Marine growth rows (elevation vs. thickness).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "Z": {
+                "description": "Elevation.",
+                "type": "number"
+              },
+              "T": {
+                "description": "Marine growth thickness at this elevation.",
+                "type": "number"
+              }
+            },
+            "required": ["Z", "T"]
+          }
+        },
+        "GRID_X": {
+          "description": "Number of grid divisions along X (horizontal); the full internal user grid holds up to 73 columns.",
+          "type": "integer"
+        },
+        "GRID_Z": {
+          "description": "Number of grid divisions along Z (vertical); the full internal user grid holds up to 20 rows.",
+          "type": "integer"
+        },
+        "USERGRID": {
+          "description": "User-defined kinematics grid, laid out as rows of columns (Row[Column[cell]]). The handler reads up to 20 rows by 73 columns.",
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "array",
+            "maxItems": 73,
+            "items": {
+              "type": "object",
+              "properties": {
+                "X": {
+                  "description": "Horizontal position.",
+                  "type": "number"
+                },
+                "Z": {
+                  "description": "Vertical position.",
+                  "type": "number"
+                },
+                "ELEV": {
+                  "description": "Elevation.",
+                  "type": "number"
+                },
+                "VX": {
+                  "description": "Horizontal (wave) velocity.",
+                  "type": "number"
+                },
+                "VCX": {
+                  "description": "Current horizontal velocity.",
+                  "type": "number"
+                },
+                "VT": {
+                  "description": "Total horizontal velocity (VX + VCX).",
+                  "type": "number"
+                },
+                "VZ": {
+                  "description": "Vertical velocity.",
+                  "type": "number"
+                },
+                "AX": {
+                  "description": "Horizontal acceleration.",
+                  "type": "number"
+                },
+                "AZ": {
+                  "description": "Vertical acceleration.",
+                  "type": "number"
+                }
+              },
+              "required": ["X", "Z", "ELEV", "VX", "VCX", "VT", "VZ", "AX", "AZ"]
+            }
+          }
+        },
+        "TRAJ": {
+          "description": "Trajectory kinematics grid, laid out as rows of columns (Row[Column[cell]]). The handler reads up to 10 rows by 73 columns.",
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "type": "array",
+            "maxItems": 73,
+            "items": {
+              "type": "object",
+              "properties": {
+                "X": {
+                  "description": "Horizontal position.",
+                  "type": "number"
+                },
+                "Z": {
+                  "description": "Vertical position.",
+                  "type": "number"
+                },
+                "ELEV": {
+                  "description": "Elevation.",
+                  "type": "number"
+                },
+                "VX": {
+                  "description": "Horizontal (wave) velocity.",
+                  "type": "number"
+                },
+                "VCX": {
+                  "description": "Current horizontal velocity.",
+                  "type": "number"
+                },
+                "VT": {
+                  "description": "Total horizontal velocity (VX + VCX).",
+                  "type": "number"
+                },
+                "VZ": {
+                  "description": "Vertical velocity.",
+                  "type": "number"
+                },
+                "AX": {
+                  "description": "Horizontal acceleration.",
+                  "type": "number"
+                },
+                "AZ": {
+                  "description": "Vertical acceleration.",
+                  "type": "number"
+                }
+              },
+              "required": ["X", "Z", "ELEV", "VX", "VCX", "VT", "VZ", "AX", "AZ"]
+            }
+          }
+        },
+        "bSELFW": {
+          "description": "Include self weight when true.",
+          "type": "boolean"
+        },
+        "bBUOYANT": {
+          "description": "Include buoyancy load when true.",
+          "type": "boolean"
+        },
+        "CREST": {
+          "description": "Crest critical position selection. Case-insensitive: \"MXM\" (max moment), \"MNM\" (min moment), \"MXS\" (max shear), \"MNS\" (min shear), \"MUP\" (max uplift), \"MDN\" (max downward), \"ALL\" (all positions).",
+          "type": "string",
+          "enum": ["MXM", "MNM", "MXS", "MNS", "MUP", "MDN", "ALL"]
+        },
+        "UNIT": {
+          "description": "Unit of the crest position values (INITAL_POS/STEP). Case-insensitive: \"LENGTH\" (length [L]), \"PHASE\" (phase [deg]), \"TIME\" (time [sec]).",
+          "type": "string",
+          "enum": ["LENGTH", "PHASE", "TIME"]
+        },
+        "INITAL_POS": {
+          "description": "Initial crest position, in the unit selected by UNIT.",
+          "type": "number"
+        },
+        "STEP": {
+          "description": "Crest position increase step, in the unit selected by UNIT.",
+          "type": "number"
+        },
+        "POS": {
+          "description": "Number of crest positions to evaluate.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "NAME",
+        "bSTLD",
+        "bTHIS",
+        "NAME_THIS",
+        "VERT_COORD",
+        "DENSITY",
+        "DEPTH",
+        "COEF",
+        "CHAR",
+        "PROF",
+        "FLOOD_GRUP",
+        "GROWTH",
+        "GRID_X",
+        "GRID_Z",
+        "USERGRID",
+        "TRAJ",
+        "bSELFW",
+        "bBUOYANT",
+        "CREST",
+        "UNIT",
+        "INITAL_POS",
+        "STEP",
+        "POS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "WaveLoad1",
+        "DESC": "",
+        "bSTLD": true,
+        "bTHIS": false,
+        "NAME_THIS": "",
+        "VERT_COORD": "GLOBAL_Z",
+        "DENSITY": 10,
+        "DEPTH": 10,
+        "COEF": {
+          "TYPE": "CONST",
+          "COEF_S": [
+            {
+              "GRUP": "",
+              "DIA": 0.013,
+              "DRAG_COEF_X": 0,
+              "DRAG_COEF_Y": 0.65,
+              "DRAG_COEF_Z": 0.65,
+              "INER_COEF_X": 0,
+              "INER_COEF_Y": 1.65,
+              "INER_COEF_Z": 1.65
+            }
+          ],
+          "COEF_R": [
+            {
+              "GRUP": "",
+              "DIA": 0.013,
+              "DRAG_COEF_X": 0,
+              "DRAG_COEF_Y": 0.65,
+              "DRAG_COEF_Z": 0.65,
+              "INER_COEF_X": 0,
+              "INER_COEF_Y": 1.65,
+              "INER_COEF_Z": 1.65
+            }
+          ],
+          "bOVER": false,
+          "OVER_S": [],
+          "OVER_R": []
+        },
+        "CHAR": {
+          "THEORY": "AIRY",
+          "FUNC": 1,
+          "DIR": 0,
+          "HEIGHT": 2,
+          "CHAR_TYPE": "PERIOD",
+          "LENGTH": 36.58115359112376,
+          "PERIOD": 5,
+          "K_FACTOR": 0.85,
+          "SURFACE_V": 1,
+          "BOTTOM_Y": 0
+        },
+        "PROF": {
+          "CUR_DIR": 0,
+          "CUR_FACTOR": 1,
+          "GRID_DATA": [
+            { "D": 0, "V": 2 },
+            { "D": 10, "V": 2 }
+          ]
+        },
+        "FLOOD_GRUP": [],
+        "GROWTH": [],
+        "GRID_X": 73,
+        "GRID_Z": 20,
+        "USERGRID": [
+          [
+            {
+              "X": 0,
+              "Z": 0,
+              "ELEV": 11,
+              "VX": 0.466,
+              "VCX": 2,
+              "VT": 2.466,
+              "VZ": 0,
+              "AX": 0,
+              "AZ": 0
+            },
+            {
+              "X": 0.508,
+              "Z": 0,
+              "ELEV": 10.996,
+              "VX": 0.464,
+              "VCX": 2,
+              "VT": 2.464,
+              "VZ": 0,
+              "AX": 0.047,
+              "AZ": 0
+            }
+          ]
+        ],
+        "TRAJ": [
+          [
+            {
+              "X": 0,
+              "Z": 0,
+              "ELEV": 11,
+              "VX": 0.466,
+              "VCX": 2,
+              "VT": 2.466,
+              "VZ": 0,
+              "AX": 0,
+              "AZ": 0
+            }
+          ]
+        ],
+        "bSELFW": true,
+        "bBUOYANT": true,
+        "CREST": "MXM",
+        "UNIT": "PHASE",
+        "INITAL_POS": 0,
+        "STEP": 10,
+        "POS": 3
+      }
+    }
+  }
+}

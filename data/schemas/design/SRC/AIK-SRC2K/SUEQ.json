@@ -1,0 +1,57 @@
+{
+  "_group": "design",
+  "_name": "SUEQ",
+  "uri": "design/SRC/AIK-SRC2K/SUEQ",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SUEQ": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Seismic Load Scale Factors for Design (SUEQ). Scale factors applied to earthquake load-case and load-combination results (axial, moment, shear) used in the design calculation.",
+      "properties": {
+        "LC_AXIAL": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load case axial force scale factor for earthquake results (maps to dEqLcaseN)."
+        },
+        "LC_MOMENT": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load case moment scale factor for earthquake results (maps to dEqLcaseM)."
+        },
+        "LC_SHEAR": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load case shear force scale factor for earthquake results (maps to dEqLcaseV)."
+        },
+        "LCOM_AXIAL": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load combination axial force scale factor for earthquake results (maps to dEqLcomN)."
+        },
+        "LCOM_MOMENT": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load combination moment scale factor for earthquake results (maps to dEqLcomM)."
+        },
+        "LCOM_SHEAR": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load combination shear force scale factor for earthquake results (maps to dEqLcomV)."
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LC_AXIAL": 1.0,
+        "LC_MOMENT": 1.0,
+        "LC_SHEAR": 1.0,
+        "LCOM_AXIAL": 1.0,
+        "LCOM_MOMENT": 1.0,
+        "LCOM_SHEAR": 1.0
+      }
+    }
+  }
+}

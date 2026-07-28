@@ -1,0 +1,149 @@
+{
+  "_group": "db",
+  "_name": "ESQW",
+  "uri": "db/ESQW",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "ESQW": {
+      "type": "object",
+      "description": "Construction Stage Loads (ESQW). A single construction-stage-wizard record (key 1) driving the construction dead load case, the erection sequence list (per-step model selection by material type or material name), and additional load cases applied per story.",
+      "properties": {
+        "LCNAME": {
+          "type": "string",
+          "description": "Construction Dead Load Case: name of the static load case (STLD) used as the construction dead load. Must reference an existing load case name."
+        },
+        "ESQW_SEQ_LIST": {
+          "type": "array",
+          "description": "Erection Sequence List: one entry per construction step defining the story for dead load, stage duration, member age, and the model selection items.",
+          "items": {
+            "type": "object",
+            "description": "One erection sequence step.",
+            "properties": {
+              "STEP": {
+                "type": "integer",
+                "description": "Step: 1-based construction step index."
+              },
+              "ITEMS": {
+                "type": "array",
+                "description": "Model Selection for Each Steps: per-step model selections. At most D_ESEQ_NUMESEQ items are applied by the handler (extra items are ignored).",
+                "items": {
+                  "type": "object",
+                  "description": "One model selection entry.",
+                  "properties": {
+                    "MODEL_TYPE": {
+                      "type": "string",
+                      "enum": ["MATL_TYPE", "MATL_NAME"],
+                      "description": "Model Type (case-insensitive). MATL_TYPE => MODEL_MATL is a material category (see MATL_TYPE); MATL_NAME => MODEL_MATL is an existing material name."
+                    },
+                    "MATL_TYPE": {
+                      "type": "string",
+                      "enum": ["ALL", "STEEL", "CONC", "SRC", "USER"],
+                      "description": "Material Type (case-insensitive). Material category used when MODEL_TYPE=MATL_TYPE: ALL, STEEL, CONC, SRC, or USER."
+                    },
+                    "MODEL_MATL": {
+                      "type": "string",
+                      "description": "Model Material Name. When MODEL_TYPE=MATL_TYPE this is a material category token; when MODEL_TYPE=MATL_NAME this is an existing material name."
+                    },
+                    "MODEL_STORY": {
+                      "type": "string",
+                      "description": "Model Story Name: existing story name whose members are activated in this step. Must reference an existing story."
+                    }
+                  },
+                  "required": ["MODEL_TYPE", "MATL_TYPE", "MODEL_MATL", "MODEL_STORY"]
+                }
+              },
+              "STORY_FOR_DL": {
+                "type": "string",
+                "description": "Story for Dead Load: existing story name to which the construction dead load is applied at this step. Must reference an existing story."
+              },
+              "DURATION": {
+                "type": "number",
+                "description": "Stage Duration: duration of the construction stage (days)."
+              },
+              "AGE": {
+                "type": "number",
+                "description": "Member Age: age of the member at activation (days)."
+              }
+            },
+            "required": ["STEP", "ITEMS", "STORY_FOR_DL", "DURATION", "AGE"]
+          }
+        },
+        "ESQW_LC": {
+          "type": "array",
+          "description": "Load Cases: additional dead load cases applied to specific stories with a starting day.",
+          "items": {
+            "type": "object",
+            "description": "One additional load case.",
+            "properties": {
+              "LCNAME": {
+                "type": "string",
+                "description": "Load Case: name of the additional static load case (STLD). Must reference an existing load case name."
+              },
+              "ITEMS": {
+                "type": "array",
+                "description": "Additional Load Items: per-story starting-day entries for this load case.",
+                "items": {
+                  "type": "object",
+                  "description": "One additional load item.",
+                  "properties": {
+                    "START_DAY": {
+                      "type": "integer",
+                      "description": "Start Day: day on which the additional load starts for this story."
+                    },
+                    "STORY": {
+                      "type": "string",
+                      "description": "Story Name: existing story name the additional load is applied to. Must reference an existing story."
+                    }
+                  },
+                  "required": ["START_DAY", "STORY"]
+                }
+              }
+            },
+            "required": ["LCNAME", "ITEMS"]
+          }
+        }
+      },
+      "required": ["LCNAME", "ESQW_SEQ_LIST", "ESQW_LC"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "Dead Load(CS)",
+        "ESQW_SEQ_LIST": [
+          {
+            "STEP": 1,
+            "ITEMS": [
+              {
+                "MODEL_TYPE": "MATL_TYPE",
+                "MATL_TYPE": "CONC",
+                "MODEL_MATL": "CONC",
+                "MODEL_STORY": "1F"
+              },
+              {
+                "MODEL_TYPE": "MATL_NAME",
+                "MATL_TYPE": "STEEL",
+                "MODEL_MATL": "SM355",
+                "MODEL_STORY": "2F"
+              }
+            ],
+            "STORY_FOR_DL": "1F",
+            "DURATION": 30.0,
+            "AGE": 3.0
+          }
+        ],
+        "ESQW_LC": [
+          {
+            "LCNAME": "Additional Dead(CS)",
+            "ITEMS": [
+              {
+                "START_DAY": 7,
+                "STORY": "1F"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

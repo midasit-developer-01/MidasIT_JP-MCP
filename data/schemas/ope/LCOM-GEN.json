@@ -1,0 +1,353 @@
+{
+  "_group": "ope",
+  "_name": "LCOM-GEN",
+  "uri": "ope/LCOM-GEN",
+  "methods": "POST",
+  "schema": {
+    "LCOM-GEN": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Load Combination Auto Generation, General table (LCOM-GEN). Auto-generates load combinations into the General table (name prefix gLCB) for the selected DESIGN_TYPE (STEEL/CONCRETE/SRC) and its design code (DGNCODE); the request is a two-level flattened discriminated union where DESIGN_TYPE selects the code family and DGNCODE selects the per-code payload, so all fields are sent flat at one level.",
+      "definitions": {
+        "SCALE_FACTOR_ITEM": {
+          "type": "object",
+          "description": "Response-spectrum scale-up row. FACTOR must be in [0, 10].",
+          "properties": {
+            "LOAD_CASE": {
+              "type": "string",
+              "description": "Response spectrum (RS) load case name; must resolve to an existing spectrum load case."
+            },
+            "FACTOR": {
+              "type": "number",
+              "description": "Scale factor applied to the spectrum load case; valid range [0, 10]."
+            }
+          },
+          "required": ["LOAD_CASE", "FACTOR"]
+        },
+        "FACTOR_ITEM": {
+          "type": "object",
+          "description": "Load case + scale factor row (over-strength factor). FACTOR must be > 0.",
+          "properties": {
+            "LOAD_CASE": {
+              "type": "string",
+              "description": "Load case name; must resolve to an existing load case."
+            },
+            "FACTOR": {
+              "type": "number",
+              "description": "Scale factor; must be > 0 (CheckSlcf/CheckSift strict)."
+            }
+          },
+          "required": ["LOAD_CASE", "FACTOR"]
+        },
+        "WIND_LOAD_CASE": {
+          "type": "object",
+          "description": "Wind load cases per building type. BUILDING_TYPE=MIDDLE: ALONG required, TORSION forbidden, ACROSS optional. BUILDING_TYPE=HIGH: ALONG required, ACROSS/TORSION optional. ACROSS/TORSION may only name WA/WT load cases produced when Across/Torsional wind is enabled.",
+          "properties": {
+            "ALONG": {
+              "type": "string",
+              "description": "Along-wind load case name."
+            },
+            "ACROSS": {
+              "type": "string",
+              "description": "Across-wind (WA) load case name (optional)."
+            },
+            "TORSION": {
+              "type": "string",
+              "description": "Torsional-wind (WT) load case name (optional; forbidden when BUILDING_TYPE=MIDDLE)."
+            }
+          }
+        },
+        "WIND_LOAD_COMB_ITEM": {
+          "type": "object",
+          "description": "One wind load combination set.",
+          "properties": {
+            "BUILDING_TYPE": {
+              "type": "string",
+              "enum": ["MIDDLE", "HIGH"],
+              "description": "Wind loads group (case-insensitive). MIDDLE = mid-rise, HIGH = high-rise (dynamic wind, needs GUST_FACTOR/KAPPA_FACTOR)."
+            },
+            "WIND_LOAD_CASE": {
+              "$ref": "#/definitions/WIND_LOAD_CASE"
+            },
+            "GUST_FACTOR": {
+              "type": "number",
+              "description": "[BUILDING_TYPE=HIGH] Gust factor GD; required only for high-rise dynamic wind, unused for MIDDLE."
+            },
+            "KAPPA_FACTOR": {
+              "type": "number",
+              "description": "[BUILDING_TYPE=HIGH] Kappa factor; required only for high-rise dynamic wind, unused for MIDDLE."
+            }
+          },
+          "required": ["BUILDING_TYPE", "WIND_LOAD_CASE"]
+        },
+        "WIND_LOAD_COMB": {
+          "type": "object",
+          "description": "Wind load combination set. Optional field on the leaf: absent or empty PARAMETERS leaves the wind record untouched (no-op).",
+          "properties": {
+            "PARAMETERS": {
+              "type": "array",
+              "description": "List of wind load combination sets.",
+              "items": {
+                "$ref": "#/definitions/WIND_LOAD_COMB_ITEM"
+              }
+            },
+            "TORSION_DIR": {
+              "type": "string",
+              "enum": ["BOTH", "POSITIVE", "NEGATIVE"],
+              "default": "BOTH",
+              "description": "Torsion wind direction (case-insensitive)."
+            }
+          },
+          "required": ["PARAMETERS"]
+        },
+        "ORTHO_EFFECT": {
+          "type": "object",
+          "description": "Orthogonal effect. When OPT_USE=true, TYPE and LOAD_GROUP are required (LOAD_GROUP must have exactly 2 distinct load cases of the same type). When OPT_USE=false they are forbidden.",
+          "properties": {
+            "OPT_USE": {
+              "type": "boolean",
+              "description": "Consider orthogonal effect."
+            },
+            "TYPE": {
+              "type": "string",
+              "enum": ["100_30", "SRSS"],
+              "description": "[OPT_USE=true] Orthogonal effect type (case-insensitive): 100_30 = 100:30 combination, SRSS = square-root-sum-of-squares."
+            },
+            "LOAD_GROUP": {
+              "type": "array",
+              "description": "[OPT_USE=true] Exactly two distinct load case names (Load Case1, Load Case2) of the same load-case type (no ST/RS mixing).",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": ["OPT_USE"]
+        },
+        "ADDITIONAL_SPECIAL_LOAD": {
+          "type": "object",
+          "description": "Special seismic load. When OPT_USE=true, VERTICAL_LOAD_FACTOR (> 0), SDS and OVER_STRENGTH_FACTOR are required; when OPT_USE=false they are forbidden.",
+          "properties": {
+            "OPT_USE": {
+              "type": "boolean",
+              "description": "Use special seismic load."
+            },
+            "VERTICAL_LOAD_FACTOR": {
+              "type": "number",
+              "description": "[OPT_USE=true] Vertical load factor; must be > 0 (CheckSlcf strict)."
+            },
+            "SDS": {
+              "type": "number",
+              "description": "[OPT_USE=true] Sds design spectral response acceleration."
+            },
+            "OVER_STRENGTH_FACTOR": {
+              "type": "array",
+              "description": "[OPT_USE=true] Over-strength factors per load case.",
+              "items": {
+                "$ref": "#/definitions/FACTOR_ITEM"
+              }
+            }
+          },
+          "required": ["OPT_USE"]
+        },
+        "ADDITIONAL_VERTICAL_LOAD": {
+          "type": "object",
+          "description": "Vertical seismic load. When OPT_USE=true, FORCE_FACTOR (> 0) is required; when OPT_USE=false it is forbidden.",
+          "properties": {
+            "OPT_USE": {
+              "type": "boolean",
+              "description": "Use vertical seismic forces."
+            },
+            "FORCE_FACTOR": {
+              "type": "number",
+              "description": "[OPT_USE=true] Vertical force factor; must be > 0 (CheckSlcf strict)."
+            }
+          },
+          "required": ["OPT_USE"]
+        },
+        "ADDITIONAL_LOAD": {
+          "type": "object",
+          "description": "Additional load. Either half may be omitted; an omitted half behaves as OPT_USE=false. If neither half is used, any existing additional-load (T_SLCF) record is cleared.",
+          "properties": {
+            "SPECIAL_LOAD": {
+              "$ref": "#/definitions/ADDITIONAL_SPECIAL_LOAD"
+            },
+            "VERTICAL_LOAD": {
+              "$ref": "#/definitions/ADDITIONAL_VERTICAL_LOAD"
+            }
+          }
+        },
+        "UNDERGROUND_LOAD_CASE_ITEM": {
+          "type": "object",
+          "description": "One underground load-case row.",
+          "properties": {
+            "LOAD_CASE": {
+              "type": "string",
+              "description": "Seismic load case name."
+            },
+            "DIRECTION": {
+              "type": "string",
+              "enum": ["POSITIVE", "NEGATIVE"],
+              "description": "Seismic load case direction (case-insensitive): POSITIVE (UG+) or NEGATIVE (UG-)."
+            },
+            "LOAD_CASE_SEISMIC": {
+              "type": "array",
+              "description": "Earth-pressure seismic load case names; each must resolve to an STLD of LoadCaseType EEP.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "LOAD_CASE_STATIC": {
+              "type": "array",
+              "description": "Earth-pressure static load case names; each must resolve to an STLD of LoadCaseType EH.",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": ["LOAD_CASE", "DIRECTION", "LOAD_CASE_SEISMIC", "LOAD_CASE_STATIC"]
+        },
+        "UNDERGROUND_SPECIAL_LOAD": {
+          "type": "object",
+          "description": "Underground special load. When OPT_USE=true, VERTICAL_LOAD_FACTOR (> 0), SDS and OVER_STRENGTH_FACTOR are required; when OPT_USE=false they are forbidden.",
+          "properties": {
+            "OPT_USE": {
+              "type": "boolean",
+              "description": "Use special load for underground load."
+            },
+            "VERTICAL_LOAD_FACTOR": {
+              "type": "number",
+              "description": "[OPT_USE=true] Vertical load factor; must be > 0."
+            },
+            "SDS": {
+              "type": "number",
+              "description": "[OPT_USE=true] Sds design spectral response acceleration."
+            },
+            "OVER_STRENGTH_FACTOR": {
+              "type": "array",
+              "description": "[OPT_USE=true] Over-strength factors for underground special load.",
+              "items": {
+                "$ref": "#/definitions/FACTOR_ITEM"
+              }
+            }
+          },
+          "required": ["OPT_USE"]
+        },
+        "UNDERGROUND_LOAD": {
+          "type": "object",
+          "description": "Underground load. Optional field on the leaf: absent behaves as OPT_USE=false (dialog-unchecked, overwrites with empty record). When OPT_USE=true, SCALE_FACTOR and LOAD_CASE_LIST (>= 1 entry) are required; SPECIAL_LOAD is optional.",
+          "properties": {
+            "OPT_USE": {
+              "type": "boolean",
+              "description": "Use underground load."
+            },
+            "SCALE_FACTOR": {
+              "type": "array",
+              "description": "[OPT_USE=true] Underground scale factors; each FACTOR in [0, 10] and LOAD_CASE must resolve.",
+              "items": {
+                "$ref": "#/definitions/SCALE_FACTOR_ITEM"
+              }
+            },
+            "LOAD_CASE_LIST": {
+              "type": "array",
+              "description": "[OPT_USE=true] Underground load case list; must contain at least one entry.",
+              "items": {
+                "$ref": "#/definitions/UNDERGROUND_LOAD_CASE_ITEM"
+              }
+            },
+            "SPECIAL_LOAD": {
+              "$ref": "#/definitions/UNDERGROUND_SPECIAL_LOAD"
+            }
+          },
+          "required": ["OPT_USE"]
+        }
+      },
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Flattened auto-generation request. DESIGN_TYPE selects the code family and DGNCODE selects the per-code payload; all leaf inputs are sent at this same flat level.",
+          "properties": {
+            "DESIGN_TYPE": {
+              "type": "string",
+              "enum": ["STEEL", "CONCRETE", "SRC"],
+              "description": "Design type / code family (case-insensitive). Selects which DGNCODE values are valid and which combinations are generated (all output lands in the General table)."
+            },
+            "OPTION": {
+              "type": "string",
+              "enum": ["ADD", "REPLACE"],
+              "description": "Add or replace existing combinations (case-insensitive). ADD = append (mode 0); REPLACE = wipe this design type's combinations then regenerate (mode 1). Applies to every code path including AIK-SRC2K."
+            },
+            "ADD_ENVELOPE": {
+              "type": "boolean",
+              "default": true,
+              "description": "Add envelope option (General-only dialog checkbox, default-checked). When true, envelope rows are added to the generated General combinations."
+            },
+            "DGNCODE": {
+              "type": "string",
+              "enum": ["KDS 41 30 : 2022", "KDS 41 20 : 2022", "KDS 41 SRC : 2022", "AIK-SRC2K"],
+              "description": "Design code (case-insensitive), must match DESIGN_TYPE: STEEL -> \"KDS 41 30 : 2022\"; CONCRETE -> \"KDS 41 20 : 2022\"; SRC -> \"KDS 41 SRC : 2022\" or \"AIK-SRC2K\". AIK-SRC2K takes a minimal path (only RS_SCALE_FACTOR is consumed; every other optional feature stays off)."
+            },
+            "RS_SCALE_FACTOR": {
+              "type": "array",
+              "description": "Response Spectrum scale-up rows (optional; absent = no scale-up). Available for all design types/codes.",
+              "items": {
+                "$ref": "#/definitions/SCALE_FACTOR_ITEM"
+              }
+            },
+            "WIND_LOAD_COMB": {
+              "$ref": "#/definitions/WIND_LOAD_COMB",
+              "description": "[DESIGN_TYPE=STEEL/CONCRETE/SRC with KDS code; not AIK-SRC2K] Wind load combination set (optional; absent/empty = no-op)."
+            },
+            "ORTHO_EFFECT": {
+              "$ref": "#/definitions/ORTHO_EFFECT",
+              "description": "[DESIGN_TYPE=STEEL/CONCRETE/SRC with KDS code; not AIK-SRC2K] Orthogonal effect (optional; absent = OPT_USE false)."
+            },
+            "ADDITIONAL_LOAD": {
+              "$ref": "#/definitions/ADDITIONAL_LOAD",
+              "description": "[DESIGN_TYPE=STEEL/CONCRETE/SRC with KDS code; not AIK-SRC2K] Additional (special/vertical seismic) load (optional; absent = disabled)."
+            },
+            "UNDERGROUND_LOAD": {
+              "$ref": "#/definitions/UNDERGROUND_LOAD",
+              "description": "[DESIGN_TYPE=STEEL/CONCRETE/SRC with KDS code; not AIK-SRC2K] Underground load (optional; absent = OPT_USE false / overwritten empty)."
+            },
+            "CS_ANALYSIS": {
+              "type": "boolean",
+              "default": false,
+              "description": "[DESIGN_TYPE=CONCRETE only] Construction stage analysis flag."
+            },
+            "PRESTRESS_LOSS": {
+              "type": "boolean",
+              "default": false,
+              "description": "[DESIGN_TYPE=CONCRETE only] Prestress loss flag."
+            }
+          },
+          "required": ["DESIGN_TYPE", "OPTION", "DGNCODE"]
+        }
+      },
+      "required": ["Argument"]
+    }
+  },
+  "example": {
+    "Argument": {
+      "DESIGN_TYPE": "STEEL",
+      "OPTION": "ADD",
+      "ADD_ENVELOPE": true,
+      "DGNCODE": "KDS 41 30 : 2022",
+      "RS_SCALE_FACTOR": [
+        {
+          "LOAD_CASE": "RS-X",
+          "FACTOR": 1.0
+        }
+      ],
+      "ORTHO_EFFECT": {
+        "OPT_USE": true,
+        "TYPE": "SRSS",
+        "LOAD_GROUP": ["RS-X", "RS-Y"]
+      },
+      "UNDERGROUND_LOAD": {
+        "OPT_USE": false
+      }
+    }
+  }
+}

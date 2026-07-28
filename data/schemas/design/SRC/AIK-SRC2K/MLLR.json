@@ -1,0 +1,55 @@
+{
+  "_group": "design",
+  "_name": "MLLR",
+  "uri": "design/SRC/AIK-SRC2K/MLLR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MLLR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Member Live Load Reduction (MLLR). Fields are driven by a reduction factor and the set of applied force components (axial, moment, shear).",
+      "properties": {
+        "FACTOR": {
+          "type": "number",
+          "description": "Reduction factor applied to the member live load. Must be between 0.3 and 1.0 inclusive.",
+          "minimum": 0.3,
+          "maximum": 1.0,
+          "default": 1.0
+        },
+        "COMPONENTS": {
+          "type": "object",
+          "description": "Applied Components. Force components the reduction factor is applied to. If omitted, all components default to false.",
+          "properties": {
+            "AXIAL": {
+              "type": "boolean",
+              "description": "Apply reduction to Axial Force.",
+              "default": false
+            },
+            "MOMENT": {
+              "type": "boolean",
+              "description": "Apply reduction to Moments.",
+              "default": false
+            },
+            "SHEAR": {
+              "type": "boolean",
+              "description": "Apply reduction to Shear Forces.",
+              "default": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FACTOR": 0.8,
+        "COMPONENTS": {
+          "AXIAL": true,
+          "MOMENT": true,
+          "SHEAR": false
+        }
+      }
+    }
+  }
+}

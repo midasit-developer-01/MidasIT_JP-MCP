@@ -1,0 +1,204 @@
+{
+  "_group": "db",
+  "_name": "NLNK",
+  "uri": "db/NLNK",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "NLNK": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "General Link (NLNK). REF_SYSTEM chooses the orientation input: when 0 (Element system) BETA_ANGLE is used; when 1 (Global/User system) INPUT_METHOD selects ANGLE_VALUES (0), POINT_VALUES (1) or VECTOR_VALUES (2).",
+      "type": "object",
+      "properties": {
+        "NODE1": {
+          "description": "ID number of the first connected node (start node) of the general link element.",
+          "type": "integer"
+        },
+        "NODE2": {
+          "description": "ID number of the second connected node (end node) of the general link element.",
+          "type": "integer"
+        },
+        "GROUP_NAME": {
+          "description": "Boundary group name the link belongs to. Must reference an existing boundary group; empty string means no group.",
+          "type": "string",
+          "default": ""
+        },
+        "PROP_NAME": {
+          "description": "General Link Property name. Must reference an existing NLLP (general link property).",
+          "type": "string"
+        },
+        "IEHP_NAME": {
+          "description": "Inelastic Hinge Property name. Empty string means none; when set it must reference an existing IEHP (inelastic hinge property).",
+          "type": "string",
+          "default": ""
+        },
+        "REF_SYSTEM": {
+          "description": "Reference coordinate system for the element orientation. 0 = Element coordinate system (uses BETA_ANGLE); 1 = uses INPUT_METHOD with ANGLE_VALUES / POINT_VALUES / VECTOR_VALUES.",
+          "type": "integer"
+        },
+        "BETA_ANGLE": {
+          "description": "[REF_SYSTEM=0] Beta angle (degrees) rotating the element coordinate system about its local x-axis.",
+          "type": "number",
+          "default": 0
+        },
+        "INPUT_METHOD": {
+          "description": "[REF_SYSTEM=1] Orientation input method. 0 = Angle (uses ANGLE_VALUES); 1 = 3 Points (uses POINT_VALUES); 2 = Vector (uses VECTOR_VALUES).",
+          "type": "integer"
+        },
+        "ANGLE_VALUES": {
+          "description": "[REF_SYSTEM=1, INPUT_METHOD=0] Orientation given as angles. One object whose VALUE holds the 3 angles [about x, about y', about z''].",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "VALUE": {
+                "description": "Three angle components [about x, about y', about z''] in degrees.",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              }
+            },
+            "required": [
+              "VALUE"
+            ]
+          },
+          "minItems": 1
+        },
+        "POINT_VALUES": {
+          "description": "[REF_SYSTEM=1, INPUT_METHOD=1] Orientation given as 3 reference points [P0, P1, P2]. Three objects, each VALUE holding one point [X, Y, Z].",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "VALUE": {
+                "description": "One point coordinate [X, Y, Z].",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              }
+            },
+            "required": [
+              "VALUE"
+            ]
+          },
+          "minItems": 3
+        },
+        "VECTOR_VALUES": {
+          "description": "[REF_SYSTEM=1, INPUT_METHOD=2] Orientation given as 2 reference vectors [V1, V2]. Two objects, each VALUE holding one vector [X, Y, Z].",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "VALUE": {
+                "description": "One vector component set [X, Y, Z].",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              }
+            },
+            "required": [
+              "VALUE"
+            ]
+          },
+          "minItems": 2
+        }
+      },
+      "required": [
+        "NODE1",
+        "NODE2",
+        "PROP_NAME",
+        "REF_SYSTEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NODE1": 10,
+        "NODE2": 11,
+        "PROP_NAME": "GL01",
+        "IEHP_NAME": "",
+        "REF_SYSTEM": 0,
+        "BETA_ANGLE": 30,
+        "GROUP_NAME": ""
+      },
+      "2": {
+        "NODE1": 12,
+        "NODE2": 13,
+        "PROP_NAME": "GL01",
+        "REF_SYSTEM": 1,
+        "INPUT_METHOD": 0,
+        "ANGLE_VALUES": [
+          {
+            "VALUE": [
+              0,
+              0,
+              90
+            ]
+          }
+        ]
+      },
+      "3": {
+        "NODE1": 14,
+        "NODE2": 15,
+        "PROP_NAME": "GL01",
+        "REF_SYSTEM": 1,
+        "INPUT_METHOD": 1,
+        "POINT_VALUES": [
+          {
+            "VALUE": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "VALUE": [
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "VALUE": [
+              0,
+              1,
+              0
+            ]
+          }
+        ]
+      },
+      "4": {
+        "NODE1": 16,
+        "NODE2": 17,
+        "PROP_NAME": "GL01",
+        "REF_SYSTEM": 1,
+        "INPUT_METHOD": 2,
+        "VECTOR_VALUES": [
+          {
+            "VALUE": [
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "VALUE": [
+              0,
+              1,
+              0
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

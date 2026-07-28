@@ -1,0 +1,44 @@
+{
+  "_group": "design",
+  "_name": "HCD-ANAL",
+  "uri": "design/RC/KDS-41-20-2022/HCD-ANAL",
+  "methods": "POST",
+  "schema": {
+    "HCD-ANAL": {
+      "type": "object",
+      "description": "HC Design Analysis Element Selection (HCD-ANAL). Selects which elements the HC design analysis runs on; the element set is resolved from the first assigned field in priority order KEYS, then TO, then STRUCTURE_GROUP_NAME.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Element selection for the HC design analysis (DTO_DESIGN_ANAL_ELEM_SELECTION). All fields are optional; the first assigned field among KEYS, TO, STRUCTURE_GROUP_NAME (in that order) determines the element set.",
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Specify Each ID - Element No. Explicit list of element numbers. Highest priority selection source.",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "TO": {
+              "type": "string",
+              "description": "Specify ID Range - Element Range (e.g. 1-10). Used when KEYS is not provided."
+            },
+            "STRUCTURE_GROUP_NAME": {
+              "type": "string",
+              "description": "Structure Group Name. Elements are collected from this structure group. Used when neither KEYS nor TO is provided."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "KEYS": [
+        1,
+        2,
+        3
+      ]
+    }
+  }
+}
