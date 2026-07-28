@@ -152,21 +152,45 @@ docker run --rm -p 8080:8080 midas-mcp
 
 ### Track 2 — deploy to AWS (EC2 via CloudFormation)
 
-The EC2 instance pulls a **source zip** from S3 and builds the image on boot.
-Regenerate the zip after any source change:
+Nothing is built or uploaded from your machine — no local AWS CLI, no local
+Docker. Upload **only** `deploy/infra-ec2.yaml` to CloudShell and deploy it:
 
-```powershell
-Compress-Archive -Force -DestinationPath deploy/midas-mcp-src.zip -Path Dockerfile,.dockerignore,pyproject.toml,README.md,requirements.txt,midas_mcp,data
+```bash
+aws cloudformation deploy \
+  --region ap-northeast-2 \
+  --template-file infra-ec2.yaml \
+  --stack-name midas-mcp \
+  --capabilities CAPABILITY_IAM \
+  --parameter-overrides \
+      GitHubBranch=<branch> \
+      ZoneDomain=<your-domain.com> \
+      ServiceHostname=mcp.<your-domain.com> \
+      AcmeEmail=<you@example.com>
 ```
 
-Then follow [deploy/RUNBOOK.md](deploy/RUNBOOK.md) step by step (CloudShell:
-upload zip → S3 → `aws cloudformation deploy` → verify → **tear down**).
-Two templates:
+That one command creates everything and kicks off the first build:
+
+```
+git push --> CodeBuild (native arm64) --> ECR --> EventBridge
+                                                       |
+                                                  SSM RunCommand
+                                                       v
+                                              EC2 pulls & restarts
+```
+
+CodeBuild clones this repo from GitHub and builds the `Dockerfile`, so
+`Dockerfile`, `.dockerignore` and `deploy/` **must stay committed**. To ship a
+change: push, then rerun the build (`RebuildCommand` stack output) — or supply
+`GitHubToken` once to get a webhook that rebuilds on every push. Any push to the
+watched ECR tag redeploys, whoever made it.
+
+Step-by-step, parameter reference and troubleshooting:
+[deploy/RUNBOOK.md](deploy/RUNBOOK.md).
 
 | Template | Use |
 | --- | --- |
-| `deploy/infra.yaml` | Throwaway test stack (HTTP :8080, IP-restricted) |
-| `deploy/infra-ec2.yaml` | Persistent stack (HTTPS via Caddy, Route 53 domain, weekday auto stop/start) |
+| `deploy/infra-ec2.yaml` | Persistent stack: CodeBuild→ECR→EC2, HTTPS via Caddy, Route 53 domain, weekday auto stop/start |
+| `deploy/infra.yaml` | Older throwaway test stack (HTTP :8080, IP-restricted, builds from an S3 source zip) |
 
 ## Example flow (what the model does)
 

@@ -1,0 +1,14 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+.env
+.mapikey
+.git/
+.gitignore
+# Local .mcpb bundle track + infra files — never belong in the server image.
+mcpb/
+deploy/
