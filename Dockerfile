@@ -13,10 +13,14 @@ WORKDIR /app
 
 # Copy metadata + source, then install. `pip install .` builds the wheel via
 # hatchling and bundles data/ (force-include in pyproject.toml).
-COPY pyproject.toml README.md ./
+COPY pyproject.toml README.md constraints.txt ./
 COPY midas_mcp ./midas_mcp
 COPY data ./data
-RUN pip install .
+# Install against the lock file so the container gets the exact versions verified
+# locally (transitive deps included), not whatever is newest at build time. This
+# is what stops a drift like mcp 2.0 (which dropped mcp.server.fastmcp) from
+# silently landing in the image. Update the lock with: pip freeze > constraints.txt
+RUN pip install . -c constraints.txt
 
 # App Runner / ALB health checks and MCP traffic hit this port.
 EXPOSE 8080

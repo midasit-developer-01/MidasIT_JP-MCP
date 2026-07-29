@@ -5,7 +5,10 @@ description = "MCP server for the MIDAS NX (CIVIL/GEN) Open API"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "mcp[cli]>=1.2.0",
+    # Cap below 2.0: mcp 2.x moved/removed `mcp.server.fastmcp`, which server.py
+    # imports. The unpinned ">=1.2.0" let container builds pull 2.0 and crash on
+    # startup while the pinned local venv (1.28.1) stayed fine. <2 keeps 1.x.
+    "mcp[cli]>=1.2.0,<2",
     "requests>=2.31.0",
     "jsonschema>=4.0.0",
 ]
