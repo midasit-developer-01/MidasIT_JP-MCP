@@ -24,13 +24,14 @@ from mcp.server.auth.provider import (
 )
 from mcp.shared.auth import OAuthClientInformationFull, OAuthToken
 
-from .keys import fingerprint, looks_like_mapi_key
-from .pages import LOGIN_PATH
+from .keys import fingerprint, looks_like_mapi_key, program_of
+from .pages import LOGIN_PATH, REKEY_PATH
 from .store import Store
 
 AUTH_CODE_TTL = 300  # the client redeems it immediately
 ACCESS_TOKEN_TTL = 60 * 60 * 24 * 30
 PENDING_TTL = 600  # how long the user has to finish the consent form
+REKEY_TTL = 600  # how long a handed-out re-key link stays valid
 
 
 def _now() -> int:
@@ -51,6 +52,8 @@ complete_login     폼에서 키 받음 → 검증 → 인가 코드 발급 → 
 exchange_authorization_code   코드 → 토큰 (코드 즉시 소멸)
    │
 load_access_token / mapi_key_for_token   매 요청: 토큰 → 키
+   │
+start_rekey / complete_rekey   재연결 없이 저장된 키만 교체 (프로그램은 새 키를 따라감)
 """
 class MidasKeyProvider(OAuthAuthorizationServerProvider[AuthorizationCode, RefreshToken, AccessToken]):
     def __init__(self, public_url: str, db_path: str | None = None) -> None:
@@ -242,3 +245,54 @@ class MidasKeyProvider(OAuthAuthorizationServerProvider[AuthorizationCode, Refre
         if row is None or (row["expires_at"] is not None and row["expires_at"] < _now()):
             return None
         return row["mapi_key"]
+
+    # -- re-keying (swap the stored key without a reconnect) -----------------
+
+    def start_rekey(self, token: str) -> str:
+        """Mint a one-time re-key link for the holder of a live access token.
+
+        The MCP request that calls this is already bearer-authenticated, so the
+        token identifies the user. We stash (subject, client_id) behind a short
+        ``rid`` and hand back a URL - possession of that rid is the capability
+        to replace this user's key, so it lives only minutes. The key itself is
+        never taken here; it is pasted later into the browser form.
+        """
+        row = self.store.one(
+            "SELECT subject, client_id, expires_at FROM tokens WHERE token=? AND kind='access'",
+            (token,),
+        )
+        if row is None or (row["expires_at"] is not None and row["expires_at"] < _now()):
+            raise AuthorizeError("access_denied", "not authenticated")
+        rid = _secret()
+        self.store.run("DELETE FROM rekey WHERE created_at < ?", (_now() - REKEY_TTL,))
+        self.store.run(
+            "INSERT INTO rekey (rid, subject, client_id, created_at) VALUES (?,?,?,?)",
+            (rid, row["subject"], row["client_id"], _now()),
+        )
+        return f"{self.public_url}{REKEY_PATH}?{urlencode({'rid': rid})}"
+
+    def complete_rekey(self, rid: str, new_key: str) -> str:
+        """Consume a re-key rid and swap the stored key for this user+client.
+
+        Returns the program (civil|gen) the new key belongs to, so the caller
+        can confirm the switch. The tokens the client already holds keep
+        working - only the key behind them (and its fingerprint) changes, which
+        is why no reconnect is needed. The subject moves to the new key's
+        fingerprint so grouping (revoke) stays consistent.
+        """
+        row = self.store.one(
+            "SELECT subject, client_id, created_at FROM rekey WHERE rid=?", (rid,)
+        )
+        if row is None:
+            raise AuthorizeError("invalid_request", "This re-key link is unknown - start again from your MCP client.")
+        if row["created_at"] < _now() - REKEY_TTL:
+            self.store.run("DELETE FROM rekey WHERE rid=?", (rid,))
+            raise AuthorizeError("invalid_request", "This re-key link expired - start again from your MCP client.")
+        if not looks_like_mapi_key(new_key):
+            raise AuthorizeError("access_denied", "That does not look like a MAPI key.")
+        self.store.run(
+            "UPDATE tokens SET mapi_key=?, subject=? WHERE subject=? AND client_id=?",
+            (new_key, fingerprint(new_key), row["subject"], row["client_id"]),
+        )
+        self.store.run("DELETE FROM rekey WHERE rid=?", (rid,))
+        return program_of(new_key) or "civil"

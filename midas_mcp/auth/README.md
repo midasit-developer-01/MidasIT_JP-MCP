@@ -34,15 +34,34 @@ MIDAS_MCP_PUBLIC_URL=https://mcp.example.com   # 외부에서 접속 가능한 h
 베어러 미들웨어는 **MCP SDK가 전부 제공**한다. 이 패키지가 구현하는 건 저장소와
 "로그인이 무엇인가"뿐이다.
 
+## 키 교체 (재연결 없이)
+
+키를 재발급받았거나 **CIVIL ↔ GEN 프로그램을 바꿀 때**, 커넥터를 지웠다 다시 붙일
+필요 없이 저장된 키만 갈아끼운다.
+
+```
+1. 사용자가 도구 midas_rekey_link 호출 (키 인자 없음 → 채팅에 키 안 남음)
+2. 서버: 이 요청의 베어러 토큰 → subject/client_id 확보 → 일회용 rid 발급
+   → https://.../rekey?rid=... 링크 반환
+3. GET /rekey (폼)  사용자가 브라우저에서 새 키 입력
+4. POST /rekey      해당 subject의 토큰 행들의 mapi_key 교체 + subject를 새 지문으로 이동
+   → "활성 프로그램: GEN" 확인 페이지
+```
+
+프로그램(civil/gen)은 **키 안에 인코딩**돼 있고 base_url은 매 요청 키에서 파생되므로
+([client.py `_decode_program_from_key`]), 키만 바꾸면 프로그램은 자동으로 따라간다 —
+별도 입력이 필요 없다. 클라이언트가 이미 들고 있는 토큰 값은 그대로라 재연결이 없다.
+rid 소지 자체가 권한이므로 수명은 몇 분이다.
+
 ## 파일
 
 | 파일 | 역할 |
 | --- | --- |
-| `store.py` | SQLite 영속화 (clients / pending / codes / tokens) |
-| `keys.py` | 신원 = MAPI 키. 형식 검사 + 지문(SHA-256 앞 16자) |
-| `pages.py` | 로그인(동의) 화면 HTML — 키 1개만 입력 |
-| `provider.py` | OAuth 2.1 인가 서버 본체 (authorize→login→토큰) |
-| `__init__.py` | 환경변수 기반 설정, FastMCP 배선, `/login`·`/healthz` 라우트 |
+| `store.py` | SQLite 영속화 (clients / pending / codes / tokens / rekey) |
+| `keys.py` | 신원 = MAPI 키. 형식 검사 + 지문(SHA-256 앞 16자) + 프로그램 판독 |
+| `pages.py` | 로그인·재키 화면 + 재키 완료 확인 HTML — 키 1개만 입력 |
+| `provider.py` | OAuth 2.1 인가 서버 본체 (authorize→login→토큰, start/complete_rekey) |
+| `__init__.py` | 환경변수 기반 설정, FastMCP 배선, `/login`·`/rekey`·`/healthz` 라우트 |
 | `check_flow.py` | 종단 검증 스크립트 (런타임 미사용, 배포 게이트) |
 
 ## 설계 결정
@@ -53,9 +72,11 @@ MIDAS_MCP_PUBLIC_URL=https://mcp.example.com   # 외부에서 접속 가능한 h
 | OAuth `sub` = 키의 SHA-256 앞 16자 | 키를 두 번 저장 않고 사용자 식별. 로그에 키 안 남음 |
 | SQLite를 도커 볼륨(`/data`)에 | 이미지 교체에도 인증 유지. 인스턴스 교체 시엔 재인증 |
 | 인가 코드는 `authorize()`가 아니라 폼이 발급 | `authorize()` 시점엔 어떤 키를 인가할지 모른다 → `pending`에 보관 후 폼에서 발급 |
-| `/login`·`/healthz`는 베어러 미들웨어 면제 | 로그인은 자격증명을 얻는 곳이고, `/healthz`는 인증 없는 생존 확인용 |
+| `/login`·`/rekey`·`/healthz`는 베어러 미들웨어 면제 | 키를 얻거나 교체하는 곳이라 토큰이 아직/굳이 없다. 재키는 rid 소지로 인증 |
 | 베어러 폴백 유지 | OAuth 꺼짐이면 베어러를 곧 키로 해석 → 헤더 방식 클라이언트 호환 |
 | 리프레시 토큰 로테이션 | 제출된 리프레시는 교환과 함께 폐기 (명세 권고) |
+| 재키는 도구가 링크만 반환, 키는 브라우저 폼에서 입력 | 키를 도구 인자로 받으면 채팅 트랜스크립트에 평문으로 남는다 → OAuth 취지 무효화 |
+| 재키 도구는 OAuth 켜졌을 때만 등록 | stdio/.mcpb는 키가 env에서 오므로 교체할 대상이 없음 |
 
 ## 로컬 검증
 

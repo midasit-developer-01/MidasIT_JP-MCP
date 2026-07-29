@@ -141,6 +141,27 @@ def _extract_key(ctx: Context | None) -> tuple[str | None, str | None]:
     return key, headers.get("x-midas-base-url")
 
 
+def _bearer_token(ctx: Context | None) -> str | None:
+    """The raw opaque bearer token on this request, if any (OAuth mode only).
+
+    Unlike ``_extract_key`` this does not resolve the token to a key - the
+    re-key tool needs the token itself to prove which session is asking.
+    """
+    if ctx is None:
+        return None
+    try:
+        req = ctx.request_context.request
+    except (ValueError, AttributeError):
+        return None
+    headers = getattr(req, "headers", None)
+    if not headers:
+        return None
+    authorization = headers.get("authorization") or ""
+    if authorization.lower().startswith("bearer "):
+        return authorization[7:].strip() or None
+    return None
+
+
 def _client(ctx: Context | None = None) -> MidasClient:
     """Resolve the client for this call.
 
@@ -166,6 +187,48 @@ def _client(ctx: Context | None = None) -> MidasClient:
     if _env_client is None:
         _env_client = MidasClient()
     return _env_client
+
+
+# --- Re-keying (OAuth mode only): swap your MAPI key without reconnecting -
+# Registered only when the server is its own OAuth authorization server. In
+# stdio/.mcpb the key comes from env, so there is nothing to re-key here.
+
+def midas_rekey_link(ctx: Context) -> str:
+    """Get a one-time link to replace your MAPI key without reconnecting.
+
+    Use this after renewing your key, or to switch between MIDAS CIVIL and GEN —
+    the program follows whichever key you paste, so no other change is needed.
+    Open the returned URL in a browser and paste the new key there; your
+    connection keeps working and the connector does not need to be removed and
+    re-added. The key is entered on the server's own page, so it never passes
+    through this chat.
+    """
+    token = _bearer_token(ctx)
+    if _auth is None or token is None:
+        return ("Re-keying applies only to the OAuth (remote connector) deployment. "
+                "In local .mcpb/stdio mode, update MIDAS_MAPI_KEY in the extension "
+                "settings instead.")
+    try:
+        url = _auth.start_rekey(token)
+    except Exception as exc:  # e.g. AuthorizeError when the token is not live
+        return f"Could not start re-keying: {exc}"
+    return ("Open this link in a browser and paste your new MAPI key, then return "
+            f"here — the connection switches over with no reconnect:\n{url}\n\n"
+            "The link is valid for a few minutes.")
+
+
+# Only expose the tool where it means something (OAuth on); otherwise it would
+# be dead weight in the .mcpb tool list.
+if _auth is not None:
+    midas_rekey_link = mcp.tool(
+        annotations=ToolAnnotations(
+            title="Get a link to replace your MAPI key",
+            readOnlyHint=False,
+            destructiveHint=False,  # replaces your own credential; no model data touched
+            idempotentHint=False,
+            openWorldHint=False,  # talks to this server's own auth store, not the model
+        )
+    )(midas_rekey_link)
 
 
 # --- Catalog / discovery (offline: no key needed) ------------------------

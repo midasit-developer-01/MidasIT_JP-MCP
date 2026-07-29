@@ -1,7 +1,8 @@
 """SQLite persistence for the authorization server.
 
 Kept deliberately small: clients, in-flight authorization requests, one-time
-codes, and issued tokens. Volume is a handful of writes per user per month, so
+codes, issued tokens, and pending re-key requests. Volume is a handful of
+writes per user per month, so
 a single connection behind a lock costs nothing and sidesteps every threading
 pitfall sqlite3 has.
 
@@ -45,6 +46,12 @@ CREATE TABLE IF NOT EXISTS tokens (
     resource   TEXT,
     mapi_key   TEXT NOT NULL,
     expires_at INTEGER
+);
+CREATE TABLE IF NOT EXISTS rekey (
+    rid        TEXT PRIMARY KEY,
+    subject    TEXT NOT NULL,
+    client_id  TEXT NOT NULL,
+    created_at INTEGER NOT NULL
 );
 """
 

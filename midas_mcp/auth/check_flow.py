@@ -20,6 +20,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import re
 import secrets
 import sys
 import urllib.parse
@@ -28,9 +29,15 @@ import requests
 
 REDIRECT = "http://localhost:9999/cb"
 
-# Syntactically valid MAPI key: first segment is base64(JSON carrying "pg").
-_head = base64.urlsafe_b64encode(json.dumps({"pg": "civil"}).encode()).decode().rstrip("=")
-SAMPLE_KEY = f"{_head}.signaturepart"
+
+def _sample_key(program: str) -> str:
+    # A syntactically valid MAPI key: first segment is base64(JSON carrying "pg").
+    head = base64.urlsafe_b64encode(json.dumps({"pg": program}).encode()).decode().rstrip("=")
+    return f"{head}.signaturepart"
+
+
+SAMPLE_KEY = _sample_key("civil")   # what we authorize with
+REKEY_KEY = _sample_key("gen")      # re-key to this: a different program
 
 INITIALIZE = {
     "jsonrpc": "2.0",
@@ -154,6 +161,26 @@ def run(base: str) -> int:
         r = s.post(f"{base}/mcp", json=INITIALIZE,
                    headers={**MCP_HEADERS, "Authorization": f"Bearer {new['access_token']}"})
         check("refreshed token still works", r.ok, str(r.status_code))
+
+    # --- re-keying swaps the stored key without a reconnect ---
+    r = s.post(f"{base}/mcp", json={
+        "jsonrpc": "2.0", "id": 3, "method": "tools/call",
+        "params": {"name": "midas_rekey_link", "arguments": {}},
+    }, headers=auth_headers)
+    m = re.search(r"/rekey\?rid=([A-Za-z0-9_\-]+)", r.text)
+    if check("re-key link issued by tool", r.ok and m is not None, str(r.status_code)):
+        rid = m.group(1)
+        check("re-key form renders", s.get(f"{base}/rekey", params={"rid": rid}).text.count("MAPI key") > 0)
+        r = s.post(f"{base}/rekey", params={"rid": rid}, data={"mapi_key": "nope"})
+        check("re-key rejects a malformed key", r.status_code == 400)
+        # Swap to a GEN key; the confirmation should report the new program.
+        r = s.post(f"{base}/rekey", params={"rid": rid}, data={"mapi_key": REKEY_KEY})
+        check("re-key accepts new key, reports program", r.ok and "GEN" in r.text.upper(), r.text[:120])
+        r = s.post(f"{base}/rekey", params={"rid": rid}, data={"mapi_key": REKEY_KEY})
+        check("re-key rid is single use", r.status_code == 400)
+        # The token the client already holds keeps working after the swap.
+        r = s.post(f"{base}/mcp", json=INITIALIZE, headers=auth_headers)
+        check("token still valid after re-key", r.ok, str(r.status_code))
 
     return check.failed
 

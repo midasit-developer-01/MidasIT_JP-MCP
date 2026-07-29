@@ -53,7 +53,7 @@ class AuthSetup:
         from starlette.requests import Request
         from starlette.responses import HTMLResponse, PlainTextResponse, RedirectResponse
 
-        from .pages import LOGIN_PATH, render_login
+        from .pages import LOGIN_PATH, REKEY_PATH, render_login, render_rekey, render_rekey_done
 
         provider = self.provider
 
@@ -74,6 +74,22 @@ class AuthSetup:
             # 302 so the browser switches to GET when it lands back on the client.
             return RedirectResponse(target, status_code=302)
 
+        @app.custom_route(REKEY_PATH, methods=["GET"])
+        async def rekey_form(request: Request) -> HTMLResponse:
+            # Show the re-key form (same shape as login), carrying the rid through.
+            return HTMLResponse(render_rekey(request.query_params.get("rid", "")))
+
+        @app.custom_route(REKEY_PATH, methods=["POST"])
+        async def rekey_submit(request: Request) -> HTMLResponse:
+            # Swap the stored key; on success confirm which program is now active.
+            form = await request.form()
+            rid = request.query_params.get("rid", "")
+            try:
+                program = provider.complete_rekey(rid, str(form.get("mapi_key", "")).strip())
+            except AuthorizeError as exc:
+                return HTMLResponse(render_rekey(rid, exc.error_description or exc.error), status_code=400)
+            return HTMLResponse(render_rekey_done(program))
+
         @app.custom_route("/healthz", methods=["GET"])
         async def healthz(request: Request) -> PlainTextResponse:  # noqa: ARG001
             # Unauthenticated liveness probe - the one way to check the server without a token.
@@ -82,6 +98,10 @@ class AuthSetup:
     def mapi_key_for_token(self, token: str) -> str | None:
         # Delegate to the provider: resolve a bearer token back to its MAPI key.
         return self.provider.mapi_key_for_token(token)
+
+    def start_rekey(self, token: str) -> str:
+        # Delegate: mint a one-time re-key link for this bearer token's owner.
+        return self.provider.start_rekey(token)
 
 
 def from_env() -> AuthSetup | None:

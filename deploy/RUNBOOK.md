@@ -92,6 +92,18 @@ curl -s -o /dev/null -w '%{http_code}\n' -X POST \
   -H "Accept: application/json, text/event-stream" -d '{}'    # → 401  (정상)
 ```
 
+**인스턴스 안에서 확인** — 컨테이너가 실제로 떠 있는지:
+
+① 인스턴스에 접속 (스택 출력 `SsmConnect`, 이 명령을 실제로 실행):
+```bash
+aws ssm start-session --target i-xxxxxxxxxxxxxxxxx
+```
+② EC2 안에서 상태·로그 확인 (docker는 sudo 필요할 수 있음):
+```bash
+sudo docker ps                     # midas / caddy 둘 다 Up 이어야 정상
+sudo docker logs midas --tail 20   # "Application startup complete" 나오면 정상
+```
+
 전체 OAuth 흐름(등록→로그인→토큰→도구 호출)까지 확인:
 ```bash
 python -m midas_mcp.auth.check_flow https://mcp.example.com   # 19개 항목
