@@ -97,11 +97,15 @@ def from_env() -> AuthSetup | None:
     if not public_url:
         return None
 
+    from urllib.parse import urlparse
+
     from mcp.server.auth.settings import AuthSettings, ClientRegistrationOptions, RevocationOptions
+    from mcp.server.transport_security import TransportSecuritySettings
 
     from .provider import MidasKeyProvider
 
     provider = MidasKeyProvider(public_url)
+    host = urlparse(public_url).netloc
     return AuthSetup(
         provider=provider,
         fastmcp_kwargs={
@@ -113,6 +117,13 @@ def from_env() -> AuthSetup | None:
                 # every client would need credentials issued by hand.
                 client_registration_options=ClientRegistrationOptions(enabled=True),
                 revocation_options=RevocationOptions(enabled=True),
+            ),
+            # Behind a proxy the Host is our public domain; allow it so the SDK's
+            # localhost-only rebinding check doesn't 421 every request.
+            "transport_security": TransportSecuritySettings(
+                enable_dns_rebinding_protection=True,
+                allowed_hosts=[host, f"{host}:*"],
+                allowed_origins=[public_url, f"{public_url}:*"],
             ),
         },
     )

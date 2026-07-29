@@ -43,10 +43,28 @@ mcp.example.com   A   <ElasticIP 출력값>
 aws cloudformation deploy ... --parameter-overrides ... GitHubToken=ghp_xxx
 ```
 
-**B. 수동 빌드 (토큰 없이)** — GitHub에 push 후:
+**B. 수동 빌드 + 재배포 (토큰 없이)** — GitHub에 push 후. **ECR push 자동 재배포가
+안 걸릴 수 있으므로**, 빌드 완료를 기다렸다가 인스턴스 재배포까지 함께 한다:
 ```bash
-aws codebuild start-build --region ap-northeast-1 --project-name midas-mcp-build
+REGION=ap-northeast-1; PROJECT=midas-mcp-build; STACK=midas-mcp
+INSTANCE=$(aws cloudformation describe-stacks --region $REGION --stack-name $STACK \
+  --query "Stacks[0].Outputs[?OutputKey=='SsmConnect'].OutputValue" --output text | awk '{print $NF}')
+
+# 1) 빌드 시작 → 완료(SUCCEEDED)까지 대기 (보통 3~5분)
+BID=$(aws codebuild start-build --region $REGION --project-name $PROJECT --query 'build.id' --output text)
+while :; do
+  S=$(aws codebuild batch-get-builds --region $REGION --ids "$BID" --query 'builds[0].buildStatus' --output text)
+  [ "$S" = SUCCEEDED ] && { echo "build ok"; break; }
+  [ "$S" = IN_PROGRESS ] || { echo "build $S — 로그 확인(§5)"; break; }
+  echo "  building..."; sleep 15
+done
+
+# 2) 새 이미지를 인스턴스에 pull & 재시작 (스택 출력 ForceRedeploy 와 동일)
+aws ssm send-command --region $REGION --document-name AWS-RunShellScript \
+  --instance-ids "$INSTANCE" --parameters commands=/opt/redeploy.sh
 ```
+> `SsmConnect` 출력이 `aws ssm start-session --target i-xxxx` 형태라 `awk '{print $NF}'`로
+> 인스턴스 id만 뽑는다. 자동 재배포(ECR push→EventBridge→SSM)가 정상이면 2)는 생략 가능.
 
 **C. 직접 ECR push** — 자동 반영. `linux/arm64` + 감시 태그(`latest`)만 지킬 것:
 ```bash
