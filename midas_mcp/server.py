@@ -31,6 +31,18 @@ Auth (per-request headers, streamable-http mode)
 In http mode the server never falls back to a server-wide key: a request with
 no key header gets a clean {"error": ...} instead of acting as someone else.
 
+Auth (OAuth, streamable-http mode)
+----------------------------------
+  MIDAS_MCP_PUBLIC_URL=https://...  the externally reachable origin. Setting it
+                                    turns the server into its own OAuth 2.1
+                                    authorization server (see midas_mcp/auth/);
+                                    unset = off. One variable, both switch and
+                                    address.
+
+MCP clients such as Claude's custom connectors cannot attach a custom header,
+so with OAuth on they authorize once through a form that collects the MAPI key
+and then send an opaque bearer token. Requests without a valid token get 401.
+
 Precondition: the target MIDAS NX app must be running with a model file open.
 """
 
@@ -42,7 +54,7 @@ from typing import Any
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.types import ToolAnnotations
 
-from . import catalog
+from . import auth, catalog
 from .client import MidasClient
 
 INSTRUCTIONS = """\
@@ -82,7 +94,13 @@ Good to know:
   • Action tools need MIDAS NX running with a model open and a valid MAPI-Key.
 """
 
-mcp = FastMCP("midas-nx", instructions=INSTRUCTIONS)
+# Auth lives in midas_mcp/auth/ and is entirely opt-in (see that package).
+# It has to be resolved before FastMCP is constructed: the SDK wires the OAuth
+# routes and the bearer middleware from settings passed to __init__.
+_auth = auth.from_env()
+mcp = FastMCP("midas-nx", instructions=INSTRUCTIONS, **(_auth.fastmcp_kwargs if _auth else {}))
+if _auth:
+    _auth.install_routes(mcp)
 
 # stdio single-user fallback client (built lazily from env). Never used in http
 # mode, where every request must carry its own key.
@@ -95,6 +113,9 @@ def _extract_key(ctx: Context | None) -> tuple[str | None, str | None]:
     Returns (None, None) under stdio (no HTTP request) or when no key header is
     present. Header lookup is case-insensitive (Starlette Headers).
     """
+
+    # ------------------------------------------------------
+    # stdio 모드(로컬 데스크톱, 프로세스 1개)
     if ctx is None:
         return None, None
     try:
@@ -104,11 +125,19 @@ def _extract_key(ctx: Context | None) -> tuple[str | None, str | None]:
     headers = getattr(req, "headers", None)
     if not headers:  # stdio: request has no .headers
         return None, None
+    # ------------------------------------------------------
+    # DePloy 모드 
     key = headers.get("x-midas-mapi-key")
     if not key:
-        auth = headers.get("authorization") or ""
-        if auth.lower().startswith("bearer "):
-            key = auth[7:].strip() or None
+        # Renamed from `auth` to avoid shadowing the imported auth package.
+        authorization = headers.get("authorization") or ""
+        if authorization.lower().startswith("bearer "):
+            token = authorization[7:].strip()
+            # With OAuth on, the bearer is our opaque token -> resolve it to the
+            # stored MAPI key. Otherwise (header-only clients) treat it AS the key.
+            if token and _auth is not None:
+                key = _auth.mapi_key_for_token(token)
+            key = key or token or None
     return key, headers.get("x-midas-base-url")
 
 

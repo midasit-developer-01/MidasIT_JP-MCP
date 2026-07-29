@@ -79,7 +79,8 @@ midas_mcp/          # server source (stdio + streamable-http)  ── shared cor
   ├─ server.py      #   the 15 FastMCP tools
   ├─ client.py      #   thin REST client for the MIDAS Open API
   ├─ catalog.py     #   offline endpoint lookup over data/schemas
-  └─ hooks/         #   pre-request JSON-Schema validation of DB bodies
+  ├─ hooks/         #   pre-request JSON-Schema validation of DB bodies
+  └─ auth/          #   opt-in OAuth for remote mode (MIDAS_MCP_PUBLIC_URL); see auth/README.md
 data/
   ├─ schemas/       # endpoint catalog, one file per endpoint (bundled into every build)
   └─ midas-api-reference.md
@@ -157,13 +158,12 @@ Docker. Upload **only** `deploy/infra-ec2.yaml` to CloudShell and deploy it:
 
 ```bash
 aws cloudformation deploy \
-  --region ap-northeast-2 \
+  --region ap-northeast-1 \
   --template-file infra-ec2.yaml \
   --stack-name midas-mcp \
   --capabilities CAPABILITY_IAM \
   --parameter-overrides \
       GitHubBranch=<branch> \
-      ZoneDomain=<your-domain.com> \
       ServiceHostname=mcp.<your-domain.com> \
       AcmeEmail=<you@example.com>
 ```
@@ -187,10 +187,8 @@ watched ECR tag redeploys, whoever made it.
 Step-by-step, parameter reference and troubleshooting:
 [deploy/RUNBOOK.md](deploy/RUNBOOK.md).
 
-| Template | Use |
-| --- | --- |
-| `deploy/infra-ec2.yaml` | Persistent stack: CodeBuild→ECR→EC2, HTTPS via Caddy, Route 53 domain, weekday auto stop/start |
-| `deploy/infra.yaml` | Older throwaway test stack (HTTP :8080, IP-restricted, builds from an S3 source zip) |
+`deploy/infra-ec2.yaml` is the only template: CodeBuild→ECR→EC2, HTTPS via Caddy
+on a stable Elastic IP (point your own DNS at it), weekday auto stop/start.
 
 ## Example flow (what the model does)
 

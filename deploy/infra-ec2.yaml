@@ -1,27 +1,11 @@
 AWSTemplateFormatVersion: "2010-09-09"
+
+# CloudFormation rejects a Description over 1024 characters.
 Description: >
-  MIDAS NX MCP server — self-contained persistent stack (EC2 t4g.small / ARM64).
-
-  Upload ONLY this file to CloudShell and deploy it. Nothing is built or uploaded
-  from your laptop: CodeBuild clones the GitHub repo, builds the arm64 image
-  natively, and pushes it to an ECR repo this stack creates. The push fires an
-  EventBridge rule that tells the EC2 instance (via SSM) to pull and restart.
-  Caddy fronts the app with automatic HTTPS; Route 53 + an Elastic IP hold the
-  domain; EventBridge Scheduler stops/starts the instance on weekdays.
-
-    git push --> (webhook, optional) --> CodeBuild --> ECR --> EventBridge
-                                                                   |
-                                                              SSM RunCommand
-                                                                   v
-                                                          EC2 pulls & restarts
-
-  The first build starts automatically when the stack is created, so a single
-  `cloudformation deploy` brings up the whole system.
-
-  MANUAL STEPS THAT CANNOT BE AUTOMATED:
-    1. Register the domain and point its NS records at the NameServers output.
-    2. (optional) Supply GitHubToken to get build-on-push; without it, rebuild
-       with the RebuildCommand output or the CodeBuild console button.
+  MIDAS NX MCP server - persistent EC2 stack. CodeBuild builds the arm64 image
+  from GitHub and pushes it to ECR; the push triggers a pull-and-restart on the
+  instance via SSM. HTTPS through Caddy on a stable Elastic IP, weekday auto
+  stop/start. Point your own DNS at the ElasticIP output. See deploy/RUNBOOK.md.
 
 Parameters:
   # ---- Source ----
@@ -41,7 +25,7 @@ Parameters:
       OPTIONAL GitHub personal access token (repo + admin:repo_hook). Supplying it
       registers a webhook so every push to the branch rebuilds automatically.
       Leave empty to rebuild manually. NOTE: AWS stores one GitHub credential per
-      account+region — if the account already has one, leave this empty.
+      account+region - if the account already has one, leave this empty.
 
   # ---- Image ----
   EcrRepositoryName:
@@ -56,12 +40,9 @@ Parameters:
       automatic redeploy.
 
   # ---- Domain / TLS ----
-  ZoneDomain:
-    Type: String
-    Description: Registrable apex domain to host, e.g. example.com (no trailing dot).
   ServiceHostname:
     Type: String
-    Description: FQDN clients will hit, e.g. mcp.example.com (may equal ZoneDomain).
+    Description: FQDN clients will hit, e.g. mcp.example.com. Its A record must point at the ElasticIP output.
   AcmeEmail:
     Type: String
     Description: Email for Let's Encrypt account / expiry notices.
@@ -89,8 +70,8 @@ Parameters:
   # ---- Schedule ----
   ScheduleTimezone:
     Type: String
-    Default: Asia/Seoul
-    Description: IANA timezone for the start/stop schedule (e.g. Asia/Seoul, Asia/Tokyo).
+    Default: Asia/Tokyo
+    Description: IANA timezone for the start/stop schedule (e.g. Asia/Tokyo, Asia/Seoul).
   StartCron:
     Type: String
     Default: cron(0 8 ? * MON-FRI *)
@@ -110,14 +91,12 @@ Resources:
     Properties:
       RepositoryName: !Ref EcrRepositoryName
       ImageTagMutability: MUTABLE
-      # Lets `delete-stack` succeed without a manual purge. Images are rebuilt
-      # from GitHub in minutes, so nothing irreplaceable is lost.
+      # Lets delete-stack succeed without a manual purge; images are rebuildable.
       EmptyOnDelete: true
       ImageScanningConfiguration:
         ScanOnPush: true
       LifecyclePolicy:
-        # Each push to a mutable tag orphans the previous image; expire those
-        # so the repo does not grow without bound.
+        # Each push to a mutable tag orphans the previous image.
         LifecyclePolicyText: |
           {
             "rules": [
@@ -179,20 +158,17 @@ Resources:
 
   BuildProject:
     Type: AWS::CodeBuild::Project
-    # The webhook cannot be registered before the credential exists. A DependsOn
-    # on a resource whose condition is false is simply treated as satisfied.
-    DependsOn: GitHubCredential
     Properties:
       Name: !Sub "${AWS::StackName}-build"
       Description: Build the MIDAS MCP arm64 image from GitHub and push it to ECR.
       ServiceRole: !GetAtt BuildRole.Arn
       Artifacts: { Type: NO_ARTIFACTS }
       Environment:
-        # ARM_CONTAINER builds aarch64 natively — no QEMU, no cross-compilation.
+        # ARM_CONTAINER builds aarch64 natively - no QEMU, no cross-compilation.
         Type: ARM_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
         Image: aws/codebuild/amazonlinux2-aarch64-standard:3.0
-        PrivilegedMode: true          # required to run the Docker daemon
+        PrivilegedMode: true
         EnvironmentVariables:
           - Name: REGISTRY
             Value: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com"
@@ -201,6 +177,13 @@ Resources:
       Source:
         Type: GITHUB
         Location: !Ref GitHubRepoUrl
+        # Referencing the credential here rather than via DependsOn, which cannot
+        # point at a resource whose condition is false.
+        Auth: !If
+          - HasGitHubToken
+          - Type: OAUTH
+            Resource: !Ref GitHubCredential
+          - !Ref AWS::NoValue
         BuildSpec: |
           version: 0.2
           phases:
@@ -212,11 +195,10 @@ Resources:
                 - docker build -t "$IMAGE" .
             post_build:
               commands:
-                # This push is what triggers the redeploy on the instance.
                 - docker push "$IMAGE"
                 - echo "pushed $IMAGE"
       SourceVersion: !Ref GitHubBranch
-      # Webhook needs an authenticated GitHub connection; cloning a public repo
+      # Webhooks need an authenticated GitHub connection; cloning a public repo
       # does not. So build-on-push is opt-in, manual rebuild always works.
       Triggers: !If
         - HasGitHubToken
@@ -231,7 +213,7 @@ Resources:
       LogsConfig:
         CloudWatchLogs: { Status: ENABLED }
 
-  # ---- Kick off the very first build so one deploy is enough ----
+  # ---- First build, so a single deploy brings up the whole system ----
   InitialBuildRole:
     Type: AWS::IAM::Role
     Properties:
@@ -297,7 +279,7 @@ Resources:
                       project = event["ResourceProperties"]["ProjectName"]
                       build = boto3.client("codebuild").start_build(projectName=project)
                       reason = "started " + build["build"]["id"]
-              except Exception as exc:                      # noqa: BLE001
+              except Exception as exc:
                   reason = f"initial build not started: {exc}"
               print(reason)
               respond(event, context, reason)
@@ -307,7 +289,7 @@ Resources:
     Properties:
       ServiceToken: !GetAtt InitialBuildFunction.Arn
       ProjectName: !Ref BuildProject
-      # Re-run the build whenever the branch or tag changes on a stack update.
+      # Changing either re-runs the build on a stack update.
       SourceVersion: !Ref GitHubBranch
       ImageTag: !Ref ImageTag
 
@@ -322,7 +304,7 @@ Resources:
             Principal: { Service: ec2.amazonaws.com }
             Action: sts:AssumeRole
       ManagedPolicyArns:
-        # SSM Session Manager (shell) + SSM Run Command (the redeploy trigger).
+        # SSM Session Manager (shell) + Run Command (the redeploy trigger).
         - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
       Policies:
         - PolicyName: pull-image-from-ecr
@@ -348,13 +330,16 @@ Resources:
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: MIDAS MCP — inbound HTTP(80) + HTTPS(443) only.
+      # EC2 accepts only this character set in group/rule descriptions:
+      #   a-zA-Z0-9. _-:/()#,@[]+=&;{}!$*
+      # No apostrophes - "Let's Encrypt" is rejected here.
+      GroupDescription: MIDAS MCP - inbound HTTP(80) + HTTPS(443) only.
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
           CidrIp: !Ref AllowedCidr
-          Description: HTTP (Let's Encrypt ACME + redirect to HTTPS)
+          Description: HTTP (ACME HTTP-01 challenge + redirect to HTTPS)
         - IpProtocol: tcp
           FromPort: 443
           ToPort: 443
@@ -387,29 +372,38 @@ Resources:
         - Key: Name
           Value: midas-mcp
       UserData:
-        # NOTE: user-data runs ONCE per instance, not on every boot. Anything
-        # that must happen on each start (pulling the current image) belongs in
-        # the midas-redeploy systemd unit installed below, not here.
+        # Runs ONCE per instance, not on every boot. Anything that must happen on
+        # each start (pulling the current image) belongs in the systemd unit.
+        #
+        # Three things are installed here, then never touched again:
+        #   /opt/midas.env             values only CloudFormation knows
+        #   /opt/redeploy.sh           the one script both redeploy paths call
+        #                              (boot via systemd, ECR push via SSM)
+        #   midas-redeploy.service     runs it on every boot, retrying every 60s
+        #                              until the pull succeeds - which is what
+        #                              makes the first deploy self-healing while
+        #                              CodeBuild is still building, and what
+        #                              covers an ECR push event that arrives
+        #                              before SSM has registered the instance
+        #
+        # Caddy starts before the app exists on purpose: it resolves the `midas`
+        # upstream per request, so it can obtain the certificate during that
+        # first build (requests just 502 until the app lands).
         Fn::Base64: !Sub |
           #!/bin/bash
           set -eux
 
-          # --- Docker ---
           dnf install -y docker
           systemctl enable --now docker
           docker network create web || true
 
-          # --- Where the image lives (read by the redeploy script) ---
           cat > /opt/midas.env <<EOF
           AWS_REGION=${AWS::Region}
           REGISTRY=${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com
           IMAGE=${EcrRepository.RepositoryUri}:${ImageTag}
+          PUBLIC_URL=https://${ServiceHostname}
           EOF
 
-          # --- Redeploy: log in to ECR, pull the tag, swap the container ---
-          # Invoked on every boot (systemd) and on every ECR push to the watched
-          # tag (EventBridge -> SSM Run Command). Idempotent; a pull that finds
-          # the same digest still just restarts the container.
           cat > /opt/redeploy.sh <<'SCRIPT'
           #!/bin/bash
           set -euo pipefail
@@ -418,9 +412,12 @@ Resources:
             | docker login --username AWS --password-stdin "$REGISTRY"
           docker pull "$IMAGE"
           docker rm -f midas 2>/dev/null || true
+
           docker run -d --restart always --name midas --network web \
-            --expose 8080 "$IMAGE"
-          # Drop the image the previous container was pinning.
+            --expose 8080 \
+            -v midas_data:/data \
+            -e MIDAS_MCP_PUBLIC_URL="$PUBLIC_URL" \
+            "$IMAGE"
           docker image prune -f
           SCRIPT
           chmod +x /opt/redeploy.sh
@@ -436,11 +433,6 @@ Resources:
           Type=oneshot
           RemainAfterExit=yes
           ExecStart=/opt/redeploy.sh
-          # Retry until the image is actually pullable. This is what makes the
-          # first deploy self-healing: the instance boots before CodeBuild has
-          # pushed anything, keeps retrying every minute, and latches once the
-          # pull succeeds (RemainAfterExit). It also covers the case where the
-          # ECR push event fires before SSM has registered the instance.
           Restart=on-failure
           RestartSec=60
 
@@ -450,10 +442,6 @@ Resources:
           systemctl daemon-reload
           systemctl enable midas-redeploy.service
 
-          # --- Caddy: automatic HTTPS, reverse proxy to the app ---
-          # Started before the app exists on purpose: it resolves the `midas`
-          # upstream per request, so it can obtain the certificate while the
-          # first CodeBuild run is still going (requests just 502 until then).
           cat > /opt/Caddyfile <<'EOF'
           {
             email ${AcmeEmail}
@@ -469,33 +457,14 @@ Resources:
             -v /opt/Caddyfile:/etc/caddy/Caddyfile:ro \
             caddy:2
 
-          # The instance usually finishes booting before the first build ends,
-          # so the repo is still empty here. Do not fail the boot over it — the
-          # push event deploys the image as soon as the build lands.
           systemctl start midas-redeploy.service \
-            || echo "no image in ECR yet — the CodeBuild push will deploy it"
+            || echo "no image in ECR yet - the CodeBuild push will deploy it"
 
   EipAssociation:
     Type: AWS::EC2::EIPAssociation
     Properties:
       AllocationId: !GetAtt Eip.AllocationId
       InstanceId: !Ref Instance
-
-  # ================= DNS =================
-  HostedZone:
-    Type: AWS::Route53::HostedZone
-    Properties:
-      Name: !Ref ZoneDomain
-
-  ServiceRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneId: !Ref HostedZone
-      Name: !Ref ServiceHostname
-      Type: A
-      TTL: "300"
-      ResourceRecords:
-        - !Ref Eip
 
   # ================= Continuous deploy: ECR push -> SSM =================
   EcrPushInvokeRole:
@@ -540,8 +509,8 @@ Resources:
             RunCommandTargets:
               - Key: InstanceIds
                 Values: [ !Ref Instance ]
-          # If the instance is stopped (nightly schedule) the command simply
-          # fails; the boot-time systemd unit picks the image up on next start.
+          # If the instance is stopped the command fails; the boot-time systemd
+          # unit picks the image up on next start.
           Input: '{"commands":["/opt/redeploy.sh"],"executionTimeout":["600"]}'
 
   # ================= Scheduled start/stop =================
@@ -591,11 +560,11 @@ Outputs:
   McpEndpoint:
     Description: HTTPS MCP endpoint (give this URL to the client).
     Value: !Sub "https://${ServiceHostname}/mcp"
-  NameServers:
+  DnsRecordToCreate:
     Description: >
-      Set these as your domain's NS records at the registrar, then wait for
-      propagation. Caddy retries until DNS resolves, then issues the certificate.
-    Value: !Join [ ", ", !GetAtt HostedZone.NameServers ]
+      Create this A record at your DNS provider. Caddy retries until it resolves,
+      then issues the certificate.
+    Value: !Sub "${ServiceHostname}  A  ${Eip}"
   RebuildCommand:
     Description: Rebuild from GitHub and redeploy (the one command you rerun).
     Value: !Sub "aws codebuild start-build --region ${AWS::Region} --project-name ${BuildProject}"
