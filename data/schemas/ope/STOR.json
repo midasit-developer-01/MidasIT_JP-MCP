@@ -1,0 +1,75 @@
+{
+  "_group": "ope",
+  "_name": "STOR",
+  "uri": "ope/STOR",
+  "methods": "POST",
+  "schema": {
+    "STOR": {
+      "type": "object",
+      "description": "Auto Generate Story (STOR). Reads all model nodes to auto-detect story levels, then generates story data; the request fields only control whether accidental seismic/wind eccentricity is applied and by what percentage.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body controlling accidental eccentricity used during automatic story generation.",
+          "properties": {
+            "SEIS_ECC": {
+              "type": "object",
+              "description": "Seismic accidental eccentricity settings. When INC_SEIS_ECC is true, each story's seismic eccentricity is computed as building width * SEIS_ECC_VALUE / 100.",
+              "properties": {
+                "INC_SEIS_ECC": {
+                  "type": "boolean",
+                  "description": "Include Seismic Eccentricity: if true, apply accidental seismic eccentricity to each generated story."
+                },
+                "SEIS_ECC_VALUE": {
+                  "type": "number",
+                  "description": "Seismic Eccentricity (%). Must be non-negative; used as a percentage of the story width. Ignored when INC_SEIS_ECC is false."
+                }
+              },
+              "required": [
+                "INC_SEIS_ECC",
+                "SEIS_ECC_VALUE"
+              ]
+            },
+            "WIND_ECC": {
+              "type": "object",
+              "description": "Wind accidental eccentricity settings. When INC_WIND_ECC is true, each story's wind eccentricity is computed as building width * WIND_ECC_VALUE / 100.",
+              "properties": {
+                "INC_WIND_ECC": {
+                  "type": "boolean",
+                  "description": "Include Wind Eccentricity: if true, apply accidental wind eccentricity to each generated story."
+                },
+                "WIND_ECC_VALUE": {
+                  "type": "number",
+                  "description": "Wind Eccentricity (%). Must be non-negative; used as a percentage of the story width. Ignored when INC_WIND_ECC is false."
+                }
+              },
+              "required": [
+                "INC_WIND_ECC",
+                "WIND_ECC_VALUE"
+              ]
+            }
+          },
+          "required": [
+            "SEIS_ECC",
+            "WIND_ECC"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "SEIS_ECC": {
+        "INC_SEIS_ECC": true,
+        "SEIS_ECC_VALUE": 5.0
+      },
+      "WIND_ECC": {
+        "INC_WIND_ECC": false,
+        "WIND_ECC_VALUE": 0.0
+      }
+    }
+  }
+}

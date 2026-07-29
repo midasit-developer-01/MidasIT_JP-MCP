@@ -1,0 +1,72 @@
+{
+  "_group": "rating",
+  "_name": "DATR-VBEAM",
+  "uri": "rating/PSC/AASHTO-LRFR19/DATR-VBEAM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DATR-VBEAM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Deflection at Rating - Vehicle Beam (DATR). Fields are driven by LTM_TYPE (0=Auto Calculation, 1=User Input) and POSITION (0=I, 1=J, 2=I & J), which select whether the strain/benefit factors or the manual adjustment factor apply.",
+      "properties": {
+        "POSITION": {
+          "type": "integer",
+          "enum": [
+            0,
+            1,
+            2
+          ],
+          "description": "Position Type: 0=I, 1=J, 2=I & J. Range-validated (0-2) in the handler."
+        },
+        "LTM_TYPE": {
+          "type": "integer",
+          "enum": [
+            0,
+            1
+          ],
+          "description": "Load Test Measurement Type: 0=Auto Calculation, 1=User Input. Range-validated (0-1) in the handler."
+        },
+        "STRAIN_I": {
+          "type": "number",
+          "default": 1e-05,
+          "description": "[LTM_TYPE=0 and POSITION=0 or 2] Strain at I-End. When applicable it must be >= 0."
+        },
+        "STRAIN_J": {
+          "type": "number",
+          "default": 1e-05,
+          "description": "[LTM_TYPE=0 and POSITION=1 or 2] Strain at J-End. When applicable it must be >= 0."
+        },
+        "KB": {
+          "type": "number",
+          "default": 1.0,
+          "description": "[LTM_TYPE=0] Load Test Measurement Benefit Factor. When applicable it must be > 0."
+        },
+        "K": {
+          "type": "number",
+          "default": 1.0,
+          "description": "[LTM_TYPE=1] Adjustment Factor. When applicable it must be > 0."
+        }
+      },
+      "required": [
+        "POSITION",
+        "LTM_TYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "POSITION": 2,
+        "LTM_TYPE": 0,
+        "STRAIN_I": 0.00012,
+        "STRAIN_J": 0.00015,
+        "KB": 1.1
+      },
+      "2": {
+        "POSITION": 0,
+        "LTM_TYPE": 1,
+        "K": 1.25
+      }
+    }
+  }
+}

@@ -1,0 +1,221 @@
+{
+  "_group": "design",
+  "_name": "RPSC",
+  "uri": "design/PSC/AASHTO-LRFD24/RPSC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "RPSC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Reinforcement of Section for PSC Design (RPSC). Fields are driven by the top-level booleans (separate I/J flags) plus the shear (SBAR_ITEMS) and longitudinal (MBARS) reinforcement item lists.",
+      "properties": {
+        "OPT_MBAR_J": {
+          "type": "boolean",
+          "description": "MBarJ Boolean. When true, the longitudinal reinforcement at the J end differs from the I end (two MBARS entries used); when false, J copies I."
+        },
+        "OPT_SBAR_J": {
+          "type": "boolean",
+          "description": "SBarJ Boolean. When true, the shear reinforcement at the J end differs from the I end (two SBAR_ITEMS entries used); when false, J copies I."
+        },
+        "OPT_CRACKED": {
+          "type": "boolean",
+          "description": "Cracked Boolean. Whether the cracked-section check is applied."
+        },
+        "SBAR_ITEMS": {
+          "type": "array",
+          "description": "Shear Reinforcement Properties. One entry per position (I, and J when OPT_SBAR_J is true); only the first two entries are used.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "OPT_DR": {
+                "type": "boolean",
+                "default": false,
+                "description": "Diagonal Reinforcement exists. Gates DR_PITCH, DR_THETA, DR_AW."
+              },
+              "DR_PITCH": {
+                "type": "number",
+                "description": "[OPT_DR=true] Diagonal reinforcement pitch."
+              },
+              "DR_THETA": {
+                "type": "number",
+                "description": "[OPT_DR=true] Diagonal reinforcement angle."
+              },
+              "DR_AW": {
+                "type": "number",
+                "description": "[OPT_DR=true] Diagonal reinforcement area Aw."
+              },
+              "OPT_SBW": {
+                "type": "boolean",
+                "default": false,
+                "description": "Steel Bar for Web exists. Gates SBW_PITCH, SBW_ANGLE, SBW_AP, SBW_PS, SBW_FACTOR."
+              },
+              "SBW_PITCH": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Web steel bar pitch."
+              },
+              "SBW_ANGLE": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Web steel bar angle."
+              },
+              "SBW_AP": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Web steel bar area Ap."
+              },
+              "SBW_PS": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Web steel bar effective prestress Pe."
+              },
+              "SBW_FACTOR": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Web steel bar shear reduction factor."
+              },
+              "OPT_TR": {
+                "type": "boolean",
+                "default": false,
+                "description": "Torsional Reinforcement exists. Gates TR_PITCH, TR_AWT, TR_ALT."
+              },
+              "TR_PITCH": {
+                "type": "number",
+                "description": "[OPT_TR=true] Torsional reinforcement pitch."
+              },
+              "TR_AWT": {
+                "type": "number",
+                "description": "[OPT_TR=true] Torsional reinforcement area Awt."
+              },
+              "TR_ALT": {
+                "type": "number",
+                "description": "[OPT_TR=true] Torsional reinforcement area Alt."
+              },
+              "OPT_SR": {
+                "type": "boolean",
+                "default": false,
+                "description": "Stirrup exists. Gates SR_PITCH, SR_AW."
+              },
+              "SR_PITCH": {
+                "type": "number",
+                "description": "[OPT_SR=true] Stirrup pitch."
+              },
+              "SR_AW": {
+                "type": "number",
+                "description": "[OPT_SR=true] Stirrup area Aw."
+              },
+              "OPT_LBAR_FLG": {
+                "type": "boolean",
+                "default": false,
+                "description": "Enclosing Stirrup exists. Gates LBAR_THICK, LBAR_INC_FC."
+              },
+              "LBAR_THICK": {
+                "type": "number",
+                "description": "[OPT_LBAR_FLG=true] Cover thickness for the enclosed section area."
+              },
+              "LBAR_INC_FC": {
+                "type": "boolean",
+                "description": "[OPT_LBAR_FLG=true] Include Flange/Cantilever in the enclosed section."
+              }
+            }
+          }
+        },
+        "MBARS": {
+          "type": "array",
+          "description": "Longitudinal Reinforcement Properties. One wrapper per position (I, and J when OPT_MBAR_J is true); only the first two entries are used.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "MBAR_ITEMS": {
+                "type": "array",
+                "description": "Longitudinal Reinforcement Property Detail. List of longitudinal reinforcement bars.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "IJ": {
+                      "type": "string",
+                      "enum": ["I", "J"],
+                      "description": "I / J position of the bar (case-insensitive)."
+                    },
+                    "NAME": {
+                      "type": "string",
+                      "description": "Bar Name."
+                    },
+                    "REF_Y": {
+                      "type": "integer",
+                      "description": "Reference for the Y coordinate."
+                    },
+                    "Y": {
+                      "type": "number",
+                      "default": 0,
+                      "description": "Y coordinate."
+                    },
+                    "REF_Z": {
+                      "type": "integer",
+                      "description": "Reference for the Z coordinate."
+                    },
+                    "Z": {
+                      "type": "number",
+                      "default": 0,
+                      "description": "Z coordinate."
+                    },
+                    "NUM": {
+                      "type": "integer",
+                      "description": "Number of bars."
+                    },
+                    "SPACING": {
+                      "type": "number",
+                      "default": 0,
+                      "description": "Spacing between bars."
+                    },
+                    "PART": {
+                      "type": "integer",
+                      "description": "Part index the bar belongs to."
+                    }
+                  },
+                  "required": ["IJ", "NAME", "REF_Y", "REF_Z", "NUM", "PART"]
+                }
+              }
+            },
+            "required": ["MBAR_ITEMS"]
+          }
+        }
+      },
+      "required": ["OPT_MBAR_J", "OPT_SBAR_J", "OPT_CRACKED", "SBAR_ITEMS", "MBARS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "OPT_MBAR_J": false,
+        "OPT_SBAR_J": false,
+        "OPT_CRACKED": true,
+        "SBAR_ITEMS": [
+          {
+            "OPT_DR": false,
+            "OPT_SBW": false,
+            "OPT_TR": false,
+            "OPT_SR": true,
+            "SR_PITCH": 150.0,
+            "SR_AW": 253.4,
+            "OPT_LBAR_FLG": true,
+            "LBAR_THICK": 40.0,
+            "LBAR_INC_FC": false
+          }
+        ],
+        "MBARS": [
+          {
+            "MBAR_ITEMS": [
+              {
+                "IJ": "I",
+                "NAME": "P13",
+                "REF_Y": 0,
+                "Y": 0.0,
+                "REF_Z": 0,
+                "Z": -500.0,
+                "NUM": 4,
+                "SPACING": 100.0,
+                "PART": 0
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

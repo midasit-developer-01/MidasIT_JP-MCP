@@ -1,0 +1,55 @@
+{
+  "_group": "db",
+  "_name": "PHGE",
+  "uri": "db/PHGE",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PHGE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Pushover Hinge Properties (PHGE). Assigns a pushover hinge to an object; TYPE selects which element category (BEAM/WALL/TRUSS/G-LINK/P-SPRING) the hinge applies to, HINGE_TYPE references a defined pushover hinge type by name, and FIBER_KEY links an optional fiber definition.",
+      "type": "object",
+      "properties": {
+        "ID": {
+          "description": "Element type index of the assignment (1-based ordinal of TYPE among BEAM/WALL/TRUSS/G-LINK/P-SPRING). Used as the sub-key together with the object key.",
+          "type": "integer"
+        },
+        "TYPE": {
+          "description": "Element category the pushover hinge is assigned to. Determines the internal type index. Case-insensitive.",
+          "type": "string",
+          "enum": ["BEAM", "WALL", "TRUSS", "G-LINK", "P-SPRING"]
+        },
+        "HINGE_TYPE": {
+          "description": "Name of the pushover hinge type (PHGT) to assign. Must reference an existing hinge type name; a non-existent name is rejected at runtime.",
+          "type": "string"
+        },
+        "FIBER_KEY": {
+          "description": "Key of the associated fiber definition (0 when no fiber is used).",
+          "type": "integer"
+        }
+      },
+      "required": ["ID", "TYPE", "HINGE_TYPE", "FIBER_KEY"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "15": {
+        "ID": 1,
+        "TYPE": "BEAM",
+        "HINGE_TYPE": "Myz_15",
+        "FIBER_KEY": 0
+      },
+      "21": {
+        "ID": 2,
+        "TYPE": "WALL",
+        "HINGE_TYPE": "Wall_H1",
+        "FIBER_KEY": 0
+      },
+      "34": {
+        "ID": 5,
+        "TYPE": "P-SPRING",
+        "HINGE_TYPE": "PSpring_1",
+        "FIBER_KEY": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "_group": "db",
+  "_name": "CPSETTINGS",
+  "uri": "db/CPSETTINGS",
+  "methods": "POST, GET, PUT",
+  "schema": {
+    "CPSETTINGS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Cooperate Civil Designer Settings (CPSETTINGS). A single-record setting (only key 1 exists); MODULE selects the civil-designer module and drives which CODE (design-code) values are valid.",
+      "properties": {
+        "MODULE": {
+          "description": "Module type selector. 0 = Design (Dgn), 1 = Assessment (Ass), 2 = Detailing (Det), 3 = Reinforcement (Rein). Determines the valid domain of CODE.",
+          "type": "integer",
+          "enum": [0, 1, 2, 3]
+        },
+        "CODE": {
+          "description": "Design-code selector; meaning depends on MODULE. [MODULE=0 Design] 0=JTG D64-2015, 1=JTG/T D64-01-2015, 2=JTG 3362-2018, 3=JTG D62-2004, 4=JTJ 023-85, 5=CJJ 11-2011, 6=CJJ 11-2019, 7=TB 10092-2017, 8=JTG/T B02-01-2008, 9=JTG/T 2231-01-2020, 10=CJJ 166-2011, 11=JTG 3363-2019, 12=JTG/T D65-06-2015. [MODULE=1 Assessment] 0=JTG 3362-2018, 1=JTG D62-2004, 2=JTJ 023-85, 3=CJJ 11-2011, 4=CJJ 11-2019, 5=JTG D64-2015. [MODULE=2 Detailing] 0=JTG/T J21-01-2015. [MODULE=3 Reinforcement] 0=JTG/T J22-2008, 1=JTG/T 5431-2025.",
+          "type": "integer"
+        },
+        "TYPE": {
+          "description": "Export file type code. Valid values 0, 1, 2 (mapped internally to distinct export file formats). Optional; defaults to 0.",
+          "type": "integer",
+          "enum": [0, 1, 2],
+          "default": 0
+        },
+        "INFULENCE": {
+          "description": "Whether influence-line/influence data is included in the export. Optional; defaults to false.",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "MODULE",
+        "CODE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "MODULE": 0,
+        "CODE": 2,
+        "TYPE": 0,
+        "INFULENCE": false
+      }
+    }
+  }
+}

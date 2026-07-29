@@ -1,0 +1,60 @@
+{
+  "_group": "design",
+  "_name": "BC-ANAL",
+  "uri": "design/RC/KDS-41-20-2022/BC-ANAL",
+  "methods": "POST",
+  "schema": {
+    "BC-ANAL": {
+      "type": "object",
+      "description": "RC Beam Design Analysis (BC-ANAL). Fields select which elements or sections the design analysis is performed on, driven by PERFORM_TYPE.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body (DTO_DESIGN_ANAL) selecting the design analysis target.",
+          "properties": {
+            "PERFORM_TYPE": {
+              "type": "string",
+              "enum": ["ALL", "ELEMS", "SECTIONS"],
+              "default": "ALL",
+              "description": "Perform Target - All Elements: ALL / By Element No.: ELEMS / By Section No.: SECTIONS. Case-insensitive matching."
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "[PERFORM_TYPE=ELEMS] Element No. object selecting elements to analyze.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "items": { "type": "integer" },
+                  "description": "Specify Each ID - Element No."
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "description": "[PERFORM_TYPE=SECTIONS] Section No. list."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "PERFORM_TYPE": "ELEMS",
+      "ELEMS": {
+        "KEYS": [1, 2, 3],
+        "TO": "1-10",
+        "STRUCTURE_GROUP_NAME": "Beams"
+      }
+    }
+  }
+}

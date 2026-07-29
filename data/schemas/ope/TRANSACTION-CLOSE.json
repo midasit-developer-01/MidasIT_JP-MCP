@@ -1,0 +1,22 @@
+{
+  "_group": "ope",
+  "_name": "TRANSACTION-CLOSE",
+  "uri": "ope/TRANSACTION-CLOSE",
+  "methods": "POST",
+  "schema": {
+    "TRANSACTION-CLOSE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Close API Super-Transaction (TRANSACTION-CLOSE). The request body carries no meaningful fields (DTO_EMPTY); posting finishes and closes the currently active API super-transaction.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body. No fields are consumed by the handler."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

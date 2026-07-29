@@ -1,0 +1,31 @@
+{
+  "_group": "db",
+  "_name": "ULCT",
+  "uri": "db/ULCT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "ULCT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Underground Load Combination Type (ULCT). Assigned per element (key = element number); the single flag bUNDERLOADTYPE marks whether the element uses the underground load combination type.",
+      "properties": {
+        "bUNDERLOADTYPE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Underground load type flag for the element. true => underground load combination type (EN_ULCT_UNDERGROUND); false => non-underground (EN_ULCT_NONE_UNDERGROUND)."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "2": {
+        "bUNDERLOADTYPE": true
+      },
+      "397": {
+        "bUNDERLOADTYPE": false
+      }
+    }
+  }
+}

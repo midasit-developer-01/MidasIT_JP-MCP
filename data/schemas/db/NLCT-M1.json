@@ -1,0 +1,296 @@
+{
+  "_group": "db",
+  "_name": "NLCT-M1",
+  "uri": "db/NLCT-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "NLCT-M1": {
+      "type": "object",
+      "description": "Nonlinear Analysis Control Data (NLCT-M1). LC_SCOPE decides whether one global setting (ALL, key must be 1) or per-load-case settings (SELECT, requires LOAD_CASE) apply; ITER_METHOD (FORCE/ARC/DISP) and LOAD_STEPS.STEP_MODE (AUTO/MANUAL) drive which nested fields are meaningful.",
+      "properties": {
+        "LC_SCOPE": {
+          "type": "string",
+          "enum": ["ALL", "SELECT"],
+          "default": "ALL",
+          "description": "Load case scope (case-insensitive). ALL = one global nonlinear control (key must be 1); SELECT = per static load case (LOAD_CASE required)."
+        },
+        "LOAD_CASE": {
+          "type": "string",
+          "description": "[LC_SCOPE=SELECT] Static load case name; must reference an existing static load case. Required when LC_SCOPE=SELECT and the key is a new entry."
+        },
+        "NONLINEAR_TYPE": {
+          "type": "string",
+          "enum": ["GEOM", "MATL", "GEOM+MATL"],
+          "description": "Nonlinear type (case-insensitive). GEOM = geometry nonlinear, MATL = material nonlinear, GEOM+MATL = both."
+        },
+        "ITER_METHOD": {
+          "type": "string",
+          "enum": ["FORCE", "ARC", "DISP"],
+          "description": "Iteration method (case-insensitive). FORCE = force control (Newton-Raphson), ARC = arc-length, DISP = displacement control. Governs which LOAD_STEPS sub-fields apply."
+        },
+        "LOAD_STEPS": {
+          "type": "object",
+          "description": "Load step configuration. STEP_MODE selects increment definition; ARC and DISP methods enable extra sub-fields.",
+          "properties": {
+            "STEP_MODE": {
+              "type": "string",
+              "enum": ["AUTO", "MANUAL"],
+              "description": "Step mode (case-insensitive). AUTO = fixed number of equal increments (uses NUMBER_STEPS, OUTPUT); MANUAL = user-defined step list (uses MANUAL_STEPS)."
+            },
+            "NUMBER_STEPS": {
+              "type": "integer",
+              "default": 1,
+              "description": "[STEP_MODE=AUTO] Number of load increments."
+            },
+            "OUTPUT": {
+              "type": "string",
+              "enum": ["EVERY", "LAST"],
+              "default": "EVERY",
+              "description": "[STEP_MODE=AUTO] Intermediate output request. EVERY = output at every increment, LAST = only the last increment (case-insensitive)."
+            },
+            "MANUAL_STEPS": {
+              "type": "array",
+              "items": {"type": "number"},
+              "description": "[STEP_MODE=MANUAL] User-defined list of load increment factors, one per step."
+            },
+            "MIN_ARC_RATIO": {
+              "type": "number",
+              "description": "[ITER_METHOD=ARC] Minimum arc-length adjustment ratio (default applied internally: 0.25)."
+            },
+            "MAX_ARC_RATIO": {
+              "type": "number",
+              "description": "[ITER_METHOD=ARC] Maximum arc-length adjustment ratio (default applied internally: 4.0)."
+            },
+            "MAX_ARC_INCREMENTS": {
+              "type": "integer",
+              "description": "[ITER_METHOD=ARC] Maximum number of arc-length increments (default applied internally: 100)."
+            },
+            "MASTER_NODE": {
+              "type": "integer",
+              "description": "[ITER_METHOD=DISP] Master node number whose displacement is controlled."
+            },
+            "DIRECTION": {
+              "type": "string",
+              "enum": ["DX", "DY", "DZ"],
+              "default": "DX",
+              "description": "[ITER_METHOD=DISP] Displacement control direction (case-insensitive)."
+            },
+            "MAX_DISP": {
+              "type": "number",
+              "description": "[ITER_METHOD=DISP] Maximum controlled displacement at the master node."
+            },
+            "REF_NODE": {
+              "type": "object",
+              "description": "[ITER_METHOD=DISP] Reference (relative) node for displacement control.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Whether a reference node is used for relative displacement control."
+                },
+                "NODE": {
+                  "type": "integer",
+                  "description": "Reference node number (meaningful when OPT_USE=true)."
+                }
+              },
+              "required": ["OPT_USE"]
+            }
+          },
+          "required": ["STEP_MODE"]
+        },
+        "CONV_CRITERIA": {
+          "type": "object",
+          "description": "Convergence criteria. Each of DISP/LOAD/WORK toggles a criterion and supplies its tolerance.",
+          "properties": {
+            "DISP": {
+              "type": "object",
+              "description": "Displacement convergence criterion.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Enable displacement convergence check."
+                },
+                "VALUE": {
+                  "type": "number",
+                  "description": "Displacement convergence tolerance (meaningful when OPT_USE=true; internal default 0.001)."
+                }
+              },
+              "required": ["OPT_USE"]
+            },
+            "LOAD": {
+              "type": "object",
+              "description": "Load convergence criterion.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Enable load convergence check."
+                },
+                "VALUE": {
+                  "type": "number",
+                  "description": "Load convergence tolerance (meaningful when OPT_USE=true; internal default 0.001)."
+                }
+              },
+              "required": ["OPT_USE"]
+            },
+            "WORK": {
+              "type": "object",
+              "description": "Work convergence criterion.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Enable work convergence check."
+                },
+                "VALUE": {
+                  "type": "number",
+                  "description": "Work convergence tolerance (meaningful when OPT_USE=true; internal default 0.000001)."
+                }
+              },
+              "required": ["OPT_USE"]
+            }
+          }
+        },
+        "ADVANCED": {
+          "type": "object",
+          "description": "Advanced nonlinear parameters. When OPT_USE_DEFAULT=true the remaining fields are ignored (defaults used); when false they configure the solver.",
+          "properties": {
+            "OPT_USE_DEFAULT": {
+              "type": "boolean",
+              "description": "Use default advanced settings. If true, all fields below are ignored."
+            },
+            "STIFF_UPDATE_SCHEME": {
+              "type": "string",
+              "enum": ["CUSTOM", "FULL_NEWTON_RAPHSON", "INITIAL_STIFF"],
+              "description": "[OPT_USE_DEFAULT=false] Stiffness update scheme (case-insensitive). CUSTOM = update every N iterations (uses ITER_BEFORE_STIFF_UPDATE); FULL_NEWTON_RAPHSON = update every iteration; INITIAL_STIFF = keep initial stiffness."
+            },
+            "ITER_BEFORE_STIFF_UPDATE": {
+              "type": "integer",
+              "description": "[STIFF_UPDATE_SCHEME=CUSTOM] Number of iterations before each stiffness update."
+            },
+            "OPT_TERMINATE_ON_FAILED_CONV": {
+              "type": "boolean",
+              "description": "[OPT_USE_DEFAULT=false] Terminate analysis on failed convergence."
+            },
+            "MAX_ITER_PER_INCREMENT": {
+              "type": "integer",
+              "description": "[OPT_USE_DEFAULT=false] Maximum number of iterations per increment."
+            },
+            "MAX_BISECTION_LEVEL": {
+              "type": "integer",
+              "description": "[OPT_USE_DEFAULT=false] Maximum bisection level."
+            },
+            "OPT_SMART_BISECTION": {
+              "type": "boolean",
+              "description": "[OPT_USE_DEFAULT=false] Enable smart bisection."
+            },
+            "DIVERGENCE_THRESHOLD": {
+              "type": "number",
+              "description": "[OPT_USE_DEFAULT=false] Divergence threshold (stored as an integer count internally)."
+            },
+            "OPT_ENABLE_LINE_SEARCH": {
+              "type": "boolean",
+              "description": "[OPT_USE_DEFAULT=false] Enable line search. If true, LINE_SEARCH_OPTION must be supplied (hard-validated)."
+            },
+            "LINE_SEARCH_OPTION": {
+              "type": "string",
+              "enum": ["AUTO", "MANUAL"],
+              "description": "[OPT_ENABLE_LINE_SEARCH=true] Line search option (case-insensitive). AUTO = automatic; MANUAL = user-defined (uses MAX_LINE_SEARCH_PER_ITER, LINE_SEARCH_TOL)."
+            },
+            "MAX_LINE_SEARCH_PER_ITER": {
+              "type": "integer",
+              "description": "[LINE_SEARCH_OPTION=MANUAL] Maximum line searches per iteration."
+            },
+            "LINE_SEARCH_TOL": {
+              "type": "number",
+              "description": "[LINE_SEARCH_OPTION=MANUAL] Line search tolerance."
+            }
+          },
+          "required": ["OPT_USE_DEFAULT"]
+        }
+      },
+      "required": ["NONLINEAR_TYPE", "ITER_METHOD", "LOAD_STEPS", "CONV_CRITERIA"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LC_SCOPE": "ALL",
+        "NONLINEAR_TYPE": "GEOM",
+        "ITER_METHOD": "FORCE",
+        "LOAD_STEPS": {
+          "STEP_MODE": "AUTO",
+          "NUMBER_STEPS": 10,
+          "OUTPUT": "EVERY"
+        },
+        "CONV_CRITERIA": {
+          "DISP": {"OPT_USE": true, "VALUE": 0.001},
+          "LOAD": {"OPT_USE": true, "VALUE": 0.001},
+          "WORK": {"OPT_USE": false}
+        },
+        "ADVANCED": {
+          "OPT_USE_DEFAULT": true
+        }
+      },
+      "2": {
+        "LC_SCOPE": "SELECT",
+        "LOAD_CASE": "PushLC",
+        "NONLINEAR_TYPE": "GEOM+MATL",
+        "ITER_METHOD": "ARC",
+        "LOAD_STEPS": {
+          "STEP_MODE": "MANUAL",
+          "MANUAL_STEPS": [0.1, 0.2, 0.3, 0.4, 1.0],
+          "MIN_ARC_RATIO": 0.25,
+          "MAX_ARC_RATIO": 4.0,
+          "MAX_ARC_INCREMENTS": 100
+        },
+        "CONV_CRITERIA": {
+          "DISP": {"OPT_USE": true, "VALUE": 0.001},
+          "LOAD": {"OPT_USE": false},
+          "WORK": {"OPT_USE": false}
+        },
+        "ADVANCED": {
+          "OPT_USE_DEFAULT": false,
+          "STIFF_UPDATE_SCHEME": "CUSTOM",
+          "ITER_BEFORE_STIFF_UPDATE": 5,
+          "OPT_TERMINATE_ON_FAILED_CONV": true,
+          "MAX_ITER_PER_INCREMENT": 30,
+          "MAX_BISECTION_LEVEL": 8,
+          "OPT_SMART_BISECTION": true,
+          "DIVERGENCE_THRESHOLD": 1000000.0,
+          "OPT_ENABLE_LINE_SEARCH": true,
+          "LINE_SEARCH_OPTION": "MANUAL",
+          "MAX_LINE_SEARCH_PER_ITER": 10,
+          "LINE_SEARCH_TOL": 0.5
+        }
+      },
+      "3": {
+        "LC_SCOPE": "SELECT",
+        "LOAD_CASE": "DispLC",
+        "NONLINEAR_TYPE": "MATL",
+        "ITER_METHOD": "DISP",
+        "LOAD_STEPS": {
+          "STEP_MODE": "AUTO",
+          "NUMBER_STEPS": 20,
+          "OUTPUT": "LAST",
+          "MASTER_NODE": 15,
+          "DIRECTION": "DZ",
+          "MAX_DISP": 0.05,
+          "REF_NODE": {"OPT_USE": true, "NODE": 1}
+        },
+        "CONV_CRITERIA": {
+          "DISP": {"OPT_USE": true, "VALUE": 0.001},
+          "LOAD": {"OPT_USE": true, "VALUE": 0.001},
+          "WORK": {"OPT_USE": true, "VALUE": 0.000001}
+        },
+        "ADVANCED": {
+          "OPT_USE_DEFAULT": false,
+          "STIFF_UPDATE_SCHEME": "FULL_NEWTON_RAPHSON",
+          "OPT_TERMINATE_ON_FAILED_CONV": false,
+          "MAX_ITER_PER_INCREMENT": 25,
+          "MAX_BISECTION_LEVEL": 5,
+          "OPT_SMART_BISECTION": false,
+          "DIVERGENCE_THRESHOLD": 500000.0,
+          "OPT_ENABLE_LINE_SEARCH": false
+        }
+      }
+    }
+  }
+}

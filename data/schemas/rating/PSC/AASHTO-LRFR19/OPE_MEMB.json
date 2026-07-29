@@ -1,0 +1,65 @@
+{
+  "_group": "rating",
+  "_name": "OPE_MEMB",
+  "uri": "rating/PSC/AASHTO-LRFR19/OPE_MEMB",
+  "methods": "POST",
+  "schema": {
+    "OPE_MEMB": {
+      "type": "object",
+      "description": "Define Member (OPE_MEMB). Groups frame elements into members either manually from an element list or automatically, driven by the assign type, selection type, and single-element-member option.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request payload that drives member definition over frame elements.",
+          "properties": {
+            "ELEM_LIST": {
+              "type": "array",
+              "description": "Element List. Keys of the elements to group into members; used when specific elements are provided (e.g. MANUAL / SELECTION). If assigned, member definition is limited to these elements.",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "ASSIGN_TYPE": {
+              "type": "string",
+              "description": "Assign Type. Case-insensitive. MANUAL defines members from the given element selection; AUTO defines members automatically from frame elements. MANUAL combined with SELECTION_TYPE ALL is rejected.",
+              "enum": [
+                "MANUAL",
+                "AUTO"
+              ]
+            },
+            "SELECTION_TYPE": {
+              "type": "string",
+              "description": "Selection Type. Case-insensitive. ALL applies to all elements (valid with AUTO); SELECTION applies to the provided element list.",
+              "enum": [
+                "ALL",
+                "SELECTION"
+              ],
+              "default": "SELECTION"
+            },
+            "ALLOW_SINGLE": {
+              "type": "boolean",
+              "description": "Allow Single Element Member. If true, a member consisting of a single element is permitted."
+            }
+          },
+          "required": [
+            "ASSIGN_TYPE",
+            "ALLOW_SINGLE"
+          ]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "ELEM_LIST": [
+        1,
+        2,
+        3
+      ],
+      "ASSIGN_TYPE": "MANUAL",
+      "SELECTION_TYPE": "SELECTION",
+      "ALLOW_SINGLE": true
+    }
+  }
+}

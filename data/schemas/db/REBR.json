@@ -1,0 +1,251 @@
+{
+  "_group": "db",
+  "_name": "REBR",
+  "uri": "db/REBR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "REBR": {
+      "type": "object",
+      "description": "Concrete Brace Rebar (REBR). Keyed by section id (sectK); each ITEMS entry defines the rebar arrangement for one brace section or, when CREATE_SUB_SECTION is true, a sub-section bound to specific elements.",
+      "required": [
+        "ITEMS"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ITEMS": {
+          "type": "array",
+          "description": "Concrete brace rebar items. One entry per brace section or sub-section written to the section key.",
+          "items": {
+            "type": "object",
+            "required": [
+              "MAIN_BAR",
+              "SHEAR_BAR_END",
+              "SHEAR_BAR_CEN",
+              "DO"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "CREATE_SUB_SECTION": {
+                "type": "boolean",
+                "default": false,
+                "description": "When true, this item creates a sub-section bound to specific elements via ELEMS (subSectK != 0, AddRebrMreb path). When false or omitted, writes the base section rebar (AddRebr path)."
+              },
+              "ID": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Sub-section id (subSectK). Omit to auto-generate the next free sub-section id when CREATE_SUB_SECTION=true; provide to target a specific existing sub-section."
+              },
+              "ELEMS": {
+                "type": "object",
+                "description": "Element selection for the sub-section. Used only when CREATE_SUB_SECTION=true. Provide exactly one of KEYS, TO, or STRUCTURE_GROUP_NAME; each selected element's section (elpro) must match this section key.",
+                "additionalProperties": false,
+                "properties": {
+                  "KEYS": {
+                    "type": "array",
+                    "description": "Explicit element ids to bind to this sub-section.",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "TO": {
+                    "type": "string",
+                    "description": "Element id range expression (e.g. \"1to10\", \"1 3 5\") resolved to a list of element ids."
+                  },
+                  "STRUCTURE_GROUP_NAME": {
+                    "type": "string",
+                    "description": "Structure group name whose member elements are bound to this sub-section."
+                  }
+                },
+                "oneOf": [
+                  {
+                    "required": [
+                      "KEYS"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "TO"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "STRUCTURE_GROUP_NAME"
+                    ]
+                  }
+                ]
+              },
+              "MAIN_BAR": {
+                "type": "object",
+                "description": "Brace main rebar (single layer).",
+                "required": [
+                  "NAME",
+                  "NUM",
+                  "ROW"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "NAME": {
+                    "type": "string",
+                    "description": "Main rebar size designation (e.g. D4, D5, D6, D7, D8, D10, D13, D16, D19, D22, D25, D29, D32, D35, D38, D41, D43, D51, D57). Validated against the material rebar database at runtime; \"NONE\" is not allowed."
+                  },
+                  "NUM": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Total number of main rebars."
+                  },
+                  "ROW": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Number of rows of main rebars."
+                  }
+                }
+              },
+              "SHEAR_BAR_END": {
+                "type": "object",
+                "description": "Shear (hoop) rebar at the ends (I & J).",
+                "required": [
+                  "NAME",
+                  "LEG_Y",
+                  "LEG_Z",
+                  "DIST"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "NAME": {
+                    "type": "string",
+                    "description": "Hoop rebar size designation (same set as MAIN_BAR.NAME: D4..D57). Validated against the material rebar database at runtime; \"NONE\" is not allowed."
+                  },
+                  "LEG_Y": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Number of hoop legs along local Y. Must be positive."
+                  },
+                  "LEG_Z": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Number of hoop legs along local Z. Must be positive."
+                  },
+                  "DIST": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "description": "Spacing between hoop rebars (length unit). Must be positive."
+                  }
+                }
+              },
+              "SHEAR_BAR_CEN": {
+                "type": "object",
+                "description": "Shear (hoop) rebar at the center (M).",
+                "required": [
+                  "NAME",
+                  "LEG_Y",
+                  "LEG_Z",
+                  "DIST"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "NAME": {
+                    "type": "string",
+                    "description": "Hoop rebar size designation (same set as MAIN_BAR.NAME: D4..D57). Validated against the material rebar database at runtime; \"NONE\" is not allowed."
+                  },
+                  "LEG_Y": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Number of hoop legs along local Y. Must be positive."
+                  },
+                  "LEG_Z": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Number of hoop legs along local Z. Must be positive."
+                  },
+                  "DIST": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "description": "Spacing between hoop rebars (length unit). Must be positive."
+                  }
+                }
+              },
+              "DO": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "description": "Distance from the concrete face to the center of rebar (do, length unit). Must be positive."
+              },
+              "HOOP_TYPE": {
+                "type": "string",
+                "enum": [
+                  "Ties",
+                  "Spirals"
+                ],
+                "default": "Ties",
+                "description": "Type of hoop rebar (case-insensitive). DB encoding: Ties=1, Spirals=2."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "CREATE_SUB_SECTION": false,
+            "MAIN_BAR": {
+              "NAME": "D19",
+              "NUM": 8,
+              "ROW": 2
+            },
+            "SHEAR_BAR_END": {
+              "NAME": "D10",
+              "LEG_Y": 2,
+              "LEG_Z": 2,
+              "DIST": 100.0
+            },
+            "SHEAR_BAR_CEN": {
+              "NAME": "D10",
+              "LEG_Y": 2,
+              "LEG_Z": 2,
+              "DIST": 150.0
+            },
+            "DO": 50.0,
+            "HOOP_TYPE": "Ties"
+          }
+        ]
+      },
+      "2": {
+        "ITEMS": [
+          {
+            "CREATE_SUB_SECTION": true,
+            "ELEMS": {
+              "KEYS": [
+                11,
+                12,
+                13
+              ]
+            },
+            "MAIN_BAR": {
+              "NAME": "D22",
+              "NUM": 12,
+              "ROW": 3
+            },
+            "SHEAR_BAR_END": {
+              "NAME": "D13",
+              "LEG_Y": 3,
+              "LEG_Z": 2,
+              "DIST": 80.0
+            },
+            "SHEAR_BAR_CEN": {
+              "NAME": "D13",
+              "LEG_Y": 3,
+              "LEG_Z": 2,
+              "DIST": 120.0
+            },
+            "DO": 60.0,
+            "HOOP_TYPE": "Spirals"
+          }
+        ]
+      }
+    }
+  }
+}

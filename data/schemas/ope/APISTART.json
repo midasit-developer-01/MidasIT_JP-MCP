@@ -1,0 +1,21 @@
+{
+  "_group": "ope",
+  "_name": "APISTART",
+  "uri": "ope/APISTART",
+  "methods": "GET",
+  "schema": {
+    "APISTART": {
+      "type": "object",
+      "description": "API Start (APISTART). Starts an API working session for the current product; the request carries no fields (DTO_EMPTY). Fails if an API session is already working.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "No request body; DTO_EMPTY takes no fields."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

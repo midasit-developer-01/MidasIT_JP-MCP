@@ -1,0 +1,3603 @@
+{
+  "_group": "db",
+  "_name": "SEIS",
+  "uri": "db/SEIS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SEIS": {
+      "type": "object",
+      "description": "Seismic Load (SEIS). The SEIS_LOAD_CODE string selects exactly one nested code sub-object (KS1992, UBC1997, KDS2019, ... or the USER array) whose fields must be supplied; common scale/eccentricity/torsion fields and optional ITEMS apply to all codes.",
+      "properties": {
+        "SEIS_LOAD_CODE": {
+          "type": "string",
+          "description": "Seismic Load Code descriptive name; selects which code sub-object below is used (e.g. \"Korea(Arch. 1992)\", \"UBC(1997)\", \"KDS(41-17-00:2019)\"). Must match a registered code name."
+        },
+        "DESC": {
+          "type": "string",
+          "description": "Description.",
+          "default": ""
+        },
+        "SCALE_FACTOR_X": {
+          "type": "number",
+          "description": "Seismic Load Direction Factor (Scale Factor) X-Dir."
+        },
+        "SCALE_FACTOR_Y": {
+          "type": "number",
+          "description": "Seismic Load Direction Factor (Scale Factor) Y-Dir."
+        },
+        "ACCIDENT_ECCEN_X": {
+          "type": "integer",
+          "description": "Accidental Eccentricity X-Dir.",
+          "default": 0
+        },
+        "ACCIDENT_ECCEN_Y": {
+          "type": "integer",
+          "description": "Accidental Eccentricity Y-Dir.",
+          "default": 0
+        },
+        "bACCIDENT_TORSION": {
+          "type": "boolean",
+          "description": "Consider amplification of accidental torsion.",
+          "default": false
+        },
+        "bINHERENT_TORSION": {
+          "type": "boolean",
+          "description": "Consider amplification of inherent torsion.",
+          "default": false
+        },
+        "KS1992": {
+          "type": "object",
+          "description": "Korea (Arch. 1992) seismic parameters; used only when SEIS_LOAD_CODE selects this code.",
+          "properties": {
+            "SOIL_FACTOR": {
+              "type": "number",
+              "description": "Soil profile type factor."
+            },
+            "ZONE_FACTOR": {
+              "type": "number",
+              "description": "Earthquake area (zone) factor."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance factor."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Period (Analysis) X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Period (Analysis) Y-Dir."
+            },
+            "PERIOD_CODE_X": {
+              "type": "number",
+              "description": "Period (Code) X-Dir."
+            },
+            "PERIOD_CODE_Y": {
+              "type": "number",
+              "description": "Period (Code) Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Coef. (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Coef. (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SOIL_FACTOR",
+            "ZONE_FACTOR",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_CODE_X",
+            "PERIOD_CODE_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "UBC1991": {
+          "type": "object",
+          "description": "UBC (1991) seismic parameters.",
+          "properties": {
+            "SOIL_FACTOR": {
+              "type": "number",
+              "description": "Soil profile type factor."
+            },
+            "ZONE_FACTOR": {
+              "type": "number",
+              "description": "Seismic zone factor."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance factor."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Period (Analysis) X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Period (Analysis) Y-Dir."
+            },
+            "PERIOD_CODE_X": {
+              "type": "number",
+              "description": "Period (Code) X-Dir."
+            },
+            "PERIOD_CODE_Y": {
+              "type": "number",
+              "description": "Period (Code) Y-Dir."
+            },
+            "SYS_FACTOR_X": {
+              "type": "number",
+              "description": "Ductility Coef. (Rw) X-Dir."
+            },
+            "SYS_FACTOR_Y": {
+              "type": "number",
+              "description": "Ductility Coef. (Rw) Y-Dir."
+            }
+          },
+          "required": [
+            "SOIL_FACTOR",
+            "ZONE_FACTOR",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_CODE_X",
+            "PERIOD_CODE_Y",
+            "SYS_FACTOR_X",
+            "SYS_FACTOR_Y"
+          ]
+        },
+        "UBC1997": {
+          "type": "object",
+          "description": "UBC (1997) seismic parameters.",
+          "properties": {
+            "SOIL_PROFILE_TYPE": {
+              "type": "string",
+              "enum": [
+                "Sa",
+                "Sb",
+                "Sc",
+                "Sd",
+                "Se",
+                "Sf"
+              ],
+              "description": "Soil Profile Type (case-insensitive)."
+            },
+            "ZONE_FACTOR": {
+              "type": "number",
+              "description": "Seismic zone factor."
+            },
+            "SEISMIC_SOURCE_TYPE": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B",
+                "C"
+              ],
+              "description": "Seismic Source Type (case-insensitive); clamped to A-C at runtime."
+            },
+            "CLOSEAST_DISTANCE": {
+              "type": "number",
+              "description": "Closest distance to known seismic source."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance factor."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Period (Analysis) X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Period (Analysis) Y-Dir."
+            },
+            "PERIOD_CODE_X": {
+              "type": "number",
+              "description": "Period (Code) X-Dir."
+            },
+            "PERIOD_CODE_Y": {
+              "type": "number",
+              "description": "Period (Code) Y-Dir."
+            },
+            "SYS_FACTOR_X": {
+              "type": "number",
+              "description": "Ductility Coef. (Rw) X-Dir."
+            },
+            "SYS_FACTOR_Y": {
+              "type": "number",
+              "description": "Ductility Coef. (Rw) Y-Dir."
+            }
+          },
+          "required": [
+            "SOIL_PROFILE_TYPE",
+            "ZONE_FACTOR",
+            "SEISMIC_SOURCE_TYPE",
+            "CLOSEAST_DISTANCE",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_CODE_X",
+            "PERIOD_CODE_Y",
+            "SYS_FACTOR_X",
+            "SYS_FACTOR_Y"
+          ]
+        },
+        "ATC306": {
+          "type": "object",
+          "description": "ATC3-06 seismic parameters.",
+          "properties": {
+            "SOIL_PROFILE_COEF": {
+              "type": "number",
+              "description": "Soil profile coefficient."
+            },
+            "EFFECTIVE_PEAK_VELOCITY": {
+              "type": "number",
+              "description": "Effective peak velocity."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Period (Analysis) X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Period (Analysis) Y-Dir."
+            },
+            "PERIOD_CODE_X": {
+              "type": "number",
+              "description": "Period (Code) X-Dir."
+            },
+            "PERIOD_CODE_Y": {
+              "type": "number",
+              "description": "Period (Code) Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor Y-Dir."
+            }
+          },
+          "required": [
+            "SOIL_PROFILE_COEF",
+            "EFFECTIVE_PEAK_VELOCITY",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_CODE_X",
+            "PERIOD_CODE_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "KS2000": {
+          "type": "object",
+          "description": "Korea (Arch. 2000) seismic parameters.",
+          "properties": {
+            "SOIL_FACTOR": {
+              "type": "number",
+              "description": "Soil profile type factor."
+            },
+            "ZONE_FACTOR": {
+              "type": "number",
+              "description": "Earthquake area (zone) factor."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance factor."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Period (Analysis) X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Period (Analysis) Y-Dir."
+            },
+            "PERIOD_CODE_X": {
+              "type": "number",
+              "description": "Period (Code) X-Dir."
+            },
+            "PERIOD_CODE_Y": {
+              "type": "number",
+              "description": "Period (Code) Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Coef. (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Coef. (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SOIL_FACTOR",
+            "ZONE_FACTOR",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_CODE_X",
+            "PERIOD_CODE_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "JIS_E": {
+          "type": "object",
+          "description": "Japan (Arch. 2000 / JIS) seismic parameters.",
+          "properties": {
+            "SOIL_FACTOR": {
+              "type": "number",
+              "description": "Soil profile type factor."
+            },
+            "ZONE_FACTOR": {
+              "type": "number",
+              "description": "Earthquake area (zone) factor."
+            },
+            "STD_SHEAR_FACTOR": {
+              "type": "number",
+              "description": "Base (standard) shear factor."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Period (Analysis) X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Period (Analysis) Y-Dir."
+            },
+            "PERIOD_CODE_X": {
+              "type": "number",
+              "description": "Period (Code) X-Dir."
+            },
+            "PERIOD_CODE_Y": {
+              "type": "number",
+              "description": "Period (Code) Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Coef. (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Coef. (R) Y-Dir."
+            },
+            "OPT_AI_USER_DEFINED": {
+              "type": "boolean",
+              "description": "Use user-defined Ai distribution factors; if true and AI_FACTOR_ITEMS is given, AI method = user-defined (1), else auto (0)."
+            },
+            "AI_FACTOR_ITEMS": {
+              "type": "array",
+              "description": "User-defined Ai factors per story; effective only when OPT_AI_USER_DEFINED is true.",
+              "items": {
+                "type": "object",
+                "description": "User-defined Ai distribution factor per story.",
+                "properties": {
+                  "STORY_NAME": {
+                    "type": "string",
+                    "description": "Story name (must match an existing story)."
+                  },
+                  "X_DIR": {
+                    "type": "number",
+                    "description": "Ai factor X-Dir."
+                  },
+                  "Y_DIR": {
+                    "type": "number",
+                    "description": "Ai factor Y-Dir."
+                  }
+                },
+                "required": [
+                  "STORY_NAME",
+                  "X_DIR",
+                  "Y_DIR"
+                ]
+              }
+            }
+          },
+          "required": [
+            "SOIL_FACTOR",
+            "ZONE_FACTOR",
+            "STD_SHEAR_FACTOR",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_CODE_X",
+            "PERIOD_CODE_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y",
+            "OPT_AI_USER_DEFINED"
+          ]
+        },
+        "IBC2000": {
+          "type": "object",
+          "description": "IBC2000 (ASCE7-98) seismic parameters.",
+          "properties": {
+            "SEIS_DGN_CATEGORY": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F"
+              ],
+              "description": "Seismic Design Category (case-insensitive)."
+            },
+            "SITE_CLASS": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F"
+              ],
+              "description": "Site Class (case-insensitive)."
+            },
+            "DUCTILITY_CLASS": {
+              "type": "number",
+              "description": "Mapped Spectral Response Acceleration at Short Periods (Ss)."
+            },
+            "REGULARITY": {
+              "type": "number",
+              "description": "Mapped Spectral Response Acceleration at 1 Second Period (S1)."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance factor."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Period (Analysis) X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Period (Analysis) Y-Dir."
+            },
+            "PERIOD_CODE_X": {
+              "type": "number",
+              "description": "Period (Code) X-Dir."
+            },
+            "PERIOD_CODE_Y": {
+              "type": "number",
+              "description": "Period (Code) Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Coef. (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Coef. (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SEIS_DGN_CATEGORY",
+            "SITE_CLASS",
+            "DUCTILITY_CLASS",
+            "REGULARITY",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_CODE_X",
+            "PERIOD_CODE_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "EURO1996": {
+          "type": "object",
+          "description": "Eurocode-8 (1996) seismic parameters.",
+          "properties": {
+            "SOIL_CLASS": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B",
+                "C"
+              ],
+              "description": "Soil Class (S) (case-insensitive)."
+            },
+            "BASIC_BEHAVIOR": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B",
+                "C"
+              ],
+              "description": "Basic Behavior Factor (go) (case-insensitive)."
+            },
+            "DUCTILITY_CLASS": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B",
+                "C"
+              ],
+              "description": "Ductility Class (Kd) (case-insensitive)."
+            },
+            "REGULARITY": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B",
+                "C"
+              ],
+              "description": "Elevation Regularity (Kr) (case-insensitive)."
+            },
+            "FAILURE_MODE_FACTOR": {
+              "type": "number",
+              "description": "Failure Mode Factor (Kw)."
+            },
+            "ALPHA_FACTOR": {
+              "type": "number",
+              "description": "Ratio of design ground acceleration to gravity (alpha)."
+            },
+            "PERIOD_X": {
+              "type": "number",
+              "description": "Fundamental period X-Dir."
+            },
+            "PERIOD_Y": {
+              "type": "number",
+              "description": "Fundamental period Y-Dir."
+            }
+          },
+          "required": [
+            "SOIL_CLASS",
+            "BASIC_BEHAVIOR",
+            "DUCTILITY_CLASS",
+            "REGULARITY",
+            "FAILURE_MODE_FACTOR",
+            "ALPHA_FACTOR",
+            "PERIOD_X",
+            "PERIOD_Y"
+          ]
+        },
+        "CH2001": {
+          "type": "object",
+          "description": "China (GB50011-2001) seismic parameters.",
+          "properties": {
+            "NEAR_SOURCE_CATEGORY": {
+              "type": "integer",
+              "description": "Near source category (1-based; stored as value-1)."
+            },
+            "SEIS_FORTIFICATION": {
+              "type": "string",
+              "enum": [
+                "0.05g",
+                "0.10g",
+                "0.15g",
+                "0.20g",
+                "0.30g",
+                "0.40g"
+              ],
+              "description": "Seismic Fortification Intensity (wire value, case-insensitive)."
+            },
+            "SITE_CLASS": {
+              "type": "integer",
+              "description": "Site class (1-based; stored as value-1)."
+            },
+            "STRUCTURE_TYPE": {
+              "type": "string",
+              "enum": [
+                "RSM",
+                "IFM",
+                "TSB",
+                "ETC"
+              ],
+              "description": "Structure type (case-insensitive)."
+            },
+            "DAMPING_RATIO": {
+              "type": "number",
+              "description": "Damping ratio."
+            },
+            "EARTH_RESPONSE_TYPE": {
+              "type": "string",
+              "enum": [
+                "FREQUENT",
+                "SCARCE"
+              ],
+              "description": "Earth response type (case-insensitive)."
+            },
+            "OPT_A1": {
+              "type": "boolean",
+              "description": "Use masonry multistory / framed 1st story option."
+            },
+            "PERIOD_X": {
+              "type": "number",
+              "description": "Fundamental period X-Dir."
+            },
+            "PERIOD_Y": {
+              "type": "number",
+              "description": "Fundamental period Y-Dir."
+            }
+          },
+          "required": [
+            "NEAR_SOURCE_CATEGORY",
+            "SEIS_FORTIFICATION",
+            "SITE_CLASS",
+            "STRUCTURE_TYPE",
+            "DAMPING_RATIO",
+            "EARTH_RESPONSE_TYPE",
+            "OPT_A1",
+            "PERIOD_X",
+            "PERIOD_Y"
+          ]
+        },
+        "CHSH2003": {
+          "type": "object",
+          "description": "China Shanghai (DGJ08-9-2003) seismic parameters.",
+          "properties": {
+            "SEIS_FORTIFICATION": {
+              "type": "string",
+              "enum": [
+                "0.05g",
+                "0.10g",
+                "0.20g"
+              ],
+              "description": "Seismic Fortification Intensity (wire value, case-insensitive)."
+            },
+            "SITE_CLASS": {
+              "type": "integer",
+              "description": "Site class (stored as value-3)."
+            },
+            "STRUCTURE_TYPE": {
+              "type": "string",
+              "enum": [
+                "RSM",
+                "IFM",
+                "TSB",
+                "ETC"
+              ],
+              "description": "Structure type (case-insensitive)."
+            },
+            "DAMPING_RATIO": {
+              "type": "number",
+              "description": "Damping ratio."
+            },
+            "EARTH_RESPONSE_TYPE": {
+              "type": "string",
+              "enum": [
+                "FREQUENT",
+                "SCARCE"
+              ],
+              "description": "Earth response type (case-insensitive)."
+            },
+            "OPT_A1": {
+              "type": "boolean",
+              "description": "Use masonry multistory / framed 1st story option."
+            },
+            "PERIOD_X": {
+              "type": "number",
+              "description": "Fundamental period X-Dir."
+            },
+            "PERIOD_Y": {
+              "type": "number",
+              "description": "Fundamental period Y-Dir."
+            }
+          },
+          "required": [
+            "SEIS_FORTIFICATION",
+            "SITE_CLASS",
+            "STRUCTURE_TYPE",
+            "DAMPING_RATIO",
+            "EARTH_RESPONSE_TYPE",
+            "OPT_A1",
+            "PERIOD_X",
+            "PERIOD_Y"
+          ]
+        },
+        "NBC1995": {
+          "type": "object",
+          "description": "NBC (1995) seismic parameters.",
+          "properties": {
+            "ZONAL_VELOCITY_RATION": {
+              "type": "number",
+              "description": "Zonal velocity ratio (v)."
+            },
+            "ACCELERATION_ZONE": {
+              "type": "integer",
+              "description": "Acceleration Zone (Za)."
+            },
+            "VELOCITY_ZONE": {
+              "type": "integer",
+              "description": "Velocity Zone (Zv)."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "FOUNDATION_FACTOR": {
+              "type": "number",
+              "description": "Foundation Factor (F)."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Period (Analysis) X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Period (Analysis) Y-Dir."
+            },
+            "PERIOD_CODE_X": {
+              "type": "number",
+              "description": "Period (Code) X-Dir."
+            },
+            "PERIOD_CODE_Y": {
+              "type": "number",
+              "description": "Period (Code) Y-Dir."
+            },
+            "FORCE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Force Modification Factor (R) X-Dir."
+            },
+            "FORCE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Force Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "ZONAL_VELOCITY_RATION",
+            "ACCELERATION_ZONE",
+            "VELOCITY_ZONE",
+            "IMPORTANCE_FACTOR",
+            "FOUNDATION_FACTOR",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_CODE_X",
+            "PERIOD_CODE_Y",
+            "FORCE_MOD_FACTOR_X",
+            "FORCE_MOD_FACTOR_Y"
+          ]
+        },
+        "IS2002": {
+          "type": "object",
+          "description": "IS1893 (2002) seismic parameters.",
+          "properties": {
+            "SEISMIC_ZONE": {
+              "type": "string",
+              "enum": [
+                "II",
+                "III",
+                "IV",
+                "V"
+              ],
+              "description": "Seismic Zone (Z) (case-insensitive)."
+            },
+            "SOIL_TYPE": {
+              "type": "string",
+              "enum": [
+                "I",
+                "II",
+                "III",
+                "NORTH BASIN"
+              ],
+              "description": "Soil Type (wire value, case-insensitive)."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "DAMPING_RATIO": {
+              "type": "number",
+              "description": "Damping (%)."
+            },
+            "DAMPING_MULTIPLY_FACTOR": {
+              "type": "number",
+              "description": "Damping multiplying factor."
+            },
+            "PERIOD_FND_X": {
+              "type": "number",
+              "description": "Fundamental period X-Dir."
+            },
+            "PERIOD_FND_Y": {
+              "type": "number",
+              "description": "Fundamental period Y-Dir."
+            },
+            "RESPONSE_REDUCT_FACTOR_X": {
+              "type": "number",
+              "description": "Response Reduction Factor (R) X-Dir."
+            },
+            "RESPONSE_REDUCT_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Reduction Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SEISMIC_ZONE",
+            "SOIL_TYPE",
+            "IMPORTANCE_FACTOR",
+            "DAMPING_RATIO",
+            "DAMPING_MULTIPLY_FACTOR",
+            "PERIOD_FND_X",
+            "PERIOD_FND_Y",
+            "RESPONSE_REDUCT_FACTOR_X",
+            "RESPONSE_REDUCT_FACTOR_Y"
+          ]
+        },
+        "TAIWAN1999": {
+          "type": "object",
+          "description": "Taiwan (1999) seismic parameters.",
+          "properties": {
+            "SEIS_ZONE": {
+              "type": "string",
+              "enum": [
+                "I",
+                "II"
+              ],
+              "description": "Seismic Zone (Z) (case-insensitive)."
+            },
+            "SOIL_TYPE": {
+              "type": "string",
+              "enum": [
+                "I",
+                "II",
+                "III",
+                "NORTH BASIN"
+              ],
+              "description": "Soil Type (wire value, case-insensitive)."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "SEIS_MAGNIFY_FACTOR": {
+              "type": "number",
+              "description": "Seismic magnify factor."
+            },
+            "PERIOD_METHOD": {
+              "type": "string",
+              "enum": [
+                "ANALYTICAL",
+                "APPROXIMATE"
+              ],
+              "description": "Period method (case-insensitive)."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Analytical Period X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Analytical Period Y-Dir."
+            },
+            "PERIOD_APPR_X": {
+              "type": "number",
+              "description": "Approximate Period X-Dir."
+            },
+            "PERIOD_APPR_Y": {
+              "type": "number",
+              "description": "Approximate Period Y-Dir."
+            },
+            "PERIOD_FINAL_X": {
+              "type": "number",
+              "description": "Final Period X-Dir."
+            },
+            "PERIOD_FINAL_Y": {
+              "type": "number",
+              "description": "Final Period Y-Dir."
+            },
+            "RESPONSE_REDUCT_FACTOR_X": {
+              "type": "number",
+              "description": "Response Reduction Factor (R) X-Dir."
+            },
+            "RESPONSE_REDUCT_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Reduction Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SEIS_ZONE",
+            "SOIL_TYPE",
+            "IMPORTANCE_FACTOR",
+            "SEIS_MAGNIFY_FACTOR",
+            "PERIOD_METHOD",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_APPR_X",
+            "PERIOD_APPR_Y",
+            "PERIOD_FINAL_X",
+            "PERIOD_FINAL_Y",
+            "RESPONSE_REDUCT_FACTOR_X",
+            "RESPONSE_REDUCT_FACTOR_Y"
+          ]
+        },
+        "KBC2005": {
+          "type": "object",
+          "description": "KBC (2005) seismic parameters; ACC_CALC_METHOD selects which optional fields are used (0 -> SEIS_ZONE/SITE_CLASS, 1 -> Sds/Sd1 group).",
+          "properties": {
+            "ACC_CALC_METHOD": {
+              "type": "integer",
+              "description": "Design spectral response acceleration method: 0 = by Seismic Zone/Site Class, 1 = by Sds/Sd1 direct input."
+            },
+            "SEIS_ZONE": {
+              "type": "integer",
+              "description": "[ACC_CALC_METHOD=0] Seismic Zone (Z)."
+            },
+            "SITE_CLASS": {
+              "type": "integer",
+              "description": "[ACC_CALC_METHOD=0] Site Class."
+            },
+            "SDS": {
+              "type": "number",
+              "description": "[ACC_CALC_METHOD=1] Sds."
+            },
+            "SD1": {
+              "type": "number",
+              "description": "[ACC_CALC_METHOD=1] Sd1."
+            },
+            "SEIS_USE_GROUP": {
+              "type": "integer",
+              "description": "[ACC_CALC_METHOD=1] Seismic Use Group."
+            },
+            "CITY_PLAN_REGION": {
+              "type": "boolean",
+              "description": "[ACC_CALC_METHOD=1] City planning region flag."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "[ACC_CALC_METHOD=1] Importance Factor (I)."
+            },
+            "PERIOD_METHOD": {
+              "type": "integer",
+              "description": "[ACC_CALC_METHOD=1] Period method."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "[ACC_CALC_METHOD=1] Analytical Period X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "[ACC_CALC_METHOD=1] Analytical Period Y-Dir."
+            },
+            "PERIOD_APPR_X": {
+              "type": "number",
+              "description": "[ACC_CALC_METHOD=1] Approximate Period X-Dir."
+            },
+            "PERIOD_APPR_Y": {
+              "type": "number",
+              "description": "[ACC_CALC_METHOD=1] Approximate Period Y-Dir."
+            },
+            "PERIOD_FINAL_X": {
+              "type": "number",
+              "description": "[ACC_CALC_METHOD=1] Final Period X-Dir."
+            },
+            "PERIOD_FINAL_Y": {
+              "type": "number",
+              "description": "[ACC_CALC_METHOD=1] Final Period Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "[ACC_CALC_METHOD=1] Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "[ACC_CALC_METHOD=1] Response Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "ACC_CALC_METHOD"
+          ]
+        },
+        "TAIWAN2006": {
+          "type": "object",
+          "description": "Taiwan (2006) seismic parameters.",
+          "properties": {
+            "SEIS_ZONE": {
+              "type": "integer",
+              "description": "Seismic Zone (Z)."
+            },
+            "SDS": {
+              "type": "number",
+              "description": "Short Period (Ss) design value."
+            },
+            "SD1": {
+              "type": "number",
+              "description": "1sec Period (S1) design value."
+            },
+            "SMS": {
+              "type": "number",
+              "description": "Ss (mapped)."
+            },
+            "SM1": {
+              "type": "number",
+              "description": "S1 (mapped)."
+            },
+            "NDA": {
+              "type": "number",
+              "description": "Na (design)."
+            },
+            "NDV": {
+              "type": "number",
+              "description": "Nv (design)."
+            },
+            "NMA": {
+              "type": "number",
+              "description": "Na (mapped)."
+            },
+            "NMV": {
+              "type": "number",
+              "description": "Nv (mapped)."
+            },
+            "SOIL_TYPE": {
+              "type": "integer",
+              "description": "Soil type."
+            },
+            "FDA": {
+              "type": "number",
+              "description": "Short Period (Fa) design."
+            },
+            "FDV": {
+              "type": "number",
+              "description": "Short Period (Fv) design."
+            },
+            "FMA": {
+              "type": "number",
+              "description": "Fa (mapped)."
+            },
+            "FMV": {
+              "type": "number",
+              "description": "Fv (mapped)."
+            },
+            "SUB_ZONE": {
+              "type": "integer",
+              "description": "Sub zone."
+            },
+            "SDS_T": {
+              "type": "number",
+              "description": "Sds_t."
+            },
+            "SMS_T": {
+              "type": "number",
+              "description": "Sms_t."
+            },
+            "TD0": {
+              "type": "number",
+              "description": "Td0."
+            },
+            "TM0": {
+              "type": "number",
+              "description": "Tm0."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "SEIS_MAGNIFY_FACTOR": {
+              "type": "number",
+              "description": "Seismic Magnify Factor (ay)."
+            },
+            "PERIOD_METHOD": {
+              "type": "string",
+              "enum": [
+                "ANALYTICAL",
+                "APPROXIMATE"
+              ],
+              "description": "Period method (case-insensitive)."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Analytical Period X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Analytical Period Y-Dir."
+            },
+            "PERIOD_APPR_X": {
+              "type": "number",
+              "description": "Approximate Period X-Dir."
+            },
+            "PERIOD_APPR_Y": {
+              "type": "number",
+              "description": "Approximate Period Y-Dir."
+            },
+            "PERIOD_FINAL_X": {
+              "type": "number",
+              "description": "Final Period X-Dir."
+            },
+            "PERIOD_FINAL_Y": {
+              "type": "number",
+              "description": "Final Period Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SEIS_ZONE",
+            "SDS",
+            "SD1",
+            "SMS",
+            "SM1",
+            "NDA",
+            "NDV",
+            "NMA",
+            "NMV",
+            "SOIL_TYPE",
+            "FDA",
+            "FDV",
+            "FMA",
+            "FMV",
+            "SUB_ZONE",
+            "SDS_T",
+            "SMS_T",
+            "TD0",
+            "TM0",
+            "IMPORTANCE_FACTOR",
+            "SEIS_MAGNIFY_FACTOR",
+            "PERIOD_METHOD",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_APPR_X",
+            "PERIOD_APPR_Y",
+            "PERIOD_FINAL_X",
+            "PERIOD_FINAL_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "EURO2004": {
+          "type": "object",
+          "description": "Eurocode-8 (2004) seismic parameters.",
+          "properties": {
+            "GROUND_TYPE": {
+              "type": "integer",
+              "description": "Ground type."
+            },
+            "SPEC_TYPE": {
+              "type": "integer",
+              "description": "Spectrum parameters type."
+            },
+            "NATIONAL_ANNEX": {
+              "type": "integer",
+              "description": "National annex."
+            },
+            "REGION_TYPE": {
+              "type": "integer",
+              "description": "Region type."
+            },
+            "S_": {
+              "type": "number",
+              "description": "Soil Factor (S)."
+            },
+            "TB": {
+              "type": "number",
+              "description": "Tb."
+            },
+            "TC": {
+              "type": "number",
+              "description": "Tc."
+            },
+            "TD": {
+              "type": "number",
+              "description": "Td."
+            },
+            "AG": {
+              "type": "number",
+              "description": "Ref. Peak Ground Acc. (AgR)."
+            },
+            "Q": {
+              "type": "number",
+              "description": "Behavior Factor (q)."
+            },
+            "BETA": {
+              "type": "number",
+              "description": "Lower Bound Factor (b)."
+            },
+            "IMPORTANCE": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "PERIOD_X": {
+              "type": "number",
+              "description": "Fundamental Period X-Dir."
+            },
+            "PERIOD_Y": {
+              "type": "number",
+              "description": "Fundamental Period Y-Dir."
+            }
+          },
+          "required": [
+            "GROUND_TYPE",
+            "SPEC_TYPE",
+            "NATIONAL_ANNEX",
+            "REGION_TYPE",
+            "S_",
+            "TB",
+            "TC",
+            "TD",
+            "AG",
+            "Q",
+            "BETA",
+            "IMPORTANCE",
+            "PERIOD_X",
+            "PERIOD_Y"
+          ]
+        },
+        "NTC2008": {
+          "type": "object",
+          "description": "NTC2008 seismic parameters.",
+          "properties": {
+            "GROUND_TYPE": {
+              "type": "integer",
+              "description": "Ground type."
+            },
+            "SPEC_TYPE": {
+              "type": "integer",
+              "description": "Spectrum parameters type."
+            },
+            "S_": {
+              "type": "number",
+              "description": "Soil Factor (S)."
+            },
+            "TB": {
+              "type": "number",
+              "description": "Tb."
+            },
+            "TC": {
+              "type": "number",
+              "description": "Tc."
+            },
+            "TD": {
+              "type": "number",
+              "description": "Td."
+            },
+            "AG": {
+              "type": "number",
+              "description": "Ref. Peak Ground Acc. (AgR)."
+            },
+            "Q": {
+              "type": "number",
+              "description": "Behavior Factor (q)."
+            },
+            "AMP_F": {
+              "type": "number",
+              "description": "Amplification factor."
+            },
+            "TC_STAR": {
+              "type": "number",
+              "description": "Tc*."
+            },
+            "PERIOD_X": {
+              "type": "number",
+              "description": "Fundamental Period X-Dir."
+            },
+            "PERIOD_Y": {
+              "type": "number",
+              "description": "Fundamental Period Y-Dir."
+            }
+          },
+          "required": [
+            "GROUND_TYPE",
+            "SPEC_TYPE",
+            "S_",
+            "TB",
+            "TC",
+            "TD",
+            "AG",
+            "Q",
+            "AMP_F",
+            "TC_STAR",
+            "PERIOD_X",
+            "PERIOD_Y"
+          ]
+        },
+        "KBC2009": {
+          "type": "object",
+          "description": "KBC (2009) seismic parameters.",
+          "properties": {
+            "SEIS_ZONE": {
+              "type": "integer",
+              "description": "Seismic Zone (Z)."
+            },
+            "ZONE_FACTOR": {
+              "type": "number",
+              "description": "Zone Factor (S)."
+            },
+            "SITE_CLASS": {
+              "type": "integer",
+              "description": "Site Class."
+            },
+            "PERIOD_COEF": {
+              "type": "number",
+              "description": "Period Coef. (Cu)."
+            },
+            "FA": {
+              "type": "number",
+              "description": "Fa."
+            },
+            "FV": {
+              "type": "number",
+              "description": "Fv."
+            },
+            "SDS": {
+              "type": "number",
+              "description": "Sds."
+            },
+            "SD1": {
+              "type": "number",
+              "description": "Sd1."
+            },
+            "SEIS_USE_GROUP": {
+              "type": "integer",
+              "description": "Seismic Use Group."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "PERIOD_METHOD": {
+              "type": "integer",
+              "description": "Structural Parameters : Period Method."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Analytical Period X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Analytical Period Y-Dir."
+            },
+            "PERIOD_APPR_X": {
+              "type": "number",
+              "description": "Approximate Period X-Dir."
+            },
+            "PERIOD_APPR_Y": {
+              "type": "number",
+              "description": "Approximate Period Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SEIS_ZONE",
+            "ZONE_FACTOR",
+            "SITE_CLASS",
+            "PERIOD_COEF",
+            "FA",
+            "FV",
+            "SDS",
+            "SD1",
+            "SEIS_USE_GROUP",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_METHOD",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_APPR_X",
+            "PERIOD_APPR_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "TAIWAN2011": {
+          "type": "object",
+          "description": "Taiwan (2011) seismic parameters.",
+          "properties": {
+            "SEIS_ZONE": {
+              "type": "integer",
+              "description": "Seismic Zone (Z)."
+            },
+            "SDS": {
+              "type": "number",
+              "description": "Short Period (Ss) design value."
+            },
+            "SD1": {
+              "type": "number",
+              "description": "1sec Period (S1) design value."
+            },
+            "SMS": {
+              "type": "number",
+              "description": "Ss (mapped)."
+            },
+            "SM1": {
+              "type": "number",
+              "description": "S1 (mapped)."
+            },
+            "NDA": {
+              "type": "number",
+              "description": "Na (design)."
+            },
+            "NDV": {
+              "type": "number",
+              "description": "Nv (design)."
+            },
+            "NMA": {
+              "type": "number",
+              "description": "Na (mapped)."
+            },
+            "NMV": {
+              "type": "number",
+              "description": "Nv (mapped)."
+            },
+            "SOIL_TYPE": {
+              "type": "integer",
+              "description": "Soil type."
+            },
+            "FDA": {
+              "type": "number",
+              "description": "Short Period (Fa) design."
+            },
+            "FDV": {
+              "type": "number",
+              "description": "Short Period (Fv) design."
+            },
+            "FMA": {
+              "type": "number",
+              "description": "Fa (mapped)."
+            },
+            "FMV": {
+              "type": "number",
+              "description": "Fv (mapped)."
+            },
+            "SUB_ZONE": {
+              "type": "integer",
+              "description": "Sub zone."
+            },
+            "SDS_T": {
+              "type": "number",
+              "description": "Sds_t."
+            },
+            "SMS_T": {
+              "type": "number",
+              "description": "Sms_t."
+            },
+            "TD0": {
+              "type": "number",
+              "description": "Td0."
+            },
+            "TM0": {
+              "type": "number",
+              "description": "Tm0."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "SEIS_MAGNIFY_FACTOR": {
+              "type": "number",
+              "description": "Seismic Magnify Factor (ay)."
+            },
+            "PERIOD_METHOD": {
+              "type": "string",
+              "enum": [
+                "ANALYTICAL",
+                "APPROXIMATE"
+              ],
+              "description": "Period method (case-insensitive)."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Analytical Period X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Analytical Period Y-Dir."
+            },
+            "PERIOD_APPR_X": {
+              "type": "number",
+              "description": "Approximate Period X-Dir."
+            },
+            "PERIOD_APPR_Y": {
+              "type": "number",
+              "description": "Approximate Period Y-Dir."
+            },
+            "PERIOD_FINAL_X": {
+              "type": "number",
+              "description": "Final Period X-Dir."
+            },
+            "PERIOD_FINAL_Y": {
+              "type": "number",
+              "description": "Final Period Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SEIS_ZONE",
+            "SDS",
+            "SD1",
+            "SMS",
+            "SM1",
+            "NDA",
+            "NDV",
+            "NMA",
+            "NMV",
+            "SOIL_TYPE",
+            "FDA",
+            "FDV",
+            "FMA",
+            "FMV",
+            "SUB_ZONE",
+            "SDS_T",
+            "SMS_T",
+            "TD0",
+            "TM0",
+            "IMPORTANCE_FACTOR",
+            "SEIS_MAGNIFY_FACTOR",
+            "PERIOD_METHOD",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_APPR_X",
+            "PERIOD_APPR_Y",
+            "PERIOD_FINAL_X",
+            "PERIOD_FINAL_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "CH2010": {
+          "type": "object",
+          "description": "China (GB50011-2010) seismic parameters.",
+          "properties": {
+            "SEIS_DGN_CATEGORY": {
+              "type": "integer",
+              "description": "Near source category (1-based; stored as value-1)."
+            },
+            "SEIS_FORTIFICATION": {
+              "type": "string",
+              "enum": [
+                "0.05g",
+                "0.10g",
+                "0.15g",
+                "0.20g",
+                "0.30g",
+                "0.40g"
+              ],
+              "description": "Seismic Fortification Intensity (wire value, case-insensitive)."
+            },
+            "SITE_CLASS": {
+              "type": "integer",
+              "description": "Site class (1-based; stored as value-1)."
+            },
+            "DELTA_N": {
+              "type": "string",
+              "enum": [
+                "RSM",
+                "IFM",
+                "TSB",
+                "ETC"
+              ],
+              "description": "Structure type (case-insensitive)."
+            },
+            "DAMPING": {
+              "type": "number",
+              "description": "Damping ratio."
+            },
+            "EARTH_RESPONSE": {
+              "type": "string",
+              "enum": [
+                "FREQUENT",
+                "MIDDLE",
+                "SCARCE"
+              ],
+              "description": "Earthquake effect (case-insensitive)."
+            },
+            "ALPHA_1": {
+              "type": "boolean",
+              "description": "Masonry multistory / framed 1st story option."
+            },
+            "PERIOD_X": {
+              "type": "number",
+              "description": "Fundamental Period X-Dir."
+            },
+            "PERIOD_Y": {
+              "type": "number",
+              "description": "Fundamental Period Y-Dir."
+            }
+          },
+          "required": [
+            "SEIS_DGN_CATEGORY",
+            "SEIS_FORTIFICATION",
+            "SITE_CLASS",
+            "DELTA_N",
+            "DAMPING",
+            "EARTH_RESPONSE",
+            "ALPHA_1",
+            "PERIOD_X",
+            "PERIOD_Y"
+          ]
+        },
+        "IBC2009": {
+          "type": "object",
+          "description": "IBC2000 (ASCE7-05) seismic parameters.",
+          "properties": {
+            "SITE_CLASS": {
+              "type": "integer",
+              "description": "Site Class."
+            },
+            "SS": {
+              "type": "number",
+              "description": "Ss."
+            },
+            "S1": {
+              "type": "number",
+              "description": "S1."
+            },
+            "FA": {
+              "type": "number",
+              "description": "Fa."
+            },
+            "FV": {
+              "type": "number",
+              "description": "Fv."
+            },
+            "SDS": {
+              "type": "number",
+              "description": "Sds."
+            },
+            "SD1": {
+              "type": "number",
+              "description": "Sd1."
+            },
+            "TL": {
+              "type": "number",
+              "description": "TL."
+            },
+            "RISK_CATEGORY": {
+              "type": "integer",
+              "description": "Risk Category."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "PERIOD_METHOD": {
+              "type": "integer",
+              "description": "Structural Parameters : Period Method."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Analytical Period X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Analytical Period Y-Dir."
+            },
+            "PERIOD_APPR_X": {
+              "type": "number",
+              "description": "Approximate Period X-Dir."
+            },
+            "PERIOD_APPR_Y": {
+              "type": "number",
+              "description": "Approximate Period Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SITE_CLASS",
+            "SS",
+            "S1",
+            "FA",
+            "FV",
+            "SDS",
+            "SD1",
+            "TL",
+            "RISK_CATEGORY",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_METHOD",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_APPR_X",
+            "PERIOD_APPR_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "IBC2012": {
+          "type": "object",
+          "description": "IBC2000 (ASCE7-10) seismic parameters.",
+          "properties": {
+            "SITE_CLASS": {
+              "type": "integer",
+              "description": "Site Class."
+            },
+            "SS": {
+              "type": "number",
+              "description": "Ss."
+            },
+            "S1": {
+              "type": "number",
+              "description": "S1."
+            },
+            "FA": {
+              "type": "number",
+              "description": "Fa."
+            },
+            "FV": {
+              "type": "number",
+              "description": "Fv."
+            },
+            "SDS": {
+              "type": "number",
+              "description": "Sds."
+            },
+            "SD1": {
+              "type": "number",
+              "description": "Sd1."
+            },
+            "TL": {
+              "type": "number",
+              "description": "TL."
+            },
+            "RISK_CATEGORY": {
+              "type": "integer",
+              "description": "Risk Category."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "PERIOD_METHOD": {
+              "type": "integer",
+              "description": "Structural Parameters : Period Method."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Analytical Period X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Analytical Period Y-Dir."
+            },
+            "PERIOD_APPR_X": {
+              "type": "number",
+              "description": "Approximate Period X-Dir."
+            },
+            "PERIOD_APPR_Y": {
+              "type": "number",
+              "description": "Approximate Period Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SITE_CLASS",
+            "SS",
+            "S1",
+            "FA",
+            "FV",
+            "SDS",
+            "SD1",
+            "TL",
+            "RISK_CATEGORY",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_METHOD",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_APPR_X",
+            "PERIOD_APPR_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "NSCP2024": {
+          "type": "object",
+          "description": "NSCP 2024 seismic parameters.",
+          "properties": {
+            "SITE_CLASS": {
+              "type": "integer",
+              "description": "Site Class."
+            },
+            "SS": {
+              "type": "number",
+              "description": "Ss."
+            },
+            "S1": {
+              "type": "number",
+              "description": "S1."
+            },
+            "FA": {
+              "type": "number",
+              "description": "Fa."
+            },
+            "FV": {
+              "type": "number",
+              "description": "Fv."
+            },
+            "SDS": {
+              "type": "number",
+              "description": "Sds."
+            },
+            "SD1": {
+              "type": "number",
+              "description": "Sd1."
+            },
+            "TL": {
+              "type": "number",
+              "description": "TL."
+            },
+            "RISK_CATEGORY": {
+              "type": "integer",
+              "description": "Risk Category."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "PERIOD_METHOD": {
+              "type": "integer",
+              "description": "Structural Parameters : Period Method."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Analytical Period X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Analytical Period Y-Dir."
+            },
+            "PERIOD_APPR_X": {
+              "type": "number",
+              "description": "Approximate Period X-Dir."
+            },
+            "PERIOD_APPR_Y": {
+              "type": "number",
+              "description": "Approximate Period Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SITE_CLASS",
+            "SS",
+            "S1",
+            "FA",
+            "FV",
+            "SDS",
+            "SD1",
+            "TL",
+            "RISK_CATEGORY",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_METHOD",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_APPR_X",
+            "PERIOD_APPR_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "NTC2012": {
+          "type": "object",
+          "description": "NTC2012 seismic parameters (also used for NTC2018).",
+          "properties": {
+            "GROUND_TYPE": {
+              "type": "integer",
+              "description": "Ground type."
+            },
+            "SPEC_TYPE": {
+              "type": "integer",
+              "description": "Spectrum parameters type."
+            },
+            "S_": {
+              "type": "number",
+              "description": "Soil Factor (S)."
+            },
+            "TB": {
+              "type": "number",
+              "description": "Tb."
+            },
+            "TC": {
+              "type": "number",
+              "description": "Tc."
+            },
+            "TD": {
+              "type": "number",
+              "description": "Td."
+            },
+            "AG": {
+              "type": "number",
+              "description": "Ref. Peak Ground Acc. (AgR)."
+            },
+            "Q": {
+              "type": "number",
+              "description": "Behavior Factor (q)."
+            },
+            "AMP_F": {
+              "type": "number",
+              "description": "Amplification factor."
+            },
+            "TC_STAR": {
+              "type": "number",
+              "description": "Tc*."
+            },
+            "PERIOD_X": {
+              "type": "number",
+              "description": "Fundamental Period X-Dir."
+            },
+            "PERIOD_Y": {
+              "type": "number",
+              "description": "Fundamental Period Y-Dir."
+            }
+          },
+          "required": [
+            "GROUND_TYPE",
+            "SPEC_TYPE",
+            "S_",
+            "TB",
+            "TC",
+            "TD",
+            "AG",
+            "Q",
+            "AMP_F",
+            "TC_STAR",
+            "PERIOD_X",
+            "PERIOD_Y"
+          ]
+        },
+        "NTC2017": {
+          "type": "object",
+          "description": "NTC2018 seismic parameters.",
+          "properties": {
+            "GROUND_TYPE": {
+              "type": "integer",
+              "description": "Ground type."
+            },
+            "SPEC_TYPE": {
+              "type": "integer",
+              "description": "Spectrum parameters type."
+            },
+            "S_": {
+              "type": "number",
+              "description": "Soil Factor (S)."
+            },
+            "TB": {
+              "type": "number",
+              "description": "Tb."
+            },
+            "TC": {
+              "type": "number",
+              "description": "Tc."
+            },
+            "TD": {
+              "type": "number",
+              "description": "Td."
+            },
+            "AG": {
+              "type": "number",
+              "description": "Ref. Peak Ground Acc. (AgR)."
+            },
+            "Q": {
+              "type": "number",
+              "description": "Behavior Factor (q)."
+            },
+            "AMP_F": {
+              "type": "number",
+              "description": "Amplification factor."
+            },
+            "TC_STAR": {
+              "type": "number",
+              "description": "Tc*."
+            },
+            "PERIOD_X": {
+              "type": "number",
+              "description": "Fundamental Period X-Dir."
+            },
+            "PERIOD_Y": {
+              "type": "number",
+              "description": "Fundamental Period Y-Dir."
+            }
+          },
+          "required": [
+            "GROUND_TYPE",
+            "SPEC_TYPE",
+            "S_",
+            "TB",
+            "TC",
+            "TD",
+            "AG",
+            "Q",
+            "AMP_F",
+            "TC_STAR",
+            "PERIOD_X",
+            "PERIOD_Y"
+          ]
+        },
+        "NSR2010": {
+          "type": "object",
+          "description": "NSR-10 seismic parameters.",
+          "properties": {
+            "SITE_CLASS": {
+              "type": "integer",
+              "description": "Site Class."
+            },
+            "AA": {
+              "type": "number",
+              "description": "Aa."
+            },
+            "AV": {
+              "type": "number",
+              "description": "Av."
+            },
+            "FA": {
+              "type": "number",
+              "description": "Fa."
+            },
+            "FV": {
+              "type": "number",
+              "description": "Fv."
+            },
+            "PERIOD_COEF": {
+              "type": "number",
+              "description": "Period Coef. (Cu)."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "PERIOD_METHOD": {
+              "type": "integer",
+              "description": "Structural Parameters : Period Method."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Analytical Period X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Analytical Period Y-Dir."
+            },
+            "PERIOD_APPR_X": {
+              "type": "number",
+              "description": "Approximate Period X-Dir."
+            },
+            "PERIOD_APPR_Y": {
+              "type": "number",
+              "description": "Approximate Period Y-Dir."
+            },
+            "PERIOD_FINAL_X": {
+              "type": "number",
+              "description": "Final Period X-Dir."
+            },
+            "PERIOD_FINAL_Y": {
+              "type": "number",
+              "description": "Final Period Y-Dir."
+            },
+            "PHI_X": {
+              "type": "number",
+              "description": "Phi X-Dir."
+            },
+            "PHI_Y": {
+              "type": "number",
+              "description": "Phi Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SITE_CLASS",
+            "AA",
+            "AV",
+            "FA",
+            "FV",
+            "PERIOD_COEF",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_METHOD",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_APPR_X",
+            "PERIOD_APPR_Y",
+            "PERIOD_FINAL_X",
+            "PERIOD_FINAL_Y",
+            "PHI_X",
+            "PHI_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "KBC2016": {
+          "type": "object",
+          "description": "KBC (2016) seismic parameters.",
+          "properties": {
+            "SEIS_ZONE": {
+              "type": "integer",
+              "description": "Seismic Zone (Z)."
+            },
+            "ZONE_FACTOR": {
+              "type": "number",
+              "description": "Zone Factor (S)."
+            },
+            "SITE_CLASS": {
+              "type": "integer",
+              "description": "Site Class."
+            },
+            "PERIOD_COEF": {
+              "type": "number",
+              "description": "Period Coef. (Cu)."
+            },
+            "FA": {
+              "type": "number",
+              "description": "Fa."
+            },
+            "FV": {
+              "type": "number",
+              "description": "Fv."
+            },
+            "SDS": {
+              "type": "number",
+              "description": "Sds."
+            },
+            "SD1": {
+              "type": "number",
+              "description": "Sd1."
+            },
+            "SEIS_USE_GROUP": {
+              "type": "integer",
+              "description": "Seismic Use Group."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "PERIOD_METHOD": {
+              "type": "integer",
+              "description": "Structural Parameters : Period Method."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Analytical Period X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Analytical Period Y-Dir."
+            },
+            "PERIOD_APPR_X": {
+              "type": "number",
+              "description": "Approximate Period X-Dir."
+            },
+            "PERIOD_APPR_Y": {
+              "type": "number",
+              "description": "Approximate Period Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor (R) Y-Dir."
+            },
+            "DEPTH_2MR": {
+              "type": "number",
+              "description": "Depth to MR."
+            }
+          },
+          "required": [
+            "SEIS_ZONE",
+            "ZONE_FACTOR",
+            "SITE_CLASS",
+            "DEPTH_2MR",
+            "PERIOD_COEF",
+            "FA",
+            "FV",
+            "SDS",
+            "SD1",
+            "SEIS_USE_GROUP",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_METHOD",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_APPR_X",
+            "PERIOD_APPR_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "P100_2013": {
+          "type": "object",
+          "description": "P100-1 (2013) seismic parameters.",
+          "properties": {
+            "SPEC_TYPE": {
+              "type": "string",
+              "enum": [
+                "Tc=0.7s",
+                "Tc=1.0s",
+                "Tc=1.6s",
+                "USER"
+              ],
+              "description": "Spectrum parameters (wire value, case-insensitive)."
+            },
+            "TB": {
+              "type": "number",
+              "description": "Tb."
+            },
+            "ATC": {
+              "type": "number",
+              "description": "Tc."
+            },
+            "TD": {
+              "type": "number",
+              "description": "Td."
+            },
+            "AG": {
+              "type": "number",
+              "description": "Design Ground Acc. (Ag)."
+            },
+            "Q": {
+              "type": "number",
+              "description": "Behavior Factor (q)."
+            },
+            "IMPORTANCE": {
+              "type": "number",
+              "description": "Importance factor."
+            },
+            "PERIOD_X": {
+              "type": "number",
+              "description": "Fundamental Period X-Dir."
+            },
+            "PERIOD_Y": {
+              "type": "number",
+              "description": "Fundamental Period Y-Dir."
+            }
+          },
+          "required": [
+            "SPEC_TYPE",
+            "TB",
+            "ATC",
+            "TD",
+            "AG",
+            "Q",
+            "IMPORTANCE",
+            "PERIOD_X",
+            "PERIOD_Y"
+          ]
+        },
+        "IS2016": {
+          "type": "object",
+          "description": "IS1893 (2016) seismic parameters.",
+          "properties": {
+            "SEIS_ZONE": {
+              "type": "string",
+              "enum": [
+                "II",
+                "III",
+                "IV",
+                "V"
+              ],
+              "description": "Seismic Zone (Z) (case-insensitive)."
+            },
+            "SOIL_TYPE": {
+              "type": "string",
+              "enum": [
+                "I",
+                "II",
+                "III"
+              ],
+              "description": "Soil Type (case-insensitive)."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "DAMPING": {
+              "type": "number",
+              "description": "Damping (%)."
+            },
+            "PERIOD_X": {
+              "type": "number",
+              "description": "Fundamental Period X-Dir."
+            },
+            "PERIOD_Y": {
+              "type": "number",
+              "description": "Fundamental Period Y-Dir."
+            },
+            "RESPONSE_REDUCTION_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_REDUCTION_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SEIS_ZONE",
+            "SOIL_TYPE",
+            "IMPORTANCE_FACTOR",
+            "DAMPING",
+            "PERIOD_X",
+            "PERIOD_Y",
+            "RESPONSE_REDUCTION_FACTOR_X",
+            "RESPONSE_REDUCTION_FACTOR_Y"
+          ]
+        },
+        "KDS2019": {
+          "type": "object",
+          "description": "KDS (41-17-00:2019) seismic parameters.",
+          "properties": {
+            "SEIS_ZONE": {
+              "type": "integer",
+              "description": "Seismic Zone."
+            },
+            "ZONE_FACTOR": {
+              "type": "number",
+              "description": "EPA (S)."
+            },
+            "SITE_CLASS": {
+              "type": "integer",
+              "description": "Site Class."
+            },
+            "PERIOD_COEF": {
+              "type": "number",
+              "description": "Period Coef. (Cu)."
+            },
+            "OPT_NOT_CONSIDER_CU": {
+              "type": "number",
+              "description": "Not-consider-Cu option (0/1)."
+            },
+            "FA": {
+              "type": "number",
+              "description": "Fa."
+            },
+            "FV": {
+              "type": "number",
+              "description": "Fv."
+            },
+            "SDS": {
+              "type": "number",
+              "description": "Sds."
+            },
+            "SD1": {
+              "type": "number",
+              "description": "Sd1."
+            },
+            "SEIS_USE_GROUP": {
+              "type": "integer",
+              "description": "Seismic Use Group."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance factor."
+            },
+            "PERIOD_METHOD": {
+              "type": "integer",
+              "description": "Structural Parameters : Period Method."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Analytical Period X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Analytical Period Y-Dir."
+            },
+            "PERIOD_APPR_X": {
+              "type": "number",
+              "description": "Approximate Period X-Dir."
+            },
+            "PERIOD_APPR_Y": {
+              "type": "number",
+              "description": "Approximate Period Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SEIS_ZONE",
+            "ZONE_FACTOR",
+            "SITE_CLASS",
+            "PERIOD_COEF",
+            "OPT_NOT_CONSIDER_CU",
+            "FA",
+            "FV",
+            "SDS",
+            "SD1",
+            "SEIS_USE_GROUP",
+            "IMPORTANCE_FACTOR",
+            "PERIOD_METHOD",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_APPR_X",
+            "PERIOD_APPR_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "IS2025": {
+          "type": "object",
+          "description": "IS1893 (2025) seismic parameters. NOTE: not yet supported at runtime (OnGet/OnSet throw for this code).",
+          "properties": {
+            "SPEC_TYPE": {
+              "type": "string",
+              "enum": [
+                "Horizontal",
+                "Vertical"
+              ],
+              "description": "Spectrum Type (case-insensitive)."
+            },
+            "EQ_ZONE": {
+              "type": "string",
+              "enum": [
+                "II",
+                "III",
+                "IV",
+                "V",
+                "VI"
+              ],
+              "description": "Earthquake Zone (case-insensitive)."
+            },
+            "RET_PERIOD": {
+              "type": "string",
+              "enum": [
+                "R75",
+                "R175",
+                "R275",
+                "R475",
+                "R975",
+                "R1275",
+                "R2475",
+                "R4975",
+                "R9975"
+              ],
+              "description": "Return Period (case-insensitive)."
+            },
+            "ZONE_FACTOR": {
+              "type": "number",
+              "description": "Zone Factor."
+            },
+            "SITE_CLASS": {
+              "type": "string",
+              "enum": [
+                "A",
+                "B",
+                "C",
+                "D"
+              ],
+              "description": "Site Class (case-insensitive)."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "DAMPING": {
+              "type": "number",
+              "description": "Damping (%)."
+            },
+            "PERIOD_X": {
+              "type": "number",
+              "description": "Fundamental Period X-Dir."
+            },
+            "PERIOD_Y": {
+              "type": "number",
+              "description": "Fundamental Period Y-Dir."
+            },
+            "RESPONSE_REDUCTION_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_REDUCTION_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "SPEC_TYPE",
+            "EQ_ZONE",
+            "RET_PERIOD",
+            "ZONE_FACTOR",
+            "SITE_CLASS",
+            "IMPORTANCE_FACTOR",
+            "DAMPING",
+            "PERIOD_X",
+            "PERIOD_Y",
+            "RESPONSE_REDUCTION_FACTOR_X",
+            "RESPONSE_REDUCTION_FACTOR_Y"
+          ]
+        },
+        "SI413_2023": {
+          "type": "object",
+          "description": "SI413 (2023) seismic parameters.",
+          "properties": {
+            "SITE_CLASS": {
+              "type": "integer",
+              "description": "Site Class."
+            },
+            "Z": {
+              "type": "number",
+              "description": "Seismic Acceleration Ratio (Z)."
+            },
+            "SS": {
+              "type": "number",
+              "description": "Short Period Acceleration (Ss)."
+            },
+            "S1": {
+              "type": "number",
+              "description": "1-sec Period Acceleration (S1)."
+            },
+            "TD": {
+              "type": "number",
+              "description": "Long Period Corner (Td)."
+            },
+            "FA": {
+              "type": "number",
+              "description": "Short Period Site Factor (Fa)."
+            },
+            "FV": {
+              "type": "number",
+              "description": "Long Period Site Factor (Fv)."
+            },
+            "Q": {
+              "type": "number",
+              "description": "Behavior Factor (q)."
+            },
+            "BETA": {
+              "type": "number",
+              "description": "Lower Bound Factor (beta)."
+            },
+            "DAMPING": {
+              "type": "number",
+              "description": "Damping Ratio."
+            },
+            "MAX_PERIOD": {
+              "type": "number",
+              "description": "Maximum Period."
+            },
+            "PERIOD_X": {
+              "type": "number",
+              "description": "Fundamental Period X-Dir."
+            },
+            "PERIOD_Y": {
+              "type": "number",
+              "description": "Fundamental Period Y-Dir."
+            }
+          },
+          "required": [
+            "SITE_CLASS",
+            "Z",
+            "SS",
+            "S1",
+            "TD",
+            "FA",
+            "FV",
+            "Q",
+            "BETA",
+            "DAMPING",
+            "MAX_PERIOD",
+            "PERIOD_X",
+            "PERIOD_Y"
+          ]
+        },
+        "TAIWAN2022": {
+          "type": "object",
+          "description": "Taiwan (2022) seismic parameters.",
+          "properties": {
+            "STRUCT_TYPE": {
+              "type": "integer",
+              "description": "Structure type."
+            },
+            "SEIS_ZONE": {
+              "type": "integer",
+              "description": "Seismic Zone (Z)."
+            },
+            "SDS": {
+              "type": "number",
+              "description": "Short Period (Ss) design value."
+            },
+            "SD1": {
+              "type": "number",
+              "description": "1sec Period (S1) design value."
+            },
+            "SMS": {
+              "type": "number",
+              "description": "Ss (mapped)."
+            },
+            "SM1": {
+              "type": "number",
+              "description": "S1 (mapped)."
+            },
+            "NDA": {
+              "type": "number",
+              "description": "Na (design)."
+            },
+            "NDV": {
+              "type": "number",
+              "description": "Nv (design)."
+            },
+            "NMA": {
+              "type": "number",
+              "description": "Na (mapped)."
+            },
+            "NMV": {
+              "type": "number",
+              "description": "Nv (mapped)."
+            },
+            "SOIL_TYPE": {
+              "type": "integer",
+              "description": "Soil type."
+            },
+            "FDA": {
+              "type": "number",
+              "description": "Short Period (Fa) design."
+            },
+            "FDV": {
+              "type": "number",
+              "description": "Short Period (Fv) design."
+            },
+            "FSA": {
+              "type": "number",
+              "description": "Fsa."
+            },
+            "FSV": {
+              "type": "number",
+              "description": "Fsv."
+            },
+            "FMA": {
+              "type": "number",
+              "description": "Fa (mapped)."
+            },
+            "FMV": {
+              "type": "number",
+              "description": "Fv (mapped)."
+            },
+            "SUB_ZONE": {
+              "type": "integer",
+              "description": "Sub zone."
+            },
+            "SDS_T": {
+              "type": "number",
+              "description": "Sds_t."
+            },
+            "SMS_T": {
+              "type": "number",
+              "description": "Sms_t."
+            },
+            "TD0": {
+              "type": "number",
+              "description": "Td0."
+            },
+            "TM0": {
+              "type": "number",
+              "description": "Tm0."
+            },
+            "IMPORTANCE_FACTOR": {
+              "type": "number",
+              "description": "Importance Factor (I)."
+            },
+            "SEIS_MAGNIFY_FACTOR": {
+              "type": "number",
+              "description": "Seismic Magnify Factor (ay)."
+            },
+            "PERIOD_METHOD": {
+              "type": "string",
+              "enum": [
+                "ANALYTICAL",
+                "APPROXIMATE"
+              ],
+              "description": "Period method (case-insensitive)."
+            },
+            "PERIOD_ANALYSIS_X": {
+              "type": "number",
+              "description": "Analytical Period X-Dir."
+            },
+            "PERIOD_ANALYSIS_Y": {
+              "type": "number",
+              "description": "Analytical Period Y-Dir."
+            },
+            "PERIOD_APPR_X": {
+              "type": "number",
+              "description": "Approximate Period X-Dir."
+            },
+            "PERIOD_APPR_Y": {
+              "type": "number",
+              "description": "Approximate Period Y-Dir."
+            },
+            "PERIOD_FINAL_X": {
+              "type": "number",
+              "description": "Final Period X-Dir."
+            },
+            "PERIOD_FINAL_Y": {
+              "type": "number",
+              "description": "Final Period Y-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_X": {
+              "type": "number",
+              "description": "Response Modification Factor (R) X-Dir."
+            },
+            "RESPONSE_MOD_FACTOR_Y": {
+              "type": "number",
+              "description": "Response Modification Factor (R) Y-Dir."
+            }
+          },
+          "required": [
+            "STRUCT_TYPE",
+            "SEIS_ZONE",
+            "SDS",
+            "SD1",
+            "SMS",
+            "SM1",
+            "NDA",
+            "NDV",
+            "NMA",
+            "NMV",
+            "SOIL_TYPE",
+            "FDA",
+            "FDV",
+            "FSA",
+            "FSV",
+            "FMA",
+            "FMV",
+            "SUB_ZONE",
+            "SDS_T",
+            "SMS_T",
+            "TD0",
+            "TM0",
+            "IMPORTANCE_FACTOR",
+            "SEIS_MAGNIFY_FACTOR",
+            "PERIOD_METHOD",
+            "PERIOD_ANALYSIS_X",
+            "PERIOD_ANALYSIS_Y",
+            "PERIOD_APPR_X",
+            "PERIOD_APPR_Y",
+            "PERIOD_FINAL_X",
+            "PERIOD_FINAL_Y",
+            "RESPONSE_MOD_FACTOR_X",
+            "RESPONSE_MOD_FACTOR_Y"
+          ]
+        },
+        "USER": {
+          "type": "array",
+          "description": "[SEIS_LOAD_CODE=USER] User-defined seismic forces per story.",
+          "items": {
+            "type": "object",
+            "description": "User-defined seismic force per story.",
+            "properties": {
+              "STORY_NAME": {
+                "type": "string",
+                "description": "Story name (must match an existing story)."
+              },
+              "WEIGHT": {
+                "type": "number",
+                "description": "Story weight."
+              },
+              "ELIV": {
+                "type": "number",
+                "description": "Elevation."
+              },
+              "FORCE_X": {
+                "type": "number",
+                "description": "Force X-Dir."
+              },
+              "FORCE_Y": {
+                "type": "number",
+                "description": "Force Y-Dir."
+              }
+            },
+            "required": [
+              "STORY_NAME",
+              "WEIGHT",
+              "ELIV",
+              "FORCE_X",
+              "FORCE_Y"
+            ]
+          }
+        },
+        "ITEMS": {
+          "type": "array",
+          "description": "Additional seismic loads applied per story (all code types).",
+          "items": {
+            "type": "object",
+            "description": "Additional seismic load per story.",
+            "properties": {
+              "STORY_NAME": {
+                "type": "string",
+                "description": "Story name (must match an existing story)."
+              },
+              "ADD_X": {
+                "type": "number",
+                "description": "Additional force X-Dir."
+              },
+              "ADD_Y": {
+                "type": "number",
+                "description": "Additional force Y-Dir."
+              },
+              "ADD_R": {
+                "type": "number",
+                "description": "Additional moment RZ."
+              }
+            },
+            "required": [
+              "STORY_NAME",
+              "ADD_X",
+              "ADD_Y",
+              "ADD_R"
+            ]
+          }
+        },
+        "PROFILE": {
+          "type": "object",
+          "description": "Computed seismic load profiles (read-only output, populated on GET).",
+          "properties": {
+            "ALONG_X_PROFILE": {
+              "type": "array",
+              "description": "Along X-Dir. profile rows.",
+              "items": {
+                "type": "object",
+                "description": "Computed seismic load profile row (read-only, populated on GET).",
+                "properties": {
+                  "STORY_NAME": {
+                    "type": "string",
+                    "description": "Story name."
+                  },
+                  "STORY_WEIGHT": {
+                    "type": "number",
+                    "description": "Story weight."
+                  },
+                  "STORY_LEVEL": {
+                    "type": "number",
+                    "description": "Story elevation."
+                  },
+                  "SEISMIC_FORCE": {
+                    "type": "number",
+                    "description": "Seismic force."
+                  },
+                  "ADDED_FORCE": {
+                    "type": "number",
+                    "description": "Added force."
+                  },
+                  "STORY_FORCE": {
+                    "type": "number",
+                    "description": "Story force."
+                  },
+                  "STORY_SHEAR": {
+                    "type": "number",
+                    "description": "Story shear."
+                  },
+                  "OVERTURN_MOMENT": {
+                    "type": "number",
+                    "description": "Overturning moment."
+                  },
+                  "ACCIDENT_ECCENT": {
+                    "type": "number",
+                    "description": "Accidental eccentricity."
+                  },
+                  "ACCIDENT_TORSION": {
+                    "type": "number",
+                    "description": "Accidental torsion."
+                  },
+                  "INHERENT_TORSION": {
+                    "type": "number",
+                    "description": "Inherent torsion."
+                  },
+                  "TOTAL_TORSION": {
+                    "type": "number",
+                    "description": "Total torsion."
+                  }
+                }
+              }
+            },
+            "ALONG_Y_PROFILE": {
+              "type": "array",
+              "description": "Along Y-Dir. profile rows.",
+              "items": {
+                "type": "object",
+                "description": "Computed seismic load profile row (read-only, populated on GET).",
+                "properties": {
+                  "STORY_NAME": {
+                    "type": "string",
+                    "description": "Story name."
+                  },
+                  "STORY_WEIGHT": {
+                    "type": "number",
+                    "description": "Story weight."
+                  },
+                  "STORY_LEVEL": {
+                    "type": "number",
+                    "description": "Story elevation."
+                  },
+                  "SEISMIC_FORCE": {
+                    "type": "number",
+                    "description": "Seismic force."
+                  },
+                  "ADDED_FORCE": {
+                    "type": "number",
+                    "description": "Added force."
+                  },
+                  "STORY_FORCE": {
+                    "type": "number",
+                    "description": "Story force."
+                  },
+                  "STORY_SHEAR": {
+                    "type": "number",
+                    "description": "Story shear."
+                  },
+                  "OVERTURN_MOMENT": {
+                    "type": "number",
+                    "description": "Overturning moment."
+                  },
+                  "ACCIDENT_ECCENT": {
+                    "type": "number",
+                    "description": "Accidental eccentricity."
+                  },
+                  "ACCIDENT_TORSION": {
+                    "type": "number",
+                    "description": "Accidental torsion."
+                  },
+                  "INHERENT_TORSION": {
+                    "type": "number",
+                    "description": "Inherent torsion."
+                  },
+                  "TOTAL_TORSION": {
+                    "type": "number",
+                    "description": "Total torsion."
+                  }
+                }
+              }
+            },
+            "ALONG_SRSS_PROFILE": {
+              "type": "array",
+              "description": "Along SRSS profile rows.",
+              "items": {
+                "type": "object",
+                "description": "Computed seismic load profile row (read-only, populated on GET).",
+                "properties": {
+                  "STORY_NAME": {
+                    "type": "string",
+                    "description": "Story name."
+                  },
+                  "STORY_WEIGHT": {
+                    "type": "number",
+                    "description": "Story weight."
+                  },
+                  "STORY_LEVEL": {
+                    "type": "number",
+                    "description": "Story elevation."
+                  },
+                  "SEISMIC_FORCE": {
+                    "type": "number",
+                    "description": "Seismic force."
+                  },
+                  "ADDED_FORCE": {
+                    "type": "number",
+                    "description": "Added force."
+                  },
+                  "STORY_FORCE": {
+                    "type": "number",
+                    "description": "Story force."
+                  },
+                  "STORY_SHEAR": {
+                    "type": "number",
+                    "description": "Story shear."
+                  },
+                  "OVERTURN_MOMENT": {
+                    "type": "number",
+                    "description": "Overturning moment."
+                  },
+                  "ACCIDENT_ECCENT": {
+                    "type": "number",
+                    "description": "Accidental eccentricity."
+                  },
+                  "ACCIDENT_TORSION": {
+                    "type": "number",
+                    "description": "Accidental torsion."
+                  },
+                  "INHERENT_TORSION": {
+                    "type": "number",
+                    "description": "Inherent torsion."
+                  },
+                  "TOTAL_TORSION": {
+                    "type": "number",
+                    "description": "Total torsion."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "SEIS_LOAD_CODE",
+        "SCALE_FACTOR_X",
+        "SCALE_FACTOR_Y"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SEIS_LOAD_CODE": "Korea(Arch. 1992)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "KS1992": {
+          "SOIL_FACTOR": 1.0,
+          "ZONE_FACTOR": 0.11,
+          "IMPORTANCE_FACTOR": 1.2,
+          "PERIOD_ANALYSIS_X": 0.5,
+          "PERIOD_ANALYSIS_Y": 0.5,
+          "PERIOD_CODE_X": 0.4,
+          "PERIOD_CODE_Y": 0.4,
+          "RESPONSE_MOD_FACTOR_X": 5.0,
+          "RESPONSE_MOD_FACTOR_Y": 5.0
+        }
+      },
+      "2": {
+        "SEIS_LOAD_CODE": "UBC(1997)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "UBC1997": {
+          "SOIL_PROFILE_TYPE": "Sc",
+          "ZONE_FACTOR": 0.4,
+          "SEISMIC_SOURCE_TYPE": "A",
+          "CLOSEAST_DISTANCE": 10.0,
+          "IMPORTANCE_FACTOR": 1.0,
+          "PERIOD_ANALYSIS_X": 0.6,
+          "PERIOD_ANALYSIS_Y": 0.6,
+          "PERIOD_CODE_X": 0.5,
+          "PERIOD_CODE_Y": 0.5,
+          "SYS_FACTOR_X": 8.5,
+          "SYS_FACTOR_Y": 8.5
+        }
+      },
+      "3": {
+        "SEIS_LOAD_CODE": "Japan(Arch. 2000)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "JIS_E": {
+          "SOIL_FACTOR": 1.0,
+          "ZONE_FACTOR": 1.0,
+          "STD_SHEAR_FACTOR": 0.2,
+          "PERIOD_ANALYSIS_X": 0.5,
+          "PERIOD_ANALYSIS_Y": 0.5,
+          "PERIOD_CODE_X": 0.4,
+          "PERIOD_CODE_Y": 0.4,
+          "RESPONSE_MOD_FACTOR_X": 3.5,
+          "RESPONSE_MOD_FACTOR_Y": 3.5,
+          "OPT_AI_USER_DEFINED": true,
+          "AI_FACTOR_ITEMS": [
+            {
+              "STORY_NAME": "3F",
+              "X_DIR": 1.5,
+              "Y_DIR": 1.5
+            },
+            {
+              "STORY_NAME": "2F",
+              "X_DIR": 1.2,
+              "Y_DIR": 1.2
+            }
+          ]
+        }
+      },
+      "4": {
+        "SEIS_LOAD_CODE": "IBC2000(ASCE7-98)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "IBC2000": {
+          "SEIS_DGN_CATEGORY": "D",
+          "SITE_CLASS": "C",
+          "DUCTILITY_CLASS": 1.2,
+          "REGULARITY": 0.5,
+          "IMPORTANCE_FACTOR": 1.0,
+          "PERIOD_ANALYSIS_X": 0.6,
+          "PERIOD_ANALYSIS_Y": 0.6,
+          "PERIOD_CODE_X": 0.5,
+          "PERIOD_CODE_Y": 0.5,
+          "RESPONSE_MOD_FACTOR_X": 8.0,
+          "RESPONSE_MOD_FACTOR_Y": 8.0
+        }
+      },
+      "5": {
+        "SEIS_LOAD_CODE": "Eurocode-8(1996)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "EURO1996": {
+          "SOIL_CLASS": "B",
+          "BASIC_BEHAVIOR": "A",
+          "DUCTILITY_CLASS": "B",
+          "REGULARITY": "A",
+          "FAILURE_MODE_FACTOR": 1.0,
+          "ALPHA_FACTOR": 0.25,
+          "PERIOD_X": 0.5,
+          "PERIOD_Y": 0.5
+        }
+      },
+      "6": {
+        "SEIS_LOAD_CODE": "China(GB50011-2001)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "CH2001": {
+          "NEAR_SOURCE_CATEGORY": 1,
+          "SEIS_FORTIFICATION": "0.10g",
+          "SITE_CLASS": 2,
+          "STRUCTURE_TYPE": "RSM",
+          "DAMPING_RATIO": 0.05,
+          "EARTH_RESPONSE_TYPE": "FREQUENT",
+          "OPT_A1": false,
+          "PERIOD_X": 0.5,
+          "PERIOD_Y": 0.5
+        }
+      },
+      "7": {
+        "SEIS_LOAD_CODE": "China Shanghai(DGJ08-9-2003)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "CHSH2003": {
+          "SEIS_FORTIFICATION": "0.10g",
+          "SITE_CLASS": 3,
+          "STRUCTURE_TYPE": "RSM",
+          "DAMPING_RATIO": 0.05,
+          "EARTH_RESPONSE_TYPE": "SCARCE",
+          "OPT_A1": false,
+          "PERIOD_X": 0.5,
+          "PERIOD_Y": 0.5
+        }
+      },
+      "8": {
+        "SEIS_LOAD_CODE": "IS1893(2002)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "IS2002": {
+          "SEISMIC_ZONE": "III",
+          "SOIL_TYPE": "II",
+          "IMPORTANCE_FACTOR": 1.0,
+          "DAMPING_RATIO": 5.0,
+          "DAMPING_MULTIPLY_FACTOR": 1.0,
+          "PERIOD_FND_X": 0.5,
+          "PERIOD_FND_Y": 0.5,
+          "RESPONSE_REDUCT_FACTOR_X": 5.0,
+          "RESPONSE_REDUCT_FACTOR_Y": 5.0
+        }
+      },
+      "9": {
+        "SEIS_LOAD_CODE": "Taiwan(1999)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "TAIWAN1999": {
+          "SEIS_ZONE": "I",
+          "SOIL_TYPE": "II",
+          "IMPORTANCE_FACTOR": 1.0,
+          "SEIS_MAGNIFY_FACTOR": 1.4,
+          "PERIOD_METHOD": "ANALYTICAL",
+          "PERIOD_ANALYSIS_X": 0.5,
+          "PERIOD_ANALYSIS_Y": 0.5,
+          "PERIOD_APPR_X": 0.4,
+          "PERIOD_APPR_Y": 0.4,
+          "PERIOD_FINAL_X": 0.45,
+          "PERIOD_FINAL_Y": 0.45,
+          "RESPONSE_REDUCT_FACTOR_X": 4.8,
+          "RESPONSE_REDUCT_FACTOR_Y": 4.8
+        }
+      },
+      "10": {
+        "SEIS_LOAD_CODE": "KBC (2005)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "KBC2005": {
+          "ACC_CALC_METHOD": 0,
+          "SEIS_ZONE": 1,
+          "SITE_CLASS": 2
+        }
+      },
+      "11": {
+        "SEIS_LOAD_CODE": "KBC (2005)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "KBC2005": {
+          "ACC_CALC_METHOD": 1,
+          "SDS": 0.5,
+          "SD1": 0.3,
+          "SEIS_USE_GROUP": 1,
+          "CITY_PLAN_REGION": true,
+          "IMPORTANCE_FACTOR": 1.0,
+          "PERIOD_METHOD": 0,
+          "PERIOD_ANALYSIS_X": 0.5,
+          "PERIOD_ANALYSIS_Y": 0.5,
+          "PERIOD_APPR_X": 0.4,
+          "PERIOD_APPR_Y": 0.4,
+          "PERIOD_FINAL_X": 0.45,
+          "PERIOD_FINAL_Y": 0.45,
+          "RESPONSE_MOD_FACTOR_X": 5.0,
+          "RESPONSE_MOD_FACTOR_Y": 5.0
+        }
+      },
+      "12": {
+        "SEIS_LOAD_CODE": "Taiwan(2006)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "TAIWAN2006": {
+          "SEIS_ZONE": 1,
+          "SDS": 0.8,
+          "SD1": 0.4,
+          "SMS": 1.0,
+          "SM1": 0.5,
+          "NDA": 1.0,
+          "NDV": 1.0,
+          "NMA": 1.0,
+          "NMV": 1.0,
+          "SOIL_TYPE": 2,
+          "FDA": 1.0,
+          "FDV": 1.5,
+          "FMA": 1.0,
+          "FMV": 1.5,
+          "SUB_ZONE": 1,
+          "SDS_T": 0.8,
+          "SMS_T": 1.0,
+          "TD0": 0.4,
+          "TM0": 0.5,
+          "IMPORTANCE_FACTOR": 1.0,
+          "SEIS_MAGNIFY_FACTOR": 1.4,
+          "PERIOD_METHOD": "ANALYTICAL",
+          "PERIOD_ANALYSIS_X": 0.5,
+          "PERIOD_ANALYSIS_Y": 0.5,
+          "PERIOD_APPR_X": 0.4,
+          "PERIOD_APPR_Y": 0.4,
+          "PERIOD_FINAL_X": 0.45,
+          "PERIOD_FINAL_Y": 0.45,
+          "RESPONSE_MOD_FACTOR_X": 4.8,
+          "RESPONSE_MOD_FACTOR_Y": 4.8
+        }
+      },
+      "13": {
+        "SEIS_LOAD_CODE": "Eurocode-8(2004)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "EURO2004": {
+          "GROUND_TYPE": 1,
+          "SPEC_TYPE": 1,
+          "NATIONAL_ANNEX": 0,
+          "REGION_TYPE": 0,
+          "S_": 1.2,
+          "TB": 0.15,
+          "TC": 0.5,
+          "TD": 2.0,
+          "AG": 0.25,
+          "Q": 3.0,
+          "BETA": 0.2,
+          "IMPORTANCE": 1.0,
+          "PERIOD_X": 0.5,
+          "PERIOD_Y": 0.5
+        }
+      },
+      "14": {
+        "SEIS_LOAD_CODE": "NTC2008",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "NTC2008": {
+          "GROUND_TYPE": 1,
+          "SPEC_TYPE": 1,
+          "S_": 1.2,
+          "TB": 0.15,
+          "TC": 0.5,
+          "TD": 2.0,
+          "AG": 0.25,
+          "Q": 3.0,
+          "AMP_F": 2.5,
+          "TC_STAR": 0.4,
+          "PERIOD_X": 0.5,
+          "PERIOD_Y": 0.5
+        }
+      },
+      "15": {
+        "SEIS_LOAD_CODE": "KBC(2009)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "KBC2009": {
+          "SEIS_ZONE": 1,
+          "ZONE_FACTOR": 0.22,
+          "SITE_CLASS": 2,
+          "PERIOD_COEF": 1.4,
+          "FA": 1.0,
+          "FV": 1.5,
+          "SDS": 0.5,
+          "SD1": 0.3,
+          "SEIS_USE_GROUP": 1,
+          "IMPORTANCE_FACTOR": 1.0,
+          "PERIOD_METHOD": 0,
+          "PERIOD_ANALYSIS_X": 0.5,
+          "PERIOD_ANALYSIS_Y": 0.5,
+          "PERIOD_APPR_X": 0.4,
+          "PERIOD_APPR_Y": 0.4,
+          "RESPONSE_MOD_FACTOR_X": 5.0,
+          "RESPONSE_MOD_FACTOR_Y": 5.0
+        }
+      },
+      "16": {
+        "SEIS_LOAD_CODE": "China(GB50011_2010)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "CH2010": {
+          "SEIS_DGN_CATEGORY": 1,
+          "SEIS_FORTIFICATION": "0.10g",
+          "SITE_CLASS": 2,
+          "DELTA_N": "RSM",
+          "DAMPING": 0.05,
+          "EARTH_RESPONSE": "FREQUENT",
+          "ALPHA_1": false,
+          "PERIOD_X": 0.5,
+          "PERIOD_Y": 0.5
+        }
+      },
+      "17": {
+        "SEIS_LOAD_CODE": "IBC2000(ASCE7-10)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "IBC2012": {
+          "SITE_CLASS": 2,
+          "SS": 1.0,
+          "S1": 0.4,
+          "FA": 1.0,
+          "FV": 1.5,
+          "SDS": 0.67,
+          "SD1": 0.4,
+          "TL": 8.0,
+          "RISK_CATEGORY": 2,
+          "IMPORTANCE_FACTOR": 1.0,
+          "PERIOD_METHOD": 0,
+          "PERIOD_ANALYSIS_X": 0.5,
+          "PERIOD_ANALYSIS_Y": 0.5,
+          "PERIOD_APPR_X": 0.4,
+          "PERIOD_APPR_Y": 0.4,
+          "RESPONSE_MOD_FACTOR_X": 8.0,
+          "RESPONSE_MOD_FACTOR_Y": 8.0
+        }
+      },
+      "18": {
+        "SEIS_LOAD_CODE": "NTC2012",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "NTC2012": {
+          "GROUND_TYPE": 1,
+          "SPEC_TYPE": 1,
+          "S_": 1.2,
+          "TB": 0.15,
+          "TC": 0.5,
+          "TD": 2.0,
+          "AG": 0.25,
+          "Q": 3.0,
+          "AMP_F": 2.5,
+          "TC_STAR": 0.4,
+          "PERIOD_X": 0.5,
+          "PERIOD_Y": 0.5
+        }
+      },
+      "19": {
+        "SEIS_LOAD_CODE": "NSR-10",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "NSR2010": {
+          "SITE_CLASS": 2,
+          "AA": 0.25,
+          "AV": 0.2,
+          "FA": 1.0,
+          "FV": 1.5,
+          "PERIOD_COEF": 1.4,
+          "IMPORTANCE_FACTOR": 1.0,
+          "PERIOD_METHOD": 0,
+          "PERIOD_ANALYSIS_X": 0.5,
+          "PERIOD_ANALYSIS_Y": 0.5,
+          "PERIOD_APPR_X": 0.4,
+          "PERIOD_APPR_Y": 0.4,
+          "PERIOD_FINAL_X": 0.45,
+          "PERIOD_FINAL_Y": 0.45,
+          "PHI_X": 1.0,
+          "PHI_Y": 1.0,
+          "RESPONSE_MOD_FACTOR_X": 7.0,
+          "RESPONSE_MOD_FACTOR_Y": 7.0
+        }
+      },
+      "20": {
+        "SEIS_LOAD_CODE": "KBC (2016)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "KBC2016": {
+          "SEIS_ZONE": 1,
+          "ZONE_FACTOR": 0.22,
+          "SITE_CLASS": 2,
+          "DEPTH_2MR": 30.0,
+          "PERIOD_COEF": 1.4,
+          "FA": 1.0,
+          "FV": 1.5,
+          "SDS": 0.5,
+          "SD1": 0.3,
+          "SEIS_USE_GROUP": 1,
+          "IMPORTANCE_FACTOR": 1.0,
+          "PERIOD_METHOD": 0,
+          "PERIOD_ANALYSIS_X": 0.5,
+          "PERIOD_ANALYSIS_Y": 0.5,
+          "PERIOD_APPR_X": 0.4,
+          "PERIOD_APPR_Y": 0.4,
+          "RESPONSE_MOD_FACTOR_X": 5.0,
+          "RESPONSE_MOD_FACTOR_Y": 5.0
+        }
+      },
+      "21": {
+        "SEIS_LOAD_CODE": "P100-1 (2013)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "P100_2013": {
+          "SPEC_TYPE": "Tc=0.7s",
+          "TB": 0.15,
+          "ATC": 0.7,
+          "TD": 3.0,
+          "AG": 0.25,
+          "Q": 3.0,
+          "IMPORTANCE": 1.0,
+          "PERIOD_X": 0.5,
+          "PERIOD_Y": 0.5
+        }
+      },
+      "22": {
+        "SEIS_LOAD_CODE": "IS1893(2016)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "IS2016": {
+          "SEIS_ZONE": "III",
+          "SOIL_TYPE": "II",
+          "IMPORTANCE_FACTOR": 1.0,
+          "DAMPING": 5.0,
+          "PERIOD_X": 0.5,
+          "PERIOD_Y": 0.5,
+          "RESPONSE_REDUCTION_FACTOR_X": 5.0,
+          "RESPONSE_REDUCTION_FACTOR_Y": 5.0
+        }
+      },
+      "23": {
+        "SEIS_LOAD_CODE": "KDS(41-17-00:2019)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "KDS2019": {
+          "SEIS_ZONE": 1,
+          "ZONE_FACTOR": 0.22,
+          "SITE_CLASS": 2,
+          "PERIOD_COEF": 1.4,
+          "OPT_NOT_CONSIDER_CU": 0,
+          "FA": 1.0,
+          "FV": 1.5,
+          "SDS": 0.5,
+          "SD1": 0.3,
+          "SEIS_USE_GROUP": 1,
+          "IMPORTANCE_FACTOR": 1.0,
+          "PERIOD_METHOD": 0,
+          "PERIOD_ANALYSIS_X": 0.5,
+          "PERIOD_ANALYSIS_Y": 0.5,
+          "PERIOD_APPR_X": 0.4,
+          "PERIOD_APPR_Y": 0.4,
+          "RESPONSE_MOD_FACTOR_X": 5.0,
+          "RESPONSE_MOD_FACTOR_Y": 5.0
+        }
+      },
+      "24": {
+        "SEIS_LOAD_CODE": "SI413(2023)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "SI413_2023": {
+          "SITE_CLASS": 2,
+          "Z": 0.1,
+          "SS": 0.8,
+          "S1": 0.3,
+          "TD": 2.0,
+          "FA": 1.0,
+          "FV": 1.5,
+          "Q": 3.0,
+          "BETA": 0.2,
+          "DAMPING": 5.0,
+          "MAX_PERIOD": 4.0,
+          "PERIOD_X": 0.5,
+          "PERIOD_Y": 0.5
+        }
+      },
+      "25": {
+        "SEIS_LOAD_CODE": "TAIWAN(2022)",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "TAIWAN2022": {
+          "STRUCT_TYPE": 0,
+          "SEIS_ZONE": 1,
+          "SDS": 0.8,
+          "SD1": 0.4,
+          "SMS": 1.0,
+          "SM1": 0.5,
+          "NDA": 1.0,
+          "NDV": 1.0,
+          "NMA": 1.0,
+          "NMV": 1.0,
+          "SOIL_TYPE": 2,
+          "FDA": 1.0,
+          "FDV": 1.5,
+          "FSA": 1.0,
+          "FSV": 1.2,
+          "FMA": 1.0,
+          "FMV": 1.5,
+          "SUB_ZONE": 1,
+          "SDS_T": 0.8,
+          "SMS_T": 1.0,
+          "TD0": 0.4,
+          "TM0": 0.5,
+          "IMPORTANCE_FACTOR": 1.0,
+          "SEIS_MAGNIFY_FACTOR": 1.4,
+          "PERIOD_METHOD": "ANALYTICAL",
+          "PERIOD_ANALYSIS_X": 0.5,
+          "PERIOD_ANALYSIS_Y": 0.5,
+          "PERIOD_APPR_X": 0.4,
+          "PERIOD_APPR_Y": 0.4,
+          "PERIOD_FINAL_X": 0.45,
+          "PERIOD_FINAL_Y": 0.45,
+          "RESPONSE_MOD_FACTOR_X": 4.8,
+          "RESPONSE_MOD_FACTOR_Y": 4.8
+        }
+      },
+      "26": {
+        "SEIS_LOAD_CODE": "USER",
+        "SCALE_FACTOR_X": 1.0,
+        "SCALE_FACTOR_Y": 1.0,
+        "USER": [
+          {
+            "STORY_NAME": "2F",
+            "WEIGHT": 1000.0,
+            "ELIV": 6.0,
+            "FORCE_X": 50.0,
+            "FORCE_Y": 50.0
+          },
+          {
+            "STORY_NAME": "1F",
+            "WEIGHT": 1200.0,
+            "ELIV": 3.0,
+            "FORCE_X": 30.0,
+            "FORCE_Y": 30.0
+          }
+        ],
+        "ITEMS": [
+          {
+            "STORY_NAME": "2F",
+            "ADD_X": 5.0,
+            "ADD_Y": 5.0,
+            "ADD_R": 1.0
+          }
+        ]
+      }
+    }
+  }
+}

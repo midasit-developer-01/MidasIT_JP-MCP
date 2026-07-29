@@ -1,0 +1,40 @@
+{
+  "_group": "db",
+  "_name": "BCGD-M1",
+  "uri": "db/BCGD-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "BCGD-M1": {
+      "type": "object",
+      "description": "Boundary Group Combination (BCGD-M1). Defines a named combination of existing boundary groups; keyed by combination id, each entry carries the combination name and the list of member boundary group names.",
+      "properties": {
+        "BCG_NAME": {
+          "type": "string",
+          "description": "Boundary group combination name (strCombName)."
+        },
+        "GROUP_LIST": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of boundary group names to include in the combination. Each name must reference an existing boundary group; an unknown name is rejected at runtime (LV_WRONG_DATA)."
+        }
+      },
+      "required": [
+        "BCG_NAME",
+        "GROUP_LIST"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "BCG_NAME": "BC Combination 1",
+        "GROUP_LIST": [
+          "SupportGroup",
+          "SpringGroup"
+        ]
+      }
+    }
+  }
+}

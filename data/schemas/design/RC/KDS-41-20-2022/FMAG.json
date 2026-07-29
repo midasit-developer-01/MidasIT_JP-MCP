@@ -1,0 +1,55 @@
+{
+  "_group": "design",
+  "_name": "FMAG",
+  "uri": "design/RC/KDS-41-20-2022/FMAG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "FMAG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moment Magnifier Factors (FMAG). Holds the first- and second-order moment magnification factors about the local y and z axes; each factor must satisfy 1.0 <= value < 100.0 (hard-enforced by the handler).",
+      "properties": {
+        "B1Y_DELTA_BY": {
+          "type": "number",
+          "description": "B1y - Delta by, first-order moment magnifier about the y-axis. Must satisfy 1.0 <= value < 100.0.",
+          "default": 1.0,
+          "minimum": 1.0,
+          "exclusiveMaximum": 100.0
+        },
+        "B1Z_DELTA_BZ": {
+          "type": "number",
+          "description": "B1z - Delta bz, first-order moment magnifier about the z-axis. Must satisfy 1.0 <= value < 100.0.",
+          "default": 1.0,
+          "minimum": 1.0,
+          "exclusiveMaximum": 100.0
+        },
+        "B2Y_DELTA_SY": {
+          "type": "number",
+          "description": "B2y - Delta sy, second-order moment magnifier about the y-axis. Must satisfy 1.0 <= value < 100.0.",
+          "default": 1.0,
+          "minimum": 1.0,
+          "exclusiveMaximum": 100.0
+        },
+        "B2Z_DELTA_SZ": {
+          "type": "number",
+          "description": "B2z - Delta sz, second-order moment magnifier about the z-axis. Must satisfy 1.0 <= value < 100.0.",
+          "default": 1.0,
+          "minimum": 1.0,
+          "exclusiveMaximum": 100.0
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "B1Y_DELTA_BY": 1.0,
+        "B1Z_DELTA_BZ": 1.0,
+        "B2Y_DELTA_SY": 1.15,
+        "B2Z_DELTA_SZ": 1.2
+      }
+    }
+  }
+}

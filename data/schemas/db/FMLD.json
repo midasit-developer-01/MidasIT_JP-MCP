@@ -1,0 +1,117 @@
+{
+  "_group": "db",
+  "_name": "FMLD",
+  "uri": "db/FMLD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "FMLD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Finishing Material Load (FMLD). One or more finishing-material load items are supplied under ITEMS; each item describes a covering applied to a load case, with a covering type, per-face covering ranges, thickness, density, application direction, and scale factor.",
+      "properties": {
+        "ITEMS": {
+          "description": "Array of finishing material load items. Each object is a distinct FMLD entry.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number (union key serial) of this finishing material load item.",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Static load case name. Must reference an existing static load case; a non-existent name is rejected at runtime.",
+                "type": "string"
+              },
+              "GROUP_NAME": {
+                "description": "Load group name. If non-empty, must reference an existing load group; a non-existent name is rejected at runtime. Empty string means no group.",
+                "type": "string",
+                "default": ""
+              },
+              "COVERING_TYPE": {
+                "description": "Covering type (case-insensitive). ENVELOP, FILL, or SURROUND.",
+                "type": "string",
+                "enum": ["ENVELOP", "FILL", "SURROUND"],
+                "default": "ENVELOP"
+              },
+              "COVERING_RANGE": {
+                "description": "Covering range per face (case-insensitive), exactly 4 entries ordered by face [+x, -y, -x, +y]. Each entry is NONE, HALF, or FULL.",
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "string",
+                  "enum": ["NONE", "HALF", "FULL"]
+                }
+              },
+              "THICKNESS": {
+                "description": "Covering thickness (d).",
+                "type": "number",
+                "default": 0.0
+              },
+              "DENSITY": {
+                "description": "Filling property density.",
+                "type": "number",
+                "default": 0.0
+              },
+              "DIR": {
+                "description": "Application direction (case-insensitive). GX, GY, or GZ (global axes).",
+                "type": "string",
+                "enum": ["GX", "GY", "GZ"],
+                "default": "GZ"
+              },
+              "SCALE_FACTOR": {
+                "description": "Scale factor applied to the finishing material load.",
+                "type": "number"
+              }
+            },
+            "required": ["LCNAME", "COVERING_RANGE", "SCALE_FACTOR"]
+          }
+        }
+      },
+      "required": ["ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "DL",
+            "GROUP_NAME": "",
+            "COVERING_TYPE": "ENVELOP",
+            "COVERING_RANGE": ["HALF", "HALF", "FULL", "FULL"],
+            "THICKNESS": 0.2,
+            "DENSITY": 24.5,
+            "DIR": "GZ",
+            "SCALE_FACTOR": -1.0
+          },
+          {
+            "ID": 2,
+            "LCNAME": "DL",
+            "GROUP_NAME": "",
+            "COVERING_TYPE": "FILL",
+            "COVERING_RANGE": ["FULL", "FULL", "FULL", "FULL"],
+            "THICKNESS": 0.15,
+            "DENSITY": 24.5,
+            "DIR": "GZ",
+            "SCALE_FACTOR": -1.0
+          },
+          {
+            "ID": 3,
+            "LCNAME": "DL",
+            "GROUP_NAME": "",
+            "COVERING_TYPE": "SURROUND",
+            "COVERING_RANGE": ["HALF", "NONE", "HALF", "NONE"],
+            "THICKNESS": 0.1,
+            "DENSITY": 24.5,
+            "DIR": "GZ",
+            "SCALE_FACTOR": -1.0
+          }
+        ]
+      }
+    }
+  }
+}

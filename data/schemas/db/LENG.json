@@ -1,0 +1,58 @@
+{
+  "_group": "db",
+  "_name": "LENG",
+  "uri": "db/LENG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LENG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Unbraced Length (LENG). Per-element design unbraced-length data keyed by element number; all fields are optional length/flag values applied directly with no TYPE branching.",
+      "properties": {
+        "LY": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced length for buckling about the y-axis (Ly). Optional; defaults to 0."
+        },
+        "LZ": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced length for buckling about the z-axis (Lz). Optional; defaults to 0."
+        },
+        "LB": {
+          "type": "number",
+          "default": 0,
+          "description": "Laterally unbraced length (Lb) for lateral-torsional buckling. Optional; defaults to 0."
+        },
+        "bNOTUSE": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, do not consider the laterally unbraced length. Optional; defaults to false."
+        },
+        "bAUTOCALC": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, calculate the unbraced lengths automatically by the design code. Optional; defaults to false."
+        },
+        "LT": {
+          "type": "number",
+          "default": 0,
+          "description": "Torsional unbraced length (Lt). Optional; defaults to 0."
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "21": {
+        "LY": 9.464111,
+        "LZ": 4,
+        "LB": 4,
+        "bNOTUSE": false,
+        "bAUTOCALC": false,
+        "LT": 9.464111
+      }
+    }
+  }
+}

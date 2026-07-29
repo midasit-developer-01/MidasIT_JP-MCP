@@ -1,0 +1,77 @@
+{
+  "_group": "ope",
+  "_name": "EDMP",
+  "uri": "ope/EDMP",
+  "methods": "POST",
+  "schema": {
+    "EDMP": {
+      "type": "object",
+      "description": "Change Element Dependent Material Property (EDMP). Assigns an element-dependent material property (Notional Size h, or Volume/Surface ratio) to the selected frame elements; the H value is either supplied directly (AUTO=false) or auto-calculated from a design code and parameter (AUTO=true, NSM type only).",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body for the Change Element Dependent Material Property operation.",
+          "properties": {
+            "NODE_ELEMS": {
+              "type": "object",
+              "description": "Selection of the elements to receive the property. Only frame-type elements among the selection are processed; an empty result raises an error.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "description": "Explicit list of node/element IDs to select.",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Range selection method, TO notation (e.g. \"1to5\")."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group name selection method."
+                }
+              }
+            },
+            "TYPE": {
+              "type": "string",
+              "description": "Property type. NSM = Notional Size Method (constraint h > 0); VSR = Volume-Surface Ratio (constraint v/s > 0). Case-insensitive.",
+              "enum": ["NSM", "VSR"],
+              "default": "NSM"
+            },
+            "AUTO": {
+              "type": "boolean",
+              "description": "Auto Calculate. When true, H is auto-calculated from CODE and PARAMETER (only valid for TYPE=NSM; TYPE=VSR raises an error). When false, H_VS must be supplied.",
+              "default": false
+            },
+            "H_VS": {
+              "type": "number",
+              "description": "[AUTO=false] H value (Notional Size) or Volume/Surface ratio to assign directly. Required when AUTO is false; must be > 0."
+            },
+            "CODE": {
+              "type": "string",
+              "description": "[AUTO=true] Design code used for auto calculation of the notional size. Matched against \"CEB-FIP(1990)\", \"Korean Standard\", \"Chinese Standard\", \"Japanese Standard\"; unmatched values fall back to Korean Standard.",
+              "default": "Korean Standard"
+            },
+            "PARAMETER": {
+              "type": "number",
+              "description": "[AUTO=true] Parameter passed to the notional size auto-calculation routine."
+            }
+          },
+          "required": ["NODE_ELEMS"]
+        }
+      },
+      "required": ["Argument"]
+    }
+  },
+  "example": {
+    "Argument": {
+      "NODE_ELEMS": {
+        "KEYS": [1, 2, 3]
+      },
+      "TYPE": "NSM",
+      "AUTO": false,
+      "H_VS": 0.25
+    }
+  }
+}

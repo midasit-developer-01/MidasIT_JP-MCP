@@ -1,0 +1,55 @@
+{
+  "_group": "design",
+  "_name": "FMAG",
+  "uri": "design/SRC/AIK-SRC2K/FMAG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "FMAG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moment Magnification Factors (FMAG). Fields are the first- and second-order moment magnification factors about the Y and Z axes, each constrained to 1.0 <= value < 100.0.",
+      "properties": {
+        "B1Y_DELTA_BY": {
+          "type": "number",
+          "description": "B1y - Delta by (First Order Moment magnification factor about Y). Must satisfy 1.0 <= value < 100.0.",
+          "default": 1.0,
+          "minimum": 1.0,
+          "exclusiveMaximum": 100.0
+        },
+        "B1Z_DELTA_BZ": {
+          "type": "number",
+          "description": "B1z - Delta bz (First Order Moment magnification factor about Z). Must satisfy 1.0 <= value < 100.0.",
+          "default": 1.0,
+          "minimum": 1.0,
+          "exclusiveMaximum": 100.0
+        },
+        "B2Y_DELTA_SY": {
+          "type": "number",
+          "description": "B2y - Delta sy (Second Order Moment magnification factor about Y). Must satisfy 1.0 <= value < 100.0.",
+          "default": 1.0,
+          "minimum": 1.0,
+          "exclusiveMaximum": 100.0
+        },
+        "B2Z_DELTA_SZ": {
+          "type": "number",
+          "description": "B2z - Delta sz (Second Order Moment magnification factor about Z). Must satisfy 1.0 <= value < 100.0.",
+          "default": 1.0,
+          "minimum": 1.0,
+          "exclusiveMaximum": 100.0
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "B1Y_DELTA_BY": 1.0,
+        "B1Z_DELTA_BZ": 1.0,
+        "B2Y_DELTA_SY": 1.15,
+        "B2Z_DELTA_SZ": 1.2
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "_group": "db",
+  "_name": "STMP",
+  "uri": "db/STMP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "STMP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "System Temperature (STMP). Defines a uniform system temperature load referencing an existing static load case (LCNAME) and optionally a load group (GROUP_NAME); the key is the load case identifier.",
+      "type": "object",
+      "properties": {
+        "TEMPER": {
+          "description": "System temperature value applied uniformly to the whole model for this load case.",
+          "type": "number",
+          "default": 0
+        },
+        "LCNAME": {
+          "description": "Name of an existing static load case this temperature is assigned to. Must resolve to an existing load case; assigning a non-existent name is rejected.",
+          "type": "string"
+        },
+        "GROUP_NAME": {
+          "description": "Name of the load group. Empty string means no load group; a non-empty value must resolve to an existing load group or the request is rejected.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "required": [
+        "LCNAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TEMPER": 12.5,
+        "LCNAME": "Temp(+)",
+        "GROUP_NAME": "LoadGroup1"
+      },
+      "2": {
+        "TEMPER": -32.3,
+        "LCNAME": "Temp(-)",
+        "GROUP_NAME": ""
+      }
+    }
+  }
+}

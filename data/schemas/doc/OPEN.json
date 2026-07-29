@@ -1,0 +1,24 @@
+{
+  "_group": "doc",
+  "_name": "OPEN",
+  "uri": "doc/OPEN",
+  "methods": "POST",
+  "schema": {
+    "OPEN": {
+      "type": "object",
+      "description": "Open Document (OPEN). Opens an existing model file; the request body is a single string holding the absolute path of the file to open.",
+      "properties": {
+        "Argument": {
+          "type": "string",
+          "description": "Absolute file path of the model file to open. The handler checks the path exists (throws a 'path is wrong' error if not accessible) and then opens the document; the current document's modified flag is cleared so no save prompt appears."
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": "C:/Users/Public/Documents/model.mcb"
+  }
+}

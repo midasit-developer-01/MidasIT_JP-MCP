@@ -1,0 +1,165 @@
+{
+  "_group": "db",
+  "_name": "ACTL-M1",
+  "uri": "db/ACTL-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "ACTL-M1": {
+      "type": "object",
+      "description": "Main Analysis Control (ACTL-M1). Single global analysis-control record (key is always \"1\"); the flags govern general solver behavior and the optional TCELEM object drives nonlinear time-step (tension/compression element) control and convergence criteria.",
+      "properties": {
+        "ARCD": {
+          "type": "boolean",
+          "default": true,
+          "description": "Auto Rotational DOF Constraint. Automatically constrain unconnected rotational degrees of freedom."
+        },
+        "ANRC": {
+          "type": "boolean",
+          "default": true,
+          "description": "Auto Normal Rotation Constraint. Automatically constrain the in-plane (drilling) rotation of plate/shell elements."
+        },
+        "CSECF": {
+          "type": "boolean",
+          "default": false,
+          "description": "Consider Section Stiffness Scale Factor when computing element stiffness."
+        },
+        "TRS": {
+          "type": "boolean",
+          "default": true,
+          "description": "Transfer Reactions to Master Node for rigid-link / master-slave connections."
+        },
+        "BMSTRESS": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate Equivalent Beam Stresses."
+        },
+        "CRBAR": {
+          "type": "boolean",
+          "default": false,
+          "description": "Consider Reinforcement (rebar) for Section Stiffness."
+        },
+        "CLATS": {
+          "type": "boolean",
+          "default": false,
+          "description": "Change Local Axis of Tapered Section."
+        },
+        "CLFORM": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use the Classical Formula for Solid Element."
+        },
+        "CABINIT": {
+          "type": "boolean",
+          "default": true,
+          "description": "Consider Initial Tension for Cable Element."
+        },
+        "BSCHG": {
+          "type": "string",
+          "enum": ["CONSTANT", "CHANGE"],
+          "default": "CHANGE",
+          "description": "Beam Section Property Changes (case-insensitive). CONSTANT = keep the original section, CHANGE = allow the section property to change."
+        },
+        "TCELEM": {
+          "type": "object",
+          "description": "Nonlinear time-step control (tension/compression element). Optional; when omitted the solver applies its default convergence setup (Displacement check enabled at 0.001, Load/Work disabled).",
+          "properties": {
+            "NUMINC": {
+              "type": "integer",
+              "default": 1,
+              "description": "Number of Increments (load steps) for the nonlinear analysis."
+            },
+            "INTOUT": {
+              "type": "string",
+              "enum": ["EVERY", "LAST"],
+              "default": "LAST",
+              "description": "Intermediate Output Request (case-insensitive). EVERY = output at every increment, LAST = output at the last increment only."
+            },
+            "CONVERGENCE": {
+              "type": "object",
+              "description": "Convergence Criteria. Each sub-object (DISPL/LOAD/WORK) enables a convergence check and supplies its tolerance.",
+              "properties": {
+                "DISPL": {
+                  "type": "object",
+                  "description": "Displacement Convergence check.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Enable the displacement convergence check."
+                    },
+                    "VALUE": {
+                      "type": "number",
+                      "description": "Convergence Tolerance Value. Used when OPT_USE is true (handler default 0.001 if omitted)."
+                    }
+                  },
+                  "required": ["OPT_USE"]
+                },
+                "LOAD": {
+                  "type": "object",
+                  "description": "Load Convergence check.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Enable the load convergence check."
+                    },
+                    "VALUE": {
+                      "type": "number",
+                      "description": "Convergence Tolerance Value. Required by the handler when OPT_USE is true (a missing VALUE with OPT_USE=true is rejected)."
+                    }
+                  },
+                  "required": ["OPT_USE"]
+                },
+                "WORK": {
+                  "type": "object",
+                  "description": "Work Convergence check.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Enable the work convergence check."
+                    },
+                    "VALUE": {
+                      "type": "number",
+                      "description": "Convergence Tolerance Value. Required by the handler when OPT_USE is true (a missing VALUE with OPT_USE=true is rejected)."
+                    }
+                  },
+                  "required": ["OPT_USE"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ARCD": true,
+        "ANRC": true,
+        "CSECF": false,
+        "TRS": true,
+        "BMSTRESS": false,
+        "CRBAR": false,
+        "CLATS": false,
+        "CLFORM": false,
+        "CABINIT": true,
+        "BSCHG": "CHANGE",
+        "TCELEM": {
+          "NUMINC": 10,
+          "INTOUT": "LAST",
+          "CONVERGENCE": {
+            "DISPL": {
+              "OPT_USE": true,
+              "VALUE": 0.001
+            },
+            "LOAD": {
+              "OPT_USE": false
+            },
+            "WORK": {
+              "OPT_USE": false
+            }
+          }
+        }
+      }
+    }
+  }
+}

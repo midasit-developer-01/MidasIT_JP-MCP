@@ -1,0 +1,79 @@
+{
+  "_group": "db",
+  "_name": "NPLN",
+  "uri": "db/NPLN",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "NPLN": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Named Plane (NPLN). TYPE selects the definition mode: TYPE 1 defines the plane from three points (POINT); any other TYPE defines it by a single coordinate offset (COORD) with tolerance (TOL).",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Plane name.",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Plane definition type. 1 = defined by 3 points (uses POINT); 2 = X-Y plane, 3 = X-Z plane, 4 = Y-Z plane (each uses COORD as the plane offset). In the handler, TYPE==1 reads POINT; any other value reads COORD.",
+          "type": "integer"
+        },
+        "POINT": {
+          "description": "[TYPE=1] Three points defining the plane. Fixed-length array of exactly 3 point objects; only used when TYPE == 1.",
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "properties": {
+              "ITEM": {
+                "description": "Point coordinates as [X, Y, Z]. Fixed-length array of exactly 3 numbers.",
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "required": [
+              "ITEM"
+            ]
+          }
+        },
+        "TOL": {
+          "description": "Tolerance for the plane. Relevant for coordinate-defined planes (TYPE 2/3/4).",
+          "type": "number",
+          "default": 0
+        },
+        "COORD": {
+          "description": "[TYPE!=1] Coordinate offset of the plane along its normal axis. Used when TYPE is not 1 (i.e. TYPE 2/3/4).",
+          "type": "number",
+          "default": 0
+        }
+      },
+      "required": [
+        "NAME",
+        "TYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "NP11",
+        "TYPE": 1,
+        "POINT": [
+          { "ITEM": [0, 235, 0] },
+          { "ITEM": [0, 9710, 0] },
+          { "ITEM": [15250, 9710, 0] }
+        ]
+      },
+      "2": {
+        "NAME": "NP12",
+        "TYPE": 2,
+        "TOL": 1,
+        "COORD": -12000
+      }
+    }
+  }
+}

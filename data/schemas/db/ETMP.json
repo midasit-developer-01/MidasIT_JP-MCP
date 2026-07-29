@@ -1,0 +1,69 @@
+{
+  "_group": "db",
+  "_name": "ETMP",
+  "uri": "db/ETMP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "ETMP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Element Temperature (ETMP). A single ITEMS array holds one entry per element-temperature assignment; each entry pairs a static load case name with a uniform element temperature value.",
+      "properties": {
+        "ITEMS": {
+          "description": "List of element temperature assignments for this element key. Each object carries a load case name and a temperature value.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the assignment within this element key. Multiple temperature loads on the same element are distinguished by ID.",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Static load case name (D_LCOM_STATIC) the temperature belongs to. Must match an existing load case; the handler rejects unknown names.",
+                "type": "string"
+              },
+              "GROUP_NAME": {
+                "description": "Name of the load group this assignment belongs to. Optional; if non-empty it must match an existing load group, otherwise the handler rejects it. Empty string means no group.",
+                "type": "string",
+                "default": ""
+              },
+              "TEMP": {
+                "description": "Uniform element temperature value applied to the element.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "LCNAME",
+              "TEMP"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "Temp(+)",
+            "GROUP_NAME": "",
+            "TEMP": 35
+          },
+          {
+            "ID": 2,
+            "LCNAME": "Temp(-)",
+            "GROUP_NAME": "",
+            "TEMP": -20
+          }
+        ]
+      }
+    }
+  }
+}

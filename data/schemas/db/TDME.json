@@ -1,0 +1,163 @@
+{
+  "_group": "db",
+  "_name": "TDME",
+  "uri": "db/TDME",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "TDME": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Time Dependent Material - Compressive Strength (TDME). TYPE selects between a built-in code (CODE) whose CODENAME drives which factor fields apply, or a user-defined function (USER) that carries SCALE and the aDATA function table.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Material name. Used as the unique identifier for the material; a matching name modifies the existing record.",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Material type. CODE uses a built-in design code; USER uses a user-defined compressive-strength function. Case-insensitive.",
+          "type": "string",
+          "enum": ["CODE", "USER"]
+        },
+        "CODENAME": {
+          "description": "[TYPE=CODE] Design code name that governs which factor fields apply. Required and validated when TYPE is CODE. Case-insensitive.",
+          "type": "string",
+          "enum": [
+            "ACI",
+            "CEB-FIP(2010)",
+            "CEB-FIP(1990)",
+            "Ohzagi",
+            "Chinese Standard",
+            "European",
+            "INDIA(IRC:18-2000)",
+            "CEB-FIP(1978)",
+            "AS 5100.5-2017",
+            "AS 5100.5-2016",
+            "AS/RTA 5100.5-2011",
+            "AS 3600-2009",
+            "INDIA(IRC:112-2011)",
+            "INDIA(IRC:112-2020)",
+            "Russian",
+            "GILBERT AND RANZI",
+            "Japen(Hydration)",
+            "Japen(Elastic)",
+            "KDS-2016",
+            "KCI-USD12",
+            "Korean Standard",
+            "ABNT NBR 6118(2023)"
+          ]
+        },
+        "STRENGTH": {
+          "description": "[TYPE=CODE] Concrete compressive strength.",
+          "type": "number"
+        },
+        "A": {
+          "description": "[TYPE=CODE] Factor a. Applies when CODENAME is ACI or Korean Standard, or when CODENAME is Japen(Hydration) and bUSE is false.",
+          "type": "number"
+        },
+        "B": {
+          "description": "[TYPE=CODE] Factor b. Applies when CODENAME is ACI or Korean Standard, or when CODENAME is Japen(Hydration) and bUSE is false.",
+          "type": "number"
+        },
+        "D": {
+          "description": "[TYPE=CODE] Factor d. Applies when CODENAME is Japen(Hydration) and bUSE is false.",
+          "type": "number"
+        },
+        "iCTYPE": {
+          "description": "[TYPE=CODE] Cement type index. Applies to CEB-FIP(1990), Ohzagi, KCI-USD12, European, Russian, INDIA(IRC:112-2011), INDIA(IRC:112-2020), CEB-FIP(2010), ABNT NBR 6118(2023), KDS-2016, GILBERT AND RANZI, and to Japen(Hydration) when bUSE is true.",
+          "type": "integer"
+        },
+        "bUSE": {
+          "description": "[TYPE=CODE, CODENAME=Japen(Hydration)] Use concrete data option. When true, iCTYPE (Japanese cement type) is used; when false, factors A, B, D are used.",
+          "type": "boolean",
+          "default": false
+        },
+        "TENS_STRN_FACTOR": {
+          "description": "[TYPE=CODE, CODENAME=Japen(Hydration)] Tensile strength factor.",
+          "type": "number"
+        },
+        "iECTYPE": {
+          "description": "[TYPE=CODE, CODENAME=Japen(Elastic)] Elastic cement type index.",
+          "type": "integer"
+        },
+        "CMETH": {
+          "description": "[TYPE=CODE, CODENAME=Russian] Curing method index.",
+          "type": "integer"
+        },
+        "CTYPE": {
+          "description": "[TYPE=CODE, CODENAME=Russian] Concrete type index.",
+          "type": "integer"
+        },
+        "MAXS": {
+          "description": "[TYPE=CODE, CODENAME=Russian] Maximum aggregate size.",
+          "type": "number"
+        },
+        "PZ": {
+          "description": "[TYPE=CODE, CODENAME=Russian] Specific content of the cement paste (P-z).",
+          "type": "number"
+        },
+        "nAGGRE": {
+          "description": "[TYPE=CODE] Aggregate type index. Applies when CODENAME is INDIA(IRC:112-2020), CEB-FIP(2010), or ABNT NBR 6118(2023).",
+          "type": "integer"
+        },
+        "DENSITY": {
+          "description": "[TYPE=CODE] Weight density. Applies when CODENAME is KDS-2016 or GILBERT AND RANZI.",
+          "type": "number"
+        },
+        "SCALE": {
+          "description": "[TYPE=USER] Scale factor applied to the user-defined function.",
+          "type": "number"
+        },
+        "aDATA": {
+          "description": "[TYPE=USER] User-defined function data table. Required when TYPE is USER.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "TIME": {
+                "description": "Time in days.",
+                "type": "number"
+              },
+              "COMP": {
+                "description": "Compressive strength at this time.",
+                "type": "number"
+              },
+              "TENS": {
+                "description": "Tensile strength at this time.",
+                "type": "number"
+              },
+              "ELAST": {
+                "description": "Elastic modulus at this time.",
+                "type": "number"
+              }
+            },
+            "required": ["TIME", "COMP", "TENS", "ELAST"]
+          }
+        }
+      },
+      "required": ["NAME", "TYPE", "CODENAME", "STRENGTH"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "TDM_ACI",
+        "TYPE": "CODE",
+        "CODENAME": "ACI",
+        "STRENGTH": 30000,
+        "A": 4.0,
+        "B": 0.85
+      },
+      "2": {
+        "NAME": "TDM_USER",
+        "TYPE": "USER",
+        "CODENAME": "ACI",
+        "STRENGTH": 30000,
+        "SCALE": 1.0,
+        "aDATA": [
+          { "TIME": 3, "COMP": 15000, "TENS": 1500, "ELAST": 20000 },
+          { "TIME": 28, "COMP": 30000, "TENS": 3000, "ELAST": 27000 }
+        ]
+      }
+    }
+  }
+}

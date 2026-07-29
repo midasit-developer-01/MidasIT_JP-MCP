@@ -1,0 +1,82 @@
+{
+  "_group": "db",
+  "_name": "MTCS",
+  "uri": "db/MTCS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MTCS": {
+      "type": "object",
+      "description": "Material Coordinate System (MTCS). Defines a local coordinate system from an origin, a point on the X axis (P1), and a point on the XY plane (P2); all ten geometry fields are required.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Name of the material coordinate system."
+        },
+        "ORIGINX": {
+          "type": "number",
+          "description": "Origin X coordinate of the coordinate system (global)."
+        },
+        "ORIGINY": {
+          "type": "number",
+          "description": "Origin Y coordinate of the coordinate system (global)."
+        },
+        "ORIGINZ": {
+          "type": "number",
+          "description": "Origin Z coordinate of the coordinate system (global)."
+        },
+        "P1X": {
+          "type": "number",
+          "description": "X coordinate of point P1, a point on the local X axis."
+        },
+        "P1Y": {
+          "type": "number",
+          "description": "Y coordinate of point P1, a point on the local X axis."
+        },
+        "P1Z": {
+          "type": "number",
+          "description": "Z coordinate of point P1, a point on the local X axis."
+        },
+        "P2X": {
+          "type": "number",
+          "description": "X coordinate of point P2, a point on the local XY plane."
+        },
+        "P2Y": {
+          "type": "number",
+          "description": "Y coordinate of point P2, a point on the local XY plane."
+        },
+        "P2Z": {
+          "type": "number",
+          "description": "Z coordinate of point P2, a point on the local XY plane."
+        }
+      },
+      "required": [
+        "NAME",
+        "ORIGINX",
+        "ORIGINY",
+        "ORIGINZ",
+        "P1X",
+        "P1Y",
+        "P1Z",
+        "P2X",
+        "P2Y",
+        "P2Z"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "MCS1",
+        "ORIGINX": 0.0,
+        "ORIGINY": 0.0,
+        "ORIGINZ": 0.0,
+        "P1X": 1.0,
+        "P1Y": 0.0,
+        "P1Z": 0.0,
+        "P2X": 0.0,
+        "P2Y": 1.0,
+        "P2Z": 0.0
+      }
+    }
+  }
+}

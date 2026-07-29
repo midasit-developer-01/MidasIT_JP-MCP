@@ -1,0 +1,69 @@
+{
+  "_group": "ope",
+  "_name": "MEMB",
+  "uri": "ope/MEMB",
+  "methods": "POST",
+  "schema": {
+    "MEMB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Define Member (MEMB). Groups frame elements into structural members; fields are driven by the assign mode (AUTO vs MANUAL) and how the target elements are selected.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body that controls how members are defined from frame elements.",
+          "properties": {
+            "ELEM_LIST": {
+              "type": "array",
+              "description": "Element list to define members from. When provided (manual selection), members are built only from these elements; ignored when ASSIGN_TYPE=AUTO and SELECTION_TYPE=ALL, where all model elements are used. Only frame-type elements are considered.",
+              "items": {
+                "type": "integer"
+              },
+              "default": []
+            },
+            "ASSIGN_TYPE": {
+              "type": "string",
+              "description": "How members are formed from the selected frame elements (case-insensitive). MANUAL: group the given elements into members; AUTO: automatically detect members. MANUAL combined with SELECTION_TYPE=ALL is rejected.",
+              "enum": [
+                "MANUAL",
+                "AUTO"
+              ]
+            },
+            "SELECTION_TYPE": {
+              "type": "string",
+              "description": "Element selection scope (case-insensitive). ALL: use all elements in the model; SELECTION: use the elements in ELEM_LIST. MANUAL + ALL is not allowed.",
+              "enum": [
+                "ALL",
+                "SELECTION"
+              ],
+              "default": "SELECTION"
+            },
+            "ALLOW_SINGLE": {
+              "type": "boolean",
+              "description": "Whether a member may consist of a single element."
+            }
+          },
+          "required": [
+            "ASSIGN_TYPE",
+            "ALLOW_SINGLE"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "ELEM_LIST": [
+        1,
+        2,
+        3
+      ],
+      "ASSIGN_TYPE": "MANUAL",
+      "SELECTION_TYPE": "SELECTION",
+      "ALLOW_SINGLE": false
+    }
+  }
+}

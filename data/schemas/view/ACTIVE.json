@@ -1,0 +1,59 @@
+{
+  "_group": "view",
+  "_name": "ACTIVE",
+  "uri": "view/ACTIVE",
+  "methods": "POST",
+  "schema": {
+    "ACTIVE": {
+      "type": "object",
+      "description": "Active (ACTIVE). Controls which objects are active in the current view; ACTIVE_MODE selects the operation and drives which of the other fields are consumed.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "properties": {
+            "ACTIVE_MODE": {
+              "type": "string",
+              "enum": ["All", "Active", "Identity"],
+              "description": "Active operation mode (case-insensitive). 'All' activates everything (all other fields ignored); 'Active' activates the objects listed in N_LIST/E_LIST; 'Identity' activates objects matched by IDENTITY_TYPE + IDENTITY_LIST."
+            },
+            "N_LIST": {
+              "type": "array",
+              "items": {"type": "integer"},
+              "description": "[ACTIVE_MODE=Active] Node key list to activate."
+            },
+            "E_LIST": {
+              "type": "array",
+              "items": {"type": "integer"},
+              "description": "[ACTIVE_MODE=Active] Element key list to activate."
+            },
+            "IDENTITY_TYPE": {
+              "type": "string",
+              "enum": ["Story", "Named Plane", "Group", "Boundary Group", "Load Group", "Loading Area Group"],
+              "description": "[ACTIVE_MODE=Identity] Category of identity to match against IDENTITY_LIST (case-insensitive). Required when ACTIVE_MODE=Identity."
+            },
+            "IDENTITY_LIST": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "[ACTIVE_MODE=Identity] Names of the identity targets (stories/named planes/groups/etc.) to activate. Required and must be non-empty when ACTIVE_MODE=Identity."
+            },
+            "STORY_ACTIVE": {
+              "type": "string",
+              "enum": ["Floor", "Above", "Below", "Both"],
+              "description": "[ACTIVE_MODE=Identity, IDENTITY_TYPE=Story] Story activation option (case-insensitive): Floor (this floor), Above, Below, or Both."
+            }
+          },
+          "required": ["ACTIVE_MODE"]
+        }
+      },
+      "required": ["Argument"]
+    }
+  },
+  "example": {
+    "Argument": {
+      "ACTIVE_MODE": "Identity",
+      "IDENTITY_TYPE": "Story",
+      "IDENTITY_LIST": ["1F", "2F"],
+      "STORY_ACTIVE": "Both"
+    }
+  }
+}

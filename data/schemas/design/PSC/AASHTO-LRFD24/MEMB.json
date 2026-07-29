@@ -1,0 +1,59 @@
+{
+  "_group": "design",
+  "_name": "MEMB",
+  "uri": "design/PSC/AASHTO-LRFD24/MEMB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MEMB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "PSC Composite Section Member for Design (MEMB). Fields define the group of elements forming one PSC design member (segment) and its construction-joint type; element list and joint type drive the record.",
+      "properties": {
+        "AELEM": {
+          "type": "array",
+          "description": "Element ID list forming this PSC design member. Every ID must reference an existing element. Requires at least 1 element when ELEM_MEMBER is true, otherwise at least 2 elements.",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "ELEM_MEMBER": {
+          "type": "boolean",
+          "description": "Allow a single-element member. When true, AELEM may contain a single element; when false, AELEM must contain at least 2 elements.",
+          "default": false
+        },
+        "JOINT_TYPE": {
+          "type": "integer",
+          "description": "Construction joint type: 0 = Resin, 1 = Cement. Must be 0 or 1.",
+          "default": 0,
+          "enum": [
+            0,
+            1
+          ]
+        }
+      },
+      "required": [
+        "AELEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "AELEM": [
+          11,
+          12,
+          13
+        ],
+        "ELEM_MEMBER": false,
+        "JOINT_TYPE": 0
+      },
+      "2": {
+        "AELEM": [
+          21
+        ],
+        "ELEM_MEMBER": true,
+        "JOINT_TYPE": 1
+      }
+    }
+  }
+}

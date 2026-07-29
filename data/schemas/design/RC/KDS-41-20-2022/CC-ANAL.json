@@ -1,0 +1,64 @@
+{
+  "_group": "design",
+  "_name": "CC-ANAL",
+  "uri": "design/RC/KDS-41-20-2022/CC-ANAL",
+  "methods": "POST",
+  "schema": {
+    "CC-ANAL": {
+      "type": "object",
+      "description": "RC Column Check Design Analysis (CC-ANAL). Performs the RCS column check design analysis; fields select which elements or sections the analysis targets, driven by PERFORM_TYPE.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Design analysis request body (DESIGN_ANAL).",
+          "properties": {
+            "PERFORM_TYPE": {
+              "type": "string",
+              "description": "Perform Target - All Elements: ALL / By Element No.: ELEMS / By Section No.: SECTIONS. Case-insensitive.",
+              "enum": ["ALL", "ELEMS", "SECTIONS"],
+              "default": "ALL"
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "[PERFORM_TYPE=ELEMS] Element No. Object selecting which elements to analyze.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "description": "Specify Each ID - Element No.",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "description": "[PERFORM_TYPE=SECTIONS] Section No.",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "PERFORM_TYPE": "ELEMS",
+      "ELEMS": {
+        "KEYS": [1, 2, 3],
+        "TO": "1-10",
+        "STRUCTURE_GROUP_NAME": "Column Group"
+      }
+    }
+  }
+}

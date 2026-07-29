@@ -1,0 +1,150 @@
+{
+  "_group": "design",
+  "_name": "HCD-TABLE",
+  "uri": "design/RC/KDS-41-20-2022/HCD-TABLE",
+  "methods": "POST",
+  "schema": {
+    "HCD-TABLE": {
+      "type": "object",
+      "description": "Composite Column Design Result Table (HCD-TABLE). Builds the RC composite-column (HC) design result table; all fields are optional filters/formatting inputs that shape which results appear and how they are displayed.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body for the HC composite column design result table.",
+          "properties": {
+            "RESULT": {
+              "type": "integer",
+              "description": "Result View Option: 0=All 1=OK 2=NG.",
+              "default": 0
+            },
+            "TABLE_NAME": {
+              "type": "string",
+              "description": "Output table title in response."
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Save results to file path."
+            },
+            "UNIT": {
+              "type": "object",
+              "description": "Unit Settings.",
+              "properties": {
+                "FORCE": {
+                  "type": "string",
+                  "description": "Force unit (case-insensitive).",
+                  "enum": [
+                    "KGF",
+                    "TONF",
+                    "N",
+                    "KN",
+                    "LBF",
+                    "KIPS"
+                  ]
+                },
+                "DIST": {
+                  "type": "string",
+                  "description": "Distance unit (case-insensitive).",
+                  "enum": [
+                    "MM",
+                    "CM",
+                    "M",
+                    "IN",
+                    "FT"
+                  ]
+                },
+                "HEAT": {
+                  "type": "string",
+                  "description": "Heat unit (case-insensitive).",
+                  "enum": [
+                    "CAL",
+                    "KCAL",
+                    "J",
+                    "BTU",
+                    "KJ"
+                  ]
+                },
+                "TEMP": {
+                  "type": "string",
+                  "description": "Temperature unit (case-insensitive).",
+                  "enum": [
+                    "C",
+                    "F"
+                  ]
+                }
+              }
+            },
+            "STYLES": {
+              "type": "object",
+              "description": "Number Format Settings.",
+              "properties": {
+                "FORMAT": {
+                  "type": "string",
+                  "description": "Style Format (case-insensitive).",
+                  "enum": [
+                    "DEFAULT",
+                    "SCIENTIFIC",
+                    "FIXED",
+                    "GENERAL"
+                  ]
+                },
+                "PLACE": {
+                  "type": "integer",
+                  "description": "Style Place (number of decimal places)."
+                }
+              }
+            },
+            "COMPONENTS": {
+              "type": "array",
+              "description": "Column filter list. Column names must belong to THIS endpoint's header set (defined in wg_db/DesignTableHeader.h); an unknown name ABORTS the request with \"'<name>' is not a valid COMPONENTS name\" — it is not silently ignored.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "Element Numbers selection.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "description": "Specify Each ID - Element No.",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "RESULT": 0,
+      "TABLE_NAME": "HC Composite Column Design",
+      "UNIT": {
+        "FORCE": "KN",
+        "DIST": "MM"
+      },
+      "STYLES": {
+        "FORMAT": "FIXED",
+        "PLACE": 3
+      },
+      "COMPONENTS": [
+        "Elem",
+        "Section"
+      ],
+      "ELEMS": {
+        "TO": "1-10"
+      }
+    }
+  }
+}

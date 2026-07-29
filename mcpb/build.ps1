@@ -23,8 +23,11 @@ $py = Join-Path $repo ".venv\Scripts\python.exe"
 if (-not (Test-Path $py)) { $py = "python" }
 Write-Host "==> Using interpreter: $py"
 
-Write-Host "==> [1/4] Installing build + runtime deps (requirements, pyinstaller)"
-& $py -m pip install --quiet -r (Join-Path $repo "requirements.txt") pyinstaller
+Write-Host "==> [1/4] Installing locked runtime deps + pyinstaller"
+# constraints.txt is the single pinned lock shared with the Docker build (which
+# uses it as `pip install . -c constraints.txt`). Here it doubles as the install
+# list (`-r`) so the .mcpb bundle gets the exact same versions as the container.
+& $py -m pip install --quiet -r (Join-Path $repo "constraints.txt") pyinstaller
 
 Write-Host "==> [2/4] Cleaning previous build"
 Remove-Item -Recurse -Force $build -ErrorAction SilentlyContinue

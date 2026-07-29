@@ -1,0 +1,106 @@
+{
+  "_group": "db",
+  "_name": "MCON",
+  "uri": "db/MCON",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MCON": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Linear Constraints (MCON). Each ITEMS entry defines one constraint whose per-slave fields depend on TYPE: TYPE=EX uses DOF/COEFF and encodes constrained DOFs in SLAVE_TYPE as a 6-flag string, while TYPE=WD uses WEIGHT and SLAVE_TYPE as a single DOF index number.",
+      "properties": {
+        "ITEMS": {
+          "description": "List of linear-constraint items. Each item is applied to the master node given by the entity key.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the constraint under the master node. 0 (or omitted) lets the program pick/match by condition.",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Boundary group name. Must be an existing boundary group; empty string means no group.",
+                "type": "string",
+                "default": ""
+              },
+              "SLAVE_TYPE": {
+                "description": "Constrained DOF specifier, given as a string. [TYPE=EX] a 6-digit flag string of 0/1 ordered DX DY DZ RX RY RZ (e.g. \"100000\" = DX); the first '1' from the left selects the constrained DOF. [TYPE=WD] a single DOF index number as a string (0=DX,1=DY,2=DZ,3=RX,4=RY,5=RZ).",
+                "type": "string"
+              },
+              "TYPE": {
+                "description": "Constraint type (case-insensitive). \"EX\" = Explicit (uses per-slave DOF and COEFF), \"WD\" = Weighted Displacement (uses per-slave WEIGHT).",
+                "type": "string",
+                "enum": ["EX", "WD"]
+              },
+              "SLAVES": {
+                "description": "Independent (slave) nodes making up the constraint equation.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "NODE_KEY": {
+                      "description": "Node number of the independent node.",
+                      "type": "integer"
+                    },
+                    "COEFF": {
+                      "description": "[TYPE=EX] Constraint coefficient for this slave node's DOF.",
+                      "type": "number",
+                      "default": 0
+                    },
+                    "WEIGHT": {
+                      "description": "[TYPE=WD] Weight factor for this slave node.",
+                      "type": "number",
+                      "default": 0
+                    },
+                    "DOF": {
+                      "description": "[TYPE=EX] DOF index of this slave node (0=DX,1=DY,2=DZ,3=RX,4=RY,5=RZ).",
+                      "type": "integer",
+                      "default": 0
+                    }
+                  },
+                  "required": ["NODE_KEY"]
+                }
+              }
+            },
+            "required": ["SLAVE_TYPE", "TYPE", "SLAVES"]
+          }
+        }
+      },
+      "required": ["ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "21": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "SLAVE_TYPE": "100000",
+            "TYPE": "EX",
+            "SLAVES": [
+              { "NODE_KEY": 22, "COEFF": 0.5, "DOF": 0 },
+              { "NODE_KEY": 23, "COEFF": 0.5, "DOF": 0 }
+            ]
+          }
+        ]
+      },
+      "31": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "SLAVE_TYPE": "0",
+            "TYPE": "WD",
+            "SLAVES": [
+              { "NODE_KEY": 32, "WEIGHT": 1.0 },
+              { "NODE_KEY": 33, "WEIGHT": 2.0 }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

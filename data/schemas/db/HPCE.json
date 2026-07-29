@@ -1,0 +1,100 @@
+{
+  "_group": "db",
+  "_name": "HPCE",
+  "uri": "db/HPCE",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "HPCE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Pipe Cooling (HPCE). Defines a pipe-cooling element for heat-of-hydration analysis; ITEMS lists the node keys cooled by the pipe, and START_STAGE/END_STAGE plus START_TIME/END_TIME define the active window of the coolant inflow.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Pipe cooling name/label.",
+          "type": "string"
+        },
+        "DIAMETER": {
+          "description": "Pipe diameter of the cooling pipe.",
+          "type": "number",
+          "default": 0
+        },
+        "COEF": {
+          "description": "Convection coefficient of the coolant.",
+          "type": "number",
+          "default": 0
+        },
+        "HEAT": {
+          "description": "Specific heat of the coolant.",
+          "type": "number",
+          "default": 0
+        },
+        "DENSITY": {
+          "description": "Weight density of the coolant.",
+          "type": "number",
+          "default": 0
+        },
+        "TEMPER": {
+          "description": "Inlet temperature of the coolant.",
+          "type": "number",
+          "default": 0
+        },
+        "FLOW_RATE": {
+          "description": "Coolant flow rate.",
+          "type": "number",
+          "default": 0
+        },
+        "START_STAGE": {
+          "description": "Construction stage name at which coolant inflow starts. Hard-validated: must resolve to an existing construction stage (HSTG) name, otherwise the request is rejected. Empty string is not accepted on write.",
+          "type": "string",
+          "default": ""
+        },
+        "END_STAGE": {
+          "description": "Construction stage name at which coolant inflow ends. Hard-validated: must resolve to an existing construction stage (HSTG) name, otherwise the request is rejected. Empty string is not accepted on write.",
+          "type": "string",
+          "default": ""
+        },
+        "START_TIME": {
+          "description": "Elapsed time (within START_STAGE) at which coolant inflow starts. Combined with START_STAGE to compute the absolute total time.",
+          "type": "integer",
+          "default": 0
+        },
+        "END_TIME": {
+          "description": "Elapsed time (within END_STAGE) at which coolant inflow ends. Combined with END_STAGE to compute the absolute total time.",
+          "type": "integer",
+          "default": 0
+        },
+        "ITEMS": {
+          "description": "List of node keys (node numbers) cooled by this pipe cooling element.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "PC1",
+        "DIAMETER": 0.025,
+        "COEF": 400,
+        "HEAT": 4.2,
+        "DENSITY": 1000,
+        "TEMPER": 20,
+        "FLOW_RATE": 20,
+        "START_STAGE": "CS1",
+        "END_STAGE": "CS2",
+        "START_TIME": 0,
+        "END_TIME": 0,
+        "ITEMS": [
+          1,
+          2
+        ]
+      }
+    }
+  }
+}

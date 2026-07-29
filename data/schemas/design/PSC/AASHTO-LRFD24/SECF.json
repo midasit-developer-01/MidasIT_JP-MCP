@@ -1,0 +1,172 @@
+{
+  "_group": "design",
+  "_name": "SECF",
+  "uri": "design/PSC/AASHTO-LRFD24/SECF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SECF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Section Stiffness Scale Factor (SECF). Holds a list of stiffness scale-factor items, each scaling section properties (area, shear areas, torsional/bending inertia, weight, warping) for a construction part, optionally with distinct I/J-end factors.",
+      "properties": {
+        "ITEMS": {
+          "type": "array",
+          "description": "List of section stiffness scale-factor items.",
+          "items": {
+            "type": "object",
+            "description": "One section stiffness scale-factor item.",
+            "properties": {
+              "ID": {
+                "type": "integer",
+                "description": "Item serial ID.",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "type": "string",
+                "description": "Name of the boundary group this scale factor is assigned to; empty means no group. Must reference an existing boundary group name when non-empty.",
+                "default": ""
+              },
+              "AREA_SF": {
+                "type": "number",
+                "description": "Cross-sectional area scale factor.",
+                "default": 1
+              },
+              "ASY_SF": {
+                "type": "number",
+                "description": "Axis Y effective shear area scale factor.",
+                "default": 1
+              },
+              "ASZ_SF": {
+                "type": "number",
+                "description": "Axis Z effective shear area scale factor.",
+                "default": 1
+              },
+              "IXX_SF": {
+                "type": "number",
+                "description": "Torsional resistance scale factor.",
+                "default": 1
+              },
+              "IYY_SF": {
+                "type": "number",
+                "description": "Axis Y area moment of inertia scale factor.",
+                "default": 1
+              },
+              "IZZ_SF": {
+                "type": "number",
+                "description": "Axis Z area moment of inertia scale factor.",
+                "default": 1
+              },
+              "WGT_SF": {
+                "type": "number",
+                "description": "Weight scale factor.",
+                "default": 1
+              },
+              "W_SF": {
+                "type": "number",
+                "description": "Warping scale factor.",
+                "default": 1
+              },
+              "IPART": {
+                "type": "integer",
+                "description": "Construction stage part: 1 = before (bBefore), 2 = after (bAfter), 3 = both before and after.",
+                "default": 1
+              },
+              "bDiffIJ": {
+                "type": "boolean",
+                "description": "Whether the i-end and j-end use different scale factors (CIVIL only). When true, the J1..J8 fields carry the j-end factors.",
+                "default": true
+              },
+              "J1": {
+                "type": "number",
+                "description": "[bDiffIJ=true] J-end area scale factor (CIVIL only).",
+                "default": 1
+              },
+              "J2": {
+                "type": "number",
+                "description": "[bDiffIJ=true] J-end axis Y effective shear area scale factor (CIVIL only).",
+                "default": 1
+              },
+              "J3": {
+                "type": "number",
+                "description": "[bDiffIJ=true] J-end axis Z effective shear area scale factor (CIVIL only).",
+                "default": 1
+              },
+              "J4": {
+                "type": "number",
+                "description": "[bDiffIJ=true] J-end torsional resistance scale factor (CIVIL only).",
+                "default": 1
+              },
+              "J5": {
+                "type": "number",
+                "description": "[bDiffIJ=true] J-end axis Y area moment of inertia scale factor (CIVIL only).",
+                "default": 1
+              },
+              "J6": {
+                "type": "number",
+                "description": "[bDiffIJ=true] J-end axis Z area moment of inertia scale factor (CIVIL only).",
+                "default": 1
+              },
+              "J7": {
+                "type": "number",
+                "description": "[bDiffIJ=true] J-end weight scale factor (CIVIL only).",
+                "default": 1
+              },
+              "J8": {
+                "type": "number",
+                "description": "[bDiffIJ=true] J-end warping scale factor (CIVIL only).",
+                "default": 1
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "AREA_SF": 1.0,
+            "ASY_SF": 1.0,
+            "ASZ_SF": 1.0,
+            "IXX_SF": 0.5,
+            "IYY_SF": 1.0,
+            "IZZ_SF": 1.0,
+            "WGT_SF": 1.0,
+            "W_SF": 1.0,
+            "IPART": 1,
+            "bDiffIJ": false
+          },
+          {
+            "ID": 2,
+            "GROUP_NAME": "",
+            "AREA_SF": 1.0,
+            "ASY_SF": 1.0,
+            "ASZ_SF": 1.0,
+            "IXX_SF": 0.7,
+            "IYY_SF": 0.8,
+            "IZZ_SF": 0.8,
+            "WGT_SF": 1.0,
+            "W_SF": 1.0,
+            "IPART": 3,
+            "bDiffIJ": true,
+            "J1": 1.0,
+            "J2": 1.0,
+            "J3": 1.0,
+            "J4": 0.6,
+            "J5": 0.9,
+            "J6": 0.9,
+            "J7": 1.0,
+            "J8": 1.0
+          }
+        ]
+      }
+    }
+  }
+}

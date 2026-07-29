@@ -1,0 +1,58 @@
+{
+  "_group": "design",
+  "_name": "LENG",
+  "uri": "design/STEEL/JAPAN-ROAD-II-H24/LENG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LENG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Unbraced Length (LENG). Unbraced lengths for Japan Road (Steel, Part II) steel design checks assigned per element; all fields are optional and default to 0 or false.",
+      "properties": {
+        "LY": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced Length Ly."
+        },
+        "LZ": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced Length Lz."
+        },
+        "LB": {
+          "type": "number",
+          "default": 0,
+          "description": "Laterally Unbraced Length."
+        },
+        "bNOTUSE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Do not consider the laterally unbraced length."
+        },
+        "bAUTOCALC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate the unbraced length by Code."
+        },
+        "LT": {
+          "type": "number",
+          "default": 0,
+          "description": "Torsional Unbraced Length."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LY": 3.5,
+        "LZ": 3.5,
+        "LB": 3.5,
+        "bNOTUSE": false,
+        "bAUTOCALC": false,
+        "LT": 3.5
+      }
+    }
+  }
+}

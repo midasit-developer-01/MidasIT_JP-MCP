@@ -1,0 +1,22 @@
+{
+  "_group": "doc",
+  "_name": "EXIT",
+  "uri": "doc/EXIT",
+  "methods": "POST",
+  "schema": {
+    "EXIT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Exit Program (EXIT). Quits the MIDAS application; the request body carries no fields (DTO_EMPTY).",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "No request body is required for this endpoint (DTO_EMPTY)."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

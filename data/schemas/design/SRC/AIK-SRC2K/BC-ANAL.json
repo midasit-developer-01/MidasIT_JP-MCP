@@ -1,0 +1,66 @@
+{
+  "_group": "design",
+  "_name": "BC-ANAL",
+  "uri": "design/SRC/AIK-SRC2K/BC-ANAL",
+  "methods": "POST",
+  "schema": {
+    "BC-ANAL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "SRC Beam-Column Design Analysis (BC-ANAL). Runs the SRC beam member check design analysis; the Argument selects which members are analyzed based on PERFORM_TYPE.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "SRC beam-column design analysis request (DESIGN_ANAL). All fields optional; if omitted the analysis defaults to PERFORM_TYPE=ALL.",
+          "properties": {
+            "PERFORM_TYPE": {
+              "type": "string",
+              "enum": ["ALL", "ELEMS", "SECTIONS"],
+              "default": "ALL",
+              "description": "Perform Target - All Elements: ALL / By Element No.: ELEMS / By Section No.: SECTIONS. Enum matching is case-insensitive."
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "[PERFORM_TYPE=ELEMS] Element No. selection object (DESIGN_ANAL_ELEM_SELECTION).",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "description": "Specify Each ID - Element No.",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)"
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name"
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "description": "[PERFORM_TYPE=SECTIONS] Section No.",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "PERFORM_TYPE": "ELEMS",
+      "ELEMS": {
+        "KEYS": [1, 2, 3],
+        "TO": "5-10",
+        "STRUCTURE_GROUP_NAME": "SRC_Beams"
+      },
+      "SECTIONS": [1, 2]
+    }
+  }
+}

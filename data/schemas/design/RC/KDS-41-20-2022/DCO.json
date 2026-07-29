@@ -1,0 +1,227 @@
+{
+  "_group": "design",
+  "_name": "DCO",
+  "uri": "design/RC/KDS-41-20-2022/DCO",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "DCO": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Code - Concrete (DCO). Fields are driven by DESIGN_CD plus the seismic and torsion toggles: SEISMIC_PROV enables the nested SEISMIC block, TORS_DES enables TORS_RDCT_FACT, and within SEISMIC the FRAME_TYPE and BEAM_COL_JNT_DES flags gate the SHEAR_WALL, SHEAR_DES and JOINT sub-structs. All enums are case-insensitive and use their serialized wire strings.",
+      "properties": {
+        "DESIGN_CD": {
+          "type": "string",
+          "enum": ["KDS 41 20 : 2022"],
+          "description": "Concrete design code standard (case-insensitive). Only KDS 41 20 : 2022 is supported by this handler."
+        },
+        "SEISMIC_PROV": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply Special Provisions for Seismic Design. When true, the nested SEISMIC parameter block is applied."
+        },
+        "TORS_DES": {
+          "type": "boolean",
+          "default": false,
+          "description": "Torsion Design. When true, TORS_RDCT_FACT is applied."
+        },
+        "MOM_REDIST_FACT": {
+          "type": "number",
+          "default": 1.0,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "description": "Moment Redistribution Factor for Beam. Must satisfy 0 < value <= 1."
+        },
+        "MOM_CALC_MTHD": {
+          "type": "string",
+          "enum": ["Equivalent", "Each"],
+          "default": "Equivalent",
+          "description": "Moment Calculation Method for Beam (case-insensitive)."
+        },
+        "USE_SUBDIV_FORCE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use Subdivided Force for Beam Assigned as Member."
+        },
+        "EXP_COND": {
+          "type": "string",
+          "enum": ["Dry", "etc"],
+          "default": "Dry",
+          "description": "Exposure Condition (kcr) (case-insensitive)."
+        },
+        "PM_CRV_CALC": {
+          "type": "string",
+          "enum": ["KeepPConstant", "KeepMPConstant"],
+          "default": "KeepMPConstant",
+          "description": "P-M Curve Calculation Method (case-insensitive)."
+        },
+        "UG_LC": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use Under Ground Load Combination Type for Under Ground Members."
+        },
+        "CONC_STRS_STRN": {
+          "type": "string",
+          "enum": ["Equivalent", "Parabola"],
+          "default": "Equivalent",
+          "description": "Concrete Stress-Strain Type for Bending (case-insensitive)."
+        },
+        "FS_MAIN_BAR": {
+          "type": "string",
+          "enum": ["2/3fy", "ByProgram"],
+          "default": "2/3fy",
+          "description": "fs of Main bar in Beam Design (case-insensitive)."
+        },
+        "SEISMIC": {
+          "type": "object",
+          "description": "[SEISMIC_PROV=true] Seismic Design Parameter. Applied only when SEISMIC_PROV is true.",
+          "properties": {
+            "FRAME_TYPE": {
+              "type": "string",
+              "enum": ["Special", "Intermediate", "Ordinary"],
+              "default": "Special",
+              "description": "Select Frame Type (case-insensitive)."
+            },
+            "STRONG_COL_WEAK_LAST": {
+              "type": "boolean",
+              "default": true,
+              "description": "Consider strong column-weak beam on last floor."
+            },
+            "SHEAR_WALL": {
+              "type": "object",
+              "description": "[FRAME_TYPE=Special or Intermediate] Shear Wall Type. Applied only when FRAME_TYPE is Special or Intermediate.",
+              "properties": {
+                "SPEC_RC_WALL": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Special RC Structural Wall."
+                },
+                "BDRY_ELEM_MTHD": {
+                  "type": "string",
+                  "enum": ["Displacement", "Stress"],
+                  "default": "Displacement",
+                  "description": "[SPEC_RC_WALL=true] Boundary Element Method (case-insensitive). Applied only when SPEC_RC_WALL is true."
+                },
+                "DEFL_AMP_FACT": {
+                  "type": "number",
+                  "enum": [1.25, 1.5, 2.0, 2.5, 3.0, 3.25, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5],
+                  "default": 4.5,
+                  "description": "[SPEC_RC_WALL=true AND BDRY_ELEM_MTHD=Displacement] Deflection Amplification Factor (Cd). Must be one of the allowed discrete values."
+                },
+                "IMP_FACT": {
+                  "type": "number",
+                  "enum": [1.0, 1.2, 1.5],
+                  "default": 1.2,
+                  "description": "[SPEC_RC_WALL=true AND BDRY_ELEM_MTHD=Displacement] Important Factor (Ie). Must be one of the allowed discrete values."
+                }
+              },
+              "required": []
+            },
+            "SHEAR_DES": {
+              "type": "object",
+              "description": "[FRAME_TYPE=Special or Intermediate] Shear for Design. Applied only when FRAME_TYPE is Special or Intermediate.",
+              "properties": {
+                "MTHD": {
+                  "type": "string",
+                  "enum": ["MAX", "MIN", "Ve1", "Ve2"],
+                  "default": "MIN",
+                  "description": "Shear design method (case-insensitive)."
+                },
+                "R": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "default": 0.0,
+                  "description": "[FRAME_TYPE=Special] R*Vc(a1*Sigma(Mpr)/L) >= max(Ve1,Ve2)/2, R. Must be >= 0."
+                },
+                "A1": {
+                  "type": "number",
+                  "default": 1.0,
+                  "description": "[MTHD=MAX, MIN or Ve1] Ve1 = Vg + a1*Sigma(Mn)/L, a1. Ignored when MTHD is Ve2."
+                },
+                "A2": {
+                  "type": "number",
+                  "default": 2.0,
+                  "description": "[MTHD=MAX, MIN or Ve2] Ve2 = Vg + a2*Veq, a2. Ignored when MTHD is Ve1."
+                }
+              },
+              "required": []
+            },
+            "BEAM_COL_JNT_DES": {
+              "type": "boolean",
+              "default": false,
+              "description": "Beam-Column Joint Design."
+            },
+            "JOINT": {
+              "type": "object",
+              "description": "[FRAME_TYPE=Special or Intermediate AND BEAM_COL_JNT_DES=true] Beam-Column Joint Configuration.",
+              "properties": {
+                "EXCL_MEM_TYPES": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["SUBBEAM", "CANTIL", "UGBEAMCOL"]
+                  },
+                  "default": ["SUBBEAM", "CANTIL", "UGBEAMCOL"],
+                  "description": "Member Types to be excluded in Seismic Design (case-insensitive tokens). When omitted, all three are excluded."
+                },
+                "CHK_POS": {
+                  "type": "string",
+                  "enum": ["Top", "Bottom"],
+                  "default": "Bottom",
+                  "description": "[FRAME_TYPE=Special] Select Check Position (case-insensitive)."
+                }
+              },
+              "required": []
+            }
+          },
+          "required": []
+        },
+        "TORS_RDCT_FACT": {
+          "type": "number",
+          "minimum": 0.0,
+          "default": 1.0,
+          "description": "[TORS_DES=true] Torsion Reduction Factor for Beam. Must be >= 0."
+        }
+      },
+      "required": ["DESIGN_CD"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DESIGN_CD": "KDS 41 20 : 2022",
+        "SEISMIC_PROV": true,
+        "TORS_DES": true,
+        "MOM_REDIST_FACT": 0.9,
+        "MOM_CALC_MTHD": "Equivalent",
+        "USE_SUBDIV_FORCE": false,
+        "EXP_COND": "Dry",
+        "PM_CRV_CALC": "KeepMPConstant",
+        "UG_LC": true,
+        "CONC_STRS_STRN": "Equivalent",
+        "FS_MAIN_BAR": "2/3fy",
+        "TORS_RDCT_FACT": 1.0,
+        "SEISMIC": {
+          "FRAME_TYPE": "Special",
+          "STRONG_COL_WEAK_LAST": true,
+          "SHEAR_WALL": {
+            "SPEC_RC_WALL": true,
+            "BDRY_ELEM_MTHD": "Displacement",
+            "DEFL_AMP_FACT": 4.5,
+            "IMP_FACT": 1.2
+          },
+          "SHEAR_DES": {
+            "MTHD": "MIN",
+            "R": 0.0,
+            "A1": 1.0,
+            "A2": 2.0
+          },
+          "BEAM_COL_JNT_DES": true,
+          "JOINT": {
+            "EXCL_MEM_TYPES": ["SUBBEAM", "CANTIL", "UGBEAMCOL"],
+            "CHK_POS": "Bottom"
+          }
+        }
+      }
+    }
+  }
+}

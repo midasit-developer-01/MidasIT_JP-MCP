@@ -1,0 +1,183 @@
+{
+  "_group": "db",
+  "_name": "EPST",
+  "uri": "db/EPST",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EPST": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Static Earth Pressure (EPST). DIR selects XY (uses ANGLE) vs NORMAL (uses IN_PT), and SEL_TYPE selects GRUP (uses LOADING_AREA_GROUP) vs ELEM (uses ELEM_TYPE with ELEM_LIST/NODE_LIST) to drive which fields apply.",
+      "properties": {
+        "LOADCASE": {
+          "description": "Static load case name. Must match an existing load case (STLD) name; validated at runtime.",
+          "type": "string"
+        },
+        "DIR": {
+          "description": "Load direction. XY applies the pressure horizontally (uses ANGLE); NORMAL applies it normal to the surface (uses IN_PT). Case-insensitive.",
+          "type": "string",
+          "enum": ["XY", "NORMAL"]
+        },
+        "ANGLE": {
+          "description": "[DIR=XY] Horizontal direction angle of the earth pressure.",
+          "type": "number",
+          "default": 0
+        },
+        "IN_PT": {
+          "description": "[DIR=NORMAL] Inner reference point (x, y, z) used to orient the pressure normal to the surface.",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3,
+          "default": []
+        },
+        "SF": {
+          "description": "Scale factor applied to the earth pressure load.",
+          "type": "number"
+        },
+        "EP_TYPE": {
+          "description": "Static earth pressure type. AT_REST or ACTIVE. Case-insensitive.",
+          "type": "string",
+          "enum": ["AT_REST", "ACTIVE"]
+        },
+        "SURCHARGE_LOAD": {
+          "description": "Surcharge load value.",
+          "type": "number"
+        },
+        "WATER_LEVEL": {
+          "description": "Water level (ground water table elevation).",
+          "type": "number"
+        },
+        "SOIL_PROP": {
+          "description": "Soil property (POSP) name. Must match an existing soil property; validated at runtime.",
+          "type": "string"
+        },
+        "SEL_TYPE": {
+          "description": "Selection type for the loading area. GRUP uses a loading area group (LOADING_AREA_GROUP); ELEM uses explicitly selected elements/nodes (ELEM_TYPE, ELEM_LIST, NODE_LIST). Case-insensitive.",
+          "type": "string",
+          "enum": ["GRUP", "ELEM"]
+        },
+        "ELEM_TYPE": {
+          "description": "[SEL_TYPE=ELEM] Element type of the selected loading elements. FRAME applies loads to frame element nodes; PLANAR applies to planar element nodes. Each element in ELEM_LIST must match this type at runtime. Case-insensitive.",
+          "type": "string",
+          "enum": ["FRAME", "PLANAR"]
+        },
+        "NODE_LIST": {
+          "description": "[SEL_TYPE=ELEM] Node numbers defining the loading area. Each node must exist; validated at runtime.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "default": []
+        },
+        "ELEM_LIST": {
+          "description": "[SEL_TYPE=ELEM] Element numbers defining the loading area. Each element must exist and match ELEM_TYPE; validated at runtime.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "default": []
+        },
+        "LOADING_AREA_GROUP": {
+          "description": "[SEL_TYPE=GRUP] Loading area group name. Must reference an existing loading area group with at least one loading area plane; validated at runtime.",
+          "type": "string",
+          "default": ""
+        },
+        "PRES_PROFILE_ITEMS": {
+          "description": "Pressure profile: list of level vs. pressure entries describing the earth pressure distribution.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LEVEL": {
+                "description": "Elevation level of this profile point.",
+                "type": "number"
+              },
+              "SOIL_PRES": {
+                "description": "Soil pressure at this level.",
+                "type": "number"
+              },
+              "ADD_PRES": {
+                "description": "Additional pressure at this level.",
+                "type": "number"
+              }
+            },
+            "required": ["LEVEL", "SOIL_PRES", "ADD_PRES"]
+          },
+          "default": []
+        }
+      },
+      "required": [
+        "LOADCASE",
+        "DIR",
+        "SF",
+        "EP_TYPE",
+        "SURCHARGE_LOAD",
+        "WATER_LEVEL",
+        "SOIL_PROP",
+        "SEL_TYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LOADCASE": "HsX(+)",
+        "DIR": "XY",
+        "ANGLE": 0,
+        "SF": 1,
+        "EP_TYPE": "AT_REST",
+        "SURCHARGE_LOAD": 16,
+        "WATER_LEVEL": -4.7,
+        "SOIL_PROP": "Soil-1",
+        "SEL_TYPE": "GRUP",
+        "LOADING_AREA_GROUP": "AreaGroup-1",
+        "PRES_PROFILE_ITEMS": [
+          {
+            "LEVEL": 6,
+            "SOIL_PRES": 8,
+            "ADD_PRES": 0
+          },
+          {
+            "LEVEL": -1,
+            "SOIL_PRES": 67.5,
+            "ADD_PRES": 0
+          },
+          {
+            "LEVEL": -4.7,
+            "SOIL_PRES": 98.95,
+            "ADD_PRES": 0
+          }
+        ]
+      },
+      "2": {
+        "LOADCASE": "HsY(+)",
+        "DIR": "NORMAL",
+        "IN_PT": [5000, 0, 0],
+        "SF": 1,
+        "EP_TYPE": "ACTIVE",
+        "SURCHARGE_LOAD": 10,
+        "WATER_LEVEL": -3.5,
+        "SOIL_PROP": "Soil-1",
+        "SEL_TYPE": "ELEM",
+        "ELEM_TYPE": "PLANAR",
+        "ELEM_LIST": [101, 102, 103],
+        "NODE_LIST": [1, 2, 3, 4],
+        "PRES_PROFILE_ITEMS": [
+          {
+            "LEVEL": 0,
+            "SOIL_PRES": 12,
+            "ADD_PRES": 2
+          },
+          {
+            "LEVEL": -5,
+            "SOIL_PRES": 80,
+            "ADD_PRES": 2
+          }
+        ]
+      }
+    }
+  }
+}

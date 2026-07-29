@@ -1,0 +1,45 @@
+{
+  "_group": "db",
+  "_name": "CGLP",
+  "uri": "db/CGLP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CGLP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "General Link Property Change (CGLP). Reassigns the property (and optional boundary group) of an existing General Link identified by GLINK_KEY; the record key is the General Link number.",
+      "properties": {
+        "GLINK_KEY": {
+          "description": "General Link number (ID) whose property is being changed. Must reference an existing General Link; the handler forces this to the record key, so it must match the id key of the entry.",
+          "type": "integer"
+        },
+        "CHANGE_PROPERTY_NAME": {
+          "description": "Name of the General Link Property (NLLP) to assign. Must match an existing General Link Property name, otherwise the request is rejected as an invalid name.",
+          "type": "string"
+        },
+        "GROUP_NAME": {
+          "description": "Boundary Group name (BNGR) to assign the General Link to. Empty string means no boundary group; any non-empty value must match an existing boundary group name, otherwise the request is rejected as an invalid name.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "required": [
+        "GLINK_KEY",
+        "CHANGE_PROPERTY_NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "GLINK_KEY": 1,
+        "CHANGE_PROPERTY_NAME": "GL09",
+        "GROUP_NAME": "Service"
+      },
+      "2": {
+        "GLINK_KEY": 2,
+        "CHANGE_PROPERTY_NAME": "GL09"
+      }
+    }
+  }
+}

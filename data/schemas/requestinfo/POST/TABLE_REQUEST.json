@@ -1,0 +1,21 @@
+{
+  "_group": "requestinfo",
+  "_name": "TABLE_REQUEST",
+  "uri": "requestinfo/POST/TABLE_REQUEST",
+  "methods": "POST",
+  "schema": {
+    "TABLE_REQUEST": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Table Request Info (TABLE_REQUEST). The request DTO is DTO_EMPTY, so no request body fields are consumed; send an empty Argument object.",
+      "properties": {
+        "Argument": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

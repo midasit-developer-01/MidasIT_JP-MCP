@@ -1,0 +1,113 @@
+{
+  "_group": "db",
+  "_name": "LCOM-STLCOMP",
+  "uri": "db/LCOM-STLCOMP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LCOM-STLCOMP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Steel Composite Load Combination (LCOM-STLCOMP). One entry per combination id; each combination carries a list of (load case, factor) terms in vCOMB, and the summation method is driven by iTYPE.",
+      "type": "object",
+      "properties": {
+        "NO": {
+          "description": "[ReadOnly] Combination number/id, assigned by the program. Ignored on write.",
+          "type": "integer"
+        },
+        "NAME": {
+          "description": "Combination name. Must be unique when adding a new combination.",
+          "type": "string"
+        },
+        "ACTIVE": {
+          "description": "Active type of the combination. Typical values: \"ACTIVE\", \"INACTIVE\", \"STRENGTH\", \"SERVICE\". Converted internally via the active-type map.",
+          "type": "string",
+          "default": "ACTIVE"
+        },
+        "bES": {
+          "description": "Elastic-stage flag (E). Applies only to the Concrete load-combination type; ignored for the STLCOMP (steel composite) type.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCB": {
+          "description": "[ReadOnly] Min/max/combination result-type flag derived by the program (General: false, Min/Max/All: true). Ignored on write.",
+          "type": "boolean"
+        },
+        "iTYPE": {
+          "description": "Summation method. Add: 0, Envelope: 1, ABS: 2, SRSS: 3.",
+          "type": "integer",
+          "default": 0
+        },
+        "DESC": {
+          "description": "Description text for the combination.",
+          "type": "string",
+          "default": ""
+        },
+        "iSERV_TYPE": {
+          "description": "EC service type code. Reserved/unused on the write path in the current handler.",
+          "type": "integer"
+        },
+        "nLCOMTYPE": {
+          "description": "EC load-combination type code. Reserved/unused on the write path in the current handler.",
+          "type": "integer"
+        },
+        "nSEISTYPE": {
+          "description": "EC seismic type code. Reserved/unused on the write path in the current handler.",
+          "type": "integer"
+        },
+        "vCOMB": {
+          "description": "List of combination terms. Each term references a load case by analysis type and name with a scaling factor.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ANAL": {
+                "description": "Analysis type of the referenced load case (case-insensitive). ST: Static, RS: Response Spectrum, TH: Time History, MV: Moving Load, SM: Settlement, ENVL: Envelope, CB: General Combination, CS: Construction Stage, ES: Elastic Stage, and related CB*/N* variants.",
+                "type": "string",
+                "enum": ["ST", "RS", "TH", "MV", "SM", "ENVL", "CB", "CBS", "CBC", "CBF", "CBR", "PO", "CS", "ES", "GI", "CN", "CBA", "CBSC", "CBCF", "CBSM", "CBLN", "NRS", "NES"]
+              },
+              "LCNAME": {
+                "description": "Load case name. Must resolve to an existing load case of the given ANAL type.",
+                "type": "string"
+              },
+              "FACTOR": {
+                "description": "Scale factor applied to the referenced load case.",
+                "type": "number"
+              }
+            },
+            "required": ["ANAL", "LCNAME", "FACTOR"]
+          }
+        }
+      },
+      "required": ["NAME", "vCOMB"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "scLCB1",
+        "ACTIVE": "STRENGTH",
+        "iTYPE": 0,
+        "DESC": "scLCB1",
+        "vCOMB": [
+          {
+            "ANAL": "CS",
+            "LCNAME": "DeadLoad",
+            "FACTOR": 1.25
+          }
+        ]
+      },
+      "2": {
+        "NAME": "scLCB2",
+        "ACTIVE": "SERVICE",
+        "iTYPE": 0,
+        "DESC": "scLCB2",
+        "vCOMB": [
+          {
+            "ANAL": "CS",
+            "LCNAME": "DeadLoad",
+            "FACTOR": 1
+          }
+        ]
+      }
+    }
+  }
+}

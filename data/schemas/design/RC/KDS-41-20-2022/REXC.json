@@ -1,0 +1,29 @@
+{
+  "_group": "design",
+  "_name": "REXC",
+  "uri": "design/RC/KDS-41-20-2022/REXC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "REXC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "RC Exposure Condition (REXC). The exposure condition classifying the environment for reinforced concrete design.",
+      "properties": {
+        "EXPOSURE": {
+          "type": "string",
+          "enum": ["Dry", "Etc"],
+          "description": "Exposure Condition. Case-insensitive enum (wire values). Dry = dry environment; Etc = other exposure environment."
+        }
+      },
+      "required": ["EXPOSURE"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "EXPOSURE": "Dry"
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "_group": "ope",
+  "_name": "POSP",
+  "uri": "ope/POSP",
+  "methods": "POST",
+  "schema": {
+    "POSP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Calculate Soil Spring Property Kh (POSP). Drives Kh calculation for one or more existing soil spring properties (POSP) identified by ID; each entry selects the Vs evaluation method and layer configuration used to compute the horizontal subgrade reaction coefficient.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body wrapper (OPE_POSP_REQUEST).",
+          "properties": {
+            "CALC_KH": {
+              "type": "array",
+              "description": "Calculation Coeff. List of Kh calculation requests, one per target POSP property.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ID": {
+                    "type": "integer",
+                    "description": "Key (ID) of an existing POSP soil spring property to recalculate Kh for."
+                  },
+                  "METHOD": {
+                    "type": "string",
+                    "description": "Vs evaluation method (case-insensitive). VS_LV: use Vs by level for each soil layer. VS_AVG: use averaged Vs.",
+                    "enum": ["VS_LV", "VS_AVG"],
+                    "default": "VS_LV"
+                  },
+                  "LAYERS": {
+                    "type": "string",
+                    "description": "Layer configuration for averaging (case-insensitive). SINGLE: single layer. DOUBLE: two layers split at SPLIT_LV.",
+                    "enum": ["SINGLE", "DOUBLE"],
+                    "default": "SINGLE"
+                  },
+                  "SPLIT_LV": {
+                    "type": "number",
+                    "description": "[LAYERS=DOUBLE] Top Level of 2nd Layer. Level at which the ground is split into the second layer; only consumed when LAYERS is DOUBLE.",
+                    "default": 0
+                  }
+                },
+                "required": ["ID"]
+              }
+            }
+          },
+          "required": ["CALC_KH"]
+        }
+      },
+      "required": ["Argument"]
+    }
+  },
+  "example": {
+    "Argument": {
+      "CALC_KH": [
+        {
+          "ID": 1,
+          "METHOD": "VS_AVG",
+          "LAYERS": "DOUBLE",
+          "SPLIT_LV": -5.0
+        },
+        {
+          "ID": 2,
+          "METHOD": "VS_LV",
+          "LAYERS": "SINGLE"
+        }
+      ]
+    }
+  }
+}

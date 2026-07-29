@@ -1,0 +1,103 @@
+{
+  "_group": "db",
+  "_name": "FRLS",
+  "uri": "db/FRLS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "FRLS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Beam End Release (FRLS). Keyed by element number; each element carries an ITEMS array where every entry defines the i-end/j-end release flags and partial-fixity spring values for one boundary-group release condition.",
+      "type": "object",
+      "properties": {
+        "ITEMS": {
+          "description": "Array of beam end release conditions applied to the element. Each item is a distinct release condition (optionally tied to a boundary group via GROUP_NAME).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of this release condition within the element. If it matches an existing condition it is updated; otherwise a new serial is used. Default 0 (auto).",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Boundary Group name this release condition belongs to. Empty means no group. If non-empty it must reference an existing boundary group (hard-validated on set).",
+                "type": "string",
+                "default": ""
+              },
+              "bVALUE": {
+                "description": "Input method for the release. false = Relative release (release flag only); true = Value (partial fixity spring values in VALUE_I/VALUE_J are used).",
+                "type": "boolean",
+                "default": false
+              },
+              "FLAG_I": {
+                "description": "Release flags for the i-node, a string of exactly 7 characters ordered [Fx, Fy, Fz, Mx, My, Mz, Mb]. Each character marks whether that DOF is released. Length must be exactly 7 (hard-validated).",
+                "type": "string",
+                "minLength": 7,
+                "maxLength": 7
+              },
+              "VALUE_I": {
+                "description": "Partial fixity spring values for the i-node, ordered [Fx, Fy, Fz, Mx, My, Mz, Mb]. Used when bVALUE is true.",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 7,
+                "maxItems": 7,
+                "default": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+              },
+              "FLAG_J": {
+                "description": "Release flags for the j-node, a string of exactly 7 characters ordered [Fx, Fy, Fz, Mx, My, Mz, Mb]. Each character marks whether that DOF is released. Length must be exactly 7 (hard-validated).",
+                "type": "string",
+                "minLength": 7,
+                "maxLength": 7
+              },
+              "VALUE_J": {
+                "description": "Partial fixity spring values for the j-node, ordered [Fx, Fy, Fz, Mx, My, Mz, Mb]. Used when bVALUE is true.",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 7,
+                "maxItems": 7,
+                "default": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+              }
+            },
+            "required": ["FLAG_I", "FLAG_J"]
+          }
+        }
+      },
+      "required": ["ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "9": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "Service",
+            "bVALUE": true,
+            "FLAG_I": "1111111",
+            "VALUE_I": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7],
+            "FLAG_J": "1111111",
+            "VALUE_J": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7]
+          }
+        ]
+      },
+      "10": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "bVALUE": false,
+            "FLAG_I": "0000011",
+            "VALUE_I": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            "FLAG_J": "0000011",
+            "VALUE_J": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "_group": "ope",
+  "_name": "API-RECORDER-SAVE",
+  "uri": "ope/API-RECORDER-SAVE",
+  "methods": "POST",
+  "schema": {
+    "API-RECORDER-SAVE": {
+      "type": "object",
+      "description": "API Recorder Save (API-RECORDER-SAVE). Saves the recorded sequence of API requests to a file; the single string Argument is the destination file path (a file open failure raises an error).",
+      "properties": {
+        "Argument": {
+          "type": "string",
+          "description": "Destination file path to which the recorded API request sequence is saved."
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": "C:/Temp/api_recorder.json"
+  }
+}

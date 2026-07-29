@@ -1,0 +1,35 @@
+{
+  "_group": "db",
+  "_name": "STDG",
+  "uri": "db/STDG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "STDG": {
+      "type": "object",
+      "description": "Story Diaphragm Group (STDG). Associates a story (the id key = story key) with a boundary group; both the story name and the target boundary group name are required.",
+      "properties": {
+        "STORY_NAME": {
+          "type": "string",
+          "description": "Story name of the diaphragm group. The id key is the story key; on GET this is read from the story definition."
+        },
+        "GROUP_NAME": {
+          "type": "string",
+          "description": "Boundary group name to associate with the story. Must reference an existing boundary group (BNGR); an empty/unknown name is rejected at runtime with a WRONG_FIELD error."
+        }
+      },
+      "required": [
+        "STORY_NAME",
+        "GROUP_NAME"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "STORY_NAME": "1F",
+        "GROUP_NAME": "Diaphragm Group 1"
+      }
+    }
+  }
+}

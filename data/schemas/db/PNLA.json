@@ -1,0 +1,144 @@
+{
+  "_group": "db",
+  "_name": "PNLA",
+  "uri": "db/PNLA",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PNLA": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Plane Load (PNLA). A static plane load applied to plate or solid elements; ELEM_TYPE selects the element family (PLATE vs SOLID) and SELECT_TYPE selects how target elements are gathered, together driving which optional fields (FACE_NO, ELEM_GROUP, bDEFINE_NODE, CONNECT_NODE) are meaningful.",
+      "type": "object",
+      "properties": {
+        "LCNAME": {
+          "description": "Load Case Name of the static load case this plane load belongs to.",
+          "type": "string"
+        },
+        "LOAD_GROUP": {
+          "description": "Load Group Name. Optional; if empty, the load is not assigned to a load group.",
+          "type": "string",
+          "default": ""
+        },
+        "PNLD_KEY": {
+          "description": "Plane Load Type Key referencing a defined plane-load type (PNLD) entry.",
+          "type": "integer"
+        },
+        "ELEM_TYPE": {
+          "description": "Element Type (case-insensitive). PLATE = plate elements, SOLID = solid elements. Drives applicability of FACE_NO (SOLID) and bDEFINE_NODE/CONNECT_NODE (PLATE).",
+          "type": "string",
+          "enum": ["PLATE", "SOLID"]
+        },
+        "POINT_ORIGIN": {
+          "description": "Origin point of the loading plane as [x, y, z].",
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "AXIS_X": {
+          "description": "Point defining the plane local X axis as [x, y, z].",
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "AXIS_Y": {
+          "description": "Point defining the plane local Y axis (on the x-y plane) as [x, y, z].",
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "TOL": {
+          "description": "Tolerance used when selecting elements on/near the loading plane.",
+          "type": "number"
+        },
+        "SELECT_TYPE": {
+          "description": "Element Selection Type (case-insensitive). ON_PLANE = elements lying on the loading plane, IN_GROUP = elements in a named element group (see ELEM_GROUP).",
+          "type": "string",
+          "enum": ["ON_PLANE", "IN_GROUP"]
+        },
+        "ELEM_GROUP": {
+          "description": "[SELECT_TYPE=IN_GROUP] Element Group Name whose elements receive the load. Used only when SELECT_TYPE is IN_GROUP.",
+          "type": "string"
+        },
+        "FACE_NO": {
+          "description": "[ELEM_TYPE=SOLID] Solid face number (1~6) to which the load is applied. Used only for SOLID elements.",
+          "type": "integer"
+        },
+        "LOAD_DIR": {
+          "description": "Load Direction (case-insensitive). NORMAL_PLANE = normal to the loading plane, NORMAL_ELEM = normal to the element, GLOBAL_X / GLOBAL_Y / GLOBAL_Z = global axis directions.",
+          "type": "string",
+          "enum": ["NORMAL_PLANE", "NORMAL_ELEM", "GLOBAL_X", "GLOBAL_Y", "GLOBAL_Z"]
+        },
+        "PROJECT_TYPE": {
+          "description": "Projection Type (case-insensitive). NO = no projection, LOAD_DIR = project along the load direction, LOAD_PLANE = project onto the loading plane.",
+          "type": "string",
+          "enum": ["NO", "LOAD_DIR", "LOAD_PLANE"]
+        },
+        "bDEFINE_NODE": {
+          "description": "[ELEM_TYPE=PLATE] Whether nodes define the loading area boundary. Used only for PLATE elements.",
+          "type": "boolean",
+          "default": false
+        },
+        "CONNECT_NODE": {
+          "description": "[ELEM_TYPE=PLATE] Loading boundary connecting node numbers (up to 15). Used only for PLATE elements when bDEFINE_NODE is true.",
+          "type": "array",
+          "items": { "type": "integer" },
+          "minItems": 15,
+          "maxItems": 15
+        },
+        "DESC": {
+          "description": "Description text for this plane load.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "required": [
+        "LCNAME",
+        "PNLD_KEY",
+        "ELEM_TYPE",
+        "POINT_ORIGIN",
+        "AXIS_X",
+        "AXIS_Y",
+        "TOL",
+        "SELECT_TYPE",
+        "LOAD_DIR",
+        "PROJECT_TYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "AssignPlaneExample",
+        "PNLD_KEY": 1,
+        "ELEM_TYPE": "PLATE",
+        "POINT_ORIGIN": [18, 2, 0],
+        "AXIS_X": [19, 2, 0],
+        "AXIS_Y": [19, 3, 0],
+        "TOL": 0.0009144,
+        "SELECT_TYPE": "ON_PLANE",
+        "LOAD_DIR": "GLOBAL_Z",
+        "PROJECT_TYPE": "LOAD_DIR",
+        "bDEFINE_NODE": false,
+        "DESC": "Plate plane load"
+      },
+      "2": {
+        "LCNAME": "AssignPlaneExample",
+        "LOAD_GROUP": "",
+        "PNLD_KEY": 1,
+        "ELEM_TYPE": "SOLID",
+        "POINT_ORIGIN": [0, 0, 0],
+        "AXIS_X": [1, 0, 0],
+        "AXIS_Y": [0, 1, 0],
+        "TOL": 0.001,
+        "SELECT_TYPE": "IN_GROUP",
+        "ELEM_GROUP": "SolidGroup1",
+        "FACE_NO": 3,
+        "LOAD_DIR": "NORMAL_ELEM",
+        "PROJECT_TYPE": "NO",
+        "DESC": "Solid plane load on face 3"
+      }
+    }
+  }
+}

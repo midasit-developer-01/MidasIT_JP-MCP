@@ -1,0 +1,100 @@
+{
+  "_group": "db",
+  "_name": "PRST",
+  "uri": "db/PRST",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PRST": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Prestress Loads (PRST). Keyed by element number; each element carries a list of ITEMS, one prestress (tension) load per entry, tied to a static load case (LCNAME) and optional load group (GROUP_NAME).",
+      "properties": {
+        "ITEMS": {
+          "description": "List of prestress load entries applied to this element. Each entry is one tension load definition.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the load entry within this element. Multiple entries with distinct IDs may exist per element.",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Static load case name. Must match an existing static load case; otherwise the request is rejected.",
+                "type": "string"
+              },
+              "GROUP_NAME": {
+                "description": "Load group name. If non-empty it must match an existing load group; empty means no group.",
+                "type": "string",
+                "default": ""
+              },
+              "DIR": {
+                "description": "Prestress direction code (element local axis). 0 = local y, 1 = local z.",
+                "type": "integer",
+                "default": 0
+              },
+              "TENSION": {
+                "description": "Tension (prestress force) applied.",
+                "type": "number"
+              },
+              "DISTANCE_I": {
+                "description": "Eccentricity/offset distance at the I-end of the element.",
+                "type": "number",
+                "default": 0.0
+              },
+              "DISTANCE_M": {
+                "description": "Eccentricity/offset distance at the mid (M) point of the element.",
+                "type": "number",
+                "default": 0.0
+              },
+              "DISTANCE_J": {
+                "description": "Eccentricity/offset distance at the J-end of the element.",
+                "type": "number",
+                "default": 0.0
+              }
+            },
+            "required": [
+              "LCNAME",
+              "TENSION"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1101": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "PS",
+            "GROUP_NAME": "",
+            "DIR": 1,
+            "TENSION": 1360,
+            "DISTANCE_I": 0.2,
+            "DISTANCE_M": 0.3,
+            "DISTANCE_J": 0.4
+          }
+        ]
+      },
+      "1102": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "PS",
+            "DIR": 0,
+            "TENSION": 1360,
+            "DISTANCE_I": 0.2,
+            "DISTANCE_M": 0.3,
+            "DISTANCE_J": 0.4
+          }
+        ]
+      }
+    }
+  }
+}

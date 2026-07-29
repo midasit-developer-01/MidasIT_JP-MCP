@@ -1,0 +1,59 @@
+{
+  "_group": "db",
+  "_name": "THSL",
+  "uri": "db/THSL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THSL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Time Varying Static Load (THSL). Links a time history load case (THIS_LCNAME) to a static load case (SLOAD) and a normal-type time history function (THIS_FUNCNAME), scaled by SCALE and offset by ATIME; the key is the time varying static load id.",
+      "properties": {
+        "THIS_LCNAME": {
+          "description": "Name of the time history load case (must reference an existing time history load case).",
+          "type": "string"
+        },
+        "SLOAD": {
+          "description": "Name of the static load case whose pattern is applied over time (must reference an existing static load case).",
+          "type": "string"
+        },
+        "THIS_FUNCNAME": {
+          "description": "Name of the (normal type) time history function that governs the time variation (must reference an existing time history function).",
+          "type": "string"
+        },
+        "ATIME": {
+          "description": "Arrival time (time offset before the load begins to act).",
+          "type": "number",
+          "default": 0.0
+        },
+        "SCALE": {
+          "description": "Scale factor applied to the static load pattern.",
+          "type": "number"
+        }
+      },
+      "required": [
+        "THIS_LCNAME",
+        "SLOAD",
+        "THIS_FUNCNAME",
+        "SCALE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "THIS_LCNAME": "TH11",
+        "SLOAD": "SW",
+        "THIS_FUNCNAME": "TF",
+        "ATIME": 3.0,
+        "SCALE": 1.2
+      },
+      "2": {
+        "THIS_LCNAME": "TH11",
+        "SLOAD": "Pretension",
+        "THIS_FUNCNAME": "TF",
+        "SCALE": 1.0
+      }
+    }
+  }
+}

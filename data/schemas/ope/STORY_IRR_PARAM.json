@@ -1,0 +1,75 @@
+{
+  "_group": "ope",
+  "_name": "STORY_IRR_PARAM",
+  "uri": "ope/STORY_IRR_PARAM",
+  "methods": "POST, GET",
+  "schema": {
+    "STORY_IRR_PARAM": {
+      "type": "object",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Story Irregularity Check Parameters (STORY_IRR_PARAM). Sets/gets the parameters used for the story irregularity check; the applicable seismic/design code (COUNTRY_CODE) drives which of the remaining fields are actually consumed.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body for setting the story irregularity check parameters.",
+          "properties": {
+            "COUNTRY_CODE": {
+              "type": "string",
+              "description": "Country / design code used for the story irregularity check. Enum values are case-insensitive.",
+              "enum": [
+                "NTC2008",
+                "KBC2009",
+                "NTC2012",
+                "NSR-10",
+                "NTC2018",
+                "NTCS2020",
+                "NTCS2023",
+                "IS1893(2016)",
+                "IS16700(2023)",
+                "NSCP2015"
+              ]
+            },
+            "STORY_DRIFT_METHOD": {
+              "type": "string",
+              "description": "Method used to evaluate story drift. Consumed only when COUNTRY_CODE is not IS1893(2016) and not IS16700(2023). Enum values are case-insensitive.",
+              "enum": [
+                "Drift at the Center of Mass",
+                "Max. Drift of Outer Extreme Points",
+                "Max. Drift of All Vertical Elements"
+              ]
+            },
+            "STORY_STIFFNESS_METHOD": {
+              "type": "string",
+              "description": "Method used to evaluate story stiffness. Consumed only when COUNTRY_CODE is not IS1893(2016) and not IS16700(2023). Enum values are case-insensitive.",
+              "enum": [
+                "1 / Story Drift Ratio",
+                "Story Shear / Story Drift"
+              ]
+            },
+            "SEISMIC_BEHAVIOR_FACTOR": {
+              "type": "string",
+              "description": "[COUNTRY_CODE=NTCS2020 or NTCS2023] Seismic behavior factor, Q. Consumed only when COUNTRY_CODE is NTCS2020 or NTCS2023. Enum values are case-insensitive.",
+              "enum": [
+                "4",
+                "3 or below"
+              ]
+            }
+          },
+          "required": [
+            "COUNTRY_CODE",
+            "STORY_DRIFT_METHOD",
+            "STORY_STIFFNESS_METHOD"
+          ]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "COUNTRY_CODE": "NTCS2020",
+      "STORY_DRIFT_METHOD": "Drift at the Center of Mass",
+      "STORY_STIFFNESS_METHOD": "1 / Story Drift Ratio",
+      "SEISMIC_BEHAVIOR_FACTOR": "4"
+    }
+  }
+}

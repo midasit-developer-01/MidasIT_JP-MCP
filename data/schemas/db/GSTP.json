@@ -1,0 +1,80 @@
+{
+  "_group": "db",
+  "_name": "GSTP",
+  "uri": "db/GSTP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "GSTP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "General Spring Type (GSTP). Defines a named general spring whose 6x6 symmetric stiffness (SPRING), mass (MASS) and damping (DAMPING) matrices are each supplied as 21 upper-triangular terms; the OPT_* flags toggle which of those matrices are active.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Name of the general spring type.",
+          "type": "string"
+        },
+        "SPRING": {
+          "description": "Stiffness matrix (6x6 symmetric) given as 21 upper-triangular terms. Applied only when OPT_STIFFNESS is true. Values not supplied default to 0.",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 21,
+          "maxItems": 21,
+          "default": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "MASS": {
+          "description": "Mass matrix (6x6 symmetric) given as 21 upper-triangular terms. Applied only when OPT_MASS is true. Values not supplied default to 0.",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 21,
+          "maxItems": 21,
+          "default": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "DAMPING": {
+          "description": "Damping matrix (6x6 symmetric) given as 21 upper-triangular terms. Applied only when OPT_DAMPING is true. Values not supplied default to 0.",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 21,
+          "maxItems": 21,
+          "default": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "OPT_STIFFNESS": {
+          "description": "Use the stiffness matrix (SPRING). Defaults to false.",
+          "type": "boolean",
+          "default": false
+        },
+        "OPT_MASS": {
+          "description": "Use the mass matrix (MASS). Defaults to false.",
+          "type": "boolean",
+          "default": false
+        },
+        "OPT_DAMPING": {
+          "description": "Use the damping matrix (DAMPING). Defaults to false.",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "GS_Diagonal",
+        "SPRING": [1000.0, 0.0, 0.0, 0.0, 0.0, 1000.0, 0.0, 0.0, 0.0, 1000.0, 0.0, 0.0, 500.0, 0.0, 500.0, 0.0, 0.0, 0.0, 0.0, 0.0, 500.0],
+        "MASS": [10.0, 0.0, 0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+        "DAMPING": [5.0, 0.0, 0.0, 0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 5.0, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5],
+        "OPT_STIFFNESS": true,
+        "OPT_MASS": true,
+        "OPT_DAMPING": true
+      }
+    }
+  }
+}

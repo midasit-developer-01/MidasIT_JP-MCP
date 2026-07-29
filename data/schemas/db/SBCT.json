@@ -1,0 +1,184 @@
+{
+  "_group": "db",
+  "_name": "SBCT",
+  "uri": "db/SBCT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SBCT": {
+      "type": "object",
+      "description": "Suspension Bridge Analysis Control (SBCT). A single-instance control (key is always 1); ANAL_METHOD_TYPE drives which group field applies (INIT uses GROUP_NAME and enables OPT_CONS_HOR/OPT_HANGER sub-objects; OPT uses CABLE_GROUP_SUB_NAME).",
+      "properties": {
+        "NUM_ITR": {
+          "type": "integer",
+          "default": 5,
+          "description": "Number of iterations for the suspension bridge analysis."
+        },
+        "CONV_TOL": {
+          "type": "number",
+          "default": 0.00001,
+          "description": "Convergence tolerance for the iterative analysis."
+        },
+        "ANAL_METHOD_TYPE": {
+          "type": "string",
+          "enum": ["INIT", "OPT"],
+          "description": "Analysis method (case-insensitive). INIT = initial equilibrium state analysis; OPT = optimization. Selects which group field is used: INIT -> GROUP_NAME, OPT -> CABLE_GROUP_SUB_NAME."
+        },
+        "GROUP_NAME": {
+          "type": "string",
+          "description": "[ANAL_METHOD_TYPE=INIT] Node group to be updated. Must reference an existing group name."
+        },
+        "CABLE_GROUP_SUB_NAME": {
+          "type": "string",
+          "description": "[ANAL_METHOD_TYPE=OPT] Cable group to be updated. Must reference an existing group name."
+        },
+        "SAG_GROUP_NAME": {
+          "type": "string",
+          "description": "Sag point group. Must reference an existing group name."
+        },
+        "OPT_CONS_HOR": {
+          "type": "boolean",
+          "default": false,
+          "description": "[ANAL_METHOD_TYPE=INIT] Enable/disable constant horizontal force of cable. When true, CONS_HOR must be provided."
+        },
+        "CONS_HOR": {
+          "type": "object",
+          "description": "[ANAL_METHOD_TYPE=INIT && OPT_CONS_HOR=true] Constant horizontal force of cable definition.",
+          "properties": {
+            "CABLE_GROUP_NAME": {
+              "type": "string",
+              "description": "Main cable group. Must reference an existing group name."
+            },
+            "HOR_FORCE": {
+              "type": "number",
+              "default": 0,
+              "description": "Horizontal force applied to the main cable group."
+            }
+          },
+          "required": ["CABLE_GROUP_NAME"]
+        },
+        "OPT_HANGER": {
+          "type": "boolean",
+          "default": false,
+          "description": "[ANAL_METHOD_TYPE=INIT] Enable/disable define girder Z-displacement condition. When true, HANGER must be provided."
+        },
+        "HANGER": {
+          "type": "object",
+          "description": "[ANAL_METHOD_TYPE=INIT && OPT_HANGER=true] Define girder Z-displacement condition.",
+          "properties": {
+            "HANGER_GROUP_NAME": {
+              "type": "string",
+              "description": "Hanger group. Must reference an existing group name."
+            },
+            "HANGER_Z_DISP": {
+              "type": "array",
+              "description": "Girder Z-displacement data. Exactly one entry is allowed (handler enforces size == 1).",
+              "minItems": 1,
+              "maxItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "GIRDER_GROUP_NAME": {
+                    "type": "string",
+                    "description": "Girder group. Must reference an existing group name; the node list is derived from this group (input ARR_NODE_KEY is ignored by the handler)."
+                  },
+                  "DISP_TYPE": {
+                    "type": "string",
+                    "enum": ["ZERO", "USER"],
+                    "description": "Target displacement type (case-insensitive). ZERO = all target Z-displacements set to 0 (ARR_Z_DISP ignored); USER = user-supplied ARR_Z_DISP whose length must equal the derived node count."
+                  },
+                  "ARR_NODE_KEY": {
+                    "type": "array",
+                    "description": "Array of node keys (read-only echo; ignored on POST/PUT since nodes are derived from GIRDER_GROUP_NAME).",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  "ARR_Z_DISP": {
+                    "type": "array",
+                    "description": "[DISP_TYPE=USER] Array of target Z-displacements, one per node; ignored when DISP_TYPE=ZERO.",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "required": ["GIRDER_GROUP_NAME", "DISP_TYPE"]
+              }
+            }
+          },
+          "required": ["HANGER_GROUP_NAME", "HANGER_Z_DISP"]
+        },
+        "SBCT_BASE": {
+          "type": "array",
+          "description": "Load cases to be considered in the analysis. Maximum 15 entries.",
+          "maxItems": 15,
+          "items": {
+            "type": "object",
+            "properties": {
+              "LOAD_CASE_NAME": {
+                "type": "string",
+                "description": "Static load case name. Must reference an existing load case."
+              },
+              "SCALE_FACTOR": {
+                "type": "number",
+                "default": 1,
+                "description": "Scale factor applied to the load case."
+              }
+            },
+            "required": ["LOAD_CASE_NAME"]
+          }
+        }
+      },
+      "required": ["ANAL_METHOD_TYPE", "SAG_GROUP_NAME", "SBCT_BASE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NUM_ITR": 5,
+        "CONV_TOL": 0.00001,
+        "ANAL_METHOD_TYPE": "INIT",
+        "GROUP_NAME": "UpdateNodeGroup",
+        "SAG_GROUP_NAME": "SagGroup",
+        "OPT_CONS_HOR": true,
+        "CONS_HOR": {
+          "CABLE_GROUP_NAME": "MainCable",
+          "HOR_FORCE": 15000
+        },
+        "OPT_HANGER": true,
+        "HANGER": {
+          "HANGER_GROUP_NAME": "HangerGroup",
+          "HANGER_Z_DISP": [
+            {
+              "GIRDER_GROUP_NAME": "GirderGroup",
+              "DISP_TYPE": "USER",
+              "ARR_Z_DISP": [0.0, -0.01, -0.02]
+            }
+          ]
+        },
+        "SBCT_BASE": [
+          {
+            "LOAD_CASE_NAME": "Dead Load",
+            "SCALE_FACTOR": 1
+          }
+        ]
+      },
+      "2": {
+        "NUM_ITR": 10,
+        "CONV_TOL": 0.0001,
+        "ANAL_METHOD_TYPE": "OPT",
+        "CABLE_GROUP_SUB_NAME": "CableGroupToUpdate",
+        "SAG_GROUP_NAME": "SagGroup",
+        "SBCT_BASE": [
+          {
+            "LOAD_CASE_NAME": "Dead Load",
+            "SCALE_FACTOR": 1
+          },
+          {
+            "LOAD_CASE_NAME": "Cable Force",
+            "SCALE_FACTOR": 0.8
+          }
+        ]
+      }
+    }
+  }
+}

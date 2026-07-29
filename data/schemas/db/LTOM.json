@@ -1,0 +1,86 @@
+{
+  "_group": "db",
+  "_name": "LTOM",
+  "uri": "db/LTOM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LTOM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Loads to Masses (LTOM). Singleton settings that convert selected static load types into masses along the chosen direction, scaled per load case in vLC.",
+      "properties": {
+        "DIR": {
+          "description": "Mass direction into which the converted loads act. Case-insensitive. X/Y/Z are single axes; XY/YZ/XZ are pairs; XYZ is all three.",
+          "type": "string",
+          "enum": ["X", "Y", "Z", "XY", "YZ", "XZ", "XYZ"]
+        },
+        "bNODAL": {
+          "description": "Convert nodal loads to masses.",
+          "type": "boolean",
+          "default": false
+        },
+        "bBEAM": {
+          "description": "Convert beam element loads to masses.",
+          "type": "boolean",
+          "default": false
+        },
+        "bFLOOR": {
+          "description": "Convert floor loads to masses.",
+          "type": "boolean",
+          "default": false
+        },
+        "bPRES": {
+          "description": "Convert pressure loads to masses.",
+          "type": "boolean",
+          "default": false
+        },
+        "GRAV": {
+          "description": "Gravitational acceleration used to convert loads (force) into masses.",
+          "type": "number",
+          "default": 0.0
+        },
+        "vLC": {
+          "description": "List of static load cases to convert, each with a scale factor. Each LCNAME must reference an existing static load case.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LCNAME": {
+                "description": "Name of an existing static load case to convert to mass.",
+                "type": "string"
+              },
+              "FACTOR": {
+                "description": "Scale factor applied to the load case when converting to mass.",
+                "type": "number"
+              }
+            },
+            "required": ["LCNAME", "FACTOR"]
+          }
+        }
+      },
+      "required": ["DIR", "vLC"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DIR": "XYZ",
+        "bNODAL": true,
+        "bBEAM": true,
+        "bFLOOR": true,
+        "bPRES": true,
+        "GRAV": 9.806,
+        "vLC": [
+          {
+            "LCNAME": "D",
+            "FACTOR": 1.0
+          },
+          {
+            "LCNAME": "L",
+            "FACTOR": 0.5
+          }
+        ]
+      }
+    }
+  }
+}

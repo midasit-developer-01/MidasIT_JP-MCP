@@ -1,0 +1,41 @@
+{
+  "_group": "db",
+  "_name": "EARE",
+  "uri": "db/EARE",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EARE": {
+      "type": "object",
+      "description": "Effective Area for Soil Pressure (EARE). Each entry associates an element and one of its nodes with the effective area used for soil pressure computation; the id key is the EARE data key.",
+      "properties": {
+        "ELEM_KEY": {
+          "type": "integer",
+          "description": "Element key: the element this effective-area entry is applied to."
+        },
+        "NODE_KEY": {
+          "type": "integer",
+          "description": "Node key: the node of the element at which the effective area is defined."
+        },
+        "EFF_AREA": {
+          "type": "number",
+          "description": "Effective area value used for soil pressure at the given element/node."
+        }
+      },
+      "required": [
+        "ELEM_KEY",
+        "NODE_KEY",
+        "EFF_AREA"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ELEM_KEY": 1,
+        "NODE_KEY": 1,
+        "EFF_AREA": 0.5
+      }
+    }
+  }
+}

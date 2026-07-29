@@ -1,0 +1,59 @@
+{
+  "_group": "db",
+  "_name": "STLD",
+  "uri": "db/STLD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "STLD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Static Load Case (STLD). Defines a static load case identified by a unique NAME and a load-case TYPE code; the record is keyed by its integer id.",
+      "type": "object",
+      "properties": {
+        "NO": {
+          "description": "Load case id / ordering index as stored in the model. Read-only: set from the request key on write and echoed on read; the value in the body is ignored.",
+          "type": "integer"
+        },
+        "NAME": {
+          "description": "Static load case name. Must be unique across all static load cases (duplicate names are rejected at runtime).",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Static load case type code. Case-insensitive. USER=User Defined, D=Dead Load, DC=Dead Load of Component, DW=Dead Load of Wearing Surfaces and Utilities, DD=Downdrag, EP=Earth Pressure, EANN/EANC/EAMN/EAMC/EPNN/EPNC/EPMN/EPMC=Earthquake variants, EH=Horizontal Earth Pressure, EV=Vertical Earth Pressure, ES=Earth Surcharge, EL=Miscellaneous Locked-in Force, LS=Live Load Surcharge, LSC=Construction Live Load, L=Live Load, LC=Construction Load, LP=Pedestrian Live Load, IL=Impact Load, ILP=Impact Load for Pedestrian, CF=Centrifugal Force, BRK=Braking Force, BK=Breaking Force, CRL=Crane Load, PS=Prestress, B=Buoyancy, WP=Water Pressure, FP=Fluid Pressure, SF=Stream Flow Pressure, WPR=Water Pressure on Retaining, W=Wind Load, WL=Wind on Live Load, STL=Settlement, CR=Creep, SH=Shrinkage, T=Temperature, TPG=Temperature Gradient, CO=Collision, CT=Vehicular Collision Force, CV=Vessel Collision Force, E=Erection Load, FR=Friction, IP=Ice Pressure, CS=Construction Stage, ER=Erection, RS=Rib Shortening, GE=General, LR=Roof Live Load, S=Snow Load, R=Rain Load, LF=Longitudinal Force, RF=Rail Force, GD=Grade, SHV=Shear, DRL=Derailment, WA=Water Load, WT=Wind on Temperature, EVT=Event, EEP=Extreme Earth Pressure, EX=Explosion, I=Impact, EE=Extreme Event.",
+          "type": "string",
+          "enum": [
+            "USER", "D", "DC", "DW", "DD", "EP", "EANN", "EANC", "EAMN", "EAMC",
+            "EPNN", "EPNC", "EPMN", "EPMC", "EH", "EV", "ES", "EL", "LS", "LSC",
+            "L", "LC", "LP", "IL", "ILP", "CF", "BRK", "BK", "CRL", "PS", "B",
+            "WP", "FP", "SF", "WPR", "W", "WL", "STL", "CR", "SH", "T", "TPG",
+            "CO", "CT", "CV", "E", "FR", "IP", "CS", "ER", "RS", "GE", "LR",
+            "S", "R", "LF", "RF", "GD", "SHV", "DRL", "WA", "WT", "EVT", "EEP",
+            "EX", "I", "EE"
+          ]
+        },
+        "DESC": {
+          "description": "Free-text description of the load case.",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "required": [
+        "NAME",
+        "TYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "DL",
+        "TYPE": "D",
+        "DESC": "Dead Loads"
+      },
+      "2": {
+        "NAME": "LL",
+        "TYPE": "L",
+        "DESC": "Live Loads"
+      }
+    }
+  }
+}

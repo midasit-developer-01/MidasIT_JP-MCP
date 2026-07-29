@@ -1,0 +1,21 @@
+{
+  "_group": "ope",
+  "_name": "API-RECORDER-RESUME",
+  "uri": "ope/API-RECORDER-RESUME",
+  "methods": "POST",
+  "schema": {
+    "API-RECORDER-RESUME": {
+      "type": "object",
+      "description": "Resume API Request Recording (API-RECORDER-RESUME). Takes no body; the request DTO is empty and the handler simply resumes the API request recorder, so the Argument object carries no fields.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body. This endpoint takes no parameters."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

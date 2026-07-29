@@ -1,0 +1,66 @@
+{
+  "_group": "db",
+  "_name": "CRPC",
+  "uri": "db/CRPC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CRPC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Creep Coefficient for Construction Stage (CRPC). Keyed by element (entity) id; ITEMS holds one entry per load group, each carrying a creep coefficient applied for that group.",
+      "properties": {
+        "ITEMS": {
+          "description": "Array of creep-coefficient entries for this element. Each entry pairs a load group with its creep coefficient.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the entry within the element. Optional; when omitted or 0 the group name determines the target entry.",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Name of an existing load group. Must match a defined load group name; an empty string means no group (group key 0). A non-empty name that does not exist is rejected.",
+                "type": "string",
+                "default": ""
+              },
+              "CREEP": {
+                "description": "Creep coefficient value applied for this load group.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "CREEP"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "25": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "2ndDeadLoad",
+            "CREEP": 1.2
+          }
+        ]
+      },
+      "26": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "Selfweight",
+            "CREEP": 1.5
+          }
+        ]
+      }
+    }
+  }
+}

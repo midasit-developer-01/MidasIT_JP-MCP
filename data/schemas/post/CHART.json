@@ -1,0 +1,138 @@
+{
+  "_group": "post",
+  "_name": "CHART",
+  "uri": "post/CHART",
+  "methods": "POST",
+  "schema": {
+    "CHART": {
+      "type": "object",
+      "description": "Chart (CHART). Generates or retrieves a user chart (UCHT) and returns its tabular data; the request either builds a new chart when CHART_TYPE is assigned or looks up an existing one by CHART_NAME, with the time-history story graph driven by TH_STORY_GRAPH.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Chart request payload.",
+          "properties": {
+            "EXPORT_PATH_GRAPH": {
+              "type": "string",
+              "description": "Optional file path to export the graph image (BMP only). When assigned, the chart graph is written to this path.",
+              "default": ""
+            },
+            "EXPORT_PATH_JSON": {
+              "type": "string",
+              "description": "Optional file path to export the chart data as JSON. When assigned, the response chart data is serialized to this path.",
+              "default": ""
+            },
+            "CHART_NAME": {
+              "type": "string",
+              "description": "Chart name. When CHART_TYPE is not assigned, the existing chart with this name is looked up; also used as the graph title fallback."
+            },
+            "CHART_TYPE": {
+              "type": "string",
+              "description": "Chart type. Only ONE value is accepted server-side: 'THSTORYGRAPH' (resolved via __caChartStrType after normalization = uppercase + remove-all-spaces, so 'TH Story Graph' / 'th story graph' also work). Any other value throws. When assigned, a new chart (UCHT) is built from TH_STORY_GRAPH; when OMITTED, the existing chart named CHART_NAME is looked up instead — so leave CHART_TYPE unset to fetch a previously created chart by name.",
+              "enum": ["THSTORYGRAPH"]
+            },
+            "UNIT": {
+              "type": "object",
+              "description": "Optional user-defined unit override applied while building the chart data.",
+              "properties": {
+                "FORCE": {
+                  "type": "string",
+                  "description": "Force unit (case-insensitive).",
+                  "enum": ["KGF", "TONF", "N", "KN", "LBF", "KIPS"]
+                },
+                "DIST": {
+                  "type": "string",
+                  "description": "Distance unit (case-insensitive).",
+                  "enum": ["MM", "CM", "M", "IN", "FT"]
+                },
+                "HEAT": {
+                  "type": "string",
+                  "description": "Heat unit (case-insensitive).",
+                  "enum": ["CAL", "KCAL", "J", "BTU", "KJ"]
+                },
+                "TEMP": {
+                  "type": "string",
+                  "description": "Temperature unit (case-insensitive).",
+                  "enum": ["C", "F"]
+                }
+              }
+            },
+            "TH_STORY_GRAPH": {
+              "type": "object",
+              "description": "Time history story graph definition. Consumed only when CHART_TYPE='THSTORYGRAPH' (build path); ignored on the lookup-by-name path. Only CASE=3 (Story Displ/Vel/Accel) is functional — CASE 0/1/2 are accepted but return empty data (silent no-op), and CASE outside 0-3 errors.",
+              "properties": {
+                "CASE": {
+                  "type": "integer",
+                  "description": "Graph case: 0=Story Shear/Overturning Mom.(by Step), 1=Story Shear(Max.), 2=Shear Factor, 3=Story Displ/Vel/Accel. Only CASE 3 is functional; 0/1/2 return empty data.",
+                  "enum": [0, 1, 2, 3]
+                },
+                "CHECK_DIR_X": {
+                  "type": "boolean",
+                  "description": "Check X-Direction."
+                },
+                "CHECK_DIR_Y": {
+                  "type": "boolean",
+                  "description": "Check Y-Direction."
+                },
+                "TYPE_OF_STORY_RESULT": {
+                  "type": "integer",
+                  "description": "Type of story result: 0=Displ, 1=Vel, 2=Accel."
+                },
+                "REF_POINT": {
+                  "type": "integer",
+                  "description": "Reference point: 0=Relative, 1=Absolute, 2=Story Drift, 3=Story Drift Ratio."
+                },
+                "MINMAX": {
+                  "type": "integer",
+                  "description": "Min/Max option: 0=Min, 1=Max, 2=Abs.Max."
+                },
+                "GRAPH_TITLE": {
+                  "type": "string",
+                  "description": "Graph title. If empty, follows CHART_NAME.",
+                  "default": ""
+                },
+                "THNAME": {
+                  "type": "string",
+                  "description": "Time History Case Name. Must resolve to an existing Time History load case (non-zero internal key) or the call fails."
+                }
+              },
+              "required": [
+                "CASE",
+                "CHECK_DIR_X",
+                "CHECK_DIR_Y",
+                "TYPE_OF_STORY_RESULT",
+                "REF_POINT",
+                "MINMAX",
+                "THNAME"
+              ]
+            }
+          },
+          "required": [
+            "CHART_NAME"
+          ]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "EXPORT_PATH_JSON": "C:/temp/chart.json",
+      "CHART_NAME": "TH Story Graph 1",
+      "CHART_TYPE": "THSTORYGRAPH",
+      "UNIT": {
+        "FORCE": "KN",
+        "DIST": "M"
+      },
+      "TH_STORY_GRAPH": {
+        "CASE": 3,
+        "CHECK_DIR_X": true,
+        "CHECK_DIR_Y": false,
+        "TYPE_OF_STORY_RESULT": 0,
+        "REF_POINT": 0,
+        "MINMAX": 1,
+        "GRAPH_TITLE": "Story Displacement",
+        "THNAME": "Earthquake_X"
+      }
+    }
+  }
+}

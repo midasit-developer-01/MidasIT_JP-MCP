@@ -1,0 +1,76 @@
+{
+  "_group": "db",
+  "_name": "SMLC",
+  "uri": "db/SMLC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SMLC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Settlement Load Case (SMLC). A settlement load case bundles a scale factor, a min/max range of active settlement groups, and the list of settlement groups (ST_GROUPS) that participate; each group name is resolved to an existing settlement point group at assign time.",
+      "properties": {
+        "NAME": {
+          "description": "Settlement load case name.",
+          "type": "string"
+        },
+        "DESC": {
+          "description": "Settlement load case description.",
+          "type": "string"
+        },
+        "FACTOR": {
+          "description": "Settlement scale factor applied to the load case.",
+          "type": "number"
+        },
+        "MIN": {
+          "description": "Minimum number of settlement groups assumed to settle simultaneously.",
+          "type": "integer"
+        },
+        "MAX": {
+          "description": "Maximum number of settlement groups assumed to settle simultaneously.",
+          "type": "integer"
+        },
+        "ST_GROUPS": {
+          "description": "Names of the settlement (point) groups included in this load case. Each name must resolve to an existing settlement group; unknown names are skipped with a warning at assign time.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "NAME",
+        "DESC",
+        "FACTOR",
+        "MIN",
+        "MAX",
+        "ST_GROUPS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "SMLC1",
+        "DESC": "",
+        "FACTOR": 1.2,
+        "MIN": 1,
+        "MAX": 1,
+        "ST_GROUPS": [
+          "SG1",
+          "SG2"
+        ]
+      },
+      "2": {
+        "NAME": "SMLC2",
+        "DESC": "",
+        "FACTOR": 1,
+        "MIN": 1,
+        "MAX": 2,
+        "ST_GROUPS": [
+          "SG1",
+          "SG2"
+        ]
+      }
+    }
+  }
+}

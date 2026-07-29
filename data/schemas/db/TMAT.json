@@ -1,0 +1,35 @@
+{
+  "_group": "db",
+  "_name": "TMAT",
+  "uri": "db/TMAT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "TMAT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Time Dependent Material (TMAT). Links a structural material to time-dependent property definitions by name: TDMT_NAME selects the creep/shrinkage (TDMT) definition and TDME_NAME selects the time-dependent elasticity / compressive-strength (TDME) definition; each name must match an existing definition of that kind.",
+      "type": "object",
+      "properties": {
+        "TDMT_NAME": {
+          "description": "Name of the time-dependent creep/shrinkage material definition (TDMT) to link. Must be the name of an existing TDMT entry; the handler resolves it to a TDMT key and rejects an unknown name. Empty/omitted clears the creep/shrinkage link.",
+          "type": "string"
+        },
+        "TDME_NAME": {
+          "description": "Name of the time-dependent elasticity (compressive-strength gain) material definition (TDME) to link. Must be the name of an existing TDME entry; the handler resolves it to a TDME key and rejects an unknown name. Empty/omitted clears the elasticity link.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "TDMT_NAME",
+        "TDME_NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "2": {
+        "TDMT_NAME": "KDS2016",
+        "TDME_NAME": "KDS2016"
+      }
+    }
+  }
+}

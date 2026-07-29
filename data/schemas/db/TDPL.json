@@ -1,0 +1,103 @@
+{
+  "_group": "db",
+  "_name": "TDPL",
+  "uri": "db/TDPL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "TDPL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Tendon Prestress Load (TDPL). Applies prestress jacking loads to tendons under a static load case; each ITEMS entry carries the load case, tendon, value type, jacking order and begin/end magnitudes.",
+      "properties": {
+        "ITEMS": {
+          "description": "List of tendon prestress load entries applied under the given static load case (key = tendon element/entity key).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of this prestress load entry within the tendon key; 0 lets the program resolve/assign the serial from the LCNAME + GROUP_NAME combination.",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Static load case name (must reference an existing static load case).",
+                "type": "string"
+              },
+              "GROUP_NAME": {
+                "description": "Load group name; empty string means no load group.",
+                "type": "string",
+                "default": ""
+              },
+              "TENDON_NAME": {
+                "description": "Tendon profile name to which the prestress load is applied.",
+                "type": "string"
+              },
+              "TYPE": {
+                "description": "Value type of the prestress magnitude. STRESS applies a jacking stress, FORCE applies a jacking force. Case-insensitive.",
+                "type": "string",
+                "enum": ["STRESS", "FORCE"],
+                "default": "STRESS"
+              },
+              "ORDER": {
+                "description": "Jacking sequence / where jacking starts from: BEGIN, END, or BOTH ends. Case-insensitive.",
+                "type": "string",
+                "enum": ["BEGIN", "END", "BOTH"],
+                "default": "BEGIN"
+              },
+              "BEGIN": {
+                "description": "Prestress value (stress if TYPE=STRESS, force if TYPE=FORCE) at the begin end of the tendon.",
+                "type": "number"
+              },
+              "END": {
+                "description": "Prestress value (stress if TYPE=STRESS, force if TYPE=FORCE) at the end end of the tendon.",
+                "type": "number"
+              },
+              "GROUTING": {
+                "description": "Grouting stage / construction stage step at which the tendon is grouted; 0 means no grouting stage assigned.",
+                "type": "integer",
+                "default": 0
+              }
+            },
+            "required": ["LCNAME", "TENDON_NAME", "BEGIN", "END"]
+          }
+        }
+      },
+      "required": ["ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "2": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "PS",
+            "GROUP_NAME": "LoadGroup",
+            "TENDON_NAME": "2D/Round/Element",
+            "TYPE": "FORCE",
+            "ORDER": "BOTH",
+            "BEGIN": 1360000,
+            "END": 1360000,
+            "GROUTING": 1
+          }
+        ]
+      },
+      "6": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "PS",
+            "GROUP_NAME": "LoadGroup",
+            "TENDON_NAME": "2D/Round/Curve",
+            "TYPE": "STRESS",
+            "ORDER": "BEGIN",
+            "BEGIN": 1360,
+            "END": 1360,
+            "GROUTING": 0
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,283 @@
+{
+  "_group": "db",
+  "_name": "THGC-M1",
+  "uri": "db/THGC-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THGC-M1": {
+      "type": "object",
+      "description": "Time History Global Control - Nonlinear (THGC-M1). A single global-control record (key is always \"1\"); GEO_NONL_TYPE and INIT_LOAD_TYPE drive the initial-load setup while ITER_PARAM holds the nonlinear iteration/convergence parameters.",
+      "properties": {
+        "GEO_NONL_TYPE": {
+          "type": "integer",
+          "enum": [0, 1, 2],
+          "description": "Geometric Nonlinearity Type (None:0, Large Displacement:1, P-Delta:2). Hard-validated to 0-2. When 1 or 2, INIT_LOAD_TYPE must be 0."
+        },
+        "INIT_LOAD_TYPE": {
+          "type": "integer",
+          "enum": [0, 1],
+          "description": "Initial Load Type (Perform NL Static Analysis:0, Import Static/Construction-Stage results:1). Hard-validated to 0-1. Must be 0 when GEO_NONL_TYPE is 1 or 2."
+        },
+        "INIT_LOAD_LIST": {
+          "type": "array",
+          "default": [],
+          "description": "Initial load list; each item references an existing load case by name with a scale factor. Only applied when non-empty.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LC_NAME": {
+                "type": "string",
+                "description": "Load case name. Must resolve to an existing Static (ST) or Construction-Stage (CS) load case, else the request is rejected."
+              },
+              "SF": {
+                "type": "number",
+                "description": "Scale factor applied to this initial load case."
+              },
+              "LC_TYPE": {
+                "type": "string",
+                "enum": ["ST", "CS"],
+                "description": "Load case type: ST = Static, CS = Construction Stage. Compared case-insensitively; any other value is rejected."
+              }
+            },
+            "required": ["LC_NAME", "SF", "LC_TYPE"]
+          }
+        },
+        "INCREMENT_STEP": {
+          "type": "object",
+          "description": "Increment-step / result-output settings for the initial load case.",
+          "properties": {
+            "NSTEP": {
+              "type": "integer",
+              "default": 1,
+              "description": "Number of increment steps [nstep]."
+            },
+            "OUT_TYPE": {
+              "type": "integer",
+              "enum": [0, 1],
+              "default": 0,
+              "description": "Result Output Type (Final Step only:0, Step Number Increment for output:1). Hard-validated to 0-1. STEP_INC is meaningful only when OUT_TYPE=1."
+            },
+            "STEP_INC": {
+              "type": "integer",
+              "default": 1,
+              "description": "Step number increment for output; used when OUT_TYPE=1."
+            }
+          }
+        },
+        "ITER_PARAM": {
+          "type": "object",
+          "description": "Nonlinear iteration and convergence parameters (maps to the analysis BoundaryNL block).",
+          "properties": {
+            "PERMIT_FAIL": {
+              "type": "boolean",
+              "default": true,
+              "description": "Permit convergence failure (continue analysis when a step fails to converge)."
+            },
+            "MAX_ITER": {
+              "type": "integer",
+              "description": "Maximum number of iterations per step."
+            },
+            "NORM_CTRL": {
+              "type": "object",
+              "description": "Convergence norm control. Provide at least one of DISP/FORCE/ENERGY with OPT_USE=true. If omitted, DISP norm defaults on (0.001) and FORCE/ENERGY off.",
+              "properties": {
+                "DISP": {
+                  "type": "object",
+                  "description": "Displacement norm.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Enable this norm on/off."
+                    },
+                    "VALUE": {
+                      "type": "number",
+                      "description": "Norm tolerance value; used when OPT_USE=true (defaults to 0.001 if omitted)."
+                    }
+                  },
+                  "required": ["OPT_USE"]
+                },
+                "FORCE": {
+                  "type": "object",
+                  "description": "Force norm.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Enable this norm on/off."
+                    },
+                    "VALUE": {
+                      "type": "number",
+                      "description": "Norm tolerance value; used when OPT_USE=true (defaults to 0.001 if omitted)."
+                    }
+                  },
+                  "required": ["OPT_USE"]
+                },
+                "ENERGY": {
+                  "type": "object",
+                  "description": "Energy norm.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Enable this norm on/off."
+                    },
+                    "VALUE": {
+                      "type": "number",
+                      "description": "Norm tolerance value; used when OPT_USE=true (defaults to 0.001 if omitted)."
+                    }
+                  },
+                  "required": ["OPT_USE"]
+                }
+              }
+            },
+            "STIFF_UPD_SCHEME": {
+              "type": "integer",
+              "enum": [0, 1, 2],
+              "default": 1,
+              "description": "Stiffness Update Scheme (Custom:0, Full Newton-Raphson:1, Initial Stiffness:2). Hard-validated to 0-2. ITER_BEF_UPDATE is meaningful only when scheme=0."
+            },
+            "ITER_BEF_UPDATE": {
+              "type": "integer",
+              "default": 5,
+              "description": "Number of iterations before stiffness update; used when STIFF_UPD_SCHEME=0."
+            },
+            "MAX_BISECT_LEVEL": {
+              "type": "integer",
+              "default": 5,
+              "description": "Maximum bisection level."
+            },
+            "SMART_BISECT": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable smart bisection."
+            },
+            "DIVERGENCE_THRESHOLD": {
+              "type": "number",
+              "default": 3,
+              "description": "Divergence threshold (stored as an integer internally)."
+            },
+            "LINE_SEARCH": {
+              "type": "object",
+              "description": "Line search settings.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Enable line search on/off."
+                },
+                "LINE_SEARCH_OPT": {
+                  "type": "integer",
+                  "enum": [0, 1],
+                  "default": 0,
+                  "description": "Line Search Option (Automatic:0, User-defined:1). Hard-validated to 0-1. The user-defined fields below apply when OPT_USE=true and this is 1."
+                },
+                "START_ITER_NO": {
+                  "type": "integer",
+                  "default": 3,
+                  "description": "Number of iterations after which line search starts."
+                },
+                "MAX_LINE_SEARCH_ITER": {
+                  "type": "integer",
+                  "default": 4,
+                  "description": "Maximum number of line search iterations."
+                },
+                "LINE_SEARCH_TOL": {
+                  "type": "number",
+                  "default": 0.5,
+                  "description": "Line search tolerance."
+                }
+              },
+              "required": ["OPT_USE"]
+            }
+          },
+          "required": ["MAX_ITER"]
+        },
+        "IGNORE_ELEM": {
+          "type": "boolean",
+          "default": false,
+          "description": "Consider 'Ignore Elements' for the NL analysis initial load."
+        },
+        "SEQ_LOAD_TYPE": {
+          "type": "integer",
+          "enum": [0, 1],
+          "default": 1,
+          "description": "Sequential loading displacement type - apply specified displacement with respect to Undisplaced Position:0 or Displaced Position:1. Hard-validated to 0-1."
+        },
+        "HINGE_OPT": {
+          "type": "object",
+          "description": "Inelastic hinge data option.",
+          "properties": {
+            "PSPRING_SUP": {
+              "type": "integer",
+              "enum": [0, 1],
+              "default": 0,
+              "description": "Point Spring Support (Apply nonlinear properties:0, Assume as Linear:1). Hard-validated to 0-1."
+            },
+            "EL": {
+              "type": "integer",
+              "enum": [0, 1],
+              "default": 1,
+              "description": "Elastic Link (Apply nonlinear properties:0, Assume as Linear:1). Hard-validated to 0-1."
+            }
+          }
+        }
+      },
+      "required": ["GEO_NONL_TYPE", "INIT_LOAD_TYPE", "ITER_PARAM"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "GEO_NONL_TYPE": 0,
+        "INIT_LOAD_TYPE": 0,
+        "INIT_LOAD_LIST": [
+          {
+            "LC_NAME": "Dead Load",
+            "SF": 1.0,
+            "LC_TYPE": "ST"
+          },
+          {
+            "LC_NAME": "CS1",
+            "SF": 1.0,
+            "LC_TYPE": "CS"
+          }
+        ],
+        "INCREMENT_STEP": {
+          "NSTEP": 10,
+          "OUT_TYPE": 1,
+          "STEP_INC": 2
+        },
+        "ITER_PARAM": {
+          "PERMIT_FAIL": true,
+          "MAX_ITER": 30,
+          "NORM_CTRL": {
+            "DISP": {
+              "OPT_USE": true,
+              "VALUE": 0.001
+            },
+            "FORCE": {
+              "OPT_USE": false
+            },
+            "ENERGY": {
+              "OPT_USE": false
+            }
+          },
+          "STIFF_UPD_SCHEME": 1,
+          "MAX_BISECT_LEVEL": 5,
+          "SMART_BISECT": false,
+          "DIVERGENCE_THRESHOLD": 3,
+          "LINE_SEARCH": {
+            "OPT_USE": true,
+            "LINE_SEARCH_OPT": 1,
+            "START_ITER_NO": 3,
+            "MAX_LINE_SEARCH_ITER": 4,
+            "LINE_SEARCH_TOL": 0.5
+          }
+        },
+        "IGNORE_ELEM": false,
+        "SEQ_LOAD_TYPE": 1,
+        "HINGE_OPT": {
+          "PSPRING_SUP": 0,
+          "EL": 1
+        }
+      }
+    }
+  }
+}

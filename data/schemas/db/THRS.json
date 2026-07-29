@@ -1,0 +1,47 @@
+{
+  "_group": "db",
+  "_name": "THRS",
+  "uri": "db/THRS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THRS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Time History Analysis Results (THRS). Defines a time history result graph entry for a general link (seismic control device), keyed by the time history load case name (THIS_NAME) and the target general link element (GENERAL_LINK); TYPE_RES/COMP select which result quantity and component are graphed.",
+      "properties": {
+        "THIS_NAME": {
+          "description": "Time history load case name that this result graph is based on (resolved to the internal load case key).",
+          "type": "string"
+        },
+        "TYPE_RES": {
+          "description": "Type of result quantity to graph for the general link. Integer code selecting the result category (e.g. force-deformation, force, deformation, ductility factor, energy).",
+          "type": "integer",
+          "default": 0
+        },
+        "COMP": {
+          "description": "Component index of the selected result quantity (e.g. the local direction/DOF component of the general link).",
+          "type": "integer",
+          "default": 0
+        },
+        "GENERAL_LINK": {
+          "description": "General link element number whose time history results are graphed.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "THIS_NAME",
+        "GENERAL_LINK"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "THIS_NAME": "HIST1",
+        "TYPE_RES": 0,
+        "COMP": 0,
+        "GENERAL_LINK": 1
+      }
+    }
+  }
+}

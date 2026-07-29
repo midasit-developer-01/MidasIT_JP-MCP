@@ -1,0 +1,141 @@
+{
+  "_group": "db",
+  "_name": "PJCF",
+  "uri": "db/PJCF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PJCF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Project Information (PJCF). A single-key record (key is always 1) holding project metadata, contact details, and the review/approval log; all fields are optional strings and unspecified fields keep their existing stored value on PUT.",
+      "type": "object",
+      "properties": {
+        "PROJECT": {
+          "description": "Project name.",
+          "type": "string"
+        },
+        "REVISION": {
+          "description": "Revision info.",
+          "type": "string"
+        },
+        "USER": {
+          "description": "User name.",
+          "type": "string"
+        },
+        "EMAIL": {
+          "description": "E-mail address.",
+          "type": "string"
+        },
+        "ADDRESS": {
+          "description": "Address.",
+          "type": "string"
+        },
+        "TEL": {
+          "description": "Telephone number.",
+          "type": "string"
+        },
+        "FAX": {
+          "description": "Fax number.",
+          "type": "string"
+        },
+        "CLIENT": {
+          "description": "Client.",
+          "type": "string"
+        },
+        "TITLE": {
+          "description": "Title.",
+          "type": "string"
+        },
+        "FILE_NAME": {
+          "description": "Model file name (without extension). Read-only: derived from the saved document path on GET and ignored on PUT.",
+          "type": "string"
+        },
+        "DIR": {
+          "description": "Model file directory. Read-only: derived from the saved document path on GET and ignored on PUT.",
+          "type": "string"
+        },
+        "FILE_SIZE": {
+          "description": "Model file size (e.g. '12 Kbytes'). Read-only: derived from the saved file on GET and ignored on PUT.",
+          "type": "string"
+        },
+        "CREATED": {
+          "description": "Model file created time (dd/mm/yyyy HH:MM). Read-only: derived from the saved file on GET and ignored on PUT.",
+          "type": "string"
+        },
+        "MODIFIED": {
+          "description": "Model file modified time (dd/mm/yyyy HH:MM). Read-only: derived from the saved file on GET and ignored on PUT.",
+          "type": "string"
+        },
+        "ENGINEER": {
+          "description": "Review log row 1 (Engineer) reviewer name. Maps to review name slot 0.",
+          "type": "string"
+        },
+        "EDATE": {
+          "description": "Review log row 1 (Engineer) date. Maps to review date slot 0.",
+          "type": "string"
+        },
+        "CHECK1": {
+          "description": "Review log row 2 (Checker) reviewer name. Maps to review name slot 1.",
+          "type": "string"
+        },
+        "CDATE1": {
+          "description": "Review log row 2 (Checker) date. Maps to review date slot 1.",
+          "type": "string"
+        },
+        "CHECK2": {
+          "description": "Review log row 3 (Checker) reviewer name. Maps to review name slot 2.",
+          "type": "string"
+        },
+        "CDATE2": {
+          "description": "Review log row 3 (Checker) date. Maps to review date slot 2.",
+          "type": "string"
+        },
+        "CHECK3": {
+          "description": "Review log row 4 (Checker) reviewer name. Maps to review name slot 3.",
+          "type": "string"
+        },
+        "CDATE3": {
+          "description": "Review log row 4 (Checker) date. Maps to review date slot 3.",
+          "type": "string"
+        },
+        "APPROVE": {
+          "description": "Review log row 5 (Approver) reviewer name. Maps to review name slot 4.",
+          "type": "string"
+        },
+        "ADATE": {
+          "description": "Review log row 5 (Approver) date. Maps to review date slot 4.",
+          "type": "string"
+        },
+        "COMMENT": {
+          "description": "Comments.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "PROJECT": "Cable Bridge",
+        "REVISION": "Rev 1",
+        "USER": "LJW",
+        "EMAIL": "developer-01@midasit.co.jp",
+        "ADDRESS": "MIDAS IT",
+        "TEL": "031-789-0000",
+        "FAX": "031-789-0001",
+        "CLIENT": "MIDAS IT",
+        "TITLE": "Cable Stayed Bridge",
+        "ENGINEER": "A",
+        "EDATE": "2026/07/01",
+        "CHECK1": "B",
+        "CDATE1": "2026/07/05",
+        "CHECK2": "C",
+        "CDATE2": "2026/07/10",
+        "CHECK3": "D",
+        "CDATE3": "2026/07/15",
+        "APPROVE": "E",
+        "ADATE": "2026/07/20",
+        "COMMENT": "Reviewed and approved."
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "_group": "design",
+  "_name": "MBTP",
+  "uri": "design/SRC/AIK-SRC2K/MBTP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MBTP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Member Type (MBTP). The member classification (TYPE) drives design member behavior; the sole field selects the member category.",
+      "properties": {
+        "TYPE": {
+          "type": "string",
+          "enum": ["COLUMN", "BEAM", "BRACE"],
+          "description": "Member type classification of the element. Case-insensitive. COLUMN, BEAM, or BRACE."
+        }
+      },
+      "required": ["TYPE"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TYPE": "COLUMN"
+      }
+    }
+  }
+}

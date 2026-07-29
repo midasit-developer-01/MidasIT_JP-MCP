@@ -1,0 +1,37 @@
+{
+  "_group": "view",
+  "_name": "ANGLE",
+  "uri": "view/ANGLE",
+  "methods": "POST",
+  "schema": {
+    "ANGLE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "View Angle (ANGLE). Rotates the model view by converting horizontal and vertical angles into an axis vector; both angles drive the resulting view orientation.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "View angle request. Although both fields are optional in the DTO, the handler rejects the request unless both HORIZONTAL and VERTICAL are supplied.",
+          "properties": {
+            "HORIZONTAL": {
+              "type": "number",
+              "default": 0,
+              "description": "Horizontal rotation angle (degrees) used with VERTICAL to compute the view axis vector. Must be assigned or the request is rejected."
+            },
+            "VERTICAL": {
+              "type": "number",
+              "default": 0,
+              "description": "Vertical rotation angle (degrees) used with HORIZONTAL to compute the view axis vector. Must be assigned or the request is rejected."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "HORIZONTAL": 30,
+      "VERTICAL": 15
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "_group": "design",
+  "_name": "WD-ANAL",
+  "uri": "design/RC/KDS-41-20-2022/WD-ANAL",
+  "methods": "POST",
+  "schema": {
+    "WD-ANAL": {
+      "type": "object",
+      "description": "Wall Design Analysis (WD-ANAL). Runs RC wall design analysis per KDS-41-20-2022; the request body selects which walls and stories to design via the optional SELECTIONS list.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request DTO (DESIGN_ANAL_WALL). Specifies the walls and stories to perform design analysis for.",
+          "properties": {
+            "SELECTIONS": {
+              "type": "array",
+              "description": "List of wall and story selections to perform design for. If omitted or empty, all walls and all stories are included.",
+              "items": {
+                "type": "object",
+                "description": "One selection pair: a set of Wall IDs plus a set of Story names.",
+                "properties": {
+                  "WALL_IDS": {
+                    "type": "object",
+                    "description": "Wall ID Object - Specify Each Wall ID (KEYS) or Wall ID Range (TO). If omitted, all walls are included.",
+                    "properties": {
+                      "KEYS": {
+                        "type": "array",
+                        "description": "Specify Each Wall ID.",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "TO": {
+                        "type": "string",
+                        "description": "Specify Wall ID Range (e.g. 1to20)."
+                      }
+                    }
+                  },
+                  "STORY": {
+                    "type": "array",
+                    "description": "Story names to filter design analysis. If omitted, all stories are included.",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "SELECTIONS": [
+        {
+          "WALL_IDS": {
+            "KEYS": [
+              1,
+              2,
+              3
+            ]
+          },
+          "STORY": [
+            "1F",
+            "2F"
+          ]
+        },
+        {
+          "WALL_IDS": {
+            "TO": "10to20"
+          },
+          "STORY": [
+            "3F"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,443 @@
+{
+  "_group": "db",
+  "_name": "GALD",
+  "uri": "db/GALD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "GALD": {
+      "type": "object",
+      "description": "Grid Model Analysis Loads (GALD). LCTYPE (DL/VLL/CLL/OLL) selects which sub-key of SUBTYPE and LOAD applies; each LOAD sub-key holds an array of load definitions whose fields depend on the load case type.",
+      "additionalProperties": false,
+      "required": [
+        "LCNAME",
+        "LCTYPE"
+      ],
+      "properties": {
+        "LCNAME": {
+          "type": "string",
+          "description": "Load Case Name."
+        },
+        "LCTYPE": {
+          "type": "string",
+          "enum": [
+            "DL",
+            "VLL",
+            "CLL",
+            "OLL"
+          ],
+          "description": "Load Case Type (case-insensitive). DL = Dead Load, VLL = Vehicles Live Load, CLL = Crowd Live Load, OLL = Other Live Load. Determines which sub-key of SUBTYPE and LOAD must be supplied."
+        },
+        "SUBTYPE": {
+          "type": "object",
+          "description": "Sub Load Case Type, keyed by LCTYPE. Provide the sub-key matching LCTYPE (only VLL and CLL have a sub type).",
+          "additionalProperties": false,
+          "properties": {
+            "VLL": {
+              "type": "string",
+              "enum": [
+                "L-LOAD-A",
+                "L-LOAD-B",
+                "T-LOAD-A",
+                "Not Used",
+                "T-LOAD-B"
+              ],
+              "description": "[LCTYPE=VLL] Vehicle live load sub type (case-insensitive). L-LOAD-A / L-LOAD-B are L-load types (main load range applies when index < 2); T-LOAD-A / T-LOAD-B are T-load types."
+            },
+            "CLL": {
+              "type": "string",
+              "enum": [
+                "JAPANHW"
+              ],
+              "description": "[LCTYPE=CLL] Crowd live load sub type (case-insensitive). Only JAPANHW is supported."
+            }
+          }
+        },
+        "LOAD": {
+          "type": "object",
+          "description": "Define load data, keyed by LCTYPE. Provide the sub-key (array of load objects) matching LCTYPE.",
+          "additionalProperties": false,
+          "properties": {
+            "DL": {
+              "type": "array",
+              "description": "[LCTYPE=DL] Dead load definitions.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "LTYPE",
+                  "CLINE",
+                  "SMLTYPE",
+                  "EMLTYPE",
+                  "SMLINE",
+                  "EMLINE",
+                  "SCROSS",
+                  "ECROSS"
+                ],
+                "properties": {
+                  "LTYPE": {
+                    "type": "string",
+                    "enum": [
+                      "POINT",
+                      "LINE",
+                      "AREA"
+                    ],
+                    "description": "Dead Load Type (case-insensitive): POINT, LINE, or AREA."
+                  },
+                  "CLINE": {
+                    "type": "string",
+                    "description": "Center Line name (must reference an existing load line)."
+                  },
+                  "SMLTYPE": {
+                    "type": "string",
+                    "enum": [
+                      "G",
+                      "L"
+                    ],
+                    "description": "Main Line Type - Start (case-insensitive): G = Main Girder, L = Load Line."
+                  },
+                  "EMLTYPE": {
+                    "type": "string",
+                    "enum": [
+                      "G",
+                      "L"
+                    ],
+                    "description": "Main Line Type - End (case-insensitive): G = Main Girder, L = Load Line."
+                  },
+                  "SMLINE": {
+                    "type": "string",
+                    "description": "Main Line - Start name (resolved as a main girder when SMLTYPE=G, otherwise a load line)."
+                  },
+                  "EMLINE": {
+                    "type": "string",
+                    "description": "Main Line - End name (resolved as a main girder when EMLTYPE=G, otherwise a load line)."
+                  },
+                  "SCROSS": {
+                    "type": "string",
+                    "description": "Cross Beam - Start name (must reference an existing cross beam)."
+                  },
+                  "ECROSS": {
+                    "type": "string",
+                    "description": "Cross Beam - End name (must reference an existing cross beam)."
+                  },
+                  "SLOAD": {
+                    "type": "number",
+                    "default": 0.0,
+                    "description": "Load Value - Start."
+                  },
+                  "ELOAD": {
+                    "type": "number",
+                    "default": 0.0,
+                    "description": "Load Value - End."
+                  }
+                }
+              }
+            },
+            "VLL": {
+              "type": "array",
+              "description": "[LCTYPE=VLL] Vehicle live load definitions.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "LTYPE",
+                  "CLINE",
+                  "SMLTYPE",
+                  "EMLTYPE",
+                  "SMLINE",
+                  "EMLINE",
+                  "SCROSS",
+                  "ECROSS"
+                ],
+                "properties": {
+                  "LTYPE": {
+                    "type": "string",
+                    "enum": [
+                      "POINT",
+                      "LINE",
+                      "AREA"
+                    ],
+                    "description": "Dead Load Type (case-insensitive): POINT, LINE, or AREA."
+                  },
+                  "CLINE": {
+                    "type": "string",
+                    "description": "Center Line name (must reference an existing load line)."
+                  },
+                  "SMLTYPE": {
+                    "type": "string",
+                    "enum": [
+                      "G",
+                      "L"
+                    ],
+                    "description": "Main Line Type - Start (case-insensitive): G = Main Girder, L = Load Line."
+                  },
+                  "EMLTYPE": {
+                    "type": "string",
+                    "enum": [
+                      "G",
+                      "L"
+                    ],
+                    "description": "Main Line Type - End (case-insensitive): G = Main Girder, L = Load Line."
+                  },
+                  "SMLINE": {
+                    "type": "string",
+                    "description": "Main Line - Start name (resolved as a main girder when SMLTYPE=G, otherwise a load line)."
+                  },
+                  "EMLINE": {
+                    "type": "string",
+                    "description": "Main Line - End name (resolved as a main girder when EMLTYPE=G, otherwise a load line)."
+                  },
+                  "SCROSS": {
+                    "type": "string",
+                    "description": "Cross Beam - Start name (must reference an existing cross beam)."
+                  },
+                  "ECROSS": {
+                    "type": "string",
+                    "description": "Cross Beam - End name (must reference an existing cross beam)."
+                  },
+                  "SMEDIAN": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Median - Start: \"None\" for no median, otherwise a load line name. The handler requires this to be present for VLL and rejects a non-existent load line name."
+                  },
+                  "EMEDIAN": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Median - End: \"None\" for no median, otherwise a load line name. The handler requires this to be present for VLL and rejects a non-existent load line name."
+                  },
+                  "MLRANGE": {
+                    "type": "number",
+                    "default": 0.0,
+                    "description": "Main Load Width. Applied only for L-load sub types (SUBTYPE.VLL = L-LOAD-A or L-LOAD-B)."
+                  }
+                }
+              }
+            },
+            "CLL": {
+              "type": "array",
+              "description": "[LCTYPE=CLL] Crowd live load definitions.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "LTYPE",
+                  "CLINE",
+                  "SMLTYPE",
+                  "EMLTYPE",
+                  "SMLINE",
+                  "EMLINE",
+                  "SCROSS",
+                  "ECROSS"
+                ],
+                "properties": {
+                  "LTYPE": {
+                    "type": "string",
+                    "enum": [
+                      "POINT",
+                      "LINE",
+                      "AREA"
+                    ],
+                    "description": "Dead Load Type (case-insensitive): POINT, LINE, or AREA."
+                  },
+                  "CLINE": {
+                    "type": "string",
+                    "description": "Center Line name (must reference an existing load line)."
+                  },
+                  "SMLTYPE": {
+                    "type": "string",
+                    "enum": [
+                      "G",
+                      "L"
+                    ],
+                    "description": "Main Line Type - Start (case-insensitive): G = Main Girder, L = Load Line."
+                  },
+                  "EMLTYPE": {
+                    "type": "string",
+                    "enum": [
+                      "G",
+                      "L"
+                    ],
+                    "description": "Main Line Type - End (case-insensitive): G = Main Girder, L = Load Line."
+                  },
+                  "SMLINE": {
+                    "type": "string",
+                    "description": "Main Line - Start name (resolved as a main girder when SMLTYPE=G, otherwise a load line)."
+                  },
+                  "EMLINE": {
+                    "type": "string",
+                    "description": "Main Line - End name (resolved as a main girder when EMLTYPE=G, otherwise a load line)."
+                  },
+                  "SCROSS": {
+                    "type": "string",
+                    "description": "Cross Beam - Start name (must reference an existing cross beam)."
+                  },
+                  "ECROSS": {
+                    "type": "string",
+                    "description": "Cross Beam - End name (must reference an existing cross beam)."
+                  }
+                }
+              }
+            },
+            "OLL": {
+              "type": "array",
+              "description": "[LCTYPE=OLL] Other live load definitions.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "LTYPE",
+                  "CLINE",
+                  "SMLTYPE",
+                  "EMLTYPE",
+                  "SMLINE",
+                  "EMLINE",
+                  "SCROSS",
+                  "ECROSS"
+                ],
+                "properties": {
+                  "LTYPE": {
+                    "type": "string",
+                    "enum": [
+                      "POINT",
+                      "LINE",
+                      "AREA"
+                    ],
+                    "description": "Dead Load Type (case-insensitive): POINT, LINE, or AREA."
+                  },
+                  "CLINE": {
+                    "type": "string",
+                    "description": "Center Line name (must reference an existing load line)."
+                  },
+                  "SMLTYPE": {
+                    "type": "string",
+                    "enum": [
+                      "G",
+                      "L"
+                    ],
+                    "description": "Main Line Type - Start (case-insensitive): G = Main Girder, L = Load Line."
+                  },
+                  "EMLTYPE": {
+                    "type": "string",
+                    "enum": [
+                      "G",
+                      "L"
+                    ],
+                    "description": "Main Line Type - End (case-insensitive): G = Main Girder, L = Load Line."
+                  },
+                  "SMLINE": {
+                    "type": "string",
+                    "description": "Main Line - Start name (resolved as a main girder when SMLTYPE=G, otherwise a load line)."
+                  },
+                  "EMLINE": {
+                    "type": "string",
+                    "description": "Main Line - End name (resolved as a main girder when EMLTYPE=G, otherwise a load line)."
+                  },
+                  "SCROSS": {
+                    "type": "string",
+                    "description": "Cross Beam - Start name (must reference an existing cross beam)."
+                  },
+                  "ECROSS": {
+                    "type": "string",
+                    "description": "Cross Beam - End name (must reference an existing cross beam)."
+                  },
+                  "LLOAD": {
+                    "type": "number",
+                    "default": 0.0,
+                    "description": "Load Value."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "Dead Load 1",
+        "LCTYPE": "DL",
+        "LOAD": {
+          "DL": [
+            {
+              "LTYPE": "LINE",
+              "CLINE": "CL1",
+              "SMLTYPE": "G",
+              "EMLTYPE": "G",
+              "SMLINE": "G1",
+              "EMLINE": "G2",
+              "SCROSS": "C1",
+              "ECROSS": "C2",
+              "SLOAD": -10.0,
+              "ELOAD": -10.0
+            }
+          ]
+        }
+      },
+      "2": {
+        "LCNAME": "Vehicle Live Load",
+        "LCTYPE": "VLL",
+        "SUBTYPE": {
+          "VLL": "L-LOAD-A"
+        },
+        "LOAD": {
+          "VLL": [
+            {
+              "LTYPE": "LINE",
+              "CLINE": "CL1",
+              "SMLTYPE": "G",
+              "EMLTYPE": "G",
+              "SMLINE": "G1",
+              "EMLINE": "G2",
+              "SCROSS": "C1",
+              "ECROSS": "C2",
+              "SMEDIAN": "None",
+              "EMEDIAN": "None",
+              "MLRANGE": 6.0
+            }
+          ]
+        }
+      },
+      "3": {
+        "LCNAME": "Crowd Live Load",
+        "LCTYPE": "CLL",
+        "SUBTYPE": {
+          "CLL": "JAPANHW"
+        },
+        "LOAD": {
+          "CLL": [
+            {
+              "LTYPE": "AREA",
+              "CLINE": "CL1",
+              "SMLTYPE": "G",
+              "EMLTYPE": "G",
+              "SMLINE": "G1",
+              "EMLINE": "G2",
+              "SCROSS": "C1",
+              "ECROSS": "C2"
+            }
+          ]
+        }
+      },
+      "4": {
+        "LCNAME": "Other Live Load",
+        "LCTYPE": "OLL",
+        "LOAD": {
+          "OLL": [
+            {
+              "LTYPE": "POINT",
+              "CLINE": "CL1",
+              "SMLTYPE": "G",
+              "EMLTYPE": "G",
+              "SMLINE": "G1",
+              "EMLINE": "G2",
+              "SCROSS": "C1",
+              "ECROSS": "C2",
+              "LLOAD": -5.0
+            }
+          ]
+        }
+      }
+    }
+  }
+}

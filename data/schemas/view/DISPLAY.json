@@ -1,0 +1,666 @@
+{
+  "_group": "view",
+  "_name": "DISPLAY",
+  "uri": "view/DISPLAY",
+  "methods": "POST",
+  "schema": {
+    "DISPLAY": {
+      "type": "object",
+      "description": "Display Option (DISPLAY). Controls which model entities, boundaries, loads and view decorations are drawn in the active model window; every group is optional and each boolean toggles the visibility of one item.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Display option request. All groups are optional; only the groups/fields you include are applied.",
+          "properties": {
+            "NODE": {
+              "type": "object",
+              "description": "Node display toggles.",
+              "properties": {
+                "NODE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show nodes."
+                },
+                "NODE_NUMBER": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show node numbers."
+                },
+                "STORY_NAME": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show story name."
+                },
+                "NODE_LOCAL_AXIS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show node local axis."
+                }
+              }
+            },
+            "ELEMENT": {
+              "type": "object",
+              "description": "Element display toggles.",
+              "properties": {
+                "ELEM_NUMBER": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show element numbers."
+                },
+                "WALL_ID": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show wall ID."
+                },
+                "GAP": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show gap elements."
+                },
+                "HOOK": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show hook elements."
+                },
+                "CABLE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show cable elements."
+                },
+                "LOCAL_AXIS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show element local axis."
+                }
+              }
+            },
+            "PROPERTY": {
+              "type": "object",
+              "description": "Property display toggles.",
+              "properties": {
+                "PROPERTY_NUMBER": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show property numbers."
+                },
+                "PROPERTY_NAME": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show property names."
+                },
+                "SECTION_SHAPE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show section shape."
+                },
+                "INELASTIC_HINGE_SYMBOL": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show inelastic hinge symbol."
+                },
+                "INELASTIC_HINGE_NAME": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show inelastic hinge name."
+                }
+              }
+            },
+            "BOUNDARY": {
+              "type": "object",
+              "description": "Boundary condition display toggles.",
+              "properties": {
+                "GROUP_SELECTION": {
+                  "type": "array",
+                  "description": "Boundary group selection list (names of boundary groups to display).",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "SUPPORT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show supports."
+                },
+                "SUPPORT_BY_DIRECTION": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show support by direction."
+                },
+                "POINT_SPRING_SUPPORT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show point spring support."
+                },
+                "POINT_SPRING_SUPPORT_COMP_TENS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show point spring support (Comp/Tens)."
+                },
+                "POINT_SPRING_SUPPORT_MULTI_LINEAR": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show point spring support (Multi-Linear)."
+                },
+                "POINT_SPRING_SUPPORT_BY_DIRECTION": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show point spring support by direction."
+                },
+                "POINT_SPRING_SUPPORT_BY_DIRECTION_COMP_TENS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show point spring support by direction (Comp/Tens)."
+                },
+                "POINT_SPRING_SUPPORT_BY_DIRECTION_MULTI_LINEAR": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show point spring support by direction (Multi-Linear)."
+                },
+                "SURFACE_SPRING_SUPPORT_TYPE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show surface spring support type."
+                },
+                "SURFACE_SPRING_SUPPORT_LINEAR": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show surface spring support (Linear)."
+                },
+                "SURFACE_SPRING_SUPPORT_COMP_TENS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show surface spring support (Comp/Tens)."
+                },
+                "GENERAL_SPRING_SUPPORT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show general spring support."
+                },
+                "ELASTIC_LINK": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show elastic link."
+                },
+                "ELASTIC_LINK_LOCAL_AXIS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show elastic link local axis."
+                },
+                "ELASTIC_LINK_TYPE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show elastic link type."
+                },
+                "ELASTIC_LINK_NUMBER": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show elastic link number."
+                },
+                "GENERAL_LINK": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show general link."
+                },
+                "GENERAL_LINK_NUMBER": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show general link number."
+                },
+                "GENERAL_LINK_LOCAL_AXIS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show general link local axis."
+                },
+                "GENERAL_LINK_TYPE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show general link type."
+                },
+                "CHANGE_GENERAL_LINK_PROPERTIES": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show change general link properties."
+                },
+                "BEAM_END_RELEASE_SYMBOL": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show beam end release symbol."
+                },
+                "BEAM_END_RELEASE_DIGIT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show beam end release digit."
+                },
+                "BEAM_END_OFFSET_SYMBOL": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show beam end offset symbol."
+                },
+                "BEAM_END_OFFSET_DIGIT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show beam end offset digit."
+                },
+                "PLATE_END_RELEASE_SYMBOL": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show plate end release symbol."
+                },
+                "PLATE_END_RELEASE_DIGIT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show plate end release digit."
+                },
+                "RIGID_LINK": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show rigid link."
+                },
+                "LINEAR_CONSTRAINTS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show linear constraints."
+                },
+                "REACTION_POSITION": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show reaction position."
+                },
+                "STORY_DIAPHRAGM": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show story diaphragm."
+                },
+                "DIAPHRAGM_DISCONNECT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show diaphragm disconnect."
+                }
+              }
+            },
+            "MISC": {
+              "type": "object",
+              "description": "Miscellaneous display toggles.",
+              "properties": {
+                "NODAL_MASS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show nodal mass."
+                },
+                "LOAD_TO_MASS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show load to mass."
+                },
+                "TENDON_PROFILE_NAMES": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show tendon profile names."
+                },
+                "TENDON_PROFILE_POINT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show tendon profile point."
+                },
+                "SETTLEMENT_GROUP": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show settlement group."
+                },
+                "SETTLEMENT_GROUP_VALUE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show settlement group value."
+                },
+                "HEAT_OF_HYDRATION_VALUE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show heat of hydration value."
+                },
+                "HEAT_OF_HYDRATION_FUNC_NAME": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show heat of hydration function name."
+                },
+                "HEAT_OF_HYDRATION_ELEMENT_CONVECTION_BOUNDARY": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show heat of hydration element convection boundary."
+                },
+                "HEAT_OF_HYDRATION_PRESCRIBED_TEMPERATURE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show heat of hydration prescribed temperature."
+                },
+                "HEAT_OF_HYDRATION_HEAT_SOURCE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show heat of hydration heat source."
+                },
+                "HEAT_OF_HYDRATION_PIPE_COOLING_ELEMENT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show heat of hydration pipe cooling element."
+                },
+                "GRID_MODEL_LOAD_LINE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show grid model load line."
+                }
+              }
+            },
+            "LOAD": {
+              "type": "object",
+              "description": "Load display toggles and load-display options.",
+              "properties": {
+                "CASE_SELECTION": {
+                  "type": "object",
+                  "description": "Load case selection options.",
+                  "properties": {
+                    "TYPE": {
+                      "type": "string",
+                      "description": "Load case type."
+                    },
+                    "NAME": {
+                      "type": "string",
+                      "description": "Load case name."
+                    }
+                  },
+                  "required": [
+                    "TYPE",
+                    "NAME"
+                  ]
+                },
+                "GROUP_SELECTION": {
+                  "type": "array",
+                  "description": "Load group selection list (names of load groups to display).",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "LOAD_VALUE": {
+                  "type": "object",
+                  "description": "Load value display options (numeric format and decimal places).",
+                  "properties": {
+                    "FORMAT": {
+                      "type": "string",
+                      "enum": [
+                        "Default",
+                        "Fixed",
+                        "Scientific"
+                      ],
+                      "description": "Number format of displayed load values (case-insensitive)."
+                    },
+                    "PLACE": {
+                      "type": "integer",
+                      "description": "Number of decimal places for displayed load values."
+                    }
+                  },
+                  "required": [
+                    "FORMAT",
+                    "PLACE"
+                  ]
+                },
+                "NODAL_BODY_FORCE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show nodal body force."
+                },
+                "NODAL_LOAD": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show nodal load."
+                },
+                "SPECIFIED_DISPLACEMENT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show specified displacement."
+                },
+                "BEAM_LOAD": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show beam load."
+                },
+                "PRESTRESS_LOAD": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show prestress load."
+                },
+                "PRETENSION_LOAD": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show pretension load."
+                },
+                "FLOOR_LOAD": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show floor load."
+                },
+                "FLOOR_LOAD_NAME": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show floor load name."
+                },
+                "FLOOR_LOAD_AREA": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show floor load area."
+                },
+                "LOADING_AREA_PLANE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show loading area plane."
+                },
+                "FINISHING_MATERIAL_LOAD": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show finishing material load."
+                },
+                "PRESSURE_LOAD": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show pressure load."
+                },
+                "AREA_PRESSURE_LOADS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show area pressure loads."
+                },
+                "PLANE_LOAD": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show plane load."
+                },
+                "PLANE_LOAD_NAME": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show plane load name."
+                },
+                "NODAL_TEMPERATURE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show nodal temperature."
+                },
+                "ELEMENT_TEMPERATURE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show element temperature."
+                },
+                "TEMPERATURE_GRADIENT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show temperature gradient."
+                },
+                "BEAM_SECTION_TEMPERATURE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show beam section temperature."
+                },
+                "TENDON_PRESTRESS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show tendon prestress."
+                },
+                "WIND_LOAD": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show wind load."
+                },
+                "AREA_WIND_PRESSURE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show area wind pressure."
+                },
+                "AREA_WIND_PRESSURE_NAME": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show area wind pressure name."
+                },
+                "BEAM_WIND_PRESSURE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show beam wind pressure."
+                },
+                "NODAL_WIND_PRESSURE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show nodal wind pressure."
+                },
+                "FUNCTION_WIND_PRESSURE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show function wind pressure."
+                },
+                "FUNCTION_WIND_PRESSURE_NAME": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show function wind pressure name."
+                },
+                "SEISMIC_EARTH_PRESSURE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show seismic earth pressure."
+                },
+                "STATIC_EARTH_PRESSRUE": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show static earth pressure."
+                },
+                "SEISMIC_LOAD": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show seismic load."
+                },
+                "DYNAMIC_NODAL_LOAD": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show dynamic nodal load."
+                },
+                "MULTIPLE_SUPPORT_EXCITATION": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show multiple support excitation."
+                },
+                "MULTIPLE_SUPPORT_EXCITATION_FUNCTION_NAME": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show multiple support excitation function name."
+                },
+                "DIR_X": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show load in the X direction."
+                },
+                "DIR_Y": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show load in the Y direction."
+                },
+                "DIR_Z": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show load in the Z direction."
+                }
+              }
+            },
+            "VIEW": {
+              "type": "object",
+              "description": "View decoration toggles and options.",
+              "properties": {
+                "UCS_AXIS": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show UCS axis."
+                },
+                "VIEWPORT_GIZMO": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show dynamic view control (viewport gizmo)."
+                },
+                "VIEW_POINT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Show view point."
+                },
+                "DESCRIPTION": {
+                  "type": "string",
+                  "description": "Description text."
+                },
+                "LABEL_ORIENTATION": {
+                  "type": "integer",
+                  "description": "Label orientation in degrees (0~180, divisible by 15)."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "NODE": {
+        "NODE": true,
+        "NODE_NUMBER": true
+      },
+      "ELEMENT": {
+        "ELEM_NUMBER": true,
+        "LOCAL_AXIS": true
+      },
+      "PROPERTY": {
+        "PROPERTY_NAME": true,
+        "SECTION_SHAPE": true
+      },
+      "BOUNDARY": {
+        "GROUP_SELECTION": [
+          "SupportGroup1"
+        ],
+        "SUPPORT": true,
+        "ELASTIC_LINK": true
+      },
+      "MISC": {
+        "NODAL_MASS": true
+      },
+      "LOAD": {
+        "CASE_SELECTION": {
+          "TYPE": "ST",
+          "NAME": "DL"
+        },
+        "GROUP_SELECTION": [
+          "LoadGroup1"
+        ],
+        "LOAD_VALUE": {
+          "FORMAT": "Fixed",
+          "PLACE": 3
+        },
+        "BEAM_LOAD": true,
+        "DIR_Z": true
+      },
+      "VIEW": {
+        "UCS_AXIS": true,
+        "DESCRIPTION": "Model overview",
+        "LABEL_ORIENTATION": 15
+      }
+    }
+  }
+}

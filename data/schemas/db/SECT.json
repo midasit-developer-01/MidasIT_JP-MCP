@@ -1,0 +1,1363 @@
+{
+  "_group": "db",
+  "_name": "SECT",
+  "uri": "db/SECT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SECT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Section (SECT). A single structural cross-section keyed by section id; SECTTYPE selects the section family and SECT_BEFORE (plus SECT_AFTER for CONSTRUCT and SECT_I/SECT_J for TAPERED) carries the geometry, offset, material and stiffness data.",
+      "type": "object",
+      "properties": {
+        "SECTTYPE": {
+          "type": "string",
+          "enum": [
+            "DBUSER",
+            "SRC",
+            "VALUE",
+            "COMBINED",
+            "TAPERED",
+            "CONSTRUCT",
+            "COMPOSITE",
+            "PSC",
+            "COMPOSITE-GEN",
+            "SOD",
+            "SB"
+          ],
+          "description": "Section data type (wire value, case-insensitive). Drives which section sub-fields apply: DBUSER=standard DB or user section, SRC=steel-reinforced concrete, VALUE=user-input stiffness values, COMBINED=combined, TAPERED=tapered (uses SECT_I and SECT_J), CONSTRUCT=construction-stage section (uses SECT_BEFORE and SECT_AFTER), COMPOSITE=steel-concrete composite (uses SLAB), PSC=prestressed concrete (uses vSIZE_PSC_* / PSC_OPT*), COMPOSITE-GEN=composite general (uses GENERAL_PART/polygons), SOD=steel orthotropic deck (uses SODSTIFF), SB=steel box."
+        },
+        "SECT_NAME": {
+          "type": "string",
+          "description": "Section name."
+        },
+        "SECT_BEFORE": {
+          "$ref": "#/definitions/SECT_SECTION",
+          "description": "Primary section data ('Before' part). For CONSTRUCT sections this is the before-construction part; for all other types it holds the main section definition."
+        },
+        "SECT_AFTER": {
+          "$ref": "#/definitions/SECT_SECTION",
+          "description": "[SECTTYPE=CONSTRUCT] Section data for the after-construction part."
+        },
+        "COMPOSITE_J": {
+          "$ref": "#/definitions/SECT_SECTBASE",
+          "description": "[SECTTYPE=TAPERED composite] Base section at end J for a composite tapered section."
+        },
+        "COAT_THIK": {
+          "type": "number",
+          "description": "Coating thickness."
+        },
+        "FORM_TYPE": {
+          "type": "integer",
+          "description": "Forming type code (e.g. hot-rolled vs cold-formed)."
+        },
+        "RECL_PROP": {
+          "type": "boolean",
+          "description": "Recalculate section properties after set (defaults to true when omitted)."
+        },
+        "CALC_OPT": {
+          "type": "boolean",
+          "description": "Calculate-section-property option (defaults to true when omitted)."
+        },
+        "SPC_TEXT": {
+          "type": "string",
+          "description": "SPC import text; when non-empty the section is built by importing this SPC string instead of the field-by-field data."
+        },
+        "SPC_TEXT2": {
+          "type": "string",
+          "description": "Secondary SPC import text (used with SPC_TEXT to build a tapered composite-general section from two SPC parts)."
+        }
+      },
+      "required": [
+        "SECTTYPE",
+        "SECT_NAME"
+      ],
+      "definitions": {
+        "STIFF_SHAPE": {
+          "type": "object",
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Stiffener shape name."
+            },
+            "SHAPE_TYPE": {
+              "type": "integer",
+              "description": "Stiffener shape type code."
+            },
+            "SIZE": {
+              "type": "array",
+              "minItems": 8,
+              "maxItems": 8,
+              "items": {
+                "type": "number"
+              },
+              "description": "Stiffener shape dimensions (fixed 8 values)."
+            }
+          }
+        },
+        "STIFF_PROFILE": {
+          "type": "object",
+          "properties": {
+            "SPACING": {
+              "type": "number",
+              "description": "Stiffener spacing."
+            },
+            "SHAPE": {
+              "type": "integer",
+              "description": "Index of the stiffener shape used on this edge."
+            },
+            "USE_CALC": {
+              "type": "boolean",
+              "description": "Use auto-calculation for this stiffener profile.",
+              "default": false
+            }
+          }
+        },
+        "SECT_STIFF": {
+          "type": "object",
+          "properties": {
+            "POSITION": {
+              "type": "integer",
+              "description": "Stiffener position code."
+            },
+            "REFERENCE_OF_D": {
+              "type": "integer",
+              "description": "Reference of d for stiffener placement."
+            },
+            "STIFF_CNT": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "integer"
+              },
+              "description": "Stiffener counts (fixed 4 values: top/bot/left/right)."
+            },
+            "STIFF_SHAPE": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/STIFF_SHAPE"
+              },
+              "description": "Stiffener shape definitions."
+            },
+            "STIFF_TOP": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/STIFF_PROFILE"
+              },
+              "description": "Top-edge stiffener profiles."
+            },
+            "STIFF_BOT": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/STIFF_PROFILE"
+              },
+              "description": "Bottom-edge stiffener profiles."
+            },
+            "STIFF_LEFT": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/STIFF_PROFILE"
+              },
+              "description": "Left-edge stiffener profiles."
+            },
+            "STIFF_RIGHT": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/STIFF_PROFILE"
+              },
+              "description": "Right-edge stiffener profiles."
+            }
+          }
+        },
+        "SECT_DESIGN": {
+          "type": "object",
+          "properties": {
+            "YBAR": {
+              "type": "number",
+              "description": "Design centroid distance Y."
+            },
+            "ZBAR": {
+              "type": "number",
+              "description": "Design centroid distance Z."
+            },
+            "ZYY": {
+              "type": "number",
+              "description": "Design section modulus about y-axis."
+            },
+            "ZZZ": {
+              "type": "number",
+              "description": "Design section modulus about z-axis."
+            },
+            "TANA": {
+              "type": "number",
+              "description": "Design tan(alpha) principal-axis angle."
+            },
+            "BETA": {
+              "type": "number",
+              "description": "Design beta angle."
+            }
+          }
+        },
+        "SECT_STIFFNESS": {
+          "type": "object",
+          "properties": {
+            "AREA": {
+              "type": "number",
+              "description": "Cross-sectional area."
+            },
+            "WAREA": {
+              "type": "number",
+              "description": "Effective/weighted area."
+            },
+            "ASY": {
+              "type": "number",
+              "description": "Effective shear area about y."
+            },
+            "ASZ": {
+              "type": "number",
+              "description": "Effective shear area about z."
+            },
+            "RXX": {
+              "type": "number",
+              "description": "Torsional constant (Ixx)."
+            },
+            "RYY": {
+              "type": "number",
+              "description": "Moment of inertia about y (Iyy)."
+            },
+            "RZZ": {
+              "type": "number",
+              "description": "Moment of inertia about z (Izz)."
+            },
+            "CYP": {
+              "type": "number",
+              "description": "Distance to extreme fiber +y."
+            },
+            "CYM": {
+              "type": "number",
+              "description": "Distance to extreme fiber -y."
+            },
+            "CZP": {
+              "type": "number",
+              "description": "Distance to extreme fiber +z."
+            },
+            "CZM": {
+              "type": "number",
+              "description": "Distance to extreme fiber -z."
+            },
+            "QYB": {
+              "type": "number",
+              "description": "First moment of area Qy at shear check point."
+            },
+            "QZB": {
+              "type": "number",
+              "description": "First moment of area Qz at shear check point."
+            },
+            "Y": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "number"
+              },
+              "description": "Stress-point y coordinates (fixed 4 values)."
+            },
+            "Z": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "number"
+              },
+              "description": "Stress-point z coordinates (fixed 4 values)."
+            },
+            "IW": {
+              "type": "number",
+              "description": "Warping constant."
+            },
+            "W": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "number"
+              },
+              "description": "Warping function values (fixed 4 values)."
+            },
+            "CXY": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "number"
+              },
+              "description": "Shear coefficient Cxy at stress points (fixed 4 values)."
+            },
+            "CXZ": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 4,
+              "items": {
+                "type": "number"
+              },
+              "description": "Shear coefficient Cxz at stress points (fixed 4 values)."
+            },
+            "YS_YC": {
+              "type": "number",
+              "description": "Shear-center minus centroid distance in y."
+            },
+            "ZS_ZC": {
+              "type": "number",
+              "description": "Shear-center minus centroid distance in z."
+            },
+            "IP": {
+              "type": "number",
+              "description": "Polar moment of inertia."
+            }
+          }
+        },
+        "SECT_STIFFNESS_CF_BASE": {
+          "type": "object",
+          "properties": {
+            "A_EFF": {
+              "type": "number",
+              "description": "Effective area (cold-formed ULS)."
+            },
+            "A_NET": {
+              "type": "number",
+              "description": "Net area (cold-formed ULS)."
+            },
+            "LY_EFF": {
+              "type": "number",
+              "description": "Effective Iy (cold-formed ULS)."
+            },
+            "LZ_EFF": {
+              "type": "number",
+              "description": "Effective Iz (cold-formed ULS)."
+            },
+            "WY_EFF": {
+              "type": "number",
+              "description": "Effective Wy (cold-formed ULS)."
+            },
+            "WZ_EFF": {
+              "type": "number",
+              "description": "Effective Wz (cold-formed ULS)."
+            },
+            "LT_EFF": {
+              "type": "number",
+              "description": "Effective It (cold-formed ULS)."
+            },
+            "LW_EFF": {
+              "type": "number",
+              "description": "Effective Iw (cold-formed ULS)."
+            },
+            "RY_EFF": {
+              "type": "number",
+              "description": "Effective radius of gyration ry (cold-formed ULS)."
+            },
+            "RZ_EFF": {
+              "type": "number",
+              "description": "Effective radius of gyration rz (cold-formed ULS)."
+            }
+          }
+        },
+        "SECT_SOD_STIFF_DATA": {
+          "type": "object",
+          "properties": {
+            "USE_CALC": {
+              "type": "boolean",
+              "description": "Use auto-calculation for this SOD stiffener data.",
+              "default": false
+            },
+            "SPACING": {
+              "type": "number",
+              "description": "Stiffener spacing."
+            },
+            "STIF_POS": {
+              "type": "integer",
+              "description": "Stiffener position code."
+            },
+            "SHAPE_NAME": {
+              "type": "string",
+              "description": "Stiffener shape name."
+            },
+            "STIF_NAME": {
+              "type": "string",
+              "description": "Stiffener name."
+            }
+          }
+        },
+        "SECT_SOD_STIFF_SUB": {
+          "type": "object",
+          "properties": {
+            "DECK_POS": {
+              "type": "integer",
+              "description": "Deck position code."
+            },
+            "DECK_PART": {
+              "type": "integer",
+              "description": "Deck part index."
+            },
+            "REF_POS": {
+              "type": "integer",
+              "description": "Reference position code."
+            },
+            "NUM": {
+              "type": "integer",
+              "description": "Stiffener number."
+            },
+            "DECK_NAME": {
+              "type": "string",
+              "description": "Deck name."
+            },
+            "EACHSTIFFNOS": {
+              "type": "integer",
+              "description": "Applied stiffener number."
+            },
+            "DATA": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SECT_SOD_STIFF_DATA"
+              },
+              "description": "SOD stiffener data entries."
+            }
+          }
+        },
+        "SECT_SOD_STIFF": {
+          "type": "object",
+          "properties": {
+            "TOSTIFNOS": {
+              "type": "integer",
+              "description": "Defined stiffener number."
+            },
+            "SHAPE": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/STIFF_SHAPE"
+              },
+              "description": "Stiffener shape definitions."
+            },
+            "DECKSTIFFNO": {
+              "type": "integer",
+              "description": "Total deck & stiffener number."
+            },
+            "SUB": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SECT_SOD_STIFF_SUB"
+              },
+              "description": "SOD stiffener sub-definitions."
+            }
+          }
+        },
+        "GSEC_VERTEX": {
+          "type": "object",
+          "properties": {
+            "X": {
+              "type": "number",
+              "description": "Vertex X coordinate."
+            },
+            "Y": {
+              "type": "number",
+              "description": "Vertex Y coordinate."
+            }
+          }
+        },
+        "GSEC_POLYGON": {
+          "type": "object",
+          "properties": {
+            "VERTEX": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GSEC_VERTEX"
+              },
+              "description": "Polygon vertices."
+            }
+          }
+        },
+        "GSEC_LINE": {
+          "type": "object",
+          "properties": {
+            "VERTEX_ID1": {
+              "type": "integer",
+              "description": "Start vertex id."
+            },
+            "VERTEX_ID2": {
+              "type": "integer",
+              "description": "End vertex id."
+            },
+            "ALIGN": {
+              "type": "integer",
+              "description": "Line alignment information code."
+            },
+            "THICK": {
+              "type": "number",
+              "description": "Line thickness."
+            },
+            "ROTATE_DIS": {
+              "type": "number",
+              "description": "Rotating distance."
+            },
+            "SHEAR_STRESS": {
+              "type": "number",
+              "description": "Shear stress on line."
+            }
+          }
+        },
+        "GSEC_LDGN": {
+          "type": "object",
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Longitudinal-stiffener group name."
+            },
+            "BOUNDARY": {
+              "type": "integer",
+              "description": "Boundary code."
+            },
+            "PANEL_NUM": {
+              "type": "integer",
+              "description": "Panel number."
+            },
+            "LENGTH": {
+              "type": "number",
+              "description": "Length."
+            },
+            "THICK": {
+              "type": "number",
+              "description": "Thickness."
+            },
+            "Y": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              },
+              "description": "Y coordinates (fixed 2 values)."
+            },
+            "Z": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              },
+              "description": "Z coordinates (fixed 2 values)."
+            },
+            "USE_EXCEPT": {
+              "type": "boolean",
+              "description": "Use exception flag."
+            },
+            "USE_STIFF": {
+              "type": "boolean",
+              "description": "Use stiffener flag."
+            },
+            "LINE": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GSEC_LINE"
+              },
+              "description": "Lines of the longitudinal-stiffener group."
+            }
+          }
+        },
+        "GSEC_LSHAP": {
+          "type": "object",
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Longitudinal shape name."
+            },
+            "SHAPE": {
+              "type": "integer",
+              "description": "Shape code."
+            },
+            "LDGN": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GSEC_LDGN"
+              },
+              "description": "Longitudinal-stiffener group definitions."
+            }
+          }
+        },
+        "GSEC_PART": {
+          "type": "object",
+          "properties": {
+            "STIFF": {
+              "$ref": "#/definitions/SECT_STIFFNESS",
+              "description": "Stiffness of this general-section part."
+            },
+            "STIFF_SUM": {
+              "$ref": "#/definitions/SECT_STIFFNESS",
+              "description": "Summed stiffness of general-section parts."
+            },
+            "PERIIN": {
+              "type": "number",
+              "description": "Inner perimeter."
+            },
+            "PERIOUT": {
+              "type": "number",
+              "description": "Outer perimeter."
+            },
+            "YBAR": {
+              "type": "number",
+              "description": "Centroid distance Y."
+            },
+            "ZBAR": {
+              "type": "number",
+              "description": "Centroid distance Z."
+            },
+            "PERIIN_SUM": {
+              "type": "number",
+              "description": "Inner perimeter sum."
+            },
+            "PERIOUT_SUM": {
+              "type": "number",
+              "description": "Outer perimeter sum."
+            },
+            "YBAR_SUM": {
+              "type": "number",
+              "description": "Centroid Y sum."
+            },
+            "ZBAR_SUM": {
+              "type": "number",
+              "description": "Centroid Z sum."
+            },
+            "DENS_RATIO": {
+              "type": "number",
+              "description": "Density ratio."
+            },
+            "ELAST": {
+              "type": "number",
+              "description": "Elastic modulus of this part."
+            },
+            "POISSON": {
+              "type": "number",
+              "description": "Poisson ratio of this part."
+            },
+            "USE_BASE_MATL": {
+              "type": "boolean",
+              "description": "Use base material for this part."
+            },
+            "USE_PLANE": {
+              "type": "boolean",
+              "description": "Use plane for this part.",
+              "default": false
+            },
+            "IDX_START": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 5,
+              "items": {
+                "type": "integer"
+              },
+              "description": "Start indices (fixed 5 values)."
+            },
+            "IDX_END": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 5,
+              "items": {
+                "type": "integer"
+              },
+              "description": "End indices (fixed 5 values)."
+            }
+          }
+        },
+        "SECT_SECTBASE": {
+          "type": "object",
+          "properties": {
+            "SHAPE": {
+              "type": "string",
+              "description": "Section shape code string of this base section."
+            },
+            "DB_NAME": {
+              "type": "string",
+              "description": "Standard section database name (e.g. AISC, JIS, IS808); empty for user/value sections."
+            },
+            "SECT_NAME": {
+              "type": "string",
+              "description": "Base section (DB) name."
+            },
+            "SECT_NAME2": {
+              "type": "string",
+              "description": "Secondary base section name (for built-up/combined sections)."
+            },
+            "vSIZE": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "Section dimension list; the meaning/count of each value depends on the section SHAPE."
+            },
+            "PERIIN": {
+              "type": "number",
+              "description": "Inner perimeter."
+            },
+            "PERIOUT": {
+              "type": "number",
+              "description": "Outer perimeter."
+            },
+            "BUILT_FLAG": {
+              "type": "integer",
+              "description": "Built-up flag: 0 for standard DB section, 1 for user/value input."
+            },
+            "BEFORE_PART_NUM": {
+              "type": "integer",
+              "description": "Before-part number (used for tapered composite-general sections)."
+            },
+            "USE_SYM_CALC": {
+              "type": "boolean",
+              "description": "Use symmetric auto-calculation."
+            },
+            "CF_STIFF_ULS": {
+              "$ref": "#/definitions/SECT_STIFFNESS_CF_BASE",
+              "description": "Cold-formed effective ULS stiffness properties."
+            },
+            "STIFF": {
+              "$ref": "#/definitions/SECT_STIFFNESS",
+              "description": "User-input/computed stiffness properties (used for VALUE-type sections)."
+            },
+            "DESIGN": {
+              "$ref": "#/definitions/SECT_DESIGN",
+              "description": "Design properties."
+            },
+            "STIFFENER": {
+              "$ref": "#/definitions/SECT_STIFF",
+              "description": "Stiffener layout."
+            },
+            "SODSTIFF": {
+              "$ref": "#/definitions/SECT_SOD_STIFF",
+              "description": "SOD (steel orthotropic deck) stiffener definition."
+            },
+            "GENERAL_PART": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GSEC_PART"
+              },
+              "description": "General-section parts (SECTTYPE=COMPOSITE-GEN or general user sections)."
+            },
+            "OUTER_POLYGON": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GSEC_POLYGON"
+              },
+              "description": "Outer polygons of a general section."
+            },
+            "INNER_POLYGON": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GSEC_POLYGON"
+              },
+              "description": "Inner (hole) polygons of a general section."
+            },
+            "LINE": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GSEC_LINE"
+              },
+              "description": "Section lines."
+            },
+            "LINE_LOOP": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "description": "Line loop indices."
+            },
+            "SHAPE_ARRAY": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GSEC_LSHAP"
+              },
+              "description": "Longitudinal shape array."
+            },
+            "vSIZE_PSC_A": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "PSC section I size group A (PSC sections only)."
+            },
+            "vSIZE_PSC_B": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "PSC section I size group B (PSC sections only)."
+            },
+            "vSIZE_PSC_C": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "PSC section I size group C (PSC sections only)."
+            },
+            "vSIZE_PSC_D": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "PSC section I size group D (PSC sections only)."
+            },
+            "SWIDTH": {
+              "type": "number",
+              "description": "S-Width for PSC section I or J."
+            }
+          }
+        },
+        "SECT_SECTION": {
+          "type": "object",
+          "properties": {
+            "OFFSET_PT": {
+              "type": "string",
+              "description": "Cardinal (offset) point code, e.g. 'CC','LT'."
+            },
+            "OFFSET_CENTER": {
+              "type": "integer",
+              "description": "Center location: Centroid=0, Center of Section=1."
+            },
+            "USER_OFFSET_REF": {
+              "type": "integer",
+              "description": "User-type offset reference: Centroid=0, Extreme Fiber(s)=1."
+            },
+            "HORZ_OFFSET_OPT": {
+              "type": "integer",
+              "description": "Horizontal offset option: to Extreme Fiber=0, User=1."
+            },
+            "USERDEF_OFFSET_YI": {
+              "type": "number",
+              "description": "User horizontal offset value at I."
+            },
+            "USERDEF_OFFSET_YJ": {
+              "type": "number",
+              "description": "User horizontal offset value at J (tapered sections)."
+            },
+            "VERT_OFFSET_OPT": {
+              "type": "integer",
+              "description": "Vertical offset option: to Extreme Fiber=0, User=1."
+            },
+            "USERDEF_OFFSET_ZI": {
+              "type": "number",
+              "description": "User vertical offset value at I."
+            },
+            "USERDEF_OFFSET_ZJ": {
+              "type": "number",
+              "description": "User vertical offset value at J (tapered sections)."
+            },
+            "USE_SHEAR_DEFORM": {
+              "type": "boolean",
+              "description": "Consider shear deformation.",
+              "default": false
+            },
+            "USE_WARPING_EFFECT": {
+              "type": "boolean",
+              "description": "Consider warping effect."
+            },
+            "SHAPE": {
+              "type": "string",
+              "description": "Section shape code string (e.g. 'SB','H','B','I','P')."
+            },
+            "DATATYPE": {
+              "type": "integer",
+              "description": "Data type of the section input."
+            },
+            "TYPE": {
+              "type": "integer",
+              "description": "Section sub-type code (tapered/section variation type)."
+            },
+            "SECT_I": {
+              "$ref": "#/definitions/SECT_SECTBASE",
+              "description": "Base section at end I."
+            },
+            "SECT_J": {
+              "$ref": "#/definitions/SECT_SECTBASE",
+              "description": "Base section at end J (tapered/variable sections)."
+            },
+            "Y_VAR": {
+              "type": "integer",
+              "description": "Variation type of the section along local-y (LyType) for tapered sections."
+            },
+            "Z_VAR": {
+              "type": "integer",
+              "description": "Variation type of the section along local-z (LzType) for tapered sections."
+            },
+            "SRC_TYPE": {
+              "type": "integer",
+              "description": "SRC (steel-reinforced concrete) type code."
+            },
+            "MATL_ELAST": {
+              "type": "number",
+              "description": "Material elastic modulus."
+            },
+            "MATL_DENS": {
+              "type": "number",
+              "description": "Material density."
+            },
+            "MATL_POIS_S": {
+              "type": "number",
+              "description": "Steel Poisson ratio."
+            },
+            "MATL_POIS_C": {
+              "type": "number",
+              "description": "Concrete Poisson ratio."
+            },
+            "MATL_STIF_FACTOR": {
+              "type": "number",
+              "description": "Material stiffness factor."
+            },
+            "MATL_THERMAL": {
+              "type": "number",
+              "description": "Material thermal coefficient."
+            },
+            "CALC_STIFF_OPT": {
+              "type": "integer",
+              "description": "Stiffness calculation option code."
+            },
+            "WARPING_CHK_AUTO_I": {
+              "type": "boolean",
+              "description": "Auto warping check position at I."
+            },
+            "WARPING_CHK_AUTO_J": {
+              "type": "boolean",
+              "description": "Auto warping check position at J."
+            },
+            "SHEAR_CHK": {
+              "type": "boolean",
+              "description": "Perform shear check.",
+              "default": false
+            },
+            "WARPING_CHK_POS_I": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 6,
+                "maxItems": 6,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "description": "Warping check positions at I (2 x 6 values)."
+            },
+            "WARPING_CHK_POS_J": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 6,
+                "maxItems": 6,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "description": "Warping check positions at J (2 x 6 values)."
+            },
+            "USE_AUTO_SHEAR_CHK_POS": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "boolean"
+                }
+              },
+              "description": "Use auto shear-check position (2 x 3 flags).",
+              "default": [
+                [
+                  false,
+                  false,
+                  false
+                ],
+                [
+                  false,
+                  false,
+                  false
+                ]
+              ]
+            },
+            "AUTO_SHEAR_CHK_POS": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "description": "Auto shear-check position values (2 x 3 values)."
+            },
+            "SHEAR_CHK_POS": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "description": "Shear-check position values (2 x 3 values).",
+              "default": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            },
+            "USE_AUTO_QY": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "boolean"
+                }
+              },
+              "description": "Use auto Qy (2 x 3 flags).",
+              "default": [
+                [
+                  false,
+                  false,
+                  false
+                ],
+                [
+                  false,
+                  false,
+                  false
+                ]
+              ]
+            },
+            "AUTO_QY": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "description": "Auto Qy values (2 x 3 values).",
+              "default": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            },
+            "USE_WEB_THICK": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "boolean"
+              },
+              "description": "Use web-thickness override (fixed 2 flags).",
+              "default": [
+                false,
+                false
+              ]
+            },
+            "WEB_THICK": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              },
+              "description": "Web-thickness values (fixed 2 values).",
+              "default": [
+                0.0,
+                0.0
+              ]
+            },
+            "USE_WEB_THICK_SHEAR": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "boolean"
+                }
+              },
+              "description": "Use auto web-thickness for shear (2 x 3 flags).",
+              "default": [
+                [
+                  false,
+                  false,
+                  false
+                ],
+                [
+                  false,
+                  false,
+                  false
+                ]
+              ]
+            },
+            "WEB_THICK_SHEAR": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "description": "Web-thickness-for-shear values (2 x 3 values).",
+              "default": [
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              ]
+            },
+            "USE_SYMMETRIC": {
+              "type": "boolean",
+              "description": "Symmetric section.",
+              "default": false
+            },
+            "USE_SMALL_HOLE": {
+              "type": "boolean",
+              "description": "Use small hole."
+            },
+            "USE_MULTI_ELAST": {
+              "type": "boolean",
+              "description": "Use multiple elastic modulus."
+            },
+            "LONGTERM_ESEC": {
+              "type": "number",
+              "description": "Long-term effective section modulus (composite)."
+            },
+            "SHRINK_ESEC": {
+              "type": "number",
+              "description": "Shrinkage effective section modulus (composite)."
+            },
+            "CELL_SHAPE": {
+              "type": "integer",
+              "description": "Cell shape code."
+            },
+            "CELL_TYPE": {
+              "type": "integer",
+              "description": "Cell type code."
+            },
+            "CELL_NUM": {
+              "type": "integer",
+              "description": "Cell count."
+            },
+            "FLANGE_SHAPE": {
+              "type": "integer",
+              "description": "Flange shape code."
+            },
+            "USE_USER_DEF_MESHSIZE": {
+              "type": "boolean",
+              "description": "Use user-defined mesh size."
+            },
+            "MESHSIZE": {
+              "type": "number",
+              "description": "Mesh size."
+            },
+            "USE_USER_INTPUT_STIFF": {
+              "type": "boolean",
+              "description": "Use user-input stiffness (bypass auto-calc)."
+            },
+            "PSC_OPT1": {
+              "type": "string",
+              "description": "PSC option 1."
+            },
+            "PSC_OPT2": {
+              "type": "string",
+              "description": "PSC option 2."
+            },
+            "JOINT": {
+              "type": "array",
+              "items": {
+                "type": "boolean"
+              },
+              "description": "Joint flags."
+            },
+            "SLAB": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "description": "Slab dimensions (composite sections only)."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SECTTYPE": "DBUSER",
+        "SECT_NAME": "H_400x200",
+        "SECT_BEFORE": {
+          "OFFSET_PT": "CC",
+          "USE_SHEAR_DEFORM": false,
+          "USE_WARPING_EFFECT": false,
+          "SHAPE": "H",
+          "SECT_I": {
+            "DB_NAME": "KS",
+            "SECT_NAME": "H 400x200x8/13"
+          }
+        }
+      },
+      "2": {
+        "SECTTYPE": "VALUE",
+        "SECT_NAME": "PIER_VALUE",
+        "SECT_BEFORE": {
+          "OFFSET_PT": "CC",
+          "USE_SHEAR_DEFORM": true,
+          "USE_WARPING_EFFECT": false,
+          "SHAPE": "SB",
+          "SECT_I": {
+            "BUILT_FLAG": 1,
+            "vSIZE": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "STIFF": {
+              "AREA": 5.0,
+              "ASY": 4.0,
+              "ASZ": 4.0,
+              "RXX": 3.0,
+              "RYY": 2.0,
+              "RZZ": 1.0,
+              "CYP": 0.5,
+              "CYM": 0.5,
+              "CZP": 0.5,
+              "CZM": 0.5,
+              "QYB": 0.1,
+              "QZB": 0.1,
+              "Y": [
+                0.5,
+                -0.5,
+                -0.5,
+                0.5
+              ],
+              "Z": [
+                0.5,
+                0.5,
+                -0.5,
+                -0.5
+              ]
+            }
+          }
+        }
+      },
+      "3": {
+        "SECTTYPE": "TAPERED",
+        "SECT_NAME": "GIRDER_TAPER",
+        "SECT_BEFORE": {
+          "OFFSET_PT": "CT",
+          "USER_OFFSET_REF": 1,
+          "HORZ_OFFSET_OPT": 1,
+          "USERDEF_OFFSET_YI": 1.1,
+          "USERDEF_OFFSET_YJ": 1.2,
+          "VERT_OFFSET_OPT": 1,
+          "USERDEF_OFFSET_ZI": 2.1,
+          "USERDEF_OFFSET_ZJ": 2.2,
+          "USE_SHEAR_DEFORM": true,
+          "USE_WARPING_EFFECT": true,
+          "SHAPE": "B",
+          "TYPE": 2,
+          "SECT_I": {
+            "vSIZE": [
+              0.8,
+              0.4,
+              0.02,
+              0.02,
+              0.0,
+              0.0
+            ]
+          },
+          "SECT_J": {
+            "vSIZE": [
+              1.2,
+              0.4,
+              0.02,
+              0.02,
+              0.0,
+              0.0
+            ]
+          },
+          "Y_VAR": 1,
+          "Z_VAR": 1
+        }
+      },
+      "4": {
+        "SECTTYPE": "CONSTRUCT",
+        "SECT_NAME": "CON_SECT",
+        "SECT_BEFORE": {
+          "OFFSET_PT": "CC",
+          "SHAPE": "SB",
+          "SECT_I": {
+            "vSIZE": [
+              0.5,
+              0.5
+            ]
+          }
+        },
+        "SECT_AFTER": {
+          "OFFSET_PT": "CC",
+          "SHAPE": "SB",
+          "SECT_I": {
+            "vSIZE": [
+              0.6,
+              0.6
+            ]
+          }
+        }
+      }
+    }
+  }
+}

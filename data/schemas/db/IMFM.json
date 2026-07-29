@@ -1,0 +1,47 @@
+{
+  "_group": "db",
+  "_name": "IMFM",
+  "uri": "db/IMFM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "IMFM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Inelastic Material Property for Fiber Model (IMFM). Each key is a material id; which name fields apply depends on the referenced material's type (C: concrete/confined-concrete/rebar, SRC: concrete/rebar, S: steel), and each name must reference an existing Fiber Model (FIMP) property by name.",
+      "type": "object",
+      "properties": {
+        "CONC_NAME": {
+          "description": "[TYPE=C,SRC] Name of the Fiber Model (FIMP) property assigned as the concrete inelastic material. Empty means no assignment.",
+          "type": "string",
+          "default": ""
+        },
+        "CONFINED_CONC_NAME": {
+          "description": "[TYPE=C] Name of the Fiber Model (FIMP) property assigned as the confined concrete inelastic material (columns). Empty means no assignment.",
+          "type": "string",
+          "default": ""
+        },
+        "REBAR_NAME": {
+          "description": "[TYPE=C,SRC] Name of the Fiber Model (FIMP) property assigned as the rebar inelastic material. Empty means no assignment.",
+          "type": "string",
+          "default": ""
+        },
+        "STEEL_NAME": {
+          "description": "[TYPE=S] Name of the Fiber Model (FIMP) property assigned as the steel inelastic material. Empty means no assignment.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "7": {
+        "STEEL_NAME": "Inelastic_Steel"
+      },
+      "8": {
+        "CONC_NAME": "Inelastic_Conc",
+        "CONFINED_CONC_NAME": "Inelastic_Conc",
+        "REBAR_NAME": "Inelastic_Rebar"
+      }
+    }
+  }
+}

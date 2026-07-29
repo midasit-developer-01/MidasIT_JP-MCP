@@ -1,0 +1,29 @@
+{
+  "_group": "design",
+  "_name": "CRCM",
+  "uri": "design/STEEL/KDS-41-30-2022/CRCM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CRCM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Combined Strength Method (CRCM). The single field selects how directional strength components are combined for the seismic combined-strength check.",
+      "properties": {
+        "METHOD": {
+          "type": "string",
+          "enum": ["SRSS", "Linear Sum"],
+          "description": "Combined Strength Method. Enum values are matched case-insensitively. SRSS = square-root-sum-of-squares combination; Linear Sum = linear (arithmetic) sum combination."
+        }
+      },
+      "required": ["METHOD"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "METHOD": "SRSS"
+      }
+    }
+  }
+}

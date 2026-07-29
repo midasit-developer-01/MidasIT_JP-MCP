@@ -1,0 +1,81 @@
+{
+  "_group": "db",
+  "_name": "IMFM-M1",
+  "uri": "db/IMFM-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "IMFM-M1": {
+      "type": "object",
+      "description": "Inelastic Material for Auto Generation (IMFM-M1). Keyed by the material id; the record links a model material to inelastic (fiber) material properties, and exactly one of CONCRETE or STEEL is provided according to whether that material's type is Concrete (\"C\") or Steel (\"S\").",
+      "properties": {
+        "CONCRETE": {
+          "type": "object",
+          "description": "Concrete material setting. Provide this (and not STEEL) when the material referenced by the key has type Concrete. Assigns inelastic material properties for unconfined concrete, optionally confined concrete, and rebar.",
+          "properties": {
+            "UN_CONC_NAME": {
+              "type": "string",
+              "description": "Name of the inelastic (fiber) material used as the unconfined concrete material. Must reference an existing inelastic material; otherwise the request is rejected."
+            },
+            "CONF_CONC_NAME": {
+              "type": "string",
+              "description": "Name of the inelastic (fiber) material used as the confined concrete material for columns. Empty string means no confined concrete is assigned. If non-empty, must reference an existing inelastic material.",
+              "default": ""
+            },
+            "REBAR_NAME": {
+              "type": "string",
+              "description": "Name of the inelastic (fiber) material used as the rebar material. Must reference an existing inelastic material; otherwise the request is rejected."
+            }
+          },
+          "required": [
+            "UN_CONC_NAME",
+            "REBAR_NAME"
+          ],
+          "additionalProperties": false
+        },
+        "STEEL": {
+          "type": "object",
+          "description": "Steel material setting. Provide this (and not CONCRETE) when the material referenced by the key has type Steel. Assigns the inelastic steel material.",
+          "properties": {
+            "STEEL_NAME": {
+              "type": "string",
+              "description": "Name of the inelastic (fiber) material used as the steel material. Must reference an existing inelastic material; otherwise the request is rejected."
+            }
+          },
+          "required": [
+            "STEEL_NAME"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "CONCRETE"
+          ]
+        },
+        {
+          "required": [
+            "STEEL"
+          ]
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "CONCRETE": {
+          "UN_CONC_NAME": "Unconfined C24",
+          "CONF_CONC_NAME": "Confined C24",
+          "REBAR_NAME": "Rebar SD400"
+        }
+      },
+      "2": {
+        "STEEL": {
+          "STEEL_NAME": "Steel SM355"
+        }
+      }
+    }
+  }
+}

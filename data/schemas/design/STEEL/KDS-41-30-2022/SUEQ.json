@@ -1,0 +1,57 @@
+{
+  "_group": "design",
+  "_name": "SUEQ",
+  "uri": "design/STEEL/KDS-41-30-2022/SUEQ",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SUEQ": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Seismic Design Scale Factors (SUEQ). Fields set per-value the axial, moment, and shear scale factors applied to seismic load cases and load combinations during steel design.",
+      "properties": {
+        "LC_AXIAL": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load Case - Axial scale factor applied to the seismic load case axial force."
+        },
+        "LC_MOMENT": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load Case - Moment scale factor applied to the seismic load case moment."
+        },
+        "LC_SHEAR": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load Case - Shear scale factor applied to the seismic load case shear force."
+        },
+        "LCOM_AXIAL": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load Combination - Axial scale factor applied to the seismic load combination axial force."
+        },
+        "LCOM_MOMENT": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load Combination - Moment scale factor applied to the seismic load combination moment."
+        },
+        "LCOM_SHEAR": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Load Combination - Shear scale factor applied to the seismic load combination shear force."
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LC_AXIAL": 1.0,
+        "LC_MOMENT": 1.0,
+        "LC_SHEAR": 1.0,
+        "LCOM_AXIAL": 1.0,
+        "LCOM_MOMENT": 1.0,
+        "LCOM_SHEAR": 1.0
+      }
+    }
+  }
+}

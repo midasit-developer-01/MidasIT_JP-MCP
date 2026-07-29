@@ -1,0 +1,98 @@
+{
+  "_group": "db",
+  "_name": "BUCK",
+  "uri": "db/BUCK",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "BUCK": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Buckling Analysis Control (BUCK). A single control record (fixed key 1) holding the eigenvalue buckling settings plus a list of load cases (ITEMS) each referencing a static load case by name.",
+      "type": "object",
+      "properties": {
+        "MODE_NUM": {
+          "description": "Number of buckling modes to extract.",
+          "type": "integer"
+        },
+        "OPT_POSITIVE": {
+          "description": "Load factor range type. true = positive value only; false = search within the LOAD_FACTOR_FROM/LOAD_FACTOR_TO range.",
+          "type": "boolean",
+          "default": false
+        },
+        "OPT_CONSIDER_AXIAL_ONLY": {
+          "description": "Frame geometric stiffness option: consider axial force component only.",
+          "type": "boolean",
+          "default": false
+        },
+        "LOAD_FACTOR_FROM": {
+          "description": "Search range lower bound for the load factor (applies when OPT_POSITIVE is false).",
+          "type": "number",
+          "default": 0
+        },
+        "LOAD_FACTOR_TO": {
+          "description": "Search range upper bound for the load factor (applies when OPT_POSITIVE is false).",
+          "type": "number",
+          "default": 0
+        },
+        "OPT_STURM_SEQ": {
+          "description": "Check Sturm sequence.",
+          "type": "boolean",
+          "default": false
+        },
+        "ITEMS": {
+          "description": "Load cases contributing to the buckling analysis. Only the first 15 entries are stored; each LCNAME must resolve to an existing static load case (otherwise the request fails).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LCNAME": {
+                "description": "Static load case name; must match an existing load case.",
+                "type": "string"
+              },
+              "FACTOR": {
+                "description": "Scale factor applied to this load case.",
+                "type": "number",
+                "default": 0
+              },
+              "LOAD_TYPE": {
+                "description": "Load type code for this load case (Variable/Constant classification).",
+                "type": "integer",
+                "default": 0
+              }
+            },
+            "required": [
+              "LCNAME"
+            ]
+          }
+        }
+      },
+      "required": [
+        "MODE_NUM",
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "MODE_NUM": 12,
+        "OPT_POSITIVE": true,
+        "OPT_CONSIDER_AXIAL_ONLY": true,
+        "LOAD_FACTOR_FROM": 0,
+        "LOAD_FACTOR_TO": 0,
+        "OPT_STURM_SEQ": true,
+        "ITEMS": [
+          {
+            "LCNAME": "A",
+            "FACTOR": 1,
+            "LOAD_TYPE": 0
+          },
+          {
+            "LCNAME": "B",
+            "FACTOR": 1,
+            "LOAD_TYPE": 1
+          }
+        ]
+      }
+    }
+  }
+}

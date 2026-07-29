@@ -1,0 +1,29 @@
+{
+  "_group": "db",
+  "_name": "DCON",
+  "uri": "db/DCON",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DCON": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "RC Design Code (DCON). A single global record (key must be 1) that sets the reinforced-concrete design code; DGNCODE names the code and drives all RC design defaults.",
+      "properties": {
+        "DGNCODE": {
+          "description": "Reinforced-concrete design code name. Validated at runtime against the RC design-code list (CLoadDgnCodeChecker, eDgnRC); an unrecognized value is rejected. Example: \"KCI-USD12\".",
+          "type": "string"
+        }
+      },
+      "required": [
+        "DGNCODE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DGNCODE": "KCI-USD12"
+      }
+    }
+  }
+}

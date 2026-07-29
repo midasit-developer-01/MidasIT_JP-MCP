@@ -1,0 +1,125 @@
+{
+  "_group": "design",
+  "_name": "HCBM",
+  "uri": "design/RC/KDS-41-20-2022/HCBM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "HCBM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Haunched Beam (HCBM). Fields describe a haunched beam design entry: a name, three element parts (A/B/C) each selected by an input method, a design position type, and two haunch length ratios.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Haunched beam name."
+        },
+        "PART_A": {
+          "type": "object",
+          "description": "Part A element selection.",
+          "properties": {
+            "INPUT_METHOD": {
+              "type": "string",
+              "enum": ["KEYS", "TO"],
+              "description": "Element input method (case-insensitive). KEYS: provide explicit element keys via KEYS. TO: provide a range string via TO."
+            },
+            "KEYS": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "default": [],
+              "description": "[INPUT_METHOD=KEYS] Explicit list of element keys for this part."
+            },
+            "TO": {
+              "type": "string",
+              "default": "",
+              "description": "[INPUT_METHOD=TO] Element range expression, e.g. \"1 to 5\"."
+            }
+          },
+          "required": ["INPUT_METHOD"]
+        },
+        "PART_B": {
+          "type": "object",
+          "description": "Part B element selection.",
+          "properties": {
+            "INPUT_METHOD": {
+              "type": "string",
+              "enum": ["KEYS", "TO"],
+              "description": "Element input method (case-insensitive). KEYS: provide explicit element keys via KEYS. TO: provide a range string via TO."
+            },
+            "KEYS": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "default": [],
+              "description": "[INPUT_METHOD=KEYS] Explicit list of element keys for this part."
+            },
+            "TO": {
+              "type": "string",
+              "default": "",
+              "description": "[INPUT_METHOD=TO] Element range expression, e.g. \"1 to 5\"."
+            }
+          },
+          "required": ["INPUT_METHOD"]
+        },
+        "PART_C": {
+          "type": "object",
+          "description": "Part C element selection.",
+          "properties": {
+            "INPUT_METHOD": {
+              "type": "string",
+              "enum": ["KEYS", "TO"],
+              "description": "Element input method (case-insensitive). KEYS: provide explicit element keys via KEYS. TO: provide a range string via TO."
+            },
+            "KEYS": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "default": [],
+              "description": "[INPUT_METHOD=KEYS] Explicit list of element keys for this part."
+            },
+            "TO": {
+              "type": "string",
+              "default": "",
+              "description": "[INPUT_METHOD=TO] Element range expression, e.g. \"1 to 5\"."
+            }
+          },
+          "required": ["INPUT_METHOD"]
+        },
+        "POS_TYPE": {
+          "type": "integer",
+          "description": "Design position type."
+        },
+        "L1": {
+          "type": "number",
+          "default": 1,
+          "description": "Haunch length ratio L1."
+        },
+        "L2": {
+          "type": "number",
+          "default": 1,
+          "description": "Haunch length ratio L2."
+        }
+      },
+      "required": ["NAME", "PART_A", "PART_B", "PART_C", "POS_TYPE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Haunch1",
+        "PART_A": {
+          "INPUT_METHOD": "KEYS",
+          "KEYS": [1, 2, 3]
+        },
+        "PART_B": {
+          "INPUT_METHOD": "TO",
+          "TO": "4 to 6"
+        },
+        "PART_C": {
+          "INPUT_METHOD": "KEYS",
+          "KEYS": [7, 8]
+        },
+        "POS_TYPE": 0,
+        "L1": 0.25,
+        "L2": 0.25
+      }
+    }
+  }
+}

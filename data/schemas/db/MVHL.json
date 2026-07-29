@@ -1,0 +1,2521 @@
+{
+  "_group": "db",
+  "_name": "MVHL",
+  "uri": "db/MVHL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVHL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Loads (MVHL). MVLD_CODE selects the design-code family and must match the model's Moving Load Code (MVCD); VEHICLE_LOAD_NUM=1 for a standard database vehicle (with VEHICLE_TYPE_NAME + STANDARD_CODE) or 2 for a user-defined load, and the matching VEH_* sub-object carries the code-specific parameters.",
+      "properties": {
+        "MVLD_CODE": {
+          "type": "integer",
+          "description": "Moving Load Code family (must equal the model's MVCD): 1=AASHTO Standard, 2=AASHTO LRFD, 3=China, 4=Taiwan, 5=Japan, 6=Korea, 7=India, 8=Canada, 9=PENDOT, 10=BS, 11=Eurocode, 12=Russia, 13=Korea LRFD 2011, 14=Australia, 15=Poland, 16=South Africa, 18=France."
+        },
+        "VEHICLE_LOAD_NAME": {
+          "type": "string",
+          "description": "Vehicular load name (key label)."
+        },
+        "VEHICLE_LOAD_NUM": {
+          "type": "integer",
+          "description": "1 = standard database vehicle; 2 = user-defined load."
+        },
+        "VEHICLE_TYPE_NAME": {
+          "type": "string",
+          "description": "Standard vehicle/type name (used when VEHICLE_LOAD_NUM=1), e.g. \"H20-44\", \"HA\", \"Load Model 1\"."
+        },
+        "STANDARD_CODE": {
+          "type": "string",
+          "description": "Standard code (case-insensitive). Selects the code standard within the MVLD_CODE family.",
+          "enum": [
+            "KS-RB",
+            "KS-TR",
+            "AASHTO-STD",
+            "CALTRANS",
+            "JTJ001-97",
+            "CJJ77-98",
+            "TB10002.1-99",
+            "OTHERS",
+            "AASHTO-LRFD",
+            "IRC:6-2000",
+            "CNS",
+            "CANADA",
+            "PENDOT",
+            "BS5400",
+            "JTGB01-2003",
+            "KS2005",
+            "KS-TR2004",
+            "BS BD 37/01",
+            "EN 1991-2:2003 - RoadBridge",
+            "EN 1991-2:2003 - FootBridge",
+            "EN 1991-2:2003 - RoadBridge Fatigue",
+            "ASSHTO-LEGAL",
+            "UNUSED_CODE_01",
+            "UNUSED_CODE_02",
+            "UNUSED_CODE_03",
+            "KSCE-LSD15",
+            "CJJ11-2011",
+            "ROAD TRAFFIC",
+            "PEDESTRIAN AND BICYCLE-PATH LOAD",
+            "KS-TR2012",
+            "JTGB01-2014",
+            "AASHTO LEGAL/PERMIT LOAD",
+            "IADOT LOAD",
+            "ILDOT LOAD",
+            "LADOT LOAD",
+            "MODOT LOAD",
+            "OHDOT LOAD",
+            "RIDOT LOAD",
+            "VADOT LOAD",
+            "WIDOT LOAD",
+            "BS BD 86/11",
+            "PN-85/S-10030 - RoadBridge",
+            "PN-85/S-10030 - Walkway and Pedestrian Bridge",
+            "TMH7",
+            "CALTRANS_2017",
+            "IRS: BRIDGE RULES",
+            "TURKEY",
+            "MILITARY LOAD",
+            "TB10002-2017",
+            "INDOT LOAD",
+            "COLOMBIA",
+            "FAST ACT EV LOADS",
+            "CS 454 Assessment",
+            "CJJ11-2019",
+            "RAIL TRAFFIC LOAD",
+            "ROAD DESIGN LOAD",
+            "HEAVY LOAD PLATFORM",
+            "Q/CR 9300-2018",
+            "FR_SYSTEM A",
+            "FR_SYSTEM B",
+            "FR_MILITARY LOAD",
+            "FR_SIDE_PED"
+          ]
+        },
+        "USER_LOAD_TYPE": {
+          "type": "string",
+          "description": "User-defined load type label (used when VEHICLE_LOAD_NUM=2), e.g. Truck/Lane, Train Load, Permit."
+        },
+        "VEH_FR": {
+          "type": "object",
+          "description": "[MVLD_CODE=18 FRANCE] France standard moving load parameters.",
+          "properties": {
+            "USE_DYNAMIC_FACTOR": {
+              "type": "boolean",
+              "description": "Use dynamic amplification factor.",
+              "default": false
+            },
+            "SIDE_WALK": {
+              "type": "number",
+              "description": "Sidewalk load width/value (VEHICLE_TYPE_NAME=\"Sidewalk\")."
+            }
+          }
+        },
+        "VEH_CN": {
+          "type": "object",
+          "description": "[MVLD_CODE=3 CHINA] China moving-load parameters. Standard (VEHICLE_LOAD_NUM=1) uses CROWD_WIDTH/IMPACT_COEF/DD; user (=2) uses TRUCK_TYPE/TRAIN_TYPE-driven fields.",
+          "properties": {
+            "IMPACT_COEF": {
+              "type": "number",
+              "description": "Impact coefficient (e.g. CH-ZH-SL/NL, Subway).",
+              "default": 0
+            },
+            "CROWD_WIDTH": {
+              "type": "number",
+              "description": "Crowd width (CH-RQ -> JTG, C-RQ -> CJJ11).",
+              "default": 0
+            },
+            "VEHICLE_LOAD_USER_NUM": {
+              "type": "integer",
+              "description": "User load sub-model number."
+            },
+            "P_": {
+              "type": "number",
+              "description": "P.",
+              "default": 0
+            },
+            "QM": {
+              "type": "number",
+              "description": "QM.",
+              "default": 0
+            },
+            "QQ": {
+              "type": "number",
+              "description": "Qk.",
+              "default": 0
+            },
+            "W_TRAILER": {
+              "type": "number",
+              "description": "[TRUCK_TYPE=1 Crawler] Trailer load W.",
+              "default": 0
+            },
+            "D_TRAILER": {
+              "type": "number",
+              "description": "[TRUCK_TYPE=1 Crawler] Trailer distance D.",
+              "default": 0
+            },
+            "PA": {
+              "type": "number",
+              "description": "[TRUCK_TYPE=5 Lane Load 2] Pk (A).",
+              "default": 0
+            },
+            "D1": {
+              "type": "number",
+              "description": "Spacing D1.",
+              "default": 0
+            },
+            "PB": {
+              "type": "number",
+              "description": "[TRUCK_TYPE=5 Lane Load 2] Pk (B).",
+              "default": 0
+            },
+            "D2": {
+              "type": "number",
+              "description": "Spacing D2.",
+              "default": 0
+            },
+            "TRAIN_TYPE": {
+              "type": "integer",
+              "description": "[Train] Train type index (2=Type2, 4=Subway, else Type1/3)."
+            },
+            "TRUCK_TYPE": {
+              "type": "integer",
+              "description": "[Truck/Lane] 0=Lane Load 1,1=Crawler,2=GC,5=Lane Load 2,6=Truck(JTG)."
+            },
+            "P_SUBWAY": {
+              "type": "array",
+              "description": "[TRAIN_TYPE=4 Subway] Subway point loads.",
+              "items": {
+                "type": "number"
+              },
+              "default": [
+                0.0
+              ]
+            },
+            "D_SUBWAY": {
+              "type": "array",
+              "description": "[TRAIN_TYPE=4 Subway] Subway distances.",
+              "items": {
+                "type": "number"
+              },
+              "default": [
+                0.0
+              ]
+            },
+            "CARRIAGE_DIST": {
+              "type": "number",
+              "description": "[Subway] Carriage distance.",
+              "default": 0
+            },
+            "P_OPPOSITE": {
+              "type": "number",
+              "description": "[Subway] Opposite-direction point load.",
+              "default": 0
+            },
+            "NUM_CARRIAGE": {
+              "type": "number",
+              "description": "[Subway] Number of carriages.",
+              "default": 0
+            },
+            "FD": {
+              "type": "number",
+              "description": "[TRAIN_TYPE=2] FD.",
+              "default": 0
+            },
+            "BD": {
+              "type": "number",
+              "description": "[TRAIN_TYPE=2] BD.",
+              "default": 0
+            },
+            "W1": {
+              "type": "number",
+              "description": "[Train Type1/3] Distributed load W1.",
+              "default": 0
+            },
+            "W2": {
+              "type": "number",
+              "description": "[Train Type1/3] Distributed load W2.",
+              "default": 0
+            },
+            "W_PRES_1": {
+              "type": "number",
+              "description": "[Crowd Type2] Pressure load W1.",
+              "default": 0
+            },
+            "W_PRES_2": {
+              "type": "number",
+              "description": "[Crowd Type2] Pressure load W2.",
+              "default": 0
+            },
+            "DB": {
+              "type": "number",
+              "description": "[Crowd Type2] Db.",
+              "default": 0
+            },
+            "W_CROWD": {
+              "type": "number",
+              "description": "[Crowd Type1] Crowd load.",
+              "default": 0
+            },
+            "DD": {
+              "type": "number",
+              "description": "[CH-PL2 / TRAIN_TYPE=2] DD.",
+              "default": 0
+            }
+          }
+        },
+        "VEH_IN": {
+          "type": "object",
+          "description": "[MVLD_CODE=7 INDIA] India moving-load parameters (IRC:6-2000 code 10, IRS Bridge Rules code 46).",
+          "properties": {
+            "PERMIT_LOAD": {
+              "type": "object",
+              "description": "Permit / special vehicle definition (DTO_MVHL_PV). Used when VEHICLE_LOAD_NUM=2 and the load is a permit vehicle.",
+              "properties": {
+                "IMPACT_FACTOR": {
+                  "type": "number",
+                  "description": "Permit load impact factor.",
+                  "default": 0
+                },
+                "AXLE_TYPES": {
+                  "type": "array",
+                  "description": "Axle-type groups of the permit vehicle.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-vehicle axle group.",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label referenced by PERMIT_LOADS entries."
+                      },
+                      "EVENLY_DIST_LOAD": {
+                        "type": "boolean",
+                        "description": "Treat the axle loads as evenly distributed.",
+                        "default": false
+                      },
+                      "SYMMETRIC_VEHICLE": {
+                        "type": "boolean",
+                        "description": "Vehicle is symmetric.",
+                        "default": false
+                      },
+                      "POINT_ITEMS": {
+                        "type": "array",
+                        "description": "Axle point loads for this axle type.",
+                        "items": {
+                          "type": "object",
+                          "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                          "properties": {
+                            "POINT_LOAD": {
+                              "type": "number",
+                              "description": "Concentrated axle load."
+                            },
+                            "POINT_DIST": {
+                              "type": "number",
+                              "description": "Longitudinal spacing/position of this axle."
+                            },
+                            "POINT_DIST2": {
+                              "type": "number",
+                              "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                              "default": 0
+                            }
+                          },
+                          "required": [
+                            "POINT_LOAD",
+                            "POINT_DIST"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "POINT_ITEMS"
+                    ]
+                  }
+                },
+                "PERMIT_LOADS": {
+                  "type": "array",
+                  "description": "Ordered permit-load axle arrangement.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-load arrangement entry (references an AXLE_TYPE and its spacing).",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label (must match one AXLE_TYPES entry)."
+                      },
+                      "SPACING": {
+                        "type": "number",
+                        "description": "Spacing to the previous axle group."
+                      },
+                      "EQUAL_J_NVSIDX": {
+                        "type": "boolean",
+                        "description": "True when this index marks the variable-spacing (VS) axle position.",
+                        "default": false
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "SPACING"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "AXLE_TYPES",
+                "PERMIT_LOADS"
+              ]
+            },
+            "FOOTWAY": {
+              "type": "number",
+              "description": "Footway load (IRC Footway / IRS Footbridge)."
+            },
+            "FOOTWAY_WIDTH": {
+              "type": "number",
+              "description": "Footway width."
+            },
+            "SEL_VEHICLE": {
+              "type": "string",
+              "description": "Selected vehicle name (IRS)."
+            },
+            "D_TRAILER": {
+              "type": "number",
+              "description": "Trailer distance.",
+              "default": 0
+            },
+            "PB": {
+              "type": "number",
+              "description": "Pb.",
+              "default": 0
+            },
+            "P_": {
+              "type": "number",
+              "description": "P.",
+              "default": 0
+            },
+            "DB": {
+              "type": "number",
+              "description": "Db.",
+              "default": 0
+            },
+            "D1": {
+              "type": "number",
+              "description": "D1.",
+              "default": 0
+            },
+            "D2": {
+              "type": "number",
+              "description": "D2.",
+              "default": 0
+            },
+            "D3": {
+              "type": "number",
+              "description": "D3.",
+              "default": 0
+            },
+            "NOSE_TAIL_DIST": {
+              "type": "number",
+              "description": "Minimum nose-to-tail distance (Wheeled).",
+              "default": 0
+            },
+            "NOSE_TAIL_DIST2": {
+              "type": "number",
+              "description": "Minimum nose-to-tail distance (Tracked).",
+              "default": 0
+            },
+            "SUB_TYPE": {
+              "type": "number",
+              "description": "Train sub-type (0=point set, 1=uniform).",
+              "default": 0
+            },
+            "POINT_LOAD_POS": {
+              "type": "number",
+              "description": "Gondola wagon position.",
+              "default": 0
+            },
+            "DIST_LOAD_POS": {
+              "type": "number",
+              "description": "Train load position.",
+              "default": 0
+            },
+            "UNIFORM_LOAD": {
+              "type": "number",
+              "description": "dW uniform load.",
+              "default": 0
+            },
+            "TRACTIVE": {
+              "type": "number",
+              "description": "Tractive force.",
+              "default": 0
+            },
+            "BRAKE_LOCO": {
+              "type": "number",
+              "description": "Braking for locomotive.",
+              "default": 0
+            },
+            "SPAN_LENGTH": {
+              "type": "number",
+              "description": "Brake loco span length."
+            },
+            "BRAKE_LOCO_RATIO": {
+              "type": "number",
+              "description": "Brake loco ratio.",
+              "default": 0
+            },
+            "BRAKE_TRAIN_RATIO": {
+              "type": "number",
+              "description": "Brake train ratio.",
+              "default": 0
+            },
+            "POINT_SET": {
+              "type": "array",
+              "description": "Point loads (IRS train).",
+              "items": {
+                "type": "object",
+                "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                "properties": {
+                  "POINT_LOAD": {
+                    "type": "number",
+                    "description": "Concentrated axle load."
+                  },
+                  "POINT_DIST": {
+                    "type": "number",
+                    "description": "Longitudinal spacing/position of this axle."
+                  },
+                  "POINT_DIST2": {
+                    "type": "number",
+                    "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                    "default": 0
+                  }
+                },
+                "required": [
+                  "POINT_LOAD",
+                  "POINT_DIST"
+                ]
+              }
+            },
+            "POINT_SET3": {
+              "type": "array",
+              "description": "Point loads set 3 (IRS train sub-type 0).",
+              "items": {
+                "type": "object",
+                "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                "properties": {
+                  "POINT_LOAD": {
+                    "type": "number",
+                    "description": "Concentrated axle load."
+                  },
+                  "POINT_DIST": {
+                    "type": "number",
+                    "description": "Longitudinal spacing/position of this axle."
+                  },
+                  "POINT_DIST2": {
+                    "type": "number",
+                    "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                    "default": 0
+                  }
+                },
+                "required": [
+                  "POINT_LOAD",
+                  "POINT_DIST"
+                ]
+              }
+            }
+          }
+        },
+        "VEH_CA": {
+          "type": "object",
+          "description": "[MVLD_CODE=8 CANADA] Canada (CAN/CSA) moving-load parameters.",
+          "properties": {
+            "DYN_LOAD_ALLOWANCE": {
+              "type": "number",
+              "description": "Dynamic load allowance.",
+              "default": 0
+            },
+            "UNIFORM_LOAD": {
+              "type": "number",
+              "description": "Uniform (lane) load (user-defined, nLoadType=0).",
+              "default": 0
+            },
+            "CENT_F": {
+              "type": "boolean",
+              "description": "Add centrifugal force.",
+              "default": false
+            },
+            "PERMIT_LOAD": {
+              "type": "object",
+              "description": "Permit / special vehicle definition (DTO_MVHL_PV). Used when VEHICLE_LOAD_NUM=2 and the load is a permit vehicle.",
+              "properties": {
+                "IMPACT_FACTOR": {
+                  "type": "number",
+                  "description": "Permit load impact factor.",
+                  "default": 0
+                },
+                "AXLE_TYPES": {
+                  "type": "array",
+                  "description": "Axle-type groups of the permit vehicle.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-vehicle axle group.",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label referenced by PERMIT_LOADS entries."
+                      },
+                      "EVENLY_DIST_LOAD": {
+                        "type": "boolean",
+                        "description": "Treat the axle loads as evenly distributed.",
+                        "default": false
+                      },
+                      "SYMMETRIC_VEHICLE": {
+                        "type": "boolean",
+                        "description": "Vehicle is symmetric.",
+                        "default": false
+                      },
+                      "POINT_ITEMS": {
+                        "type": "array",
+                        "description": "Axle point loads for this axle type.",
+                        "items": {
+                          "type": "object",
+                          "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                          "properties": {
+                            "POINT_LOAD": {
+                              "type": "number",
+                              "description": "Concentrated axle load."
+                            },
+                            "POINT_DIST": {
+                              "type": "number",
+                              "description": "Longitudinal spacing/position of this axle."
+                            },
+                            "POINT_DIST2": {
+                              "type": "number",
+                              "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                              "default": 0
+                            }
+                          },
+                          "required": [
+                            "POINT_LOAD",
+                            "POINT_DIST"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "POINT_ITEMS"
+                    ]
+                  }
+                },
+                "PERMIT_LOADS": {
+                  "type": "array",
+                  "description": "Ordered permit-load axle arrangement.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-load arrangement entry (references an AXLE_TYPE and its spacing).",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label (must match one AXLE_TYPES entry)."
+                      },
+                      "SPACING": {
+                        "type": "number",
+                        "description": "Spacing to the previous axle group."
+                      },
+                      "EQUAL_J_NVSIDX": {
+                        "type": "boolean",
+                        "description": "True when this index marks the variable-spacing (VS) axle position.",
+                        "default": false
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "SPACING"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "AXLE_TYPES",
+                "PERMIT_LOADS"
+              ]
+            },
+            "DYNA": {
+              "type": "object",
+              "description": "Dynamic Load Allowance sub-block (per number of axles).",
+              "properties": {
+                "DYNA_FACTOR": {
+                  "type": "number",
+                  "description": "Dynamic factor mode index (0 = default; non-zero enables per-axle values below).",
+                  "default": 0
+                },
+                "DYNA_FACT_1_AXLE": {
+                  "type": "number",
+                  "description": "Dynamic factor for 1 axle.",
+                  "default": 0
+                },
+                "DYNA_FACT_2_AXLE": {
+                  "type": "number",
+                  "description": "Dynamic factor for 2 axles.",
+                  "default": 0
+                },
+                "DYNA_FACT_3_AXLE": {
+                  "type": "number",
+                  "description": "Dynamic factor for 3+ axles.",
+                  "default": 0
+                }
+              }
+            }
+          }
+        },
+        "VEH_BS": {
+          "type": "object",
+          "description": "[MVLD_CODE=10 BS] British Standard moving-load parameters (BS5400 / BS BD 37/01). Standard uses SEL_VEHICLE/lane factors; user (SUB_TYPE 0-5) uses W/D/PA/PB fields; SUB_TYPE=6 = special/permit vehicle.",
+          "properties": {
+            "UNIT_NUM": {
+              "type": "number",
+              "description": "Unit number.",
+              "default": 0
+            },
+            "SEL_VEHICLE": {
+              "type": "string",
+              "description": "Selected standard vehicle name."
+            },
+            "USE_DYNAMIC_FACTOR": {
+              "type": "boolean",
+              "description": "Use dynamic amplification factor.",
+              "default": false
+            },
+            "AMP_USER_INPUT": {
+              "type": "boolean",
+              "description": "Dynamic amplification factor user input.",
+              "default": false
+            },
+            "AMP": {
+              "type": "number",
+              "description": "Amplification value.",
+              "default": 0
+            },
+            "OVERLOAD_USER_INPUT": {
+              "type": "boolean",
+              "description": "Use overload user input.",
+              "default": false
+            },
+            "OVERLOAD_VALUE": {
+              "type": "integer",
+              "description": "Overload value.",
+              "default": 0
+            },
+            "CRITICAL_AXLE": {
+              "type": "number",
+              "description": "Critical axle.",
+              "default": 0
+            },
+            "OTHER_AXLE": {
+              "type": "number",
+              "description": "Other axle.",
+              "default": 0
+            },
+            "VEHICLE_SPEED": {
+              "type": "number",
+              "description": "Vehicle speed (non SV/SOV vehicles)."
+            },
+            "LANE_FACTOR": {
+              "type": "integer",
+              "description": "Lane factor mode (2 = user array in LANE_FACTOR_ARRAY).",
+              "default": 0
+            },
+            "LANE_FACTOR_ARRAY": {
+              "type": "array",
+              "description": "Lane factors (4 values when LANE_FACTOR=2).",
+              "items": {
+                "type": "number"
+              },
+              "default": [
+                1.0,
+                1.0,
+                0.5,
+                0.4
+              ]
+            },
+            "ADD_DATA_BD2101": {
+              "type": "boolean",
+              "description": "Additional BD 21/01 data flag.",
+              "default": false
+            },
+            "ADD_DATA_AL": {
+              "type": "number",
+              "description": "Additional data aL."
+            },
+            "ADD_DATA_CATEGORY": {
+              "type": "number",
+              "description": "Additional data category.",
+              "default": 0
+            },
+            "ADD_DATA_LOAD_LEVEL": {
+              "type": "number",
+              "description": "Additional data load level.",
+              "default": 0
+            },
+            "LM1_CASE": {
+              "type": "integer",
+              "description": "[ALL MODEL 1] LM1 case.",
+              "default": 0
+            },
+            "LM1_SURFACE": {
+              "type": "integer",
+              "description": "[ALL MODEL 1] LM1 surface.",
+              "default": 0
+            },
+            "LM1_CATEGORY": {
+              "type": "integer",
+              "description": "[ALL MODEL 1] LM1 category.",
+              "default": 0
+            },
+            "DIST_FRONT_TO_REAR_VEHICLE": {
+              "type": "integer",
+              "description": "Distance front-to-rear vehicles (SV/SOV).",
+              "default": 5
+            },
+            "PERMIT_LOAD": {
+              "type": "object",
+              "description": "Permit / special vehicle definition (DTO_MVHL_PV). Used when VEHICLE_LOAD_NUM=2 and the load is a permit vehicle.",
+              "properties": {
+                "IMPACT_FACTOR": {
+                  "type": "number",
+                  "description": "Permit load impact factor.",
+                  "default": 0
+                },
+                "AXLE_TYPES": {
+                  "type": "array",
+                  "description": "Axle-type groups of the permit vehicle.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-vehicle axle group.",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label referenced by PERMIT_LOADS entries."
+                      },
+                      "EVENLY_DIST_LOAD": {
+                        "type": "boolean",
+                        "description": "Treat the axle loads as evenly distributed.",
+                        "default": false
+                      },
+                      "SYMMETRIC_VEHICLE": {
+                        "type": "boolean",
+                        "description": "Vehicle is symmetric.",
+                        "default": false
+                      },
+                      "POINT_ITEMS": {
+                        "type": "array",
+                        "description": "Axle point loads for this axle type.",
+                        "items": {
+                          "type": "object",
+                          "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                          "properties": {
+                            "POINT_LOAD": {
+                              "type": "number",
+                              "description": "Concentrated axle load."
+                            },
+                            "POINT_DIST": {
+                              "type": "number",
+                              "description": "Longitudinal spacing/position of this axle."
+                            },
+                            "POINT_DIST2": {
+                              "type": "number",
+                              "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                              "default": 0
+                            }
+                          },
+                          "required": [
+                            "POINT_LOAD",
+                            "POINT_DIST"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "POINT_ITEMS"
+                    ]
+                  }
+                },
+                "PERMIT_LOADS": {
+                  "type": "array",
+                  "description": "Ordered permit-load axle arrangement.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-load arrangement entry (references an AXLE_TYPE and its spacing).",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label (must match one AXLE_TYPES entry)."
+                      },
+                      "SPACING": {
+                        "type": "number",
+                        "description": "Spacing to the previous axle group."
+                      },
+                      "EQUAL_J_NVSIDX": {
+                        "type": "boolean",
+                        "description": "True when this index marks the variable-spacing (VS) axle position.",
+                        "default": false
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "SPACING"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "AXLE_TYPES",
+                "PERMIT_LOADS"
+              ]
+            },
+            "W1": {
+              "type": "number",
+              "description": "W1.",
+              "default": 0
+            },
+            "W2": {
+              "type": "number",
+              "description": "W2.",
+              "default": 0
+            },
+            "W3": {
+              "type": "number",
+              "description": "W3.",
+              "default": 0
+            },
+            "EXP": {
+              "type": "number",
+              "description": "EXP.",
+              "default": 0
+            },
+            "EXP2": {
+              "type": "number",
+              "description": "EXP2.",
+              "default": 0
+            },
+            "LOADED_LENGTH": {
+              "type": "number",
+              "description": "Loaded length.",
+              "default": 0
+            },
+            "LOADED_LENGTH2": {
+              "type": "number",
+              "description": "Loaded length 2.",
+              "default": 0
+            },
+            "PA": {
+              "type": "number",
+              "description": "PA.",
+              "default": 0
+            },
+            "PB": {
+              "type": "number",
+              "description": "PB.",
+              "default": 0
+            },
+            "D1": {
+              "type": "number",
+              "description": "D1.",
+              "default": 0
+            },
+            "D2": {
+              "type": "number",
+              "description": "D2.",
+              "default": 0
+            },
+            "DELTA": {
+              "type": "number",
+              "description": "Delta.",
+              "default": 0
+            },
+            "DD": {
+              "type": "number",
+              "description": "DD.",
+              "default": 0
+            }
+          }
+        },
+        "VEH_EUROCODE": {
+          "type": "object",
+          "description": "[MVLD_CODE=11 EUROCODE] Eurocode (EN 1991-2) moving-load parameters. Standard keyed by VEHICLE_TYPE_NAME (Load Model 1..4, HSLM, Fatigue, Train); user keyed by SUB_TYPE (0=LM1,1=LM2,2=LM3,3=LM2 wheel,4=Fatigue,5=permit,6-11=rail/HSLM).",
+          "properties": {
+            "SUB_TYPE": {
+              "type": "integer",
+              "description": "User load sub-type / standard code index."
+            },
+            "SEL_VEHICLE": {
+              "type": "string",
+              "description": "Selected vehicle name (LM3 / HSLM)."
+            },
+            "AMP": {
+              "type": "number",
+              "description": "Amplification.",
+              "default": 0
+            },
+            "AMP2": {
+              "type": "number",
+              "description": "Amplification 2.",
+              "default": 0
+            },
+            "AMP_VALUES": {
+              "type": "array",
+              "description": "Amplification value array.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "TANDEM_ADJUST_VALUES": {
+              "type": "array",
+              "description": "Tandem system adjustment factors.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "TANDEM_LOADS": {
+              "type": "array",
+              "description": "Tandem system axle loads.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "UDL_ADJUST_VALUES": {
+              "type": "array",
+              "description": "UDL system adjustment factors.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "UDL_LOADS": {
+              "type": "array",
+              "description": "UDL system uniformly distributed loads.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "USE_DYNAMIC_FACTOR2_0": {
+              "type": "boolean",
+              "description": "Use dynamic amplification factor 2_0.",
+              "default": false
+            },
+            "USE_DYNAMIC_FACTOR2_1": {
+              "type": "boolean",
+              "description": "Use dynamic amplification factor 2_1.",
+              "default": false
+            },
+            "USE_POINT_LOAD3_0": {
+              "type": "boolean",
+              "description": "Use point load 3_0.",
+              "default": false
+            },
+            "USE_POINT_LOAD3_1": {
+              "type": "boolean",
+              "description": "Use point load 3_1.",
+              "default": false
+            },
+            "VAR_SPACING": {
+              "type": "boolean",
+              "description": "Use variable axle spacing.",
+              "default": false
+            },
+            "MAX_SPACING": {
+              "type": "number",
+              "description": "Max. spacing."
+            },
+            "MIN_SPACING": {
+              "type": "number",
+              "description": "Min. spacing."
+            },
+            "WHEEL_SPACING": {
+              "type": "number",
+              "description": "Wheel spacing for static load."
+            },
+            "LOADCASES": {
+              "type": "array",
+              "description": "[SUB_TYPE=2] LM3 load cases.",
+              "items": {
+                "type": "object",
+                "description": "Eurocode LM3 load case (used by SUB_TYPE=2).",
+                "properties": {
+                  "USE_POINT_LOAD": {
+                    "type": "boolean",
+                    "description": "Use point load for this load case."
+                  },
+                  "NUM_LOAD": {
+                    "type": "integer",
+                    "description": "Number of point loads."
+                  },
+                  "DYNAMIC_FACTOR": {
+                    "type": "boolean",
+                    "description": "Dynamic amplification factor.",
+                    "default": false
+                  },
+                  "USER_INPUT": {
+                    "type": "boolean",
+                    "description": "User input amplification.",
+                    "default": false
+                  },
+                  "AMP": {
+                    "type": "number",
+                    "description": "Amplification value.",
+                    "default": 0
+                  },
+                  "POINT_SET": {
+                    "type": "array",
+                    "description": "Point loads for this load case.",
+                    "items": {
+                      "type": "object",
+                      "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                      "properties": {
+                        "POINT_LOAD": {
+                          "type": "number",
+                          "description": "Concentrated axle load."
+                        },
+                        "POINT_DIST": {
+                          "type": "number",
+                          "description": "Longitudinal spacing/position of this axle."
+                        },
+                        "POINT_DIST2": {
+                          "type": "number",
+                          "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                          "default": 0
+                        }
+                      },
+                      "required": [
+                        "POINT_LOAD",
+                        "POINT_DIST"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "USE_POINT_LOAD",
+                  "NUM_LOAD",
+                  "POINT_SET"
+                ]
+              }
+            },
+            "VEHICLES": {
+              "type": "array",
+              "description": "[SUB_TYPE=4] Fatigue vehicles.",
+              "items": {
+                "type": "object",
+                "description": "Eurocode fatigue vehicle (used by SUB_TYPE=4).",
+                "properties": {
+                  "USE_POINT_LOAD": {
+                    "type": "boolean",
+                    "description": "Use point load for this vehicle."
+                  },
+                  "NUM_LOAD": {
+                    "type": "integer",
+                    "description": "Number of point loads."
+                  },
+                  "POINT_SET": {
+                    "type": "array",
+                    "description": "Point loads for this vehicle.",
+                    "items": {
+                      "type": "object",
+                      "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                      "properties": {
+                        "POINT_LOAD": {
+                          "type": "number",
+                          "description": "Concentrated axle load."
+                        },
+                        "POINT_DIST": {
+                          "type": "number",
+                          "description": "Longitudinal spacing/position of this axle."
+                        },
+                        "POINT_DIST2": {
+                          "type": "number",
+                          "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                          "default": 0
+                        }
+                      },
+                      "required": [
+                        "POINT_LOAD",
+                        "POINT_DIST"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "USE_POINT_LOAD",
+                  "NUM_LOAD",
+                  "POINT_SET"
+                ]
+              }
+            },
+            "LM3_LOADCASE1": {
+              "type": "boolean",
+              "description": "LM3 load case 1 flag."
+            },
+            "LM3_LOADCASE2": {
+              "type": "boolean",
+              "description": "LM3 load case 2 flag."
+            },
+            "ADJUSTMENT": {
+              "type": "number",
+              "description": "Adjustment factor."
+            },
+            "ADJUSTMENT2": {
+              "type": "number",
+              "description": "Adjustment factor 2."
+            },
+            "AXLE_NUM": {
+              "type": "integer",
+              "description": "Axle number (variable spacing)."
+            },
+            "FOOTWAY": {
+              "type": "number",
+              "description": "Footway load."
+            },
+            "INTERVAL": {
+              "type": "number",
+              "description": "Two-vehicle interval.",
+              "default": 0
+            },
+            "DYNAMIC_FACTOR": {
+              "type": "boolean",
+              "description": "Dynamic amplification factor.",
+              "default": false
+            },
+            "USER_INPUT": {
+              "type": "boolean",
+              "description": "User input amplification.",
+              "default": false
+            },
+            "DSPACE": {
+              "type": "number",
+              "description": "Space.",
+              "default": 0
+            },
+            "W1": {
+              "type": "number",
+              "description": "W1.",
+              "default": 0
+            },
+            "DD1": {
+              "type": "number",
+              "description": "DD1.",
+              "default": 0
+            },
+            "D1": {
+              "type": "number",
+              "description": "D1.",
+              "default": 0
+            },
+            "W2": {
+              "type": "number",
+              "description": "W2.",
+              "default": 0
+            },
+            "DD2": {
+              "type": "number",
+              "description": "DD2.",
+              "default": 0
+            },
+            "D2": {
+              "type": "number",
+              "description": "D2.",
+              "default": 0
+            },
+            "PRESSURE_LOAD": {
+              "type": "number",
+              "description": "Pressure load."
+            },
+            "V_LOAD_FACTOR": {
+              "type": "number",
+              "description": "Eccentricity of lateral displacement of vertical loads factor.",
+              "default": 0
+            },
+            "LONGI_DIST": {
+              "type": "boolean",
+              "description": "Consider longitudinal distribution of point loads.",
+              "default": false
+            },
+            "DIST_RAIL_SUPPORT": {
+              "type": "number",
+              "description": "Distance between rail support points.",
+              "default": 0
+            },
+            "ECCEN_VERT_LOAD": {
+              "type": "boolean",
+              "description": "Eccentricity of lateral displacement of vertical loads.",
+              "default": false
+            },
+            "ECCEN_VERT_LOAD_VALUE": {
+              "type": "number",
+              "description": "Eccentricity value.",
+              "default": 0
+            },
+            "HSLMA_NUM": {
+              "type": "integer",
+              "description": "HSLM-A number.",
+              "default": 0
+            },
+            "HSLMA_LENGTH": {
+              "type": "number",
+              "description": "HSLM-A length.",
+              "default": 0
+            },
+            "HSLMA_SPACING": {
+              "type": "number",
+              "description": "HSLM-A spacing.",
+              "default": 0
+            },
+            "HSLMA_FORCE": {
+              "type": "number",
+              "description": "HSLM-A force.",
+              "default": 0
+            },
+            "HSLMB_NUM": {
+              "type": "integer",
+              "description": "HSLM-B number.",
+              "default": 0
+            },
+            "HSLMB_FORCE": {
+              "type": "number",
+              "description": "HSLM-B force."
+            },
+            "HSLMB_DIST": {
+              "type": "number",
+              "description": "HSLM-B distance.",
+              "default": 0
+            },
+            "PHI_DYN_EFF1": {
+              "type": "number",
+              "description": "PhiDynEff 1.",
+              "default": 0
+            },
+            "PHI_DYN_EFF2": {
+              "type": "number",
+              "description": "PhiDynEff 2.",
+              "default": 0
+            },
+            "PERMIT_LOAD": {
+              "type": "object",
+              "description": "Permit / special vehicle definition (DTO_MVHL_PV). Used when VEHICLE_LOAD_NUM=2 and the load is a permit vehicle.",
+              "properties": {
+                "IMPACT_FACTOR": {
+                  "type": "number",
+                  "description": "Permit load impact factor.",
+                  "default": 0
+                },
+                "AXLE_TYPES": {
+                  "type": "array",
+                  "description": "Axle-type groups of the permit vehicle.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-vehicle axle group.",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label referenced by PERMIT_LOADS entries."
+                      },
+                      "EVENLY_DIST_LOAD": {
+                        "type": "boolean",
+                        "description": "Treat the axle loads as evenly distributed.",
+                        "default": false
+                      },
+                      "SYMMETRIC_VEHICLE": {
+                        "type": "boolean",
+                        "description": "Vehicle is symmetric.",
+                        "default": false
+                      },
+                      "POINT_ITEMS": {
+                        "type": "array",
+                        "description": "Axle point loads for this axle type.",
+                        "items": {
+                          "type": "object",
+                          "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                          "properties": {
+                            "POINT_LOAD": {
+                              "type": "number",
+                              "description": "Concentrated axle load."
+                            },
+                            "POINT_DIST": {
+                              "type": "number",
+                              "description": "Longitudinal spacing/position of this axle."
+                            },
+                            "POINT_DIST2": {
+                              "type": "number",
+                              "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                              "default": 0
+                            }
+                          },
+                          "required": [
+                            "POINT_LOAD",
+                            "POINT_DIST"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "POINT_ITEMS"
+                    ]
+                  }
+                },
+                "PERMIT_LOADS": {
+                  "type": "array",
+                  "description": "Ordered permit-load axle arrangement.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-load arrangement entry (references an AXLE_TYPE and its spacing).",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label (must match one AXLE_TYPES entry)."
+                      },
+                      "SPACING": {
+                        "type": "number",
+                        "description": "Spacing to the previous axle group."
+                      },
+                      "EQUAL_J_NVSIDX": {
+                        "type": "boolean",
+                        "description": "True when this index marks the variable-spacing (VS) axle position.",
+                        "default": false
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "SPACING"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "AXLE_TYPES",
+                "PERMIT_LOADS"
+              ]
+            }
+          }
+        },
+        "VEH_RU": {
+          "type": "object",
+          "description": "[MVLD_CODE=12 RUSSIA] Russia moving-load parameters. Standard keyed by VEHICLE_TYPE_NAME (SK/AK/N11/etc.); user keyed by RUSSIA_K/SUB_TYPE.",
+          "properties": {
+            "SUB_TYPE": {
+              "type": "integer",
+              "description": "Sub-type (nStandardCode - 23)."
+            },
+            "RUSSIA_K": {
+              "type": "integer",
+              "description": "Russia K coefficient."
+            },
+            "DYNA_FACTOR": {
+              "type": "integer",
+              "description": "Dynamic factor index (0 = auto).",
+              "default": 0
+            },
+            "DYNA_FACTOR_VALUE": {
+              "type": "number",
+              "description": "Dynamic factor user value."
+            },
+            "DYNA_FACTOR_UDL_VALUE": {
+              "type": "number",
+              "description": "Dynamic factor user value (UDL)."
+            },
+            "FATIGUE": {
+              "type": "boolean",
+              "description": "Fatigue.",
+              "default": false
+            },
+            "LOAD_FACTOR": {
+              "type": "integer",
+              "description": "Load factor index (0 = auto).",
+              "default": 0
+            },
+            "LOAD_FACTOR_VALUE": {
+              "type": "number",
+              "description": "Load factor user value."
+            },
+            "LOAD_FACTOR_UDL_VALUE": {
+              "type": "number",
+              "description": "Load factor user value (UDL)."
+            },
+            "EPSILON_FACTOR": {
+              "type": "integer",
+              "description": "Epsilon factor index.",
+              "default": 0
+            },
+            "LANE_FACTORS_1": {
+              "type": "array",
+              "description": "Lane factors.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "LANE_FACTORS_1_UDL": {
+              "type": "array",
+              "description": "Lane factors (UDL).",
+              "items": {
+                "type": "number"
+              }
+            },
+            "SAME_LOADED_L": {
+              "type": "boolean",
+              "description": "Apply same loaded length between Bogie and UDL.",
+              "default": false
+            },
+            "TWO_VEHICLE": {
+              "type": "boolean",
+              "description": "Consider two vehicles as well as one.",
+              "default": false
+            },
+            "TWO_VEHICLE_FACTOR": {
+              "type": "number",
+              "description": "Two-vehicle reduction factor."
+            },
+            "_2ND_GROUP_REDUCT": {
+              "type": "boolean",
+              "description": "Reduction for limit state 2nd group.",
+              "default": false
+            },
+            "_2ND_GROUP_REDUCT_FACTOR": {
+              "type": "number",
+              "description": "2nd group reduction factor."
+            },
+            "RATIO_EMPTY_CAR": {
+              "type": "number",
+              "description": "Ratio of empty car to loaded car.",
+              "default": 0
+            },
+            "MIN_D5_VARIABLE": {
+              "type": "number",
+              "description": "Min. D5 (variable).",
+              "default": 0
+            },
+            "RUSSIA_W": {
+              "type": "number",
+              "description": "W.",
+              "default": 0
+            },
+            "RUSSIA_W2": {
+              "type": "number",
+              "description": "W2.",
+              "default": 0
+            },
+            "RUSSIA_D": {
+              "type": "number",
+              "description": "D.",
+              "default": 0
+            },
+            "RUSSIA_P": {
+              "type": "number",
+              "description": "P.",
+              "default": 0
+            },
+            "BRIDGE_TYPE": {
+              "type": "string",
+              "description": "Bridge type (uniform/concentrated load)."
+            }
+          }
+        },
+        "VEH_KSCE_LSD15": {
+          "type": "object",
+          "description": "[STANDARD_CODE=KSCE-LSD15] KSCE-LSD15 (Korea LRFD) moving-load parameters.",
+          "properties": {
+            "LOAD_TYPE": {
+              "type": "integer",
+              "description": "Load type.",
+              "default": 0
+            },
+            "LOADED_LENGTH": {
+              "type": "number",
+              "description": "Loaded length.",
+              "default": 0
+            },
+            "W1": {
+              "type": "number",
+              "description": "dW1.",
+              "default": 0
+            },
+            "W2": {
+              "type": "number",
+              "description": "dW2.",
+              "default": 0
+            },
+            "W3": {
+              "type": "number",
+              "description": "dW3.",
+              "default": 0
+            },
+            "D1": {
+              "type": "number",
+              "description": "dD1.",
+              "default": 0
+            },
+            "D2": {
+              "type": "number",
+              "description": "dD2.",
+              "default": 0
+            },
+            "EXP": {
+              "type": "number",
+              "description": "EXP.",
+              "default": 0
+            },
+            "DYN_LOAD_ALLOWANCE": {
+              "type": "number",
+              "description": "Dynamic load allowance.",
+              "default": 0
+            },
+            "LENGTH_LANE": {
+              "type": "integer",
+              "description": "Length of lane load."
+            },
+            "LENGTH_LANE_USER": {
+              "type": "number",
+              "description": "1st model user-defined length.",
+              "default": 0
+            },
+            "CONVERT_DIST_LOAD": {
+              "type": "boolean",
+              "description": "Convert point load to distributed load.",
+              "default": false
+            },
+            "UNIFORM_LOAD_NUM": {
+              "type": "integer",
+              "description": "Number of uniform loads.",
+              "default": 0
+            },
+            "UNIFORM_LOAD_DIST": {
+              "type": "number",
+              "description": "Uniform load distance.",
+              "default": 0
+            },
+            "UNIFORM_LOAD_W": {
+              "type": "number",
+              "description": "Uniform load w."
+            },
+            "UNIFORM_LOAD_LOAD_LENGTH_L": {
+              "type": "number",
+              "description": "Uniform load length L."
+            },
+            "POINT_ITEMS": {
+              "type": "array",
+              "description": "Point load & distance items.",
+              "items": {
+                "type": "object",
+                "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                "properties": {
+                  "POINT_LOAD": {
+                    "type": "number",
+                    "description": "Concentrated axle load."
+                  },
+                  "POINT_DIST": {
+                    "type": "number",
+                    "description": "Longitudinal spacing/position of this axle."
+                  },
+                  "POINT_DIST2": {
+                    "type": "number",
+                    "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                    "default": 0
+                  }
+                },
+                "required": [
+                  "POINT_LOAD",
+                  "POINT_DIST"
+                ]
+              }
+            }
+          }
+        },
+        "VEH_AU": {
+          "type": "object",
+          "description": "[MVLD_CODE=14 AUSTRALIA] Australia (AS 5100.2) moving-load parameters.",
+          "properties": {
+            "PERMIT_LOAD": {
+              "type": "object",
+              "description": "Permit / special vehicle definition (DTO_MVHL_PV). Used when VEHICLE_LOAD_NUM=2 and the load is a permit vehicle.",
+              "properties": {
+                "IMPACT_FACTOR": {
+                  "type": "number",
+                  "description": "Permit load impact factor.",
+                  "default": 0
+                },
+                "AXLE_TYPES": {
+                  "type": "array",
+                  "description": "Axle-type groups of the permit vehicle.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-vehicle axle group.",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label referenced by PERMIT_LOADS entries."
+                      },
+                      "EVENLY_DIST_LOAD": {
+                        "type": "boolean",
+                        "description": "Treat the axle loads as evenly distributed.",
+                        "default": false
+                      },
+                      "SYMMETRIC_VEHICLE": {
+                        "type": "boolean",
+                        "description": "Vehicle is symmetric.",
+                        "default": false
+                      },
+                      "POINT_ITEMS": {
+                        "type": "array",
+                        "description": "Axle point loads for this axle type.",
+                        "items": {
+                          "type": "object",
+                          "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                          "properties": {
+                            "POINT_LOAD": {
+                              "type": "number",
+                              "description": "Concentrated axle load."
+                            },
+                            "POINT_DIST": {
+                              "type": "number",
+                              "description": "Longitudinal spacing/position of this axle."
+                            },
+                            "POINT_DIST2": {
+                              "type": "number",
+                              "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                              "default": 0
+                            }
+                          },
+                          "required": [
+                            "POINT_LOAD",
+                            "POINT_DIST"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "POINT_ITEMS"
+                    ]
+                  }
+                },
+                "PERMIT_LOADS": {
+                  "type": "array",
+                  "description": "Ordered permit-load axle arrangement.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-load arrangement entry (references an AXLE_TYPE and its spacing).",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label (must match one AXLE_TYPES entry)."
+                      },
+                      "SPACING": {
+                        "type": "number",
+                        "description": "Spacing to the previous axle group."
+                      },
+                      "EQUAL_J_NVSIDX": {
+                        "type": "boolean",
+                        "description": "True when this index marks the variable-spacing (VS) axle position.",
+                        "default": false
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "SPACING"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "AXLE_TYPES",
+                "PERMIT_LOADS"
+              ]
+            },
+            "DYN_LOAD_ALLOWANCE": {
+              "type": "number",
+              "description": "Dynamic load allowance.",
+              "default": 0
+            },
+            "DYN_LOAD_ALLOWANCE2": {
+              "type": "number",
+              "description": "Dynamic load allowance (all other effects).",
+              "default": 0
+            },
+            "FATIGUE": {
+              "type": "boolean",
+              "description": "Fatigue.",
+              "default": false
+            },
+            "W1": {
+              "type": "number",
+              "description": "W1.",
+              "default": 0
+            },
+            "W2": {
+              "type": "number",
+              "description": "W2.",
+              "default": 0
+            },
+            "D1": {
+              "type": "number",
+              "description": "D1.",
+              "default": 0
+            },
+            "INCRE_LENGTH": {
+              "type": "number",
+              "description": "Increment of distance (Dinc.)."
+            },
+            "VAR_SPACING": {
+              "type": "boolean",
+              "description": "Variable spacing.",
+              "default": false
+            },
+            "UNIFORM_LOAD": {
+              "type": "number",
+              "description": "Uniform load.",
+              "default": 0
+            },
+            "GROUP_NUM": {
+              "type": "integer",
+              "description": "Fatigue group number."
+            }
+          }
+        },
+        "VEH_PL": {
+          "type": "object",
+          "description": "[MVLD_CODE=15 POLAND] Poland (PN-85/S-10030) moving-load parameters.",
+          "properties": {
+            "PERMIT_LOAD": {
+              "type": "object",
+              "description": "Permit / special vehicle definition (DTO_MVHL_PV). Used when VEHICLE_LOAD_NUM=2 and the load is a permit vehicle.",
+              "properties": {
+                "IMPACT_FACTOR": {
+                  "type": "number",
+                  "description": "Permit load impact factor.",
+                  "default": 0
+                },
+                "AXLE_TYPES": {
+                  "type": "array",
+                  "description": "Axle-type groups of the permit vehicle.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-vehicle axle group.",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label referenced by PERMIT_LOADS entries."
+                      },
+                      "EVENLY_DIST_LOAD": {
+                        "type": "boolean",
+                        "description": "Treat the axle loads as evenly distributed.",
+                        "default": false
+                      },
+                      "SYMMETRIC_VEHICLE": {
+                        "type": "boolean",
+                        "description": "Vehicle is symmetric.",
+                        "default": false
+                      },
+                      "POINT_ITEMS": {
+                        "type": "array",
+                        "description": "Axle point loads for this axle type.",
+                        "items": {
+                          "type": "object",
+                          "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                          "properties": {
+                            "POINT_LOAD": {
+                              "type": "number",
+                              "description": "Concentrated axle load."
+                            },
+                            "POINT_DIST": {
+                              "type": "number",
+                              "description": "Longitudinal spacing/position of this axle."
+                            },
+                            "POINT_DIST2": {
+                              "type": "number",
+                              "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                              "default": 0
+                            }
+                          },
+                          "required": [
+                            "POINT_LOAD",
+                            "POINT_DIST"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "POINT_ITEMS"
+                    ]
+                  }
+                },
+                "PERMIT_LOADS": {
+                  "type": "array",
+                  "description": "Ordered permit-load axle arrangement.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-load arrangement entry (references an AXLE_TYPE and its spacing).",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label (must match one AXLE_TYPES entry)."
+                      },
+                      "SPACING": {
+                        "type": "number",
+                        "description": "Spacing to the previous axle group."
+                      },
+                      "EQUAL_J_NVSIDX": {
+                        "type": "boolean",
+                        "description": "True when this index marks the variable-spacing (VS) axle position.",
+                        "default": false
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "SPACING"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "AXLE_TYPES",
+                "PERMIT_LOADS"
+              ]
+            },
+            "SUB_TYPE": {
+              "type": "integer",
+              "description": "Sub type."
+            },
+            "SEL_VEHICLE": {
+              "type": "string",
+              "description": "Selected vehicle name."
+            },
+            "PRESSURE_LOAD": {
+              "type": "number",
+              "description": "Pressure load.",
+              "default": 0
+            },
+            "TOTAL_LOAD": {
+              "type": "number",
+              "description": "Total load.",
+              "default": 0
+            },
+            "TRACKED_LENGTH": {
+              "type": "number",
+              "description": "Tracked length.",
+              "default": 0
+            },
+            "WHEEL_SPACING": {
+              "type": "number",
+              "description": "Wheel spacing.",
+              "default": 0
+            },
+            "DSPACE": {
+              "type": "number",
+              "description": "Space.",
+              "default": 0
+            },
+            "DYNAMIC_AMP_FACTOR": {
+              "type": "boolean",
+              "description": "Dynamic amplification factor.",
+              "default": false
+            },
+            "USER_INPUT": {
+              "type": "boolean",
+              "description": "User input amplification.",
+              "default": false
+            },
+            "AMP": {
+              "type": "number",
+              "description": "Amplification.",
+              "default": 0
+            },
+            "NOSE_TAIL_DIST": {
+              "type": "number",
+              "description": "Nose-to-tail distance.",
+              "default": 0
+            },
+            "NUM_VEHICLE": {
+              "type": "number",
+              "description": "Number of vehicles.",
+              "default": 0
+            }
+          }
+        },
+        "VEH_ZA": {
+          "type": "object",
+          "description": "[MVLD_CODE=16 SOUTH_AFRICA] South Africa (TMH7) moving-load parameters.",
+          "properties": {
+            "PERMIT_LOAD": {
+              "type": "object",
+              "description": "Permit / special vehicle definition (DTO_MVHL_PV). Used when VEHICLE_LOAD_NUM=2 and the load is a permit vehicle.",
+              "properties": {
+                "IMPACT_FACTOR": {
+                  "type": "number",
+                  "description": "Permit load impact factor.",
+                  "default": 0
+                },
+                "AXLE_TYPES": {
+                  "type": "array",
+                  "description": "Axle-type groups of the permit vehicle.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-vehicle axle group.",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label referenced by PERMIT_LOADS entries."
+                      },
+                      "EVENLY_DIST_LOAD": {
+                        "type": "boolean",
+                        "description": "Treat the axle loads as evenly distributed.",
+                        "default": false
+                      },
+                      "SYMMETRIC_VEHICLE": {
+                        "type": "boolean",
+                        "description": "Vehicle is symmetric.",
+                        "default": false
+                      },
+                      "POINT_ITEMS": {
+                        "type": "array",
+                        "description": "Axle point loads for this axle type.",
+                        "items": {
+                          "type": "object",
+                          "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                          "properties": {
+                            "POINT_LOAD": {
+                              "type": "number",
+                              "description": "Concentrated axle load."
+                            },
+                            "POINT_DIST": {
+                              "type": "number",
+                              "description": "Longitudinal spacing/position of this axle."
+                            },
+                            "POINT_DIST2": {
+                              "type": "number",
+                              "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                              "default": 0
+                            }
+                          },
+                          "required": [
+                            "POINT_LOAD",
+                            "POINT_DIST"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "POINT_ITEMS"
+                    ]
+                  }
+                },
+                "PERMIT_LOADS": {
+                  "type": "array",
+                  "description": "Ordered permit-load axle arrangement.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-load arrangement entry (references an AXLE_TYPE and its spacing).",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label (must match one AXLE_TYPES entry)."
+                      },
+                      "SPACING": {
+                        "type": "number",
+                        "description": "Spacing to the previous axle group."
+                      },
+                      "EQUAL_J_NVSIDX": {
+                        "type": "boolean",
+                        "description": "True when this index marks the variable-spacing (VS) axle position.",
+                        "default": false
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "SPACING"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "AXLE_TYPES",
+                "PERMIT_LOADS"
+              ]
+            },
+            "INCRE_LENGTH": {
+              "type": "boolean",
+              "description": "Unit length for loaded length increment.",
+              "default": false
+            },
+            "INCRE_LENGTH_VALUE": {
+              "type": "number",
+              "description": "Loaded length increment value.",
+              "default": 0
+            },
+            "UNIT_NUM": {
+              "type": "number",
+              "description": "Loaded length increment unit number."
+            },
+            "OPPOSITE": {
+              "type": "boolean",
+              "description": "Consider load area giving opposite contribution.",
+              "default": false
+            },
+            "W1": {
+              "type": "number",
+              "description": "W1."
+            },
+            "W2": {
+              "type": "number",
+              "description": "W2."
+            },
+            "W3": {
+              "type": "number",
+              "description": "W3."
+            },
+            "LOADED_LENGTH": {
+              "type": "number",
+              "description": "Loaded length."
+            },
+            "PA": {
+              "type": "number",
+              "description": "Pa.",
+              "default": 0
+            },
+            "PB": {
+              "type": "number",
+              "description": "Pb."
+            },
+            "D1": {
+              "type": "number",
+              "description": "D1.",
+              "default": 0
+            },
+            "D2": {
+              "type": "number",
+              "description": "D2.",
+              "default": 0
+            },
+            "DELTA": {
+              "type": "number",
+              "description": "Delta.",
+              "default": 0
+            },
+            "PRESSURE_LOAD": {
+              "type": "number",
+              "description": "Pressure load."
+            },
+            "NUM_LOAD_ARRAY": {
+              "type": "array",
+              "description": "Different discrete lengths.",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "POINT_DIST_ARRAY": {
+              "type": "array",
+              "description": "Point distance sets.",
+              "items": {
+                "type": "object",
+                "description": "Point distances set (South Africa discrete lengths).",
+                "properties": {
+                  "POINT_DIST": {
+                    "type": "array",
+                    "description": "Point distances.",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "required": [
+                  "POINT_DIST"
+                ]
+              }
+            }
+          }
+        },
+        "VEH_DEFAULT": {
+          "type": "object",
+          "description": "[MVLD_CODE=1/2 AASHTO & other default codes] Default moving-load parameters (AASHTO Standard/LRFD, Taiwan, Korea, Turkey, PENDOT, etc.).",
+          "properties": {
+            "PERMIT_LOAD": {
+              "type": "object",
+              "description": "Permit / special vehicle definition (DTO_MVHL_PV). Used when VEHICLE_LOAD_NUM=2 and the load is a permit vehicle.",
+              "properties": {
+                "IMPACT_FACTOR": {
+                  "type": "number",
+                  "description": "Permit load impact factor.",
+                  "default": 0
+                },
+                "AXLE_TYPES": {
+                  "type": "array",
+                  "description": "Axle-type groups of the permit vehicle.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-vehicle axle group.",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label referenced by PERMIT_LOADS entries."
+                      },
+                      "EVENLY_DIST_LOAD": {
+                        "type": "boolean",
+                        "description": "Treat the axle loads as evenly distributed.",
+                        "default": false
+                      },
+                      "SYMMETRIC_VEHICLE": {
+                        "type": "boolean",
+                        "description": "Vehicle is symmetric.",
+                        "default": false
+                      },
+                      "POINT_ITEMS": {
+                        "type": "array",
+                        "description": "Axle point loads for this axle type.",
+                        "items": {
+                          "type": "object",
+                          "description": "One axle point load: concentrated load and its longitudinal spacing.",
+                          "properties": {
+                            "POINT_LOAD": {
+                              "type": "number",
+                              "description": "Concentrated axle load."
+                            },
+                            "POINT_DIST": {
+                              "type": "number",
+                              "description": "Longitudinal spacing/position of this axle."
+                            },
+                            "POINT_DIST2": {
+                              "type": "number",
+                              "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                              "default": 0
+                            }
+                          },
+                          "required": [
+                            "POINT_LOAD",
+                            "POINT_DIST"
+                          ]
+                        }
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "POINT_ITEMS"
+                    ]
+                  }
+                },
+                "PERMIT_LOADS": {
+                  "type": "array",
+                  "description": "Ordered permit-load axle arrangement.",
+                  "items": {
+                    "type": "object",
+                    "description": "Permit-load arrangement entry (references an AXLE_TYPE and its spacing).",
+                    "properties": {
+                      "AXLE_TYPE": {
+                        "type": "string",
+                        "description": "Axle type label (must match one AXLE_TYPES entry)."
+                      },
+                      "SPACING": {
+                        "type": "number",
+                        "description": "Spacing to the previous axle group."
+                      },
+                      "EQUAL_J_NVSIDX": {
+                        "type": "boolean",
+                        "description": "True when this index marks the variable-spacing (VS) axle position.",
+                        "default": false
+                      }
+                    },
+                    "required": [
+                      "AXLE_TYPE",
+                      "SPACING"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "AXLE_TYPES",
+                "PERMIT_LOADS"
+              ]
+            },
+            "UNIFORM_LOAD": {
+              "type": "number",
+              "description": "Uniform load.",
+              "default": 0
+            },
+            "UNIFORM_LOAD_NUM": {
+              "type": "integer",
+              "description": "Uniform load number.",
+              "default": 0
+            },
+            "UNIFORM_LOAD_DIST": {
+              "type": "number",
+              "description": "Uniform load distance.",
+              "default": 0
+            },
+            "UNIFORM_LOAD_W": {
+              "type": "number",
+              "description": "Uniform load W.",
+              "default": 0
+            },
+            "UNIFORM_LOAD_LENGTH_L": {
+              "type": "number",
+              "description": "Uniform load length L.",
+              "default": 0
+            },
+            "DYN_LOAD_ALLOWANCE": {
+              "type": "number",
+              "description": "Dynamic load allowance (%).",
+              "default": 0
+            },
+            "COMBINED_TRUCK_SPACE": {
+              "type": "number",
+              "description": "Combined truck space.",
+              "default": 0
+            },
+            "COMBINED_UNIFORM_LOAD": {
+              "type": "number",
+              "description": "Combined uniform load.",
+              "default": 0
+            },
+            "LEGAL_R": {
+              "type": "number",
+              "description": "Legal R.",
+              "default": 0
+            },
+            "LEGAL_PERMIT_TYPE": {
+              "type": "integer",
+              "description": "Legal permit type.",
+              "default": 0
+            },
+            "W1": {
+              "type": "number",
+              "description": "W1.",
+              "default": 0
+            },
+            "W2": {
+              "type": "number",
+              "description": "W2.",
+              "default": 0
+            },
+            "D1": {
+              "type": "number",
+              "description": "D1.",
+              "default": 0
+            },
+            "D2": {
+              "type": "number",
+              "description": "D2.",
+              "default": 0
+            },
+            "PL": {
+              "type": "number",
+              "description": "Axle load for member force.",
+              "default": 0
+            },
+            "PLM": {
+              "type": "number",
+              "description": "Axle load for moment.",
+              "default": 0
+            },
+            "PLV": {
+              "type": "number",
+              "description": "Axle load for shear force.",
+              "default": 0
+            },
+            "NOSE_TAIL_DIST": {
+              "type": "number",
+              "description": "Nose-to-tail distance.",
+              "default": 0
+            },
+            "CENT_F": {
+              "type": "boolean",
+              "description": "Add centrifugal force.",
+              "default": false
+            }
+          }
+        },
+        "LOAD_ITEMS": {
+          "type": "array",
+          "description": "Axle point loads for the vehicle (generic load table).",
+          "items": {
+            "type": "object",
+            "description": "One axle point load: concentrated load and its longitudinal spacing.",
+            "properties": {
+              "POINT_LOAD": {
+                "type": "number",
+                "description": "Concentrated axle load."
+              },
+              "POINT_DIST": {
+                "type": "number",
+                "description": "Longitudinal spacing/position of this axle."
+              },
+              "POINT_DIST2": {
+                "type": "number",
+                "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                "default": 0
+              }
+            },
+            "required": [
+              "POINT_LOAD",
+              "POINT_DIST"
+            ]
+          }
+        },
+        "LOAD_ITEMS2": {
+          "type": "array",
+          "description": "Secondary axle point loads (codes needing a second set).",
+          "items": {
+            "type": "object",
+            "description": "One axle point load: concentrated load and its longitudinal spacing.",
+            "properties": {
+              "POINT_LOAD": {
+                "type": "number",
+                "description": "Concentrated axle load."
+              },
+              "POINT_DIST": {
+                "type": "number",
+                "description": "Longitudinal spacing/position of this axle."
+              },
+              "POINT_DIST2": {
+                "type": "number",
+                "description": "Secondary spacing (used only by some codes, e.g. KSCE-LSD15 second-track distance).",
+                "default": 0
+              }
+            },
+            "required": [
+              "POINT_LOAD",
+              "POINT_DIST"
+            ]
+          }
+        }
+      },
+      "required": [
+        "MVLD_CODE",
+        "VEHICLE_LOAD_NAME",
+        "VEHICLE_LOAD_NUM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "MVLD_CODE": 1,
+        "VEHICLE_LOAD_NAME": "US(ASL)_HS20-44",
+        "VEHICLE_LOAD_NUM": 1,
+        "VEHICLE_TYPE_NAME": "HS20-44",
+        "STANDARD_CODE": "AASHTO-STD",
+        "VEH_DEFAULT": {
+          "DYN_LOAD_ALLOWANCE": 0,
+          "CENT_F": false
+        }
+      },
+      "2": {
+        "MVLD_CODE": 18,
+        "VEHICLE_LOAD_NAME": "FR_System A",
+        "VEHICLE_LOAD_NUM": 1,
+        "VEHICLE_TYPE_NAME": "System A",
+        "STANDARD_CODE": "FR_SYSTEM A",
+        "VEH_FR": {
+          "USE_DYNAMIC_FACTOR": false
+        }
+      },
+      "3": {
+        "MVLD_CODE": 3,
+        "VEHICLE_LOAD_NAME": "CN_CH-RQ",
+        "VEHICLE_LOAD_NUM": 1,
+        "VEHICLE_TYPE_NAME": "CH-RQ",
+        "STANDARD_CODE": "JTGB01-2014",
+        "VEH_CN": {
+          "CROWD_WIDTH": 3.0,
+          "IMPACT_COEF": 0.3
+        }
+      },
+      "4": {
+        "MVLD_CODE": 8,
+        "VEHICLE_LOAD_NAME": "CA_CL-625",
+        "VEHICLE_LOAD_NUM": 1,
+        "VEHICLE_TYPE_NAME": "CL-625",
+        "STANDARD_CODE": "CANADA",
+        "VEH_CA": {
+          "DYN_LOAD_ALLOWANCE": 0.25,
+          "CENT_F": false,
+          "DYNA": {
+            "DYNA_FACTOR": 0
+          }
+        }
+      },
+      "5": {
+        "MVLD_CODE": 10,
+        "VEHICLE_LOAD_NAME": "BS_HA",
+        "VEHICLE_LOAD_NUM": 1,
+        "VEHICLE_TYPE_NAME": "HA",
+        "STANDARD_CODE": "BS BD 37/01",
+        "VEH_BS": {
+          "LANE_FACTOR": 2,
+          "LANE_FACTOR_ARRAY": [
+            1.0,
+            1.0,
+            0.5,
+            0.4
+          ],
+          "USE_DYNAMIC_FACTOR": false
+        }
+      },
+      "6": {
+        "MVLD_CODE": 11,
+        "VEHICLE_LOAD_NAME": "EC_LoadModel1",
+        "VEHICLE_LOAD_NUM": 1,
+        "VEHICLE_TYPE_NAME": "Load Model 1",
+        "STANDARD_CODE": "EN 1991-2:2003 - RoadBridge",
+        "VEH_EUROCODE": {
+          "SUB_TYPE": 18,
+          "AMP_VALUES": [
+            1.0,
+            1.0
+          ],
+          "TANDEM_ADJUST_VALUES": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "UDL_ADJUST_VALUES": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "7": {
+        "MVLD_CODE": 8,
+        "VEHICLE_LOAD_NAME": "CA_Permit",
+        "VEHICLE_LOAD_NUM": 2,
+        "USER_LOAD_TYPE": "Permit",
+        "VEH_CA": {
+          "PERMIT_LOAD": {
+            "IMPACT_FACTOR": 0.25,
+            "AXLE_TYPES": [
+              {
+                "AXLE_TYPE": "A1",
+                "EVENLY_DIST_LOAD": false,
+                "SYMMETRIC_VEHICLE": false,
+                "POINT_ITEMS": [
+                  {
+                    "POINT_LOAD": 100.0,
+                    "POINT_DIST": 0.0
+                  },
+                  {
+                    "POINT_LOAD": 100.0,
+                    "POINT_DIST": 4.0
+                  }
+                ]
+              }
+            ],
+            "PERMIT_LOADS": [
+              {
+                "AXLE_TYPE": "A1",
+                "SPACING": 4.0,
+                "EQUAL_J_NVSIDX": false
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "_group": "ope",
+  "_name": "SWPCGIRDER_DLG",
+  "uri": "ope/SWPCGIRDER_DLG",
+  "methods": "POST",
+  "schema": {
+    "SWPCGIRDER_DLG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Pre/Post-Tensioned Composite Girder Bridge Wizard Dialog (SWPCGIRDER_DLG). Either opens the wizard dialog or loads a .wzd/.wiz file into an already-open dialog, driven by which Argument field is set.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body. Set OPEN_DIALOG=true to launch the wizard dialog, OR set OPEN_PATH to a non-empty file path to load a file into an already-open dialog. Setting both true/non-empty at once is rejected by the handler.",
+          "properties": {
+            "OPEN_DIALOG": {
+              "type": "boolean",
+              "default": false,
+              "description": "When true, launches the Pre/Post-Tensioned Composite Girder Bridge Wizard dialog. Must not be true together with a non-empty OPEN_PATH (handler throws)."
+            },
+            "OPEN_PATH": {
+              "type": "string",
+              "description": "[OPEN_DIALOG=false] .wiz file open path. When non-empty, sends the file path (WM_COPYDATA) to the already-open wizard dialog; the dialog must already be open or the handler throws. Must not be combined with OPEN_DIALOG=true."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "OPEN_DIALOG": true
+    }
+  }
+}

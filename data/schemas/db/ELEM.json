@@ -1,0 +1,203 @@
+{
+  "_group": "db",
+  "_name": "ELEM",
+  "uri": "db/ELEM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "ELEM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Element (ELEM). TYPE selects the element family and, together with STYPE/CABLE/W_TYPE, drives which optional fields the write handler actually reads (see each field's [TYPE=...] applicability tag).",
+      "properties": {
+        "TYPE": {
+          "description": "Element type (case-insensitive; validated against the enum as a hard constraint). SOLID; TRUSS; TENSTR = tension-only/hook/cable; COMPTR = compression-only/gap; BEAM = general beam; PLATE; PLSTRS = plane stress; PLSTRN = plane strain; AXISYM = axisymmetric; WALL; \"WALL OPEN\" = wall opening (note the space in the wire value).",
+          "type": "string",
+          "enum": [
+            "SOLID",
+            "TRUSS",
+            "TENSTR",
+            "COMPTR",
+            "BEAM",
+            "PLATE",
+            "PLSTRS",
+            "PLSTRN",
+            "AXISYM",
+            "WALL",
+            "WALL OPEN"
+          ],
+          "default": "BEAM"
+        },
+        "MATL": {
+          "description": "Material number.",
+          "type": "integer"
+        },
+        "SECT": {
+          "description": "Section / thickness number.",
+          "type": "integer"
+        },
+        "NODE": {
+          "description": "Element connectivity node numbers, in order. The handler reads at most 8 entries (extras are ignored) and zero-pads the rest. Typical counts by TYPE: line elements (BEAM/TRUSS/TENSTR/COMPTR) = 2; planar (PLATE/PLSTRS/PLSTRN/AXISYM/WALL/WALL OPEN) = 3 or 4; SOLID = 4/6/8.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "maxItems": 8
+        },
+        "ANGLE": {
+          "description": "[TYPE=TRUSS/TENSTR/COMPTR/BEAM and PLATE/PLSTRS/PLSTRN/AXISYM] Beta angle of the element local axis. Not read for SOLID or WALL/WALL OPEN.",
+          "type": "number",
+          "default": 0
+        },
+        "STYPE": {
+          "description": "Element subtype; meaning depends on TYPE. [TYPE=TRUSS/TENSTR/COMPTR/BEAM] read as-is: for TENSTR 1=truss, 2=hook, 3=cable; for COMPTR 2=gap, otherwise truss. [TYPE=PLATE/PLSTRS] stored as STYPE-1 internally. [TYPE=WALL/WALL OPEN] read as-is. Not read for SOLID.",
+          "type": "integer"
+        },
+        "TENS": {
+          "description": "[TYPE=TENSTR/COMPTR] Tension/compression force. Read for TENSTR truss (STYPE=1) and COMPTR truss, and for TENSTR cable (STYPE=3) when CABLE is 1 or 2. Not read otherwise.",
+          "type": "number",
+          "default": 0
+        },
+        "T_LIMIT": {
+          "description": "[TYPE=TENSTR/COMPTR, truss subtype STYPE=1] Tension/compression limit value; effective when T_bLMT is true.",
+          "type": "number",
+          "default": 0
+        },
+        "T_bLMT": {
+          "description": "[TYPE=TENSTR/COMPTR, truss subtype STYPE=1] Whether the tension/compression limit (T_LIMIT) is used.",
+          "type": "boolean",
+          "default": false
+        },
+        "NON_LEN": {
+          "description": "[TYPE=TENSTR/COMPTR] Nonlinear length. Read for TENSTR hook (STYPE=2), TENSTR cable (STYPE=3) when CABLE=3, and COMPTR gap (STYPE=2).",
+          "type": "number",
+          "default": 0
+        },
+        "CABLE": {
+          "description": "[TYPE=TENSTR, cable subtype STYPE=3] Cable input option: 0=length ratio (then read C_RAT), 1=pretension (then read TENS), 2=horizontal force (then read TENS), 3=Lu length (then read NON_LEN). Values outside 0-3 are not handled by the write path.",
+          "type": "integer",
+          "enum": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "C_RAT": {
+          "description": "[TYPE=TENSTR, cable subtype STYPE=3, CABLE=0] Cable length ratio.",
+          "type": "number"
+        },
+        "WALL": {
+          "description": "[TYPE=WALL/WALL OPEN] Wall ID associating the element with a wall.",
+          "type": "integer"
+        },
+        "W_TYPE": {
+          "description": "[TYPE=WALL/WALL OPEN] Wall type: 0=Plate-based, 1=CRB pinned, 2=CRB fixed. Values outside 0-2 are not handled by the write path.",
+          "type": "integer",
+          "enum": [
+            0,
+            1,
+            2
+          ],
+          "default": 0
+        },
+        "LCAXIS": {
+          "description": "Local axis. Present in the C++ DTO (optional); not read by the current ELEM write handler.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "MATL",
+        "SECT",
+        "NODE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TYPE": "BEAM",
+        "MATL": 1,
+        "SECT": 1,
+        "NODE": [
+          30,
+          74
+        ],
+        "ANGLE": 0
+      },
+      "2": {
+        "TYPE": "TRUSS",
+        "MATL": 1,
+        "SECT": 1,
+        "NODE": [
+          1,
+          2
+        ]
+      },
+      "3": {
+        "TYPE": "TENSTR",
+        "MATL": 1,
+        "SECT": 1,
+        "NODE": [
+          1,
+          2
+        ],
+        "STYPE": 3,
+        "CABLE": 1,
+        "TENS": 100
+      },
+      "4": {
+        "TYPE": "COMPTR",
+        "MATL": 1,
+        "SECT": 1,
+        "NODE": [
+          1,
+          2
+        ],
+        "STYPE": 2,
+        "NON_LEN": 0.01
+      },
+      "5": {
+        "TYPE": "PLATE",
+        "MATL": 1,
+        "SECT": 1,
+        "NODE": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "STYPE": 2,
+        "ANGLE": 0
+      },
+      "6": {
+        "TYPE": "WALL",
+        "MATL": 1,
+        "SECT": 1,
+        "NODE": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "STYPE": 2,
+        "WALL": 1,
+        "W_TYPE": 0
+      },
+      "7": {
+        "TYPE": "SOLID",
+        "MATL": 1,
+        "SECT": 1,
+        "NODE": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    }
+  }
+}

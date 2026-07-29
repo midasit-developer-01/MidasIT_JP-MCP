@@ -1,0 +1,35 @@
+{
+  "_group": "design",
+  "_name": "MBTP",
+  "uri": "design/RC/KDS-41-20-2022/MBTP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MBTP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Member Type (MBTP). Defines the structural member type used for design; driven solely by the TYPE member-type enum.",
+      "properties": {
+        "TYPE": {
+          "type": "string",
+          "enum": ["COLUMN", "BEAM", "BRACE"],
+          "description": "Member Type. Enum tokens are matched case-insensitively."
+        }
+      },
+      "required": ["TYPE"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TYPE": "COLUMN"
+      },
+      "2": {
+        "TYPE": "BEAM"
+      },
+      "3": {
+        "TYPE": "BRACE"
+      }
+    }
+  }
+}

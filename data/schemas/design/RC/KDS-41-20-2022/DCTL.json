@@ -1,0 +1,50 @@
+{
+  "_group": "design",
+  "_name": "DCTL",
+  "uri": "design/RC/KDS-41-20-2022/DCTL",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "DCTL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Control (DCTL). Fields set the frame sway classification, effective length factor mode, and design type for the RC design control record.",
+      "properties": {
+        "FRAMEX": {
+          "type": "string",
+          "enum": ["Braced Non-sway", "Unbraced Sway"],
+          "default": "Braced Non-sway",
+          "description": "X-Direction of Frame. Case-insensitive enum. 'Braced Non-sway' -> braced frame in X; 'Unbraced Sway' -> sway frame in X."
+        },
+        "FRAMEY": {
+          "type": "string",
+          "enum": ["Braced Non-sway", "Unbraced Sway"],
+          "default": "Braced Non-sway",
+          "description": "Y-Direction of Frame. Case-insensitive enum. 'Braced Non-sway' -> braced frame in Y; 'Unbraced Sway' -> sway frame in Y."
+        },
+        "bAUTOKF": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auto Calculate Effective Length Factor."
+        },
+        "DT": {
+          "type": "string",
+          "enum": ["3D", "XZ", "YZ", "XY"],
+          "default": "3D",
+          "description": "Design Type. Case-insensitive enum selecting the design plane/space."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FRAMEX": "Braced Non-sway",
+        "FRAMEY": "Unbraced Sway",
+        "bAUTOKF": true,
+        "DT": "3D"
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "_group": "rating",
+  "_name": "SPLT-VBEAM",
+  "uri": "rating/PSC/AASHTO-LRFR19/SPLT-VBEAM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SPLT-VBEAM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Span Length for V-Beam (SPLT-VBEAM). Holds the span length used by the PSC rating span-length database.",
+      "properties": {
+        "SPAN_LENGTH": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Span Length (>= 0)."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SPAN_LENGTH": 30.0
+      }
+    }
+  }
+}

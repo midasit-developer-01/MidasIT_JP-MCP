@@ -1,0 +1,91 @@
+{
+  "_group": "db",
+  "_name": "GSBG",
+  "uri": "db/GSBG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "GSBG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Girder-Stress Diagram Batch Group (GSBG). A single flat record per key defining a bridge girder stress/force diagram batch group; DGRM_TYPE selects between beam stresses and beam forces/moments, and BSTRSCOMP/_7TH_DOF_TYPE refine the displayed component.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Group name of the girder-stress diagram batch group.",
+          "type": "string"
+        },
+        "BATCH": {
+          "description": "Whether this is a batch group (batch generation of the diagram).",
+          "type": "boolean"
+        },
+        "BODY_ELEM_GRUP_K": {
+          "description": "Key of the bridge/body element group to which the diagram applies.",
+          "type": "integer"
+        },
+        "ALLSTAGE": {
+          "description": "Generation option. false = Current Stage-Step; true = all Stages (Last Step).",
+          "type": "boolean",
+          "default": false
+        },
+        "BSTRSCOMP": {
+          "description": "Beam stresses component. 0=Sax, 1=+Sby, 2=-Sby, 3=+Sbz, 4=-Sbz, 5=Combined, 6=7th DOF.",
+          "type": "integer",
+          "default": 0
+        },
+        "BSTRSCOMP_SUB": {
+          "description": "Sub location for the display of stress, used when BSTRSCOMP is 6 (7th DOF). 0=Maximum, 1=1(-y,+z), 2=2(+y,+z), 3=3(+y,-z), 4=4(-y,-z).",
+          "type": "integer",
+          "default": 0
+        },
+        "MOMENT_COMP": {
+          "description": "Beam forces/moments component, used when DGRM_TYPE is 1. 0=Fx, 1=Fy, 2=Fz, 3=Mx, 4=My, 5=Mz, 6=Mb, 7=Mt, 8=Mw.",
+          "type": "integer",
+          "default": 0
+        },
+        "_7TH_DOF_TYPE": {
+          "description": "7th DOF type, used when BSTRSCOMP is 6 (7th DOF). 0=Sax(Warping), 1=Ssy(Mt), 2=Ssy(Mw), 3=Ssz(Mt), 4=Ssz(Mw), 5=Combined(Ssy), 6=Combined(Ssz).",
+          "type": "integer",
+          "default": 0
+        },
+        "DGRM_TYPE": {
+          "description": "Type of result to diagram. 0=Beam Stresses, 1=Beam Forces/Moments.",
+          "type": "integer",
+          "default": 0
+        },
+        "SCALEFACTOR": {
+          "description": "Display scale factor for the diagram.",
+          "type": "number",
+          "default": 0
+        }
+      },
+      "required": [
+        "NAME",
+        "BATCH",
+        "BODY_ELEM_GRUP_K"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Girder Stress Group1",
+        "BATCH": true,
+        "BODY_ELEM_GRUP_K": 1,
+        "ALLSTAGE": false,
+        "DGRM_TYPE": 0,
+        "BSTRSCOMP": 6,
+        "BSTRSCOMP_SUB": 3,
+        "_7TH_DOF_TYPE": 0,
+        "SCALEFACTOR": 1
+      },
+      "2": {
+        "NAME": "Girder Force Group1",
+        "BATCH": false,
+        "BODY_ELEM_GRUP_K": 2,
+        "ALLSTAGE": true,
+        "DGRM_TYPE": 1,
+        "MOMENT_COMP": 4,
+        "SCALEFACTOR": 1
+      }
+    }
+  }
+}

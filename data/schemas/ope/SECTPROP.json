@@ -1,0 +1,24 @@
+{
+  "_group": "ope",
+  "_name": "SECTPROP",
+  "uri": "ope/SECTPROP",
+  "methods": "POST, GET",
+  "schema": {
+    "SECTPROP": {
+      "type": "object",
+      "description": "Section Property (SECTPROP). Computes/queries calculated section properties (area, moments of inertia, etc.) for section definitions; the request body selects which section to report by carrying its section key (ID) as a string, which the handler converts to an integer.",
+      "properties": {
+        "Argument": {
+          "type": "string",
+          "description": "Section key (section ID) as a string, e.g. \"1\". The handler converts it to an integer (via _ttoi) and returns the section property table for that single section. Only used by the POST route. The GET route ignores the body and returns section properties for every defined section, keyed by section ID."
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": "1"
+  }
+}

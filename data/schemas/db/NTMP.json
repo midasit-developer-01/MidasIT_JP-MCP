@@ -1,0 +1,78 @@
+{
+  "_group": "db",
+  "_name": "NTMP",
+  "uri": "db/NTMP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "NTMP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Nodal Temperature (NTMP). Each key is a node number; ITEMS holds one entry per (load case, load group) nodal temperature assigned to that node.",
+      "properties": {
+        "ITEMS": {
+          "description": "Array of nodal temperature entries for this node. One object per load case / load group combination.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the entry within the node. Optional; if omitted the entry is matched/created by its (LCNAME, GROUP_NAME) combination.",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Static load case name. Must reference an existing static load case (STLD), otherwise the request is rejected.",
+                "type": "string"
+              },
+              "GROUP_NAME": {
+                "description": "Load group name. Optional; empty string means no load group. If non-empty it must reference an existing load group.",
+                "type": "string",
+                "default": ""
+              },
+              "TEMPER": {
+                "description": "Nodal temperature value.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "LCNAME",
+              "TEMPER"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "190": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "Temp(-)",
+            "GROUP_NAME": "LoadGroup2",
+            "TEMPER": -3
+          },
+          {
+            "ID": 3,
+            "LCNAME": "Temp(+)",
+            "GROUP_NAME": "LoadGroup1",
+            "TEMPER": 2
+          }
+        ]
+      },
+      "234": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "Temp(-)",
+            "TEMPER": -5
+          }
+        ]
+      }
+    }
+  }
+}

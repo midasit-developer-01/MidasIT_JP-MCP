@@ -1,0 +1,28 @@
+{
+  "_group": "design",
+  "_name": "DRC",
+  "uri": "design/RC/DRC",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "DRC": {
+      "type": "object",
+      "description": "RC Design Code (DCON). The single field carries the RC concrete design code name that is validated against the supported design-code list and used to load the default RC design control settings.",
+      "properties": {
+        "DGNCODE": {
+          "type": "string",
+          "description": "RC design code name. Validated by the RC load-design-code checker (eDgnRC); an unsupported name is rejected with LV_WRONG_FIELD. Setting it loads the default RC design control (Dcon) for that code."
+        }
+      },
+      "required": [
+        "DGNCODE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DGNCODE": "KDS-41-20-2022"
+      }
+    }
+  }
+}

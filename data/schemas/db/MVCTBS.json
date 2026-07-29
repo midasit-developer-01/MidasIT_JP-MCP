@@ -1,0 +1,165 @@
+{
+  "_group": "db",
+  "_name": "MVCTBS",
+  "uri": "db/MVCTBS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVCTBS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Analysis Control - BS (MVCTBS). Controls how moving-load influence results are generated and which reactions/displacements/forces/links are calculated, optionally filtered by structure group.",
+      "properties": {
+        "iIGP": {
+          "type": "integer",
+          "default": 0,
+          "description": "Influence generating points mode. When 0, UNUMT (number of points per line element) is used; when non-zero, DIST (distance between points) is used instead."
+        },
+        "UNUMT": {
+          "type": "integer",
+          "default": 0,
+          "description": "[iIGP=0] Number of influence-generating points per line element. Only applied when iIGP is 0."
+        },
+        "DIST": {
+          "type": "number",
+          "default": 0,
+          "description": "[iIGP!=0] Distance between influence-generating points. Only applied when iIGP is non-zero."
+        },
+        "PLATE": {
+          "type": "string",
+          "enum": ["CENTER", "NODAL"],
+          "description": "Analysis result position for plates (case-insensitive). CENTER = element center, NODAL = nodal positions."
+        },
+        "bSTRCALC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate plate stresses (Stress check box)."
+        },
+        "bCONCURRENT": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate concurrent forces (Concurrent force check box)."
+        },
+        "FRAME": {
+          "type": "string",
+          "enum": ["NORMAL", "AXIAL"],
+          "description": "Analysis result position for frames (case-insensitive)."
+        },
+        "bCSTRCALC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate combined stresses for frames (Combined stress check box)."
+        },
+        "bREAC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate reactions."
+        },
+        "bRGP": {
+          "type": "boolean",
+          "default": false,
+          "description": "Reaction filter scope. false = All, true = Group (limits reactions to the group named in RGP)."
+        },
+        "RGP": {
+          "type": "string",
+          "description": "Reaction group name. Applied only when bREAC and bRGP are both true; the group must exist. Use empty string when All is selected."
+        },
+        "bDISP": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate displacements."
+        },
+        "bDGP": {
+          "type": "boolean",
+          "default": false,
+          "description": "Displacement filter scope. false = All, true = Group (limits displacements to the group named in DGP)."
+        },
+        "DGP": {
+          "type": "string",
+          "description": "Displacement group name. Applied only when bDISP and bDGP are both true; the group must exist. Use empty string when All is selected."
+        },
+        "bFM": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate forces / moments."
+        },
+        "bFGP": {
+          "type": "boolean",
+          "default": false,
+          "description": "Force/moment filter scope. false = All, true = Group (limits forces/moments to the group named in FGP)."
+        },
+        "FGP": {
+          "type": "string",
+          "description": "Force/moment group name. Applied only when bFM and bFGP are both true; the group must exist. Use empty string when All is selected."
+        },
+        "bL": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate elastic / general links."
+        },
+        "bLG": {
+          "type": "boolean",
+          "default": false,
+          "description": "Link filter scope. false = All, true = Group (limits links to the boundary group named in LGP)."
+        },
+        "LGP": {
+          "type": "string",
+          "description": "Link boundary group name. Applied only when bL and bLG are both true; the boundary group must exist. Use empty string when All is selected."
+        },
+        "NUMLANE": {
+          "type": "integer",
+          "default": 0,
+          "description": "Number of national lanes."
+        }
+      },
+      "required": ["PLATE", "FRAME", "RGP", "DGP", "FGP", "LGP"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "iIGP": 0,
+        "UNUMT": 4,
+        "PLATE": "CENTER",
+        "bSTRCALC": true,
+        "bCONCURRENT": false,
+        "FRAME": "NORMAL",
+        "bCSTRCALC": false,
+        "bREAC": true,
+        "bRGP": true,
+        "RGP": "Supports",
+        "bDISP": true,
+        "bDGP": false,
+        "DGP": "",
+        "bFM": true,
+        "bFGP": false,
+        "FGP": "",
+        "bL": false,
+        "bLG": false,
+        "LGP": "",
+        "NUMLANE": 2
+      },
+      "2": {
+        "iIGP": 1,
+        "DIST": 1.5,
+        "PLATE": "NODAL",
+        "bSTRCALC": false,
+        "bCONCURRENT": true,
+        "FRAME": "AXIAL",
+        "bCSTRCALC": true,
+        "bREAC": false,
+        "bRGP": false,
+        "RGP": "",
+        "bDISP": false,
+        "bDGP": false,
+        "DGP": "",
+        "bFM": false,
+        "bFGP": false,
+        "FGP": "",
+        "bL": true,
+        "bLG": true,
+        "LGP": "LinkGroup1",
+        "NUMLANE": 3
+      }
+    }
+  }
+}

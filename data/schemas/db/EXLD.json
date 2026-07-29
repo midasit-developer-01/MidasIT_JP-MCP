@@ -1,0 +1,35 @@
+{
+  "_group": "db",
+  "_name": "EXLD",
+  "uri": "db/EXLD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EXLD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Prestress Loads (EXLD). Defines the set of static load cases treated as external-type (pretension) load cases; the sole key LCNAME_ITEM lists the names of the static load cases to include.",
+      "properties": {
+        "LCNAME_ITEM": {
+          "description": "Names of the static load cases (STLD) to register as external/pretension load cases. Each entry is resolved to a static load case key; on write, a non-empty list replaces the existing set.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "LCNAME_ITEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME_ITEM": [
+          "PrS1",
+          "PrS2"
+        ]
+      }
+    }
+  }
+}

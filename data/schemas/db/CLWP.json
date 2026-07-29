@@ -1,0 +1,108 @@
+{
+  "_group": "db",
+  "_name": "CLWP",
+  "uri": "db/CLWP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CLWP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Plate Cutting Line Diagram (CLWP). Each entry defines a cutting line/plane by three points; DIR selects whether the line is normal to the plane or lies in the plane, and R/G/B set the display color.",
+      "properties": {
+        "NAME": {
+          "description": "Name of the cutting line.",
+          "type": "string"
+        },
+        "DIR": {
+          "description": "Cutting direction. Case-insensitive. \"NORMAL\" = normal to the defined plane; \"DIR\" = in-plane direction.",
+          "type": "string",
+          "enum": ["NORMAL", "DIR"]
+        },
+        "PT1X": {
+          "description": "Point 1 X coordinate.",
+          "type": "number"
+        },
+        "PT1Y": {
+          "description": "Point 1 Y coordinate.",
+          "type": "number"
+        },
+        "PT1Z": {
+          "description": "Point 1 Z coordinate.",
+          "type": "number"
+        },
+        "PT2X": {
+          "description": "Point 2 X coordinate.",
+          "type": "number"
+        },
+        "PT2Y": {
+          "description": "Point 2 Y coordinate.",
+          "type": "number"
+        },
+        "PT2Z": {
+          "description": "Point 2 Z coordinate.",
+          "type": "number"
+        },
+        "PT3X": {
+          "description": "Point 3 X coordinate.",
+          "type": "number"
+        },
+        "PT3Y": {
+          "description": "Point 3 Y coordinate.",
+          "type": "number"
+        },
+        "PT3Z": {
+          "description": "Point 3 Z coordinate.",
+          "type": "number"
+        },
+        "R": {
+          "description": "Line display color, red component (0-255).",
+          "type": "integer",
+          "default": 0
+        },
+        "G": {
+          "description": "Line display color, green component (0-255).",
+          "type": "integer",
+          "default": 0
+        },
+        "B": {
+          "description": "Line display color, blue component (0-255).",
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "required": [
+        "NAME",
+        "DIR",
+        "PT1X",
+        "PT1Y",
+        "PT1Z",
+        "PT2X",
+        "PT2Y",
+        "PT2Z",
+        "PT3X",
+        "PT3Y",
+        "PT3Z"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "CL1",
+        "DIR": "DIR",
+        "PT1X": 0,
+        "PT1Y": 10710,
+        "PT1Z": -1000,
+        "PT2X": 0,
+        "PT2Y": 10710,
+        "PT2Z": 0,
+        "PT3X": 0,
+        "PT3Y": 9945,
+        "PT3Z": 0,
+        "R": 0,
+        "G": 0,
+        "B": 0
+      }
+    }
+  }
+}

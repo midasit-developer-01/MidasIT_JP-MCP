@@ -1,0 +1,66 @@
+{
+  "_group": "design",
+  "_name": "BD-ANAL",
+  "uri": "design/RC/KDS-41-20-2022/BD-ANAL",
+  "methods": "POST",
+  "schema": {
+    "BD-ANAL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "RC Beam Design Analysis (BD-ANAL). Fields are driven by the DESIGN_ANAL request DTO, which selects the design analysis target (all elements, specific element numbers, or specific section numbers).",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body for performing RC beam design analysis (DESIGN_ANAL).",
+          "properties": {
+            "PERFORM_TYPE": {
+              "type": "string",
+              "enum": ["ALL", "ELEMS", "SECTIONS"],
+              "default": "ALL",
+              "description": "Perform Target - All Elements: ALL / By Element No.: ELEMS / By Section No.: SECTIONS. Case-insensitive."
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "[PERFORM_TYPE=ELEMS] Element No. selection object.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "description": "Specify Each ID - Element No.",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "description": "[PERFORM_TYPE=SECTIONS] Section No.",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "PERFORM_TYPE": "ELEMS",
+      "ELEMS": {
+        "KEYS": [1, 2, 3],
+        "TO": "1-10",
+        "STRUCTURE_GROUP_NAME": "Beams"
+      },
+      "SECTIONS": [1, 2]
+    }
+  }
+}

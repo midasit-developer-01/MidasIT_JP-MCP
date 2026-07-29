@@ -1,0 +1,1237 @@
+{
+  "_group": "design",
+  "_name": "SECT",
+  "uri": "design/SECT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SECT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Section (SECT). Fields are driven by the section Type (SECTTYPE): a section carries a 'before' and 'after' geometry (SECT_BEFORE/SECT_AFTER), an optional composite tapered J base, and coating/forming/recalculation options; SPC_TEXT can import geometry from an SPC string.",
+      "additionalProperties": true,
+      "required": [
+        "SECTTYPE",
+        "SECT_NAME"
+      ],
+      "properties": {
+        "SECTTYPE": {
+          "type": "string",
+          "description": "Type. Section type. Case-insensitive matching.",
+          "enum": [
+            "DBUSER",
+            "SRC",
+            "VALUE",
+            "COMBINED",
+            "TAPERED",
+            "CONSTRUCT",
+            "COMPOSITE",
+            "PSC",
+            "COMPOSITE-GEN",
+            "SOD",
+            "SB"
+          ]
+        },
+        "SECT_NAME": {
+          "type": "string",
+          "description": "Sect Name."
+        },
+        "SECT_BEFORE": {
+          "$ref": "#/definitions/SECT_SECTION",
+          "description": "Sect Before. 'Before' section geometry/definition."
+        },
+        "SECT_AFTER": {
+          "$ref": "#/definitions/SECT_SECTION",
+          "description": "Sect After. 'After' section geometry/definition (used for tapered sections)."
+        },
+        "COMPOSITE_J": {
+          "$ref": "#/definitions/SECT_SECTBASE",
+          "description": "Composite Tapered J. Section base for the J end of a composite tapered section."
+        },
+        "COAT_THIK": {
+          "type": "number",
+          "description": "Coating Thickness."
+        },
+        "FORM_TYPE": {
+          "type": "integer",
+          "description": "Forming Type."
+        },
+        "RECL_PROP": {
+          "type": "boolean",
+          "description": "Recalc Sect Properties. When true, section properties are recalculated on set."
+        },
+        "CALC_OPT": {
+          "type": "boolean",
+          "description": "Caculate Sect Prop. Option."
+        },
+        "SPC_TEXT": {
+          "type": "string",
+          "description": "SPC TEXT. When assigned and non-empty, section data is imported from this SPC string."
+        },
+        "SPC_TEXT2": {
+          "type": "string",
+          "description": "SPC TEXT2. Second SPC string; when both SPC_TEXT and SPC_TEXT2 are set the section is built as a tapered composite-general."
+        }
+      },
+      "definitions": {
+        "STIFF_SHAPE": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Name."
+            },
+            "SHAPE_TYPE": {
+              "type": "integer",
+              "description": "Type."
+            },
+            "SIZE": {
+              "type": "array",
+              "description": "Size.",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 8,
+              "maxItems": 8
+            }
+          }
+        },
+        "STIFF_PROFILE": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "SPACING": {
+              "type": "number",
+              "description": "Spacing."
+            },
+            "SHAPE": {
+              "type": "integer",
+              "description": "Shape."
+            },
+            "USE_CALC": {
+              "type": "boolean",
+              "description": "Use Calc.",
+              "default": false
+            }
+          }
+        },
+        "SECT_STIFF": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "POSITION": {
+              "type": "integer",
+              "description": "Position."
+            },
+            "REFERENCE_OF_D": {
+              "type": "integer",
+              "description": "Reference of d."
+            },
+            "STIFF_CNT": {
+              "type": "array",
+              "description": "Stiff Array Count.",
+              "items": {
+                "type": "integer"
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "STIFF_SHAPE": {
+              "type": "array",
+              "description": "Stiff Shape.",
+              "items": {
+                "$ref": "#/definitions/STIFF_SHAPE"
+              }
+            },
+            "STIFF_TOP": {
+              "type": "array",
+              "description": "Stiff Top.",
+              "items": {
+                "$ref": "#/definitions/STIFF_PROFILE"
+              }
+            },
+            "STIFF_BOT": {
+              "type": "array",
+              "description": "Stiff Bot.",
+              "items": {
+                "$ref": "#/definitions/STIFF_PROFILE"
+              }
+            },
+            "STIFF_LEFT": {
+              "type": "array",
+              "description": "Stiff Left.",
+              "items": {
+                "$ref": "#/definitions/STIFF_PROFILE"
+              }
+            },
+            "STIFF_RIGHT": {
+              "type": "array",
+              "description": "Stiff Right.",
+              "items": {
+                "$ref": "#/definitions/STIFF_PROFILE"
+              }
+            }
+          }
+        },
+        "SECT_DESIGN": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "YBAR": {
+              "type": "number",
+              "description": "YBar."
+            },
+            "ZBAR": {
+              "type": "number",
+              "description": "ZBar."
+            },
+            "ZYY": {
+              "type": "number",
+              "description": "Zyy."
+            },
+            "ZZZ": {
+              "type": "number",
+              "description": "Zzz."
+            },
+            "TANA": {
+              "type": "number",
+              "description": "TanA."
+            },
+            "BETA": {
+              "type": "number",
+              "description": "Beta."
+            }
+          }
+        },
+        "SECT_STIFFNESS": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "AREA": {
+              "type": "number",
+              "description": "Area."
+            },
+            "WAREA": {
+              "type": "number",
+              "description": "WArea."
+            },
+            "ASY": {
+              "type": "number",
+              "description": "Asy."
+            },
+            "ASZ": {
+              "type": "number",
+              "description": "Asz."
+            },
+            "RXX": {
+              "type": "number",
+              "description": "Rxx."
+            },
+            "RYY": {
+              "type": "number",
+              "description": "Ryy."
+            },
+            "RZZ": {
+              "type": "number",
+              "description": "Rzz."
+            },
+            "CYP": {
+              "type": "number",
+              "description": "Cyp."
+            },
+            "CYM": {
+              "type": "number",
+              "description": "Cym."
+            },
+            "CZP": {
+              "type": "number",
+              "description": "Czp."
+            },
+            "CZM": {
+              "type": "number",
+              "description": "Czm."
+            },
+            "QYB": {
+              "type": "number",
+              "description": "Qyb."
+            },
+            "QZB": {
+              "type": "number",
+              "description": "Qzb."
+            },
+            "Y": {
+              "type": "array",
+              "description": "dy.",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "Z": {
+              "type": "array",
+              "description": "dz.",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "IW": {
+              "type": "number",
+              "description": "Iw."
+            },
+            "W": {
+              "type": "array",
+              "description": "w.",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "CXY": {
+              "type": "array",
+              "description": "Cxy.",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "CXZ": {
+              "type": "array",
+              "description": "Cxz.",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "YS_YC": {
+              "type": "number",
+              "description": "ys-yc."
+            },
+            "ZS_ZC": {
+              "type": "number",
+              "description": "zs-zc."
+            },
+            "IP": {
+              "type": "number",
+              "description": "Ip."
+            }
+          }
+        },
+        "SECT_STIFFNESS_CF_BASE": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "A_EFF": {
+              "type": "number",
+              "description": "dA_eff."
+            },
+            "A_NET": {
+              "type": "number",
+              "description": "dA_net."
+            },
+            "LY_EFF": {
+              "type": "number",
+              "description": "dIy_eff."
+            },
+            "LZ_EFF": {
+              "type": "number",
+              "description": "dIz_eff."
+            },
+            "WY_EFF": {
+              "type": "number",
+              "description": "dWy_eff."
+            },
+            "WZ_EFF": {
+              "type": "number",
+              "description": "dWz_eff."
+            },
+            "LT_EFF": {
+              "type": "number",
+              "description": "dIt_eff."
+            },
+            "LW_EFF": {
+              "type": "number",
+              "description": "dIw_eff."
+            },
+            "RY_EFF": {
+              "type": "number",
+              "description": "dRy_eff."
+            },
+            "RZ_EFF": {
+              "type": "number",
+              "description": "dRz_eff."
+            }
+          }
+        },
+        "GSEC_PART": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "STIFF": {
+              "$ref": "#/definitions/SECT_STIFFNESS",
+              "description": "Stiffness."
+            },
+            "STIFF_SUM": {
+              "$ref": "#/definitions/SECT_STIFFNESS",
+              "description": "Stiffness Sum."
+            },
+            "PERIIN": {
+              "type": "number",
+              "description": "Inner Perimeter."
+            },
+            "PERIOUT": {
+              "type": "number",
+              "description": "Outer Perimeter."
+            },
+            "YBAR": {
+              "type": "number",
+              "description": "YBar."
+            },
+            "ZBAR": {
+              "type": "number",
+              "description": "ZBar."
+            },
+            "PERIIN_SUM": {
+              "type": "number",
+              "description": "Inner Perimeter Sum."
+            },
+            "PERIOUT_SUM": {
+              "type": "number",
+              "description": "Outer Perimeter Sum."
+            },
+            "YBAR_SUM": {
+              "type": "number",
+              "description": "YBar Sum."
+            },
+            "ZBAR_SUM": {
+              "type": "number",
+              "description": "ZBar Sum."
+            },
+            "DENS_RATIO": {
+              "type": "number",
+              "description": "Density Ratio."
+            },
+            "ELAST": {
+              "type": "number",
+              "description": "Elastic."
+            },
+            "POISSON": {
+              "type": "number",
+              "description": "Poisson."
+            },
+            "USE_BASE_MATL": {
+              "type": "boolean",
+              "description": "Use Base Material."
+            },
+            "USE_PLANE": {
+              "type": "boolean",
+              "description": "Use Plane.",
+              "default": false
+            },
+            "IDX_START": {
+              "type": "array",
+              "description": "Start Index.",
+              "items": {
+                "type": "integer"
+              },
+              "minItems": 5,
+              "maxItems": 5
+            },
+            "IDX_END": {
+              "type": "array",
+              "description": "End Index.",
+              "items": {
+                "type": "integer"
+              },
+              "minItems": 5,
+              "maxItems": 5
+            }
+          }
+        },
+        "GSEC_VERTEX": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "X": {
+              "type": "number",
+              "description": "X."
+            },
+            "Y": {
+              "type": "number",
+              "description": "Y."
+            }
+          }
+        },
+        "GSEC_POLYGON": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "VERTEX": {
+              "type": "array",
+              "description": "Vertex.",
+              "items": {
+                "$ref": "#/definitions/GSEC_VERTEX"
+              }
+            }
+          }
+        },
+        "GSEC_LINE": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "VERTEX_ID1": {
+              "type": "integer",
+              "description": "Vertex ID1."
+            },
+            "VERTEX_ID2": {
+              "type": "integer",
+              "description": "Vertex ID2."
+            },
+            "ALIGN": {
+              "type": "integer",
+              "description": "Line Align Information."
+            },
+            "THICK": {
+              "type": "number",
+              "description": "Line Thick."
+            },
+            "ROTATE_DIS": {
+              "type": "number",
+              "description": "Rotating distance."
+            },
+            "SHEAR_STRESS": {
+              "type": "number",
+              "description": "Shear Stress."
+            }
+          }
+        },
+        "GSEC_LDGN": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Name."
+            },
+            "BOUNDARY": {
+              "type": "integer",
+              "description": "Boundary."
+            },
+            "PANEL_NUM": {
+              "type": "integer",
+              "description": "Panel Number."
+            },
+            "LENGTH": {
+              "type": "number",
+              "description": "Length."
+            },
+            "THICK": {
+              "type": "number",
+              "description": "Thickness."
+            },
+            "Y": {
+              "type": "array",
+              "description": "Y.",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "Z": {
+              "type": "array",
+              "description": "z.",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "USE_EXCEPT": {
+              "type": "boolean",
+              "description": "Use Except."
+            },
+            "USE_STIFF": {
+              "type": "boolean",
+              "description": "Use Stiffener."
+            },
+            "LINE": {
+              "type": "array",
+              "description": "Line.",
+              "items": {
+                "$ref": "#/definitions/GSEC_LINE"
+              }
+            }
+          }
+        },
+        "GSEC_LSHAP": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Name."
+            },
+            "SHAPE": {
+              "type": "integer",
+              "description": "Shape."
+            },
+            "LDGN": {
+              "type": "array",
+              "description": "LDGN.",
+              "items": {
+                "$ref": "#/definitions/GSEC_LDGN"
+              }
+            }
+          }
+        },
+        "SECT_SOD_STIFF_DATA": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "USE_CALC": {
+              "type": "boolean",
+              "description": "Use Calculation.",
+              "default": false
+            },
+            "SPACING": {
+              "type": "number",
+              "description": "Spacing."
+            },
+            "STIF_POS": {
+              "type": "integer",
+              "description": "Position."
+            },
+            "SHAPE_NAME": {
+              "type": "string",
+              "description": "Shape Name."
+            },
+            "STIF_NAME": {
+              "type": "string",
+              "description": "Stiff Name."
+            }
+          }
+        },
+        "SECT_SOD_STIFF_SUB": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "DECK_POS": {
+              "type": "integer",
+              "description": "Deck Position."
+            },
+            "DECK_PART": {
+              "type": "integer",
+              "description": "Deck Part."
+            },
+            "REF_POS": {
+              "type": "integer",
+              "description": "Reference Position."
+            },
+            "NUM": {
+              "type": "integer",
+              "description": "Stiffener number."
+            },
+            "DECK_NAME": {
+              "type": "string",
+              "description": "Deck Name."
+            },
+            "EACHSTIFFNOS": {
+              "type": "integer",
+              "description": "Applied stiffener number."
+            },
+            "DATA": {
+              "type": "array",
+              "description": "Stiff Data.",
+              "items": {
+                "$ref": "#/definitions/SECT_SOD_STIFF_DATA"
+              }
+            }
+          }
+        },
+        "SECT_SOD_STIFF": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "TOSTIFNOS": {
+              "type": "integer",
+              "description": "Defined stiffener number."
+            },
+            "SHAPE": {
+              "type": "array",
+              "description": "Stiff Shape.",
+              "items": {
+                "$ref": "#/definitions/STIFF_SHAPE"
+              }
+            },
+            "DECKSTIFFNO": {
+              "type": "integer",
+              "description": "Total deck & Stiff number."
+            },
+            "SUB": {
+              "type": "array",
+              "description": "SOD Stiff Sub.",
+              "items": {
+                "$ref": "#/definitions/SECT_SOD_STIFF_SUB"
+              }
+            }
+          }
+        },
+        "SECT_SECTBASE": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "SHAPE": {
+              "type": "string",
+              "description": "Shape."
+            },
+            "DB_NAME": {
+              "type": "string",
+              "description": "DB Name."
+            },
+            "SECT_NAME": {
+              "type": "string",
+              "description": "Section Name."
+            },
+            "SECT_NAME2": {
+              "type": "string",
+              "description": "Section Name2."
+            },
+            "vSIZE": {
+              "type": "array",
+              "description": "Size.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "PERIIN": {
+              "type": "number",
+              "description": "PeriIn."
+            },
+            "PERIOUT": {
+              "type": "number",
+              "description": "PeriOut."
+            },
+            "BUILT_FLAG": {
+              "type": "integer",
+              "description": "Built Up Flag."
+            },
+            "BEFORE_PART_NUM": {
+              "type": "integer",
+              "description": "Before Part Number."
+            },
+            "USE_SYM_CALC": {
+              "type": "boolean",
+              "description": "Symmetric Auto Calculator."
+            },
+            "CF_STIFF_ULS": {
+              "$ref": "#/definitions/SECT_STIFFNESS_CF_BASE",
+              "description": "CF Stiff ULS."
+            },
+            "STIFF": {
+              "$ref": "#/definitions/SECT_STIFFNESS",
+              "description": "Stiffness."
+            },
+            "DESIGN": {
+              "$ref": "#/definitions/SECT_DESIGN",
+              "description": "Design."
+            },
+            "STIFFENER": {
+              "$ref": "#/definitions/SECT_STIFF",
+              "description": "Stiffener."
+            },
+            "SODSTIFF": {
+              "$ref": "#/definitions/SECT_SOD_STIFF",
+              "description": "SOD Stiffener."
+            },
+            "GENERAL_PART": {
+              "type": "array",
+              "description": "General Part.",
+              "items": {
+                "$ref": "#/definitions/GSEC_PART"
+              }
+            },
+            "OUTER_POLYGON": {
+              "type": "array",
+              "description": "Outer Polygon.",
+              "items": {
+                "$ref": "#/definitions/GSEC_POLYGON"
+              }
+            },
+            "INNER_POLYGON": {
+              "type": "array",
+              "description": "Inner Polygon.",
+              "items": {
+                "$ref": "#/definitions/GSEC_POLYGON"
+              }
+            },
+            "LINE": {
+              "type": "array",
+              "description": "Line.",
+              "items": {
+                "$ref": "#/definitions/GSEC_LINE"
+              }
+            },
+            "LINE_LOOP": {
+              "type": "array",
+              "description": "LineLoop.",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "SHAPE_ARRAY": {
+              "type": "array",
+              "description": "Shape Array.",
+              "items": {
+                "$ref": "#/definitions/GSEC_LSHAP"
+              }
+            },
+            "vSIZE_PSC_A": {
+              "type": "array",
+              "description": "for Only PSC Section I SIZE-A.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "vSIZE_PSC_B": {
+              "type": "array",
+              "description": "for Only PSC Section I SIZE-B.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "vSIZE_PSC_C": {
+              "type": "array",
+              "description": "for Only PSC Section I SIZE-C.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "vSIZE_PSC_D": {
+              "type": "array",
+              "description": "for Only PSC Section I SIZE-D.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "SWIDTH": {
+              "type": "number",
+              "description": "for Only PSC Section I or J Section S-Width."
+            }
+          }
+        },
+        "SECT_SECTION": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "OFFSET_PT": {
+              "type": "string",
+              "description": "Cardinal Point."
+            },
+            "OFFSET_CENTER": {
+              "type": "integer",
+              "description": "Offset Center."
+            },
+            "USER_OFFSET_REF": {
+              "type": "integer",
+              "description": "User Offset Ref."
+            },
+            "HORZ_OFFSET_OPT": {
+              "type": "integer",
+              "description": "Horizon offset Option."
+            },
+            "USERDEF_OFFSET_YI": {
+              "type": "number",
+              "description": "User Offset YI."
+            },
+            "USERDEF_OFFSET_YJ": {
+              "type": "number",
+              "description": "User Offset YJ."
+            },
+            "VERT_OFFSET_OPT": {
+              "type": "integer",
+              "description": "Vertical Offset Option."
+            },
+            "USERDEF_OFFSET_ZI": {
+              "type": "number",
+              "description": "User Offset ZI."
+            },
+            "USERDEF_OFFSET_ZJ": {
+              "type": "number",
+              "description": "User Offset ZJ."
+            },
+            "USE_SHEAR_DEFORM": {
+              "type": "boolean",
+              "description": "Use Consider Shear Deform.",
+              "default": false
+            },
+            "USE_WARPING_EFFECT": {
+              "type": "boolean",
+              "description": "Use Consider Warping Effect."
+            },
+            "SHAPE": {
+              "type": "string",
+              "description": "Shape."
+            },
+            "DATATYPE": {
+              "type": "integer",
+              "description": "DataType."
+            },
+            "TYPE": {
+              "type": "integer",
+              "description": "Type."
+            },
+            "SECT_I": {
+              "$ref": "#/definitions/SECT_SECTBASE",
+              "description": "Sect I."
+            },
+            "SECT_J": {
+              "$ref": "#/definitions/SECT_SECTBASE",
+              "description": "Sect J."
+            },
+            "Y_VAR": {
+              "type": "integer",
+              "description": "LyType."
+            },
+            "Z_VAR": {
+              "type": "integer",
+              "description": "LzType."
+            },
+            "SRC_TYPE": {
+              "type": "integer",
+              "description": "SRC Type."
+            },
+            "MATL_ELAST": {
+              "type": "number",
+              "description": "Matl_Elast."
+            },
+            "MATL_DENS": {
+              "type": "number",
+              "description": "Matl_Density."
+            },
+            "MATL_POIS_S": {
+              "type": "number",
+              "description": "Matl_Poisson_S."
+            },
+            "MATL_POIS_C": {
+              "type": "number",
+              "description": "Matl_Poisson_C."
+            },
+            "MATL_STIF_FACTOR": {
+              "type": "number",
+              "description": "Matl_StiffFactor."
+            },
+            "MATL_THERMAL": {
+              "type": "number",
+              "description": "Matl_Thermal."
+            },
+            "CALC_STIFF_OPT": {
+              "type": "integer",
+              "description": "Stiff Option."
+            },
+            "WARPING_CHK_AUTO_I": {
+              "type": "boolean",
+              "description": "Warping Check Auto (I)."
+            },
+            "WARPING_CHK_AUTO_J": {
+              "type": "boolean",
+              "description": "Warping Check Auto (J)."
+            },
+            "SHEAR_CHK": {
+              "type": "boolean",
+              "description": "Shear Check.",
+              "default": false
+            },
+            "WARPING_CHK_POS_I": {
+              "type": "array",
+              "description": "Warping Check Position I.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 6,
+                "maxItems": 6
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "WARPING_CHK_POS_J": {
+              "type": "array",
+              "description": "Warping Check Position J.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 6,
+                "maxItems": 6
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "USE_AUTO_SHEAR_CHK_POS": {
+              "type": "array",
+              "description": "Use Auto Shear Check Position.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "boolean"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "default": [
+                [false, false, false],
+                [false, false, false]
+              ]
+            },
+            "AUTO_SHEAR_CHK_POS": {
+              "type": "array",
+              "description": "Value Of Auto Shear Check Position.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "SHEAR_CHK_POS": {
+              "type": "array",
+              "description": "Value Of Shear Check Position.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "default": [
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0]
+              ]
+            },
+            "USE_AUTO_QY": {
+              "type": "array",
+              "description": "Use Auto Qy.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "boolean"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "default": [
+                [false, false, false],
+                [false, false, false]
+              ]
+            },
+            "AUTO_QY": {
+              "type": "array",
+              "description": "Value Of Auto Qy.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "default": [
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0]
+              ]
+            },
+            "USE_WEB_THICK": {
+              "type": "array",
+              "description": "Use Web Thick.",
+              "items": {
+                "type": "boolean"
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "default": [false, false]
+            },
+            "WEB_THICK": {
+              "type": "array",
+              "description": "Web Thick.",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "default": [0.0, 0.0]
+            },
+            "USE_WEB_THICK_SHEAR": {
+              "type": "array",
+              "description": "Use Auto Web Thick Shear.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "boolean"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "default": [
+                [false, false, false],
+                [false, false, false]
+              ]
+            },
+            "WEB_THICK_SHEAR": {
+              "type": "array",
+              "description": "Web Thick Shear.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "default": [
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0]
+              ]
+            },
+            "USE_SYMMETRIC": {
+              "type": "boolean",
+              "description": "Symmetric.",
+              "default": false
+            },
+            "USE_SMALL_HOLE": {
+              "type": "boolean",
+              "description": "Use Small Hole."
+            },
+            "USE_MULTI_ELAST": {
+              "type": "boolean",
+              "description": "Use Multiple ELastic."
+            },
+            "LONGTERM_ESEC": {
+              "type": "number",
+              "description": "Long Term ESEC."
+            },
+            "SHRINK_ESEC": {
+              "type": "number",
+              "description": "Shrinkage ESEC."
+            },
+            "CELL_SHAPE": {
+              "type": "integer",
+              "description": "Cell Shape."
+            },
+            "CELL_TYPE": {
+              "type": "integer",
+              "description": "Cell Type."
+            },
+            "CELL_NUM": {
+              "type": "integer",
+              "description": "Cell Count."
+            },
+            "FLANGE_SHAPE": {
+              "type": "integer",
+              "description": "Flange Shape."
+            },
+            "USE_USER_DEF_MESHSIZE": {
+              "type": "boolean",
+              "description": "Use User Definition Mesh Size."
+            },
+            "MESHSIZE": {
+              "type": "number",
+              "description": "Mesh Size."
+            },
+            "USE_USER_INTPUT_STIFF": {
+              "type": "boolean",
+              "description": "Use User Input Stiffness."
+            },
+            "PSC_OPT1": {
+              "type": "string",
+              "description": "PSC Option1."
+            },
+            "PSC_OPT2": {
+              "type": "string",
+              "description": "PSC Option2."
+            },
+            "JOINT": {
+              "type": "array",
+              "description": "Joint.",
+              "items": {
+                "type": "boolean"
+              }
+            },
+            "SLAB": {
+              "type": "array",
+              "description": "Slab for Only Composite Section.",
+              "items": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SECTTYPE": "DBUSER",
+        "SECT_NAME": "H 400x200x8/13",
+        "SECT_BEFORE": {
+          "OFFSET_PT": "CC",
+          "SHAPE": "H",
+          "DATATYPE": 1,
+          "SECT_I": {
+            "SHAPE": "H",
+            "DB_NAME": "KS",
+            "SECT_NAME": "H 400x200x8/13"
+          }
+        },
+        "RECL_PROP": true,
+        "CALC_OPT": true
+      },
+      "2": {
+        "SECTTYPE": "TAPERED",
+        "SECT_NAME": "Taper H 400->600",
+        "SECT_BEFORE": {
+          "OFFSET_PT": "CC",
+          "SHAPE": "H",
+          "DATATYPE": 2,
+          "Y_VAR": 1,
+          "Z_VAR": 1,
+          "SECT_I": {
+            "SHAPE": "H",
+            "vSIZE": [0.4, 0.2, 0.008, 0.013, 0.0, 0.0]
+          },
+          "SECT_J": {
+            "SHAPE": "H",
+            "vSIZE": [0.6, 0.2, 0.008, 0.013, 0.0, 0.0]
+          }
+        },
+        "COAT_THIK": 0.0,
+        "RECL_PROP": true
+      }
+    }
+  }
+}

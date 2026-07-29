@@ -1,0 +1,100 @@
+{
+  "_group": "db",
+  "_name": "SBDO",
+  "uri": "db/SBDO",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SBDO": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Sub Domain (SBDO). Defines a rebar sub-domain over a parent design domain (DOMAIN_NAME); MEMB_TYPE_CIVIL selects the member type and REBAR_AXIS_TYPE drives which orientation fields (STR_UCS / AXIS_VECTOR) apply.",
+      "properties": {
+        "SUB_DOMAIN_NAME": {
+          "type": "string",
+          "description": "Sub domain name (identifier of this sub-domain)."
+        },
+        "V1": {
+          "type": "number",
+          "description": "First rebar direction angle (degrees)."
+        },
+        "V2": {
+          "type": "number",
+          "description": "Second rebar direction angle (degrees)."
+        },
+        "DOMAIN_NAME": {
+          "type": "string",
+          "description": "Parent design domain (MADO) name. Must reference an existing domain or the write is rejected."
+        },
+        "bUseMt": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to use Mt (torsion moment)."
+        },
+        "THICKNESS": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Sub-domain thickness."
+        },
+        "MEMB_TYPE_CIVIL": {
+          "type": "integer",
+          "description": "Member type. 0: None, 1: Plate Beam (1D), 2: Plate Column (1D), 3: Shell."
+        },
+        "REBAR_AXIS_TYPE": {
+          "type": "integer",
+          "default": 0,
+          "description": "Rebar direction reference. 0: Local, 1: UCS (see STR_UCS), 2: Reference Axis (see AXIS_VECTOR)."
+        },
+        "STR_UCS": {
+          "type": "string",
+          "default": "",
+          "description": "[REBAR_AXIS_TYPE=1] Name of the UCS defining the rebar direction."
+        },
+        "AXIS_VECTOR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 6,
+          "maxItems": 6,
+          "default": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+          "description": "[REBAR_AXIS_TYPE=2] Reference-axis vectors as 6 numbers: first 3 = axis-1 (x,y,z), last 3 = axis-2 (x,y,z). Must contain 6 values on write or the assignment is rejected."
+        }
+      },
+      "required": [
+        "SUB_DOMAIN_NAME",
+        "V1",
+        "V2",
+        "DOMAIN_NAME",
+        "MEMB_TYPE_CIVIL"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SUB_DOMAIN_NAME": "SDM1",
+        "V1": 0.0,
+        "V2": 90.0,
+        "DOMAIN_NAME": "DM1",
+        "bUseMt": true,
+        "THICKNESS": 0.0,
+        "MEMB_TYPE_CIVIL": 1,
+        "REBAR_AXIS_TYPE": 0,
+        "STR_UCS": "",
+        "AXIS_VECTOR": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      },
+      "2": {
+        "SUB_DOMAIN_NAME": "SDM2",
+        "V1": 0.0,
+        "V2": 90.0,
+        "DOMAIN_NAME": "DM1",
+        "bUseMt": true,
+        "THICKNESS": 0.3,
+        "MEMB_TYPE_CIVIL": 3,
+        "REBAR_AXIS_TYPE": 2,
+        "STR_UCS": "",
+        "AXIS_VECTOR": [1.0, 0.0, 0.0, 0.0, 1.0, 0.0]
+      }
+    }
+  }
+}

@@ -1,0 +1,352 @@
+{
+  "_group": "post",
+  "_name": "TABLE",
+  "uri": "post/TABLE",
+  "methods": "POST",
+  "schema": {
+    "TABLE": {
+      "type": "object",
+      "description": "Result Table (TABLE). Extracts a result/output table by TABLE_TYPE (created on the fly) or by an existing TABLE_NAME; the selection, filtering, unit and formatting fields shape which records and columns are returned. Supports an optional Query string for post-filtering (e.g. Node=='1').",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body for a result table extraction. Provide TABLE_TYPE to build a table on demand, or TABLE_NAME to fetch a previously saved table.",
+          "properties": {
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Output path. If assigned, the resulting table is also exported to a JSON file at this path."
+            },
+            "TABLE_NAME": {
+              "type": "string",
+              "default": "empty",
+              "description": "Name of an existing saved table to fetch. Used only when TABLE_TYPE is NOT assigned."
+            },
+            "TABLE_TYPE": {
+              "type": "string",
+              "description": "Table type identifier. When assigned, the table is created on demand from this type; when omitted, TABLE_NAME is used to look up an existing table. The value is resolved against the CDBGatewayTableTypes registry (m_KeyValueMap, built from __caTableTypeMap in DBGatewayTableTypes.cpp) after normalization = uppercase + remove-all-spaces; an unknown key does NOT error cleanly but resolves to an empty/invalid table (C++ GetValue() returns a default value on miss), so it must match one of the `enum` keys exactly. SUFFIX CONVENTION: G = Global axis, L = Local axis. Reactions are 'REACTIONG'/'REACTIONL' (there is NO bare 'REACTION'); nodal displacements are 'DISPLACEMENTG'/'DISPLACEMENTL' (there is NO 'DISPLACEMENTS'). Building-only (MIDAS Gen / _MGEN) Story & Seismic-performance tables are intentionally excluded here because this is the Civil (/civil) endpoint.",
+              "enum": [
+                "SECTIONALL", "SECTIONDB/USER", "SECTIONVALUE", "SECTIONSRC", "SECTIONCOMBINED", "SECTIONTAPERED", "SECTIONPSC", "SECTIONCONSTRUCTION", "SECTIONCOMPOSITE", "SECTIONSTEELGIRDER", "MATERIAL",
+                "FLOORLOADS", "NODALBODYFORCE", "SUPPORTS",
+                "REACTIONG", "REACTIONL", "REACTIONLSURFACESPRING", "CONCURRENT_REACTIONG", "CONCURRENT_REACTIONL", "CONCURRENT_JOINT_FORCE",
+                "DISPLACEMENTG", "DISPLACEMENTL",
+                "BEAMFORCE", "BEAMFORCESTP", "BEAMSTRESS", "BEAMSTRESSDETAIL", "BEAMSTRESSPSC", "BEAMSTRESS7DOF", "BEAMSTRESS7DOFPSC",
+                "TRUSSFORCE", "TRUSSSTRESS",
+                "PLATEFORCEL", "PLATEFORCEG", "PLATEFORCEUL", "PLATEFORCEUG", "PLATEFORCEWA", "PLATESTRESSL", "PLATESTRESSG", "PLATESTRAINTL", "PLATESTRAINPL", "PLATESTRAINTG", "PLATESTRAINPG",
+                "PLANESTRESSFL", "PLANESTRESSFG", "PLANESTRESSSL", "PLANESTRESSSG", "PLANESTRAINFL", "PLANESTRAINFG", "PLANESTRAINSL", "PLANESTRAINSG",
+                "AXISYMMETRICFL", "AXISYMMETRICFG", "AXISYMMETRICSL", "AXISYMMETRICSG",
+                "SOLIDFL", "SOLIDFG", "SOLIDSL", "SOLIDSG",
+                "ELASTICLINK", "CABLEFORCE", "CABLECONFIG", "CABLEEFFIENCY",
+                "GENERAL_LINK_FORCE", "GENERAL_LINK_DEFORM", "RS_NODAL_INERTIA", "RS_NODAL_ACCEL",
+                "RESULTANT_FORCES", "RESULTANT_FORCES2", "RESULTANT_STRESS", "RESULTANT_PT_DL_BAL_RATIO", "RESULTANT_PT_PRE_COMP",
+                "EFFECTIVE_LENGTH_TRUSS", "EFFECTIVE_LENGTH_BEAM", "EFFECTIVE_LENGTH_PLATE",
+                "IEHG_EVENT_TIME_LUMPED", "IEHG_EVENT_TIME_DIST", "IEHG_EVENT_TIME_WALL", "IEHG_EVENT_TIME_TRUSS", "IEHG_EVENT_TIME_SPRING",
+                "IEHG_BEAM_SUM_DX", "IEHG_BEAM_SUM_DY", "IEHG_BEAM_SUM_DZ", "IEHG_BEAM_SUM_RX", "IEHG_BEAM_SUM_RY", "IEHG_BEAM_SUM_RZ",
+                "IEHG_TRUSS_SUM_DX", "IEHG_TRUSS_SUM_DY", "IEHG_TRUSS_SUM_DZ", "IEHG_TRUSS_SUM_RX", "IEHG_TRUSS_SUM_RY", "IEHG_TRUSS_SUM_RZ",
+                "IEHG_GL_LINK_SUM_DX", "IEHG_GL_LINK_SUM_DY", "IEHG_GL_LINK_SUM_DZ", "IEHG_GL_LINK_SUM_RX", "IEHG_GL_LINK_SUM_RY", "IEHG_GL_LINK_SUM_RZ",
+                "IEHG_FORCE_LUMPED", "IEHG_FORCE_DIST", "IEHG_FORCE_WALL", "IEHG_FORCE_TRUSS", "IEHG_FORCE_SPRING",
+                "IEHG_DEFORM_LUMPED", "IEHG_DEFORM_DIST", "IEHG_DEFORM_WALL", "IEHG_DEFORM_TRUSS", "IEHG_DEFORM_SPRING",
+                "IEHG_ELEM_ROT_BEAM", "IEHG_ELEM_ROT_WALL",
+                "IEHG_DUCT_D1_LUMPED", "IEHG_DUCT_D1_DIST", "IEHG_DUCT_D1_WALL", "IEHG_DUCT_D1_TRUSS", "IEHG_DUCT_D1_SPRING",
+                "IEHG_DUCT_D2_LUMPED", "IEHG_DUCT_D2_DIST", "IEHG_DUCT_D2_WALL", "IEHG_DUCT_D2_TRUSS", "IEHG_DUCT_D2_SPRING",
+                "EQUILIBRIUM_ELEM_FORCE", "INITIAL_ELEM_FORCE",
+                "COMPSECTBEAMFORCE", "COMPSECTBEAMSTRESS",
+                "THISDISPLACEMENT", "THISVELOCITY", "THISABSOLUTEACCEL", "THISRELATIVEACCEL", "THISBEAMFORCE", "THISTRUSSFORCE", "THISGLINKFORCE", "THISGLINKDEFORMATION",
+                "EIGENVALUEMODE", "PARTICIPATIONVECTORMODE", "BUCKLINGMODE",
+                "LACK_OF_FIT_FORCE_TRUSS", "LACK_OF_FIT_FORCE_BEAM", "LACK_OF_FIT_FORCE_PLATE",
+                "ELEM_PROP_EACH_STAGE", "SECT_PROP_LAST_STAGE",
+                "TNDN_STRS_LIMIT_CHECK", "TNDN_APPROX_LOSS_STRESS", "TNDN_APPROX_LOSS_FORCE", "TNDN_WEIGHT_PROFILE", "TNDN_WEIGHT_PROPERTY", "TNDN_WEIGHT_GROUP", "TNDN_LOSS_STRESS", "TNDN_LOSS_FORCE", "TNDN_COORDINATES", "TNDN_ELONGATION", "TNDN_ARRANGEMENT",
+                "PTSLAB_PRIMARY", "PTSLAB_DIRECTION", "PTSLAB_TENDONFORCE", "PTSLAB_TENDONLOSS",
+                "HEAT_HYDR_STRESS_L", "HEAT_HYDR_STRESS_G", "HEAT_HYDR_TEMPERATURE", "HEAT_HYDR_DISPLACEMENT", "HEAT_HYDR_TENS_STRESS", "HEAT_HYDR_PIPE_NODE_TEMP",
+                "SOLID_LOCA_TOTAL_STRAIN", "SOLID_LOCA_PLAST_STRAIN", "SOLID_GLOB_TOTAL_STRAIN", "SOLID_GLOB_PLAST_STRAIN",
+                "SELF_CONST_BEAM_FORCE", "SELF_CONST_BEAM_STRESS",
+                "BEAMFORCEVBM", "BEAMSTRESSVBM", "PLATEFORCEULVBM", "PLATEFORCEUGVBM", "ELASTICLINKVBM", "GENERAL_LINK_FORCEVBM", "RESULTANT_FORCESVBM", "RESULTANT_DGN_STRIP_F", "RESULTANT_DGN_STRIP_S",
+                "PSC_DGN_FORCE", "PSC_STRESS_CS_AASHTO", "PSC_STRESS_TENDON_AASHTO", "PSC_STRESS_SERVICE_AASHTO", "PSC_PRINCIPAL_CS_AASHTO", "PSC_PRINCIPAL_SVC_E_AASHTO", "PSC_PRINCIPAL_SVC_AASHTO", "PSC_CRACK_WIDTH_AASHTO", "PSC_FLEXURE_AASHTO", "PSC_SHEAR_AASHTO", "PSC_SHEAR_TORSION_AASHTO",
+                "PSC_STRESS_CS_VBEAM_AASHTO", "PSC_STRESS_TENDON_VBEAM_AASHTO", "PSC_STRESS_SERVICE_VBEAM_AASHTO", "PSC_PRINCIPAL_CS_VBEAM_AASHTO", "PSC_PRINCIPAL_SVC_E_VBEAM_AASHTO", "PSC_PRINCIPAL_SVC_VBEAM_AASHTO", "PSC_CRACK_WIDTH_VBEAM_AASHTO", "PSC_FLEXURE_VBEAM_AASHTO", "PSC_SHEAR_VBEAM_AASHTO", "PSC_SHEAR_TORSION_VBEAM_AASHTO",
+                "PSC_RATING_SVC_SUM_DGN_AASHTO", "PSC_RATING_SVC_SUM_LEG_AASHTO", "PSC_RATING_SVC_SUM_PER_AASHTO", "PSC_RATING_STR_SUM_FLEX_AASHTO", "PSC_RATING_STR_SUM_SHEAR_AASHTO", "PSC_RATING_STRESS_DGN_AASHTO", "PSC_RATING_STRESS_LEG_AASHTO", "PSC_RATING_STRESS_PER_AASHTO", "PSC_RATING_FLEXURE_AASHTO", "PSC_RATING_SHEAR_AASHTO", "PSC_RATING_STRESS_DETAIL_DGN_AASHTO", "PSC_RATING_STRESS_DETAIL_LEG_AASHTO", "PSC_RATING_STRESS_DETAIL_PER_AASHTO", "PSC_RATING_FLEXURE_DETAIL_AASHTO", "PSC_RATING_SHEAR_DETAIL_AASHTO",
+                "PSC_RATING_SVC_SUM_DGN_VBEAM_AASHTO", "PSC_RATING_SVC_SUM_LEG_VBEAM_AASHTO", "PSC_RATING_SVC_SUM_PER_VBEAM_AASHTO", "PSC_RATING_STR_SUM_FLEX_VBEAM_AASHTO", "PSC_RATING_STR_SUM_SHEAR_VBEAM_AASHTO", "PSC_RATING_STRESS_DGN_VBEAM_AASHTO", "PSC_RATING_STRESS_LEG_VBEAM_AASHTO", "PSC_RATING_STRESS_PER_VBEAM_AASHTO", "PSC_RATING_FLEXURE_VBEAM_AASHTO", "PSC_RATING_SHEAR_VBEAM_AASHTO", "PSC_RATING_STRESS_DETAIL_DGN_VBEAM_AASHTO", "PSC_RATING_STRESS_DETAIL_LEG_VBEAM_AASHTO", "PSC_RATING_STRESS_DETAIL_PER_VBEAM_AASHTO", "PSC_RATING_FLEXURE_DETAIL_VBEAM_AASHTO", "PSC_RATING_SHEAR_DETAIL_VBEAM_AASHTO"
+              ]
+            },
+            "UNIT": {
+              "type": "object",
+              "description": "Unit definition for the extracted values.",
+              "properties": {
+                "FORCE": {
+                  "type": "string",
+                  "enum": ["KGF", "TONF", "N", "KN", "LBF", "KIPS"],
+                  "description": "Force unit (case-insensitive)."
+                },
+                "DIST": {
+                  "type": "string",
+                  "enum": ["MM", "CM", "M", "IN", "FT"],
+                  "description": "Distance unit (case-insensitive)."
+                },
+                "HEAT": {
+                  "type": "string",
+                  "enum": ["CAL", "KCAL", "J", "BTU", "KJ"],
+                  "description": "Heat unit (case-insensitive)."
+                },
+                "TEMP": {
+                  "type": "string",
+                  "enum": ["C", "F"],
+                  "description": "Temperature unit (case-insensitive)."
+                }
+              }
+            },
+            "STYLES": {
+              "type": "object",
+              "description": "Number formatting for the table values.",
+              "properties": {
+                "FORMAT": {
+                  "type": "string",
+                  "enum": ["DEFAULT", "SCIENTIFIC", "FIXED", "GENERAL"],
+                  "description": "Style format (case-insensitive)."
+                },
+                "PLACE": {
+                  "type": "integer",
+                  "description": "Number of decimal places."
+                }
+              }
+            },
+            "REDUCTION_FACTOR": {
+              "type": "object",
+              "description": "Reduction factors for the Tendon Stress Limit Check.",
+              "properties": {
+                "AT_ANCH": {
+                  "type": "number",
+                  "default": 0.70,
+                  "description": "Factor at anchorages immediately after anchor set."
+                },
+                "AWAY_FROM_ANCH": {
+                  "type": "number",
+                  "default": 0.74,
+                  "description": "Factor away from anchorages, immediately after anchor set."
+                },
+                "AT_SERVICE": {
+                  "type": "number",
+                  "default": 0.80,
+                  "description": "Factor at the service limit state, after losses."
+                }
+              }
+            },
+            "AVERAGE_NODAL_RESULT": {
+              "type": "boolean",
+              "description": "Check Average Nodal Result."
+            },
+            "NODE_ELEMS": {
+              "type": "object",
+              "description": "Select Node or Elem list.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "items": { "type": "integer" },
+                  "description": "Node or element IDs."
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Range method, TO (ex. 1to5)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure group name method."
+                }
+              }
+            },
+            "SECT_POSITION": {
+              "type": "string",
+              "description": "Select section position, ex) 1,3,5 / 1to8."
+            },
+            "OUTPUT_STEP": {
+              "type": "string",
+              "description": "Select output step, ex) 1,3,5 / 1to8."
+            },
+            "LOAD_CASE_NAMES": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Select load case name list."
+            },
+            "PARTS": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Select parts."
+            },
+            "NODE_FLAG": {
+              "type": "object",
+              "description": "Node flag.",
+              "properties": {
+                "CENTER": {
+                  "type": "boolean",
+                  "description": "Check center."
+                },
+                "NODES": {
+                  "type": "boolean",
+                  "description": "Check nodes."
+                }
+              }
+            },
+            "MODES": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Select mode list."
+            },
+            "TH_LOAD_CASE_NAMES": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Select time history load case list."
+            },
+            "SECTION_POSITION": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Select section position."
+            },
+            "PART": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Part."
+            },
+            "DISP_OPT": {
+              "type": "string",
+              "enum": ["ACCUMULATIVE", "CURRENT", "REAL"],
+              "description": "Select displacement option (case-insensitive)."
+            },
+            "OPT_CS": {
+              "type": "boolean",
+              "description": "Construction stage flag for a completed-state model: true extracts results at the first construction stage, false at the final stage."
+            },
+            "STAGE_STEP": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Select stage step."
+            },
+            "FIBER_CELL_MINMAX": {
+              "type": "boolean",
+              "description": "All fiber cell min/max strain table."
+            },
+            "ADDITIONAL": {
+              "type": "object",
+              "description": "Additional inputs used by specific table types.",
+              "properties": {
+                "SET_TENDON_PARAMS": {
+                  "type": "object",
+                  "description": "Set tendon parameters.",
+                  "properties": {
+                    "TENDON_GROUP": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "description": "Tendon group."
+                    },
+                    "STAGE": {
+                      "type": "array",
+                      "items": { "type": "string" },
+                      "description": "Stage."
+                    }
+                  }
+                },
+                "SET_STAGE": {
+                  "type": "object",
+                  "description": "Set stage parameters.",
+                  "properties": {
+                    "STAGE": {
+                      "type": "string",
+                      "description": "Stage."
+                    }
+                  }
+                },
+                "SET_REACTION_PARAMS": {
+                  "type": "object",
+                  "description": "Set reaction parameters.",
+                  "properties": {
+                    "GROUP_NAME": {
+                      "type": "string",
+                      "description": "Group name."
+                    },
+                    "NODE_KEY": {
+                      "type": "integer",
+                      "description": "Node key."
+                    },
+                    "COMPONENT": {
+                      "type": "string",
+                      "default": "1111111",
+                      "description": "Component flags."
+                    }
+                  }
+                }
+              }
+            },
+            "COMPONENTS": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Select components."
+            },
+            "ITEM_TO_DISPLAY": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Result items to display (View By Max Value Only)."
+            },
+            "TOP_BOT": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Top/Bottom filter (PSC BDCW). Exact labels: \"Top\", \"Bottom\". Matched case-insensitively (spaces ignored)."
+            },
+            "COMP_TENS": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Compression/Tension filter (PSC FYSG/FYCM/FSSG/FPMS/FPMT). Exact labels: \"Compression\", \"Tension\"."
+            },
+            "POS_NEG": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Positive/Negative filter (PSC BDCY). Exact labels: \"Positive\", \"Negative\"."
+            },
+            "MAX_MIN": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Max/Min filter (PSC CUMS, CRMT). Exact labels: \"Max\", \"Min\" for CUMS; \"V-Max\", \"V-Min\", \"T-Max\" for CRMT (hyphen required)."
+            },
+            "TENDON": {
+              "type": "object",
+              "description": "Tendon ID list (PSC FYPC). Same shape as NODE_ELEMS.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "items": { "type": "integer" },
+                  "description": "Specify each tendon ID."
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify tendon ID range (e.g. 1to10)."
+                }
+              }
+            },
+            "RATING_CASE": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Rating case filter (PSC RATING_* tables). Labels match model rating case names (e.g. \"HL-93\", \"Strength I\", \"Service I\")."
+            },
+            "GIRDER_SLAB": {
+              "type": "string",
+              "description": "Girder/Slab filter (PSC RATING_SER_* tables). Accepts \"Girder\" or \"Slab\"."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "TABLE_TYPE": "REACTIONG",
+      "UNIT": {
+        "FORCE": "KN",
+        "DIST": "M"
+      },
+      "STYLES": {
+        "FORMAT": "FIXED",
+        "PLACE": 3
+      },
+      "NODE_ELEMS": {
+        "TO": "1to5"
+      },
+      "LOAD_CASE_NAMES": ["Dead Load", "Live Load"],
+      "OPT_CS": false
+    }
+  }
+}

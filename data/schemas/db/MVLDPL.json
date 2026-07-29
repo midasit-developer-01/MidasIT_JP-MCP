@@ -1,0 +1,256 @@
+{
+  "_group": "db",
+  "_name": "MVLDPL",
+  "uri": "db/MVLDPL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVLDPL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Case - Poland (MVLDPL). Fields are driven by bPERMIT_LOAD (Permit Load), bAUTO_OPTIMIZE (Auto Optimize) and LOAD_MODEL, which select exactly one of the PERMIT_LOAD / AUTO_OPTIMIZE / DEFAULT sub-objects. Requires the moving-load code to be Poland.",
+      "properties": {
+        "LCNAME": {
+          "type": "string",
+          "description": "Load case name."
+        },
+        "DESC": {
+          "type": "string",
+          "default": "",
+          "description": "Description of the load case."
+        },
+        "LOAD_MODEL": {
+          "type": "integer",
+          "description": "Load model (1-based; stored internally as value-1). 1 = Vehicle S / Vehicle 2S type, 2 = Vehicle K type, 3 = MLC type. LOAD_MODEL=1 uses OPTIMIZE_ITEMS/SUB_LOAD_DATAS collections; LOAD_MODEL=2 or 3 uses a single vehicle load (VEHICLE_LOAD_NAME) with one sub-load entry."
+        },
+        "bAUTO_OPTIMIZE": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, the load case uses the AUTO_OPTIMIZE sub-object; when false (and not permit load) it uses the DEFAULT sub-object."
+        },
+        "bPERMIT_LOAD": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, the load case is a Load Case For Permit Load and uses the PERMIT_LOAD sub-object (overrides AUTO_OPTIMIZE/DEFAULT and LOAD_MODEL handling)."
+        },
+        "AUTO_OPTIMIZE": {
+          "type": "object",
+          "description": "[bAUTO_OPTIMIZE=true] Auto Optimize data. For LOAD_MODEL=1 uses MIN_NUM_VEHICLE / MAX_NUM_VEHICLE / COMB_OPTION / OPTIMIZE_ITEMS; for LOAD_MODEL=2 or 3 uses VEHICLE_LOAD_NAME / MIN_NUM_VEHICLE / NUM_LOADED_LANES.",
+          "properties": {
+            "MIN_VEHL_DIST": {
+              "type": "number",
+              "description": "Minimum vehicle distance."
+            },
+            "LANE_NAME": {
+              "type": "string",
+              "description": "Optimize lane name (surface lane if surface lanes exist, otherwise line lane)."
+            },
+            "MIN_NUM_VEHICLE": {
+              "type": "integer",
+              "description": "Minimum number of vehicles."
+            },
+            "MAX_NUM_VEHICLE": {
+              "type": "integer",
+              "description": "[LOAD_MODEL=1] Maximum number of vehicles."
+            },
+            "COMB_OPTION": {
+              "type": "string",
+              "enum": ["COMBINED", "INDEPENDENT"],
+              "description": "[LOAD_MODEL=1] Loading effect combination option (case-insensitive)."
+            },
+            "OPTIMIZE_ITEMS": {
+              "type": "array",
+              "description": "[LOAD_MODEL=1] Vehicles to optimize.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "VEHICLE_TYPE": {
+                    "type": "string",
+                    "enum": ["VL", "VC"],
+                    "description": "Vehicle type (case-insensitive)."
+                  },
+                  "VEHICLE_NAME": {
+                    "type": "string",
+                    "description": "Vehicle load name."
+                  },
+                  "SCALE_FACTOR": {
+                    "type": "number",
+                    "description": "Vehicle scale factor."
+                  }
+                },
+                "required": ["VEHICLE_TYPE", "VEHICLE_NAME", "SCALE_FACTOR"]
+              }
+            },
+            "VEHICLE_LOAD_NAME": {
+              "type": "string",
+              "description": "[LOAD_MODEL=2 or 3] Vehicle load name."
+            },
+            "NUM_LOADED_LANES": {
+              "type": "integer",
+              "description": "[LOAD_MODEL=2 or 3] Number of loaded lanes."
+            }
+          },
+          "required": ["MIN_VEHL_DIST", "LANE_NAME"]
+        },
+        "PERMIT_LOAD": {
+          "type": "object",
+          "description": "[bPERMIT_LOAD=true] Load Case For Permit Load data.",
+          "properties": {
+            "VEHICLE_LOAD_NAME": {
+              "type": "string",
+              "description": "Vehicle load name."
+            },
+            "REF_LANE": {
+              "type": "string",
+              "description": "Reference lane name (surface lane if surface lanes exist, otherwise line lane)."
+            },
+            "ECC": {
+              "type": "number",
+              "description": "Eccentricity."
+            },
+            "SCALE_FACTOR": {
+              "type": "number",
+              "description": "Permit scale factor."
+            }
+          },
+          "required": ["VEHICLE_LOAD_NAME", "REF_LANE", "ECC", "SCALE_FACTOR"]
+        },
+        "DEFAULT": {
+          "type": "object",
+          "description": "[bAUTO_OPTIMIZE=false and bPERMIT_LOAD=false] Default load data. For LOAD_MODEL=2 or 3 a single VEHICLE_LOAD_NAME is used and SUB_LOAD_DATAS holds one entry.",
+          "properties": {
+            "COMB_OPTION": {
+              "type": "string",
+              "enum": ["COMBINED", "INDEPENDENT"],
+              "description": "Loading effect combination option (case-insensitive)."
+            },
+            "VEHICLE_LOAD_NAME": {
+              "type": "string",
+              "description": "[LOAD_MODEL=2 or 3] Vehicle load name."
+            },
+            "SUB_LOAD_DATAS": {
+              "type": "array",
+              "description": "Set of sub load data.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "VEHICLE_NAME": {
+                    "type": "string",
+                    "description": "[LOAD_MODEL=1] Vehicle load name."
+                  },
+                  "SCALE_FACTOR": {
+                    "type": "number",
+                    "description": "[LOAD_MODEL=1] Vehicle scale factor."
+                  },
+                  "MIN_LOADED_LANE": {
+                    "type": "integer",
+                    "description": "[LOAD_MODEL=1] Minimum number of loaded lanes."
+                  },
+                  "MAX_LOADED_LANE": {
+                    "type": "integer",
+                    "description": "[LOAD_MODEL=1] Maximum number of loaded lanes."
+                  },
+                  "LANE_NAMES": {
+                    "type": "array",
+                    "description": "Selected lane names (surface lanes if surface lanes exist, otherwise line lanes).",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["LANE_NAMES"]
+              }
+            }
+          },
+          "required": ["SUB_LOAD_DATAS"]
+        }
+      },
+      "required": ["LCNAME"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "MVL Default LM1",
+        "DESC": "Vehicle S/2S default, load model 1",
+        "LOAD_MODEL": 1,
+        "bAUTO_OPTIMIZE": false,
+        "bPERMIT_LOAD": false,
+        "DEFAULT": {
+          "COMB_OPTION": "COMBINED",
+          "SUB_LOAD_DATAS": [
+            {
+              "VEHICLE_NAME": "VL-1",
+              "SCALE_FACTOR": 1.0,
+              "MIN_LOADED_LANE": 1,
+              "MAX_LOADED_LANE": 3,
+              "LANE_NAMES": ["Lane1", "Lane2"]
+            }
+          ]
+        }
+      },
+      "2": {
+        "LCNAME": "MVL AutoOpt LM1",
+        "DESC": "Auto optimize, load model 1",
+        "LOAD_MODEL": 1,
+        "bAUTO_OPTIMIZE": true,
+        "bPERMIT_LOAD": false,
+        "AUTO_OPTIMIZE": {
+          "MIN_VEHL_DIST": 5.0,
+          "LANE_NAME": "OptLane1",
+          "MIN_NUM_VEHICLE": 1,
+          "MAX_NUM_VEHICLE": 4,
+          "COMB_OPTION": "INDEPENDENT",
+          "OPTIMIZE_ITEMS": [
+            {
+              "VEHICLE_TYPE": "VL",
+              "VEHICLE_NAME": "VL-1",
+              "SCALE_FACTOR": 1.0
+            }
+          ]
+        }
+      },
+      "3": {
+        "LCNAME": "MVL AutoOpt LM2",
+        "DESC": "Auto optimize, load model 2 (Vehicle K)",
+        "LOAD_MODEL": 2,
+        "bAUTO_OPTIMIZE": true,
+        "bPERMIT_LOAD": false,
+        "AUTO_OPTIMIZE": {
+          "MIN_VEHL_DIST": 5.0,
+          "LANE_NAME": "OptLane1",
+          "MIN_NUM_VEHICLE": 1,
+          "NUM_LOADED_LANES": 2,
+          "VEHICLE_LOAD_NAME": "VK-1"
+        }
+      },
+      "4": {
+        "LCNAME": "MVL Default LM2",
+        "DESC": "Default, load model 2 (Vehicle K)",
+        "LOAD_MODEL": 2,
+        "bAUTO_OPTIMIZE": false,
+        "bPERMIT_LOAD": false,
+        "DEFAULT": {
+          "COMB_OPTION": "COMBINED",
+          "VEHICLE_LOAD_NAME": "VK-1",
+          "SUB_LOAD_DATAS": [
+            {
+              "LANE_NAMES": ["Lane1", "Lane2"]
+            }
+          ]
+        }
+      },
+      "5": {
+        "LCNAME": "MVL Permit",
+        "DESC": "Permit load case",
+        "bAUTO_OPTIMIZE": false,
+        "bPERMIT_LOAD": true,
+        "PERMIT_LOAD": {
+          "VEHICLE_LOAD_NAME": "Permit-1",
+          "REF_LANE": "Lane1",
+          "ECC": 0.5,
+          "SCALE_FACTOR": 1.0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "_group": "design",
+  "_name": "MEMB",
+  "uri": "design/SRC/AIK-SRC2K/MEMB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MEMB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Member Assignment (MEMB). Groups a connected set of elements into a single design member; AELEM lists the element ids forming the member and bREVERSE flips the member local direction.",
+      "properties": {
+        "AELEM": {
+          "type": "array",
+          "description": "Element list forming the design member. The elements must be connected; the handler rejects the request if the elements are not connected or if any element is already assigned to another member.",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "bREVERSE": {
+          "type": "boolean",
+          "description": "Reverse the member local direction.",
+          "default": false
+        }
+      },
+      "required": [
+        "AELEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "AELEM": [
+          1,
+          2,
+          3
+        ],
+        "bREVERSE": false
+      }
+    }
+  }
+}

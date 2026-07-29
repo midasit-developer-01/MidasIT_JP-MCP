@@ -1,0 +1,118 @@
+{
+  "_group": "ope",
+  "_name": "GSBG",
+  "uri": "ope/GSBG",
+  "methods": "POST",
+  "schema": {
+    "GSBG": {
+      "type": "object",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Bridge Girder Diagram Auto-Save (GSBG). Auto-saves bridge girder diagram graph images; the request fields under Argument drive which load case, stages, components, and image format are exported.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body for auto-saving the bridge girder diagram graph.",
+          "properties": {
+            "LC_NAME": {
+              "type": "string",
+              "description": "Load Case/Combination Name."
+            },
+            "DGRM_TYPE": {
+              "type": "integer",
+              "description": "Diagram Type (0: Stress, 1: Force)."
+            },
+            "STAGE_LIST": {
+              "type": "array",
+              "description": "Stage names to output.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Auto-save graph directory."
+            },
+            "EXTENSION": {
+              "type": "string",
+              "description": "Graph image extension (bmp/jpg/emf). Case-insensitive.",
+              "enum": ["bmp", "jpg", "emf"]
+            },
+            "BATCH": {
+              "type": "boolean",
+              "description": "Batch mode.",
+              "default": true
+            },
+            "X_AXIS_TYPE": {
+              "type": "integer",
+              "description": "X-Axis Type (0: Distance, 1: Node).",
+              "default": 0
+            },
+            "BRDG_GROUP": {
+              "type": "string",
+              "description": "Bridge girder element group name. Applied only when assigned."
+            },
+            "COMPONENTS": {
+              "type": "integer",
+              "description": "Component index. Applied only when assigned."
+            },
+            "SEVENTH_DOF_TYPE": {
+              "type": "integer",
+              "description": "7th DOF Type. Applied only when assigned."
+            },
+            "COMBINED_COMP": {
+              "type": "integer",
+              "description": "Combined component option. Applied only when assigned."
+            },
+            "STRESS_LINE": {
+              "type": "object",
+              "description": "Allowable stress line. When OPT_USE is true, COMP and TENS are required; when OPT_USE is false, COMP and TENS must not be provided.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Use allowable stress line.",
+                  "default": false
+                },
+                "COMP": {
+                  "type": "number",
+                  "description": "[OPT_USE=true] Allowable compression stress. Required when OPT_USE is true; must not be provided when OPT_USE is false."
+                },
+                "TENS": {
+                  "type": "number",
+                  "description": "[OPT_USE=true] Allowable tensile stress. Required when OPT_USE is true; must not be provided when OPT_USE is false."
+                }
+              }
+            },
+            "BATCH_LIST": {
+              "type": "array",
+              "description": "Saved bridge girder diagram batch group names.",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": ["LC_NAME", "DGRM_TYPE", "STAGE_LIST", "EXPORT_PATH", "EXTENSION"]
+        }
+      },
+      "required": ["Argument"]
+    }
+  },
+  "example": {
+    "Argument": {
+      "LC_NAME": "Summation",
+      "DGRM_TYPE": 0,
+      "STAGE_LIST": ["CS1", "CS2"],
+      "EXPORT_PATH": "C:/Temp/GSBG",
+      "EXTENSION": "jpg",
+      "BATCH": true,
+      "X_AXIS_TYPE": 0,
+      "BRDG_GROUP": "Girder1",
+      "COMPONENTS": 0,
+      "STRESS_LINE": {
+        "OPT_USE": true,
+        "COMP": -20.0,
+        "TENS": 3.5
+      },
+      "BATCH_LIST": ["Batch1", "Batch2"]
+    }
+  }
+}

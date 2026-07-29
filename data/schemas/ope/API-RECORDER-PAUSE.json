@@ -1,0 +1,20 @@
+{
+  "_group": "ope",
+  "_name": "API-RECORDER-PAUSE",
+  "uri": "ope/API-RECORDER-PAUSE",
+  "methods": "POST",
+  "schema": {
+    "API-RECORDER-PAUSE": {
+      "type": "object",
+      "description": "Pause API Recorder (API-RECORDER-PAUSE). Pauses recording of API requests; the handler takes no request fields (empty request body).",
+      "properties": {
+        "Argument": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

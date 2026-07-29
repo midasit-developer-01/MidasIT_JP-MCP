@@ -1,0 +1,22 @@
+{
+  "_group": "ope",
+  "_name": "TEMP_TABLETYPE",
+  "uri": "ope/TEMP_TABLETYPE",
+  "methods": "GET",
+  "schema": {
+    "TEMP_TABLETYPE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Table Type (TEMP_TABLETYPE). Retrieves the list of available table types; the request takes no arguments (DTO_EMPTY), so the Argument body is an empty object.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body (DTO_EMPTY). No fields are consumed by the handler."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

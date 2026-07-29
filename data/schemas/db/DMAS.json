@@ -1,0 +1,540 @@
+{
+  "_group": "db",
+  "_name": "DMAS",
+  "uri": "db/DMAS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DMAS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Floor Diaphragm Masses (DMAS). Each item's MASS_TYPE selects which mass geometry block (POINT_MASS/LINE_MASS/TRIANGLE_MASS/RECT_MASS/CIRCULAR_ARC/CIRCULAR_AREA) drives the applied mass; START_STORY/END_STORY name the story range the item is assigned to.",
+      "properties": {
+        "ITEMS": {
+          "type": "array",
+          "description": "List of floor diaphragm mass items to assign under the entity key.",
+          "items": {
+            "type": "object",
+            "description": "One diaphragm mass definition. MASS_TYPE picks which geometry block is used at runtime; all geometry blocks are structurally required by the DTO.",
+            "properties": {
+              "ID": {
+                "type": "integer",
+                "description": "Serial id of the mass item within the entity key."
+              },
+              "MASS_TYPE": {
+                "type": "string",
+                "enum": ["POINT", "LINE", "TRIANGLE", "RECT", "CIRCULAR ARC", "CIRCULAR AREA"],
+                "description": "Mass geometry type (case-insensitive). Selects the geometry block used: POINT->POINT_MASS, LINE->LINE_MASS, TRIANGLE->TRIANGLE_MASS, RECT->RECT_MASS, 'CIRCULAR ARC'->CIRCULAR_ARC, 'CIRCULAR AREA'->CIRCULAR_AREA."
+              },
+              "START_STORY": {
+                "type": "string",
+                "description": "Name of the start story. Must be an existing story name or the request is rejected."
+              },
+              "END_STORY": {
+                "type": "string",
+                "description": "Name of the end story. Empty string means the item applies only to START_STORY; otherwise must be an existing story name."
+              },
+              "POINT_MASS": {
+                "type": "object",
+                "description": "[MASS_TYPE=POINT] Point mass geometry.",
+                "properties": {
+                  "POINT_MASS": {
+                    "type": "number",
+                    "description": "Point Mass (Mp)."
+                  },
+                  "ROTATION_MASS": {
+                    "type": "number",
+                    "description": "Rotation Mass (Mr)."
+                  },
+                  "POINT_X": {
+                    "type": "number",
+                    "description": "Point X (Xc)."
+                  },
+                  "POINT_Y": {
+                    "type": "number",
+                    "description": "Point Y (Yc)."
+                  }
+                },
+                "required": ["POINT_MASS", "ROTATION_MASS", "POINT_X", "POINT_Y"]
+              },
+              "LINE_MASS": {
+                "type": "object",
+                "description": "[MASS_TYPE=LINE] Line mass geometry.",
+                "properties": {
+                  "LINE_MASS": {
+                    "type": "number",
+                    "description": "Line Mass (Ml)."
+                  },
+                  "LENGTH": {
+                    "type": "number",
+                    "description": "Length (D1)."
+                  },
+                  "POINT_X": {
+                    "type": "number",
+                    "description": "Point X (Xc)."
+                  },
+                  "POINT_Y": {
+                    "type": "number",
+                    "description": "Point Y (Yc)."
+                  }
+                },
+                "required": ["LINE_MASS", "LENGTH", "POINT_X", "POINT_Y"]
+              },
+              "TRIANGLE_MASS": {
+                "type": "object",
+                "description": "[MASS_TYPE=TRIANGLE] Triangular area mass geometry.",
+                "properties": {
+                  "AREA_MASS": {
+                    "type": "number",
+                    "description": "Area Mass (Ma)."
+                  },
+                  "P1X": {
+                    "type": "number",
+                    "description": "Vertex 1 X (X1)."
+                  },
+                  "P1Y": {
+                    "type": "number",
+                    "description": "Vertex 1 Y (Y1)."
+                  },
+                  "P2X": {
+                    "type": "number",
+                    "description": "Vertex 2 X (X2)."
+                  },
+                  "P2Y": {
+                    "type": "number",
+                    "description": "Vertex 2 Y (Y2)."
+                  },
+                  "P3X": {
+                    "type": "number",
+                    "description": "Vertex 3 X (X3)."
+                  },
+                  "P3Y": {
+                    "type": "number",
+                    "description": "Vertex 3 Y (Y3)."
+                  }
+                },
+                "required": ["AREA_MASS", "P1X", "P1Y", "P2X", "P2Y", "P3X", "P3Y"]
+              },
+              "RECT_MASS": {
+                "type": "object",
+                "description": "[MASS_TYPE=RECT] Rectangular area mass geometry.",
+                "properties": {
+                  "AREA_MASS": {
+                    "type": "number",
+                    "description": "Area Mass (Ma)."
+                  },
+                  "LENGTH_1": {
+                    "type": "number",
+                    "description": "Rectangle dimension D1."
+                  },
+                  "LENGTH_2": {
+                    "type": "number",
+                    "description": "Rectangle dimension D2."
+                  },
+                  "POINT_X": {
+                    "type": "number",
+                    "description": "Point X (Xc)."
+                  },
+                  "POINT_Y": {
+                    "type": "number",
+                    "description": "Point Y (Yc)."
+                  }
+                },
+                "required": ["AREA_MASS", "LENGTH_1", "LENGTH_2", "POINT_X", "POINT_Y"]
+              },
+              "CIRCULAR_ARC": {
+                "type": "object",
+                "description": "[MASS_TYPE=CIRCULAR ARC] Circular arc line mass geometry.",
+                "properties": {
+                  "LINE_MASS": {
+                    "type": "number",
+                    "description": "Line Mass (Ml)."
+                  },
+                  "ARC_ANGLE": {
+                    "type": "number",
+                    "description": "Arc Angle (D1)."
+                  },
+                  "ARC_RADIUS": {
+                    "type": "number",
+                    "description": "Arc Radius (D2)."
+                  },
+                  "CENTER_ANGLE": {
+                    "type": "number",
+                    "description": "Center Angle (D3)."
+                  },
+                  "POINT_X": {
+                    "type": "number",
+                    "description": "Point X (Xc)."
+                  },
+                  "POINT_Y": {
+                    "type": "number",
+                    "description": "Point Y (Yc)."
+                  }
+                },
+                "required": ["LINE_MASS", "ARC_ANGLE", "ARC_RADIUS", "CENTER_ANGLE", "POINT_X", "POINT_Y"]
+              },
+              "CIRCULAR_AREA": {
+                "type": "object",
+                "description": "[MASS_TYPE=CIRCULAR AREA] Circular area mass geometry.",
+                "properties": {
+                  "AREA_MASS": {
+                    "type": "number",
+                    "description": "Area Mass (Ma)."
+                  },
+                  "ARC_ANGLE": {
+                    "type": "number",
+                    "description": "Arc Angle (D1)."
+                  },
+                  "ARC_RADIUS": {
+                    "type": "number",
+                    "description": "Arc Radius (D2)."
+                  },
+                  "ARC_WIDTH": {
+                    "type": "number",
+                    "description": "Arc Width (D3)."
+                  },
+                  "CENTER_ANGLE": {
+                    "type": "number",
+                    "description": "Center Angle (D4)."
+                  },
+                  "POINT_X": {
+                    "type": "number",
+                    "description": "Point X (Xc)."
+                  },
+                  "POINT_Y": {
+                    "type": "number",
+                    "description": "Point Y (Yc)."
+                  }
+                },
+                "required": ["AREA_MASS", "ARC_ANGLE", "ARC_RADIUS", "ARC_WIDTH", "CENTER_ANGLE", "POINT_X", "POINT_Y"]
+              }
+            },
+            "required": ["ID", "MASS_TYPE", "START_STORY", "END_STORY", "POINT_MASS", "LINE_MASS", "TRIANGLE_MASS", "RECT_MASS", "CIRCULAR_ARC", "CIRCULAR_AREA"]
+          }
+        }
+      },
+      "required": ["ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "MASS_TYPE": "POINT",
+            "START_STORY": "1F",
+            "END_STORY": "",
+            "POINT_MASS": {
+              "POINT_MASS": 10.0,
+              "ROTATION_MASS": 2.0,
+              "POINT_X": 1.0,
+              "POINT_Y": 1.5
+            },
+            "LINE_MASS": {
+              "LINE_MASS": 5.0,
+              "LENGTH": 3.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "TRIANGLE_MASS": {
+              "AREA_MASS": 4.0,
+              "P1X": 0.0,
+              "P1Y": 0.0,
+              "P2X": 2.0,
+              "P2Y": 0.0,
+              "P3X": 1.0,
+              "P3Y": 2.0
+            },
+            "RECT_MASS": {
+              "AREA_MASS": 6.0,
+              "LENGTH_1": 2.0,
+              "LENGTH_2": 3.0,
+              "POINT_X": 1.0,
+              "POINT_Y": 1.0
+            },
+            "CIRCULAR_ARC": {
+              "LINE_MASS": 3.5,
+              "ARC_ANGLE": 90.0,
+              "ARC_RADIUS": 2.0,
+              "CENTER_ANGLE": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "CIRCULAR_AREA": {
+              "AREA_MASS": 7.0,
+              "ARC_ANGLE": 180.0,
+              "ARC_RADIUS": 3.0,
+              "ARC_WIDTH": 0.5,
+              "CENTER_ANGLE": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            }
+          },
+          {
+            "ID": 2,
+            "MASS_TYPE": "LINE",
+            "START_STORY": "1F",
+            "END_STORY": "3F",
+            "POINT_MASS": {
+              "POINT_MASS": 0.0,
+              "ROTATION_MASS": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "LINE_MASS": {
+              "LINE_MASS": 8.0,
+              "LENGTH": 5.0,
+              "POINT_X": 2.0,
+              "POINT_Y": 0.0
+            },
+            "TRIANGLE_MASS": {
+              "AREA_MASS": 0.0,
+              "P1X": 0.0,
+              "P1Y": 0.0,
+              "P2X": 0.0,
+              "P2Y": 0.0,
+              "P3X": 0.0,
+              "P3Y": 0.0
+            },
+            "RECT_MASS": {
+              "AREA_MASS": 0.0,
+              "LENGTH_1": 0.0,
+              "LENGTH_2": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "CIRCULAR_ARC": {
+              "LINE_MASS": 0.0,
+              "ARC_ANGLE": 0.0,
+              "ARC_RADIUS": 0.0,
+              "CENTER_ANGLE": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "CIRCULAR_AREA": {
+              "AREA_MASS": 0.0,
+              "ARC_ANGLE": 0.0,
+              "ARC_RADIUS": 0.0,
+              "ARC_WIDTH": 0.0,
+              "CENTER_ANGLE": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            }
+          }
+        ]
+      },
+      "2": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "MASS_TYPE": "TRIANGLE",
+            "START_STORY": "2F",
+            "END_STORY": "",
+            "POINT_MASS": {
+              "POINT_MASS": 0.0,
+              "ROTATION_MASS": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "LINE_MASS": {
+              "LINE_MASS": 0.0,
+              "LENGTH": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "TRIANGLE_MASS": {
+              "AREA_MASS": 12.0,
+              "P1X": 0.0,
+              "P1Y": 0.0,
+              "P2X": 4.0,
+              "P2Y": 0.0,
+              "P3X": 2.0,
+              "P3Y": 3.0
+            },
+            "RECT_MASS": {
+              "AREA_MASS": 0.0,
+              "LENGTH_1": 0.0,
+              "LENGTH_2": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "CIRCULAR_ARC": {
+              "LINE_MASS": 0.0,
+              "ARC_ANGLE": 0.0,
+              "ARC_RADIUS": 0.0,
+              "CENTER_ANGLE": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "CIRCULAR_AREA": {
+              "AREA_MASS": 0.0,
+              "ARC_ANGLE": 0.0,
+              "ARC_RADIUS": 0.0,
+              "ARC_WIDTH": 0.0,
+              "CENTER_ANGLE": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            }
+          },
+          {
+            "ID": 2,
+            "MASS_TYPE": "RECT",
+            "START_STORY": "2F",
+            "END_STORY": "",
+            "POINT_MASS": {
+              "POINT_MASS": 0.0,
+              "ROTATION_MASS": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "LINE_MASS": {
+              "LINE_MASS": 0.0,
+              "LENGTH": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "TRIANGLE_MASS": {
+              "AREA_MASS": 0.0,
+              "P1X": 0.0,
+              "P1Y": 0.0,
+              "P2X": 0.0,
+              "P2Y": 0.0,
+              "P3X": 0.0,
+              "P3Y": 0.0
+            },
+            "RECT_MASS": {
+              "AREA_MASS": 15.0,
+              "LENGTH_1": 5.0,
+              "LENGTH_2": 4.0,
+              "POINT_X": 2.5,
+              "POINT_Y": 2.0
+            },
+            "CIRCULAR_ARC": {
+              "LINE_MASS": 0.0,
+              "ARC_ANGLE": 0.0,
+              "ARC_RADIUS": 0.0,
+              "CENTER_ANGLE": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "CIRCULAR_AREA": {
+              "AREA_MASS": 0.0,
+              "ARC_ANGLE": 0.0,
+              "ARC_RADIUS": 0.0,
+              "ARC_WIDTH": 0.0,
+              "CENTER_ANGLE": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            }
+          }
+        ]
+      },
+      "3": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "MASS_TYPE": "CIRCULAR ARC",
+            "START_STORY": "3F",
+            "END_STORY": "",
+            "POINT_MASS": {
+              "POINT_MASS": 0.0,
+              "ROTATION_MASS": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "LINE_MASS": {
+              "LINE_MASS": 0.0,
+              "LENGTH": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "TRIANGLE_MASS": {
+              "AREA_MASS": 0.0,
+              "P1X": 0.0,
+              "P1Y": 0.0,
+              "P2X": 0.0,
+              "P2Y": 0.0,
+              "P3X": 0.0,
+              "P3Y": 0.0
+            },
+            "RECT_MASS": {
+              "AREA_MASS": 0.0,
+              "LENGTH_1": 0.0,
+              "LENGTH_2": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "CIRCULAR_ARC": {
+              "LINE_MASS": 6.0,
+              "ARC_ANGLE": 120.0,
+              "ARC_RADIUS": 4.0,
+              "CENTER_ANGLE": 30.0,
+              "POINT_X": 1.0,
+              "POINT_Y": 1.0
+            },
+            "CIRCULAR_AREA": {
+              "AREA_MASS": 0.0,
+              "ARC_ANGLE": 0.0,
+              "ARC_RADIUS": 0.0,
+              "ARC_WIDTH": 0.0,
+              "CENTER_ANGLE": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            }
+          },
+          {
+            "ID": 2,
+            "MASS_TYPE": "CIRCULAR AREA",
+            "START_STORY": "3F",
+            "END_STORY": "",
+            "POINT_MASS": {
+              "POINT_MASS": 0.0,
+              "ROTATION_MASS": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "LINE_MASS": {
+              "LINE_MASS": 0.0,
+              "LENGTH": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "TRIANGLE_MASS": {
+              "AREA_MASS": 0.0,
+              "P1X": 0.0,
+              "P1Y": 0.0,
+              "P2X": 0.0,
+              "P2Y": 0.0,
+              "P3X": 0.0,
+              "P3Y": 0.0
+            },
+            "RECT_MASS": {
+              "AREA_MASS": 0.0,
+              "LENGTH_1": 0.0,
+              "LENGTH_2": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "CIRCULAR_ARC": {
+              "LINE_MASS": 0.0,
+              "ARC_ANGLE": 0.0,
+              "ARC_RADIUS": 0.0,
+              "CENTER_ANGLE": 0.0,
+              "POINT_X": 0.0,
+              "POINT_Y": 0.0
+            },
+            "CIRCULAR_AREA": {
+              "AREA_MASS": 20.0,
+              "ARC_ANGLE": 270.0,
+              "ARC_RADIUS": 5.0,
+              "ARC_WIDTH": 1.0,
+              "CENTER_ANGLE": 45.0,
+              "POINT_X": 2.0,
+              "POINT_Y": 2.0
+            }
+          }
+        ]
+      }
+    }
+  }
+}

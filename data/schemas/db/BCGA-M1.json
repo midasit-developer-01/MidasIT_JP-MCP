@@ -1,0 +1,117 @@
+{
+  "_group": "db",
+  "_name": "BCGA-M1",
+  "uri": "db/BCGA-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "BCGA-M1": {
+      "type": "object",
+      "description": "Boundary Change Assignment (BCGA-M1). A model-wide singleton (key 1): BC_ASSIGN maps each analysis/load case to a Boundary Group Combination, and BC_SELECT lists which boundary-condition categories the change applies to.",
+      "additionalProperties": false,
+      "required": [
+        "BC_ASSIGN",
+        "BC_SELECT"
+      ],
+      "properties": {
+        "BC_ASSIGN": {
+          "type": "array",
+          "description": "Boundary Change assignment list. One entry per analysis or load case that should use a specific Boundary Group Combination; load cases not listed remain unchanged.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "ANAL_TYPE",
+              "BGCNAME"
+            ],
+            "properties": {
+              "ANAL_TYPE": {
+                "type": "string",
+                "description": "Analysis / load case type (case-insensitive). ST=Static Load Case, MV=Moving Load Analysis, SM=Settlement Analysis, EIGV=Eigenvalue Analysis, RS=Response Spectrum Analysis, LTH=Linear Time History Analysis, NLTH=Nonlinear Time History Analysis, PO=Pushover Analysis.",
+                "enum": [
+                  "ST",
+                  "MV",
+                  "SM",
+                  "EIGV",
+                  "RS",
+                  "LTH",
+                  "NLTH",
+                  "PO"
+                ]
+              },
+              "LCNAME": {
+                "type": "string",
+                "description": "[ANAL_TYPE=ST|NLTH|PO] Load case name. The handler requires it and resolves it to a Static/Nonlinear-Time-History/Pushover load case for ST, NLTH, and PO; it is ignored for MV, SM, EIGV, RS, and LTH (those types identify their single analysis directly).",
+                "default": ""
+              },
+              "BGCNAME": {
+                "type": "string",
+                "description": "Boundary Group Combination name. Must match an existing Boundary Group Combination in the model, otherwise the request fails."
+              }
+            }
+          }
+        },
+        "BC_SELECT": {
+          "type": "array",
+          "description": "Boundary-condition categories the boundary change is applied to (case-insensitive). SSSF=Section Stiffness Scale Factor, ES=Element Stiffness Scale Factor, EW=Effective Width Scale Factor, PS=Plate Stiffness Scale Factor, SP=Support, PSS=Point Spring Support, GSS=General Spring Support, SSS=Surface Spring Support, EL=Elastic Link, RL=Rigid Link, GL=General Link, CGL=Change General Link Property, BER=Beam End Release, BEO=Beam End Offset, PER=Plate End Release, LC=Linear Constraints.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "SSSF",
+              "ES",
+              "EW",
+              "PS",
+              "SP",
+              "PSS",
+              "GSS",
+              "SSS",
+              "EL",
+              "RL",
+              "GL",
+              "CGL",
+              "BER",
+              "BEO",
+              "PER",
+              "LC"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "BC_ASSIGN": [
+          {
+            "ANAL_TYPE": "ST",
+            "LCNAME": "Dead Load",
+            "BGCNAME": "BGC1"
+          },
+          {
+            "ANAL_TYPE": "MV",
+            "BGCNAME": "BGC1"
+          },
+          {
+            "ANAL_TYPE": "EIGV",
+            "BGCNAME": "BGC2"
+          },
+          {
+            "ANAL_TYPE": "NLTH",
+            "LCNAME": "Earthquake X",
+            "BGCNAME": "BGC2"
+          },
+          {
+            "ANAL_TYPE": "PO",
+            "LCNAME": "Pushover X",
+            "BGCNAME": "BGC1"
+          }
+        ],
+        "BC_SELECT": [
+          "SP",
+          "PSS",
+          "EL"
+        ]
+      }
+    }
+  }
+}

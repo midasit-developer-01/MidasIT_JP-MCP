@@ -1,0 +1,51 @@
+{
+  "_group": "db",
+  "_name": "WMAK",
+  "uri": "db/WMAK",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "WMAK": {
+      "type": "object",
+      "description": "Wall Mark (WMAK). Groups a set of walls under a named mark; each key is the wall mark id and its value carries the mark name and the list of wall element ids it contains.",
+      "properties": {
+        "MARKNAME": {
+          "type": "string",
+          "description": "Wall mark name. Trailing whitespace is trimmed. Must be unique across all wall marks (duplicate names are rejected)."
+        },
+        "WID_LIST": {
+          "type": "array",
+          "description": "List of wall element ids belonging to this wall mark. Assigning replaces the entire existing list.",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "required": [
+        "MARKNAME",
+        "WID_LIST"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "MARKNAME": "W1",
+        "WID_LIST": [
+          1,
+          5,
+          8
+        ]
+      },
+      "2": {
+        "MARKNAME": "W2",
+        "WID_LIST": [
+          2,
+          3,
+          4,
+          6,
+          7
+        ]
+      }
+    }
+  }
+}

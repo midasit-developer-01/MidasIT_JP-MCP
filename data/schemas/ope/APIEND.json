@@ -1,0 +1,20 @@
+{
+  "_group": "ope",
+  "_name": "APIEND",
+  "uri": "ope/APIEND",
+  "methods": "GET",
+  "schema": {
+    "APIEND": {
+      "type": "object",
+      "description": "API End (APIEND). Terminates the running API session; the request takes no meaningful body (empty request DTO), so the Argument object carries no fields.",
+      "properties": {
+        "Argument": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

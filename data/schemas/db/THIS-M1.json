@@ -1,0 +1,543 @@
+{
+  "_group": "db",
+  "_name": "THIS-M1",
+  "uri": "db/THIS-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THIS-M1": {
+      "type": "object",
+      "description": "Time History Load Case (THIS-M1). Field applicability is driven by ANAL_CASE.ANAL_TYPE (Linear:0/Nonlinear:1) and ANAL_CASE.ANAL_METHOD (Modal:0/Direct Integration:1/Static:2); the Nonlinear-Static combination (ANAL_TYPE=1 & ANAL_METHOD=2) uses INC_STEP + INC_CTRL while all other combinations use ENDTIME + TIME_INC + DAMPING, and INIT_METHOD (INIT/ORDER) selects the initial-load path (USE_INIT_LOAD vs SUBSEQ).",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Time History Load Case name (unique identifier)."
+        },
+        "DESC": {
+          "type": "string",
+          "default": "",
+          "description": "Optional description text."
+        },
+        "ANAL_CASE": {
+          "type": "object",
+          "description": "Analysis case options. ANAL_TYPE and ANAL_METHOD together decide the whole field layout.",
+          "properties": {
+            "ANAL_TYPE": {
+              "type": "integer",
+              "enum": [0, 1],
+              "description": "Analysis Type. Linear:0, Nonlinear:1."
+            },
+            "ANAL_METHOD": {
+              "type": "integer",
+              "enum": [0, 1, 2],
+              "description": "Analysis Method. Modal:0, Direct Integration:1, Static:2 (Static valid only for Nonlinear)."
+            },
+            "TH_TYPE": {
+              "type": "integer",
+              "enum": [0, 1],
+              "description": "[not Nonlinear-Static] Time History Type. Transient:0, Periodic:1. Ignored when ANAL_TYPE=1 & ANAL_METHOD=2."
+            }
+          },
+          "required": ["ANAL_TYPE", "ANAL_METHOD"],
+          "additionalProperties": false
+        },
+        "INC_STEP": {
+          "type": "integer",
+          "default": 1,
+          "description": "[ANAL_TYPE=1 & ANAL_METHOD=2 (Nonlinear-Static)] Number of increment steps."
+        },
+        "ENDTIME": {
+          "type": "number",
+          "description": "[not Nonlinear-Static] End time of the analysis. Required together with TIME_INC when not Nonlinear-Static."
+        },
+        "TIME_INC": {
+          "type": "number",
+          "description": "[not Nonlinear-Static] Time increment (time step). Required together with ENDTIME when not Nonlinear-Static."
+        },
+        "OUTPUT_STEP": {
+          "type": "integer",
+          "description": "Step number increment for output."
+        },
+        "INIT_METHOD": {
+          "type": "string",
+          "enum": ["INIT", "ORDER"],
+          "description": "Initial load mode (case-insensitive). INIT = Initial Load; ORDER = Order in Sequence Load. INIT uses USE_INIT_LOAD; ORDER uses SUBSEQ."
+        },
+        "USE_INIT_LOAD": {
+          "type": "boolean",
+          "description": "[INIT_METHOD=INIT] Use initial load defined in Time History Global Control."
+        },
+        "SUBSEQ": {
+          "type": "object",
+          "description": "[INIT_METHOD=ORDER] Subsequent load options (order-in-sequence loading).",
+          "properties": {
+            "OPT_USE": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable 'Subsequent to'. When false, SUBSEQ_LOAD/LCTYPE/CASE are ignored."
+            },
+            "SUBSEQ_LOAD": {
+              "type": "integer",
+              "enum": [0, 1, 2],
+              "description": "[OPT_USE=true] Subsequent type. Load Case:0, Initial Element Forces:1, Initial Forces for Geometric Stiffness:2. LCTYPE/CASE apply only when 0."
+            },
+            "LCTYPE": {
+              "type": "string",
+              "enum": ["ST", "CS", "TH"],
+              "description": "[OPT_USE=true & SUBSEQ_LOAD=0] Load case type. Static:ST, Construction Stage:CS, Time History:TH. Hard-validated (unknown value rejected)."
+            },
+            "CASE": {
+              "type": "string",
+              "description": "[OPT_USE=true & SUBSEQ_LOAD=0] Referenced load case name. Must resolve to an existing case of the given LCTYPE (hard-validated)."
+            }
+          },
+          "additionalProperties": false
+        },
+        "CUM_DVA": {
+          "type": "boolean",
+          "default": false,
+          "description": "Cumulate D/V/A results. Effective for INIT_METHOD=INIT with USE_INIT_LOAD=true, or INIT_METHOD=ORDER with SUBSEQ.OPT_USE=true, SUBSEQ_LOAD=0 and LCTYPE=TH."
+        },
+        "KEEP_LOAD": {
+          "type": "boolean",
+          "default": false,
+          "description": "Keep final step loads constant. Same applicability as CUM_DVA."
+        },
+        "KEEP_ACC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Keep final step accelerations. Effective for INIT_METHOD=ORDER with SUBSEQ.OPT_USE=true, SUBSEQ_LOAD=0 and LCTYPE=TH."
+        },
+        "GEOM_NL_TYPE": {
+          "type": "integer",
+          "enum": [0, 1, 2],
+          "default": 0,
+          "description": "Geometric nonlinearity type. None:0, P-Delta:1, Large Displacements:2 (schema convention)."
+        },
+        "DAMPING": {
+          "type": "object",
+          "description": "[not Nonlinear-Static] Damping definition. DAMPING_METHOD selects which sub-fields apply.",
+          "properties": {
+            "DAMPING_METHOD": {
+              "type": "integer",
+              "enum": [0, 1, 2, 3],
+              "description": "Damping method. Direct Modal:0, Mass & Stiffness Proportional:1, Strain Energy Proportional:2, Element Mass & Stiffness Proportional:3. Hard-validated (unknown value rejected). Values 2 and 3 need no extra fields."
+            },
+            "ALL_DAMPING_RATIO": {
+              "type": "number",
+              "description": "[DAMPING_METHOD=0] Damping ratio applied to all modes."
+            },
+            "MODAL_DAMPING_RATIO": {
+              "type": "array",
+              "description": "[DAMPING_METHOD=0] Per-mode damping ratio overrides.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "MODE_NO": {
+                    "type": "integer",
+                    "description": "Mode number."
+                  },
+                  "DAMPING": {
+                    "type": "number",
+                    "description": "Damping ratio for this mode."
+                  }
+                },
+                "required": ["MODE_NO", "DAMPING"],
+                "additionalProperties": false
+              }
+            },
+            "COEF_INPUT": {
+              "type": "integer",
+              "enum": [0, 1],
+              "description": "[DAMPING_METHOD=1] Coefficient input. Direct Specification:0, Calculate from Modal Damping:1."
+            },
+            "USE_MASS": {
+              "type": "boolean",
+              "description": "[DAMPING_METHOD=1] Use mass proportional term."
+            },
+            "USE_STIFF": {
+              "type": "boolean",
+              "description": "[DAMPING_METHOD=1] Use stiffness proportional term."
+            },
+            "MASS_VALUE": {
+              "type": "number",
+              "description": "[DAMPING_METHOD=1 & COEF_INPUT=0 & USE_MASS=true] Mass proportional coefficient."
+            },
+            "STIFF_VALUE": {
+              "type": "number",
+              "description": "[DAMPING_METHOD=1 & COEF_INPUT=0 & USE_STIFF=true] Stiffness proportional coefficient."
+            },
+            "COEF_CALC": {
+              "type": "integer",
+              "enum": [0, 1],
+              "description": "[DAMPING_METHOD=1 & COEF_INPUT=1] Coefficient calculation basis. Frequency [Hz]:0, Period [sec]:1."
+            },
+            "FREQ1": {
+              "type": "number",
+              "description": "[DAMPING_METHOD=1 & COEF_INPUT=1 & COEF_CALC=0] Mode 1 frequency [Hz]."
+            },
+            "FREQ2": {
+              "type": "number",
+              "description": "[DAMPING_METHOD=1 & COEF_INPUT=1 & COEF_CALC=0] Mode 2 frequency [Hz] (when both mass and stiffness used)."
+            },
+            "PERIOD1": {
+              "type": "number",
+              "description": "[DAMPING_METHOD=1 & COEF_INPUT=1 & COEF_CALC=1] Mode 1 period [sec]."
+            },
+            "PERIOD2": {
+              "type": "number",
+              "description": "[DAMPING_METHOD=1 & COEF_INPUT=1 & COEF_CALC=1] Mode 2 period [sec] (when both mass and stiffness used)."
+            },
+            "DR1": {
+              "type": "number",
+              "description": "[DAMPING_METHOD=1 & COEF_INPUT=1] Mode 1 damping ratio."
+            },
+            "DR2": {
+              "type": "number",
+              "description": "[DAMPING_METHOD=1 & COEF_INPUT=1 & USE_MASS & USE_STIFF] Mode 2 damping ratio."
+            }
+          },
+          "required": ["DAMPING_METHOD"],
+          "additionalProperties": false
+        },
+        "INC_CTRL": {
+          "type": "object",
+          "description": "[ANAL_TYPE=1 & ANAL_METHOD=2 (Nonlinear-Static)] Increment (static loading) control.",
+          "properties": {
+            "INC_METHOD": {
+              "type": "integer",
+              "enum": [0, 1],
+              "description": "Increment method. Load Control:0, Displacement Control:1."
+            },
+            "SF": {
+              "type": "number",
+              "default": 1.0,
+              "description": "[INC_METHOD=0] Scale factor."
+            },
+            "DISP_CTRL": {
+              "type": "object",
+              "description": "[INC_METHOD=1] Displacement control settings.",
+              "properties": {
+                "CTRL_OPT": {
+                  "type": "integer",
+                  "enum": [0, 1],
+                  "description": "Control option. Global Control:0, Master Node Control:1."
+                },
+                "MAX_TRANS_DISP": {
+                  "type": "number",
+                  "description": "[CTRL_OPT=0] Maximum translational displacement."
+                },
+                "MASTER_NODE": {
+                  "type": "integer",
+                  "description": "[CTRL_OPT=1] Master node number."
+                },
+                "MASTER_DIR": {
+                  "type": "integer",
+                  "enum": [0, 1, 2],
+                  "description": "[CTRL_OPT=1] Master direction. DX:0, DY:1, DZ:2."
+                },
+                "MAX_DISP": {
+                  "type": "number",
+                  "description": "[CTRL_OPT=1] Maximum displacement."
+                }
+              },
+              "required": ["CTRL_OPT"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["INC_METHOD"],
+          "additionalProperties": false
+        },
+        "TIME_PARAM": {
+          "type": "object",
+          "description": "[ANAL_METHOD=1 (Direct Integration)] Time integration parameters.",
+          "properties": {
+            "METHOD": {
+              "type": "integer",
+              "enum": [0, 1],
+              "description": "Integration method. Hilber-Hughes-Taylor (HHT):0, Newmark:1."
+            },
+            "NEWMARK_METHOD": {
+              "type": "integer",
+              "enum": [0, 1, 2],
+              "description": "[METHOD=1] Newmark input type. Constant Acceleration:0, Linear Acceleration:1, User Input:2."
+            },
+            "GAMMA": {
+              "type": "number",
+              "default": 0.5,
+              "description": "[METHOD=1 & NEWMARK_METHOD=2] Gamma value."
+            },
+            "BETA": {
+              "type": "number",
+              "default": 0.25,
+              "description": "[METHOD=1 & NEWMARK_METHOD=2] Beta value."
+            }
+          },
+          "required": ["METHOD"],
+          "additionalProperties": false
+        },
+        "NONL_CTRL_PARAM": {
+          "type": "object",
+          "description": "[ANAL_TYPE=1 (Nonlinear)] Nonlinear control parameters.",
+          "properties": {
+            "PERFORM_ITER": {
+              "type": "boolean",
+              "default": true,
+              "description": "Perform iteration. When false, ITER_CTRL is ignored."
+            },
+            "ITER_CTRL": {
+              "type": "object",
+              "description": "[PERFORM_ITER=true] Iteration control.",
+              "properties": {
+                "PERMIT_FAIL": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Permit convergence failure."
+                },
+                "MAX_ITER": {
+                  "type": "integer",
+                  "description": "Maximum number of iterations."
+                },
+                "NORM_CTRL": {
+                  "type": "object",
+                  "description": "Convergence norms.",
+                  "properties": {
+                    "DISP": {
+                      "type": "object",
+                      "description": "Displacement norm criterion.",
+                      "properties": {
+                        "OPT_USE": {
+                          "type": "boolean",
+                          "description": "Enable displacement norm."
+                        },
+                        "VALUE": {
+                          "type": "number",
+                          "description": "[OPT_USE=true] Displacement norm tolerance."
+                        }
+                      },
+                      "required": ["OPT_USE"],
+                      "additionalProperties": false
+                    },
+                    "FORCE": {
+                      "type": "object",
+                      "description": "Force norm criterion.",
+                      "properties": {
+                        "OPT_USE": {
+                          "type": "boolean",
+                          "description": "Enable force norm."
+                        },
+                        "VALUE": {
+                          "type": "number",
+                          "description": "[OPT_USE=true] Force norm tolerance."
+                        }
+                      },
+                      "required": ["OPT_USE"],
+                      "additionalProperties": false
+                    },
+                    "ENERGY": {
+                      "type": "object",
+                      "description": "Energy norm criterion.",
+                      "properties": {
+                        "OPT_USE": {
+                          "type": "boolean",
+                          "description": "Enable energy norm."
+                        },
+                        "VALUE": {
+                          "type": "number",
+                          "description": "[OPT_USE=true] Energy norm tolerance."
+                        }
+                      },
+                      "required": ["OPT_USE"],
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "STIFF_UPD_SCHEME": {
+                  "type": "integer",
+                  "enum": [0, 1, 2],
+                  "default": 0,
+                  "description": "Stiffness update scheme. Custom:0, Full Newton-Raphson:1, Initial Stiffness:2."
+                },
+                "ITER_BEF_UPDATE": {
+                  "type": "integer",
+                  "default": 5,
+                  "description": "[STIFF_UPD_SCHEME=0] Number of iterations before stiffness update."
+                },
+                "MAX_BISECT_LEVEL": {
+                  "type": "integer",
+                  "default": 5,
+                  "description": "Maximum bisection level."
+                },
+                "SMART_BISECT": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Enable smart bisection."
+                },
+                "DIVERGENCE_THRESHOLD": {
+                  "type": "number",
+                  "default": 3.0,
+                  "description": "Divergence threshold (stored as an integer internally)."
+                },
+                "LINE_SEARCH": {
+                  "type": "object",
+                  "description": "Line search settings.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Enable line search."
+                    },
+                    "LINE_SEARCH_OPT": {
+                      "type": "integer",
+                      "enum": [0, 1],
+                      "default": 0,
+                      "description": "[OPT_USE=true] Line search option. Auto:0, User Defined:1."
+                    },
+                    "START_ITER_NO": {
+                      "type": "integer",
+                      "default": 3,
+                      "description": "[OPT_USE=true & LINE_SEARCH_OPT=1] Iteration number to start line search."
+                    },
+                    "MAX_LINE_SEARCH_ITER": {
+                      "type": "integer",
+                      "default": 4,
+                      "description": "[OPT_USE=true & LINE_SEARCH_OPT=1] Max line searches per iteration."
+                    },
+                    "LINE_SEARCH_TOL": {
+                      "type": "number",
+                      "default": 0.5,
+                      "description": "[OPT_USE=true & LINE_SEARCH_OPT=1] Line search tolerance."
+                    }
+                  },
+                  "required": ["OPT_USE"],
+                  "additionalProperties": false
+                },
+                "BOUNDARY_NL_ANAL": {
+                  "type": "object",
+                  "description": "Boundary nonlinear analysis (Runge-Kutta) settings.",
+                  "properties": {
+                    "METHOD": {
+                      "type": "integer",
+                      "enum": [0, 1, 2],
+                      "default": 0,
+                      "description": "Runge-Kutta method. Fehlberg:0, Cash-Karp:1, Dormand-Prince:2."
+                    },
+                    "TOL": {
+                      "type": "number",
+                      "default": 1e-8,
+                      "description": "Tolerance."
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "required": ["MAX_ITER"],
+              "additionalProperties": false
+            },
+            "DAMP_UPDATE": {
+              "type": "integer",
+              "enum": [0, 1, 2],
+              "default": 0,
+              "description": "Damping matrix update. No (Use Linear Stiffness):0, No (Use Initial Stiffness):1, Yes (Use Current Stiffness):2."
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["NAME", "ANAL_CASE", "OUTPUT_STEP", "INIT_METHOD"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "TH_LinearModal",
+        "DESC": "Linear modal time history",
+        "ANAL_CASE": { "ANAL_TYPE": 0, "ANAL_METHOD": 0, "TH_TYPE": 0 },
+        "ENDTIME": 10.0,
+        "TIME_INC": 0.01,
+        "OUTPUT_STEP": 1,
+        "INIT_METHOD": "INIT",
+        "USE_INIT_LOAD": false,
+        "GEOM_NL_TYPE": 0,
+        "DAMPING": { "DAMPING_METHOD": 0, "ALL_DAMPING_RATIO": 0.05 }
+      },
+      "2": {
+        "NAME": "TH_LinearDirect",
+        "ANAL_CASE": { "ANAL_TYPE": 0, "ANAL_METHOD": 1, "TH_TYPE": 0 },
+        "ENDTIME": 10.0,
+        "TIME_INC": 0.01,
+        "OUTPUT_STEP": 1,
+        "INIT_METHOD": "INIT",
+        "USE_INIT_LOAD": false,
+        "DAMPING": {
+          "DAMPING_METHOD": 1,
+          "COEF_INPUT": 0,
+          "USE_MASS": true,
+          "USE_STIFF": true,
+          "MASS_VALUE": 0.5,
+          "STIFF_VALUE": 0.01
+        },
+        "TIME_PARAM": { "METHOD": 1, "NEWMARK_METHOD": 0 }
+      },
+      "3": {
+        "NAME": "TH_NonlinearDirect",
+        "ANAL_CASE": { "ANAL_TYPE": 1, "ANAL_METHOD": 1, "TH_TYPE": 0 },
+        "ENDTIME": 10.0,
+        "TIME_INC": 0.01,
+        "OUTPUT_STEP": 1,
+        "INIT_METHOD": "ORDER",
+        "SUBSEQ": { "OPT_USE": true, "SUBSEQ_LOAD": 0, "LCTYPE": "TH", "CASE": "TH_LinearDirect" },
+        "CUM_DVA": true,
+        "KEEP_LOAD": false,
+        "KEEP_ACC": true,
+        "GEOM_NL_TYPE": 1,
+        "DAMPING": {
+          "DAMPING_METHOD": 0,
+          "ALL_DAMPING_RATIO": 0.05,
+          "MODAL_DAMPING_RATIO": [
+            { "MODE_NO": 1, "DAMPING": 0.05 },
+            { "MODE_NO": 2, "DAMPING": 0.03 }
+          ]
+        },
+        "TIME_PARAM": { "METHOD": 1, "NEWMARK_METHOD": 2, "GAMMA": 0.5, "BETA": 0.25 },
+        "NONL_CTRL_PARAM": {
+          "PERFORM_ITER": true,
+          "ITER_CTRL": {
+            "PERMIT_FAIL": true,
+            "MAX_ITER": 30,
+            "NORM_CTRL": {
+              "DISP": { "OPT_USE": true, "VALUE": 0.001 },
+              "FORCE": { "OPT_USE": false },
+              "ENERGY": { "OPT_USE": false }
+            },
+            "STIFF_UPD_SCHEME": 0,
+            "ITER_BEF_UPDATE": 5,
+            "LINE_SEARCH": { "OPT_USE": false },
+            "BOUNDARY_NL_ANAL": { "METHOD": 0, "TOL": 1e-8 }
+          },
+          "DAMP_UPDATE": 0
+        }
+      },
+      "4": {
+        "NAME": "TH_NonlinearStatic",
+        "ANAL_CASE": { "ANAL_TYPE": 1, "ANAL_METHOD": 2 },
+        "INC_STEP": 10,
+        "OUTPUT_STEP": 1,
+        "INIT_METHOD": "INIT",
+        "USE_INIT_LOAD": false,
+        "GEOM_NL_TYPE": 2,
+        "INC_CTRL": {
+          "INC_METHOD": 1,
+          "DISP_CTRL": { "CTRL_OPT": 1, "MASTER_NODE": 5, "MASTER_DIR": 2, "MAX_DISP": 0.1 }
+        },
+        "NONL_CTRL_PARAM": {
+          "PERFORM_ITER": true,
+          "ITER_CTRL": {
+            "MAX_ITER": 30,
+            "NORM_CTRL": { "DISP": { "OPT_USE": true, "VALUE": 0.001 } }
+          }
+        }
+      }
+    }
+  }
+}

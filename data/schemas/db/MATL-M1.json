@@ -1,0 +1,215 @@
+{
+  "_group": "db",
+  "_name": "MATL-M1",
+  "uri": "db/MATL-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MATL-M1": {
+      "type": "object",
+      "description": "Material Property (MATL-M1). MATL_TYPE selects the material category and each PARAM item's P_TYPE (0=Standard from code DB, 1=Isotropic user-defined, 2=Orthotropic user-defined) drives which USER_DEFINED fields apply; SRC materials supply two PARAM items (concrete then steel).",
+      "properties": {
+        "MATL_NAME": {
+          "type": "string",
+          "description": "Material name."
+        },
+        "MATL_TYPE": {
+          "type": "string",
+          "enum": ["CONC", "STEEL", "SRC", "USER"],
+          "description": "Material type (case-insensitive). CONC=concrete, STEEL=steel, SRC=steel reinforced concrete, USER=user-defined. Hard-validated at runtime."
+        },
+        "DAMP_RAT": {
+          "type": "number",
+          "default": 0,
+          "description": "Damping ratio."
+        },
+        "PARAM": {
+          "type": "array",
+          "description": "Material parameter items. One item for CONC/STEEL/USER; two items for SRC (index 0 = concrete data, index 1 = steel data).",
+          "items": {
+            "type": "object",
+            "properties": {
+              "P_TYPE": {
+                "type": "integer",
+                "enum": [0, 1, 2],
+                "description": "Definition type: 0=Standard (properties pulled from code DB; requires STANDARD and DB), 1=Isotropic user-defined (uses USER_DEFINED bELAST/POISN/THERMAL/DEN), 2=Orthotropic user-defined (uses USER_DEFINED ELAST_M/THERMAL_M/SHEAR_M/POISN_M). For MATL_TYPE=SRC only P_TYPE 0 and 1 are meaningful."
+              },
+              "STANDARD": {
+                "type": "string",
+                "description": "[P_TYPE=0] Standard/code name (e.g. design code). Required together with DB when P_TYPE is 0."
+              },
+              "CODE": {
+                "type": "string",
+                "default": "",
+                "description": "[P_TYPE=0] Sub-code name under the standard."
+              },
+              "DB": {
+                "type": "string",
+                "description": "[P_TYPE=0] Material name within the code DB. Required together with STANDARD when P_TYPE is 0."
+              },
+              "USER_DEFINED": {
+                "type": "object",
+                "description": "User-defined material properties. For P_TYPE=0 only bMASS_DENS/MASS are applied; for P_TYPE=1 use bELAST/POISN/THERMAL/DEN; for P_TYPE=2 use ELAST_M/THERMAL_M/SHEAR_M/POISN_M.",
+                "properties": {
+                  "bELAST": {
+                    "type": "number",
+                    "description": "[P_TYPE=1] Modulus of elasticity."
+                  },
+                  "POISN": {
+                    "type": "number",
+                    "description": "[P_TYPE=1] Poisson's ratio."
+                  },
+                  "THERMAL": {
+                    "type": "number",
+                    "description": "[P_TYPE=1] Coefficient of linear thermal expansion."
+                  },
+                  "DEN": {
+                    "type": "number",
+                    "description": "[P_TYPE=1] Weight density."
+                  },
+                  "ELAST_M": {
+                    "type": "array",
+                    "items": {"type": "number"},
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "description": "[P_TYPE=2] Moduli of elasticity [X, Y, Z]."
+                  },
+                  "THERMAL_M": {
+                    "type": "array",
+                    "items": {"type": "number"},
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "description": "[P_TYPE=2] Coefficients of linear thermal expansion [X, Y, Z]."
+                  },
+                  "SHEAR_M": {
+                    "type": "array",
+                    "items": {"type": "number"},
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "description": "[P_TYPE=2] Shear moduli [xy, xz, yz]."
+                  },
+                  "POISN_M": {
+                    "type": "array",
+                    "items": {"type": "number"},
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "description": "[P_TYPE=2] Poisson's ratios [xy, xz, yz]."
+                  },
+                  "bMASS_DENS": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Use mass density (independent of weight density). When true, MASS is applied."
+                  },
+                  "MASS": {
+                    "type": "number",
+                    "description": "Mass density. Applied only when bMASS_DENS is true."
+                  }
+                },
+                "additionalProperties": false
+              },
+              "PLASTIC_MATL_NAME": {
+                "type": "string",
+                "description": "Plastic material name. Must reference an existing plastic material; empty string clears it. A non-empty unknown name is rejected at runtime."
+              },
+              "THERMAL_TRANS": {
+                "type": "object",
+                "description": "Thermal transfer data.",
+                "properties": {
+                  "HE_SPEC": {
+                    "type": "number",
+                    "default": 0,
+                    "description": "Specific heat."
+                  },
+                  "HE_COND": {
+                    "type": "number",
+                    "default": 0,
+                    "description": "Heat conduction."
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": ["P_TYPE"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["MATL_NAME", "MATL_TYPE", "PARAM"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "MATL_NAME": "Steel-Grade50",
+        "MATL_TYPE": "STEEL",
+        "DAMP_RAT": 0,
+        "PARAM": [
+          {
+            "P_TYPE": 0,
+            "STANDARD": "ASTM(S)",
+            "CODE": "",
+            "DB": "A992",
+            "USER_DEFINED": {
+              "bMASS_DENS": false
+            }
+          }
+        ]
+      },
+      "2": {
+        "MATL_NAME": "Concrete-Iso",
+        "MATL_TYPE": "CONC",
+        "PARAM": [
+          {
+            "P_TYPE": 1,
+            "USER_DEFINED": {
+              "bELAST": 25000000,
+              "POISN": 0.18,
+              "THERMAL": 0.00001,
+              "DEN": 24.5,
+              "bMASS_DENS": true,
+              "MASS": 2.5
+            },
+            "THERMAL_TRANS": {
+              "HE_SPEC": 0.9,
+              "HE_COND": 1.6
+            }
+          }
+        ]
+      },
+      "3": {
+        "MATL_NAME": "User-Ortho",
+        "MATL_TYPE": "USER",
+        "PARAM": [
+          {
+            "P_TYPE": 2,
+            "USER_DEFINED": {
+              "ELAST_M": [21000000, 21000000, 10000000],
+              "THERMAL_M": [0.000012, 0.000012, 0.000012],
+              "SHEAR_M": [8000000, 8000000, 4000000],
+              "POISN_M": [0.3, 0.3, 0.2],
+              "bMASS_DENS": false
+            }
+          }
+        ]
+      },
+      "4": {
+        "MATL_NAME": "SRC-Composite",
+        "MATL_TYPE": "SRC",
+        "PARAM": [
+          {
+            "P_TYPE": 0,
+            "STANDARD": "ASTM(RC)",
+            "CODE": "",
+            "DB": "C4000"
+          },
+          {
+            "P_TYPE": 0,
+            "STANDARD": "ASTM(S)",
+            "CODE": "",
+            "DB": "A992"
+          }
+        ]
+      }
+    }
+  }
+}

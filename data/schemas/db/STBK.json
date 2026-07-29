@@ -1,0 +1,67 @@
+{
+  "_group": "db",
+  "_name": "STBK",
+  "uri": "db/STBK",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "STBK": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Set-Back Loads for Nonlinear Construction Stage (STBK). Each entry, keyed by its load id, defines a set-back displacement load acting between two nodes and is assigned to a load group.",
+      "properties": {
+        "NODE1": {
+          "description": "First node number of the set-back load.",
+          "type": "integer"
+        },
+        "NODE2": {
+          "description": "Second node number of the set-back load.",
+          "type": "integer"
+        },
+        "DX": {
+          "description": "Set-back displacement component in the global X direction.",
+          "type": "number",
+          "default": 0.0
+        },
+        "DY": {
+          "description": "Set-back displacement component in the global Y direction.",
+          "type": "number",
+          "default": 0.0
+        },
+        "DZ": {
+          "description": "Set-back displacement component in the global Z direction.",
+          "type": "number",
+          "default": 0.0
+        },
+        "GROUP_NAME": {
+          "description": "Name of the load group this set-back load is assigned to. Must be an existing load group name (an empty string means no group); an unknown non-empty name is rejected.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "NODE1",
+        "NODE2",
+        "GROUP_NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NODE1": 39,
+        "NODE2": 22,
+        "DX": 0.1,
+        "DY": 0.2,
+        "DZ": 0.3,
+        "GROUP_NAME": ""
+      },
+      "2": {
+        "NODE1": 28,
+        "NODE2": 21,
+        "DX": 0.6,
+        "DY": 0.1,
+        "DZ": 0.1,
+        "GROUP_NAME": ""
+      }
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "_group": "design",
+  "_name": "SMODI",
+  "uri": "design/STEEL/KDS-41-30-2022/SMODI",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "SMODI": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Steel Design Material Modification (SMODI). Fields are driven by CODE: when CODE is 'None' the material is user-defined (NAME, FY, ES, PS, FU required by the handler); when CODE is 'Standard' the material is looked up from the KS22(S) database by STANDARD_CODE and GRADE.",
+      "properties": {
+        "CODE": {
+          "type": "string",
+          "enum": ["None", "Standard"],
+          "description": "Steel material code source (case-insensitive). 'None' = user-defined material; 'Standard' = pull material properties from the standard database."
+        },
+        "ES": {
+          "type": "number",
+          "description": "[CODE=None] Modulus of elasticity. Required by the handler when CODE is 'None'. For CODE 'Standard' it is overwritten from the standard database."
+        },
+        "PS": {
+          "type": "number",
+          "description": "[CODE=None] Poisson's ratio. Required by the handler when CODE is 'None'. For CODE 'Standard' it is overwritten from the standard database."
+        },
+        "FU": {
+          "type": "number",
+          "description": "[CODE=None] Tensile strength (Fu). Required by the handler when CODE is 'None'. For CODE 'Standard' it is overwritten from the standard database."
+        },
+        "STANDARD_CODE": {
+          "type": "string",
+          "enum": ["KS22(S)"],
+          "description": "[CODE=Standard] Standard steel code (case-insensitive). Required by the handler when CODE is 'Standard'. Only KS22(S) is accepted."
+        },
+        "GRADE": {
+          "type": "string",
+          "enum": [
+            "SS235", "SS275", "SS315", "SS410", "SS450", "SS550",
+            "SM275", "SM355", "SM420", "SM460",
+            "SM275TMC", "SM355TMC", "SM420TMC", "SM460TMC",
+            "SMA275A", "SMA275B", "SMA275C", "SMA355A", "SMA355B", "SMA355C", "SMA460",
+            "HSM500",
+            "SN275A", "SN275B", "SN275C", "SN355", "SN460",
+            "SHN275", "SHN355", "SHN420", "SHN460",
+            "HSB380", "HSB460", "HSB690", "HSA650",
+            "SGT275", "SGT355", "SGT410", "SGT450", "SGT550",
+            "SRT275", "SRT355", "SRT410", "SRT450", "SRT550",
+            "SNT275", "SNT355", "SNT460",
+            "SHT410", "SHT460",
+            "SNRT295E", "SNRT390E", "SNRT275A", "SNRT355A",
+            "SSC275",
+            "SWH275", "SWH355", "SWH420", "SWH460",
+            "SF490", "SF540",
+            "SDP1", "SDP2", "SDP3",
+            "SWPC1", "SWPD1", "SWPC", "SWPD"
+          ],
+          "description": "[CODE=Standard] Steel material grade (case-insensitive) looked up in the KS22(S) database. Required by the handler when CODE is 'Standard'."
+        },
+        "FY1": {
+          "type": "number",
+          "description": "[CODE=Standard] Yield strength Fy1. For 'Standard' the Fy values are populated from the database lookup by GRADE."
+        },
+        "FY2": {
+          "type": "number",
+          "description": "[CODE=Standard] Yield strength Fy2 (populated from the database lookup by GRADE)."
+        },
+        "FY3": {
+          "type": "number",
+          "description": "[CODE=Standard] Yield strength Fy3 (populated from the database lookup by GRADE)."
+        },
+        "FY4": {
+          "type": "number",
+          "description": "[CODE=Standard] Yield strength Fy4 (populated from the database lookup by GRADE)."
+        },
+        "FY5": {
+          "type": "number",
+          "description": "[CODE=Standard] Yield strength Fy5 (populated from the database lookup by GRADE)."
+        },
+        "NAME": {
+          "type": "string",
+          "description": "[CODE=None] Material name. Required by the handler when CODE is 'None'."
+        },
+        "FY": {
+          "type": "number",
+          "description": "[CODE=None] Yield strength. Required by the handler when CODE is 'None'; all internal Fy slots are filled with this value."
+        },
+        "FY6": {
+          "type": "number",
+          "description": "Yield strength Fy6. Returned by GET only; ignored on PUT."
+        },
+        "FY7": {
+          "type": "number",
+          "description": "Yield strength Fy7. Returned by GET only; ignored on PUT."
+        },
+        "FY8": {
+          "type": "number",
+          "description": "Yield strength Fy8. Returned by GET only; ignored on PUT."
+        },
+        "FY9": {
+          "type": "number",
+          "description": "Yield strength Fy9. Returned by GET only; ignored on PUT."
+        },
+        "FY10": {
+          "type": "number",
+          "description": "Yield strength Fy10. Returned by GET only; ignored on PUT."
+        }
+      },
+      "required": ["CODE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "CODE": "Standard",
+        "STANDARD_CODE": "KS22(S)",
+        "GRADE": "SM355"
+      },
+      "2": {
+        "CODE": "None",
+        "NAME": "MySteel",
+        "FY": 235000.0,
+        "ES": 205000000.0,
+        "PS": 0.3,
+        "FU": 400000.0
+      }
+    }
+  }
+}

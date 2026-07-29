@@ -1,0 +1,77 @@
+{
+  "_group": "db",
+  "_name": "ACTL",
+  "uri": "db/ACTL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "ACTL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Analysis Control (ACTL). Single global model setting stored under key \"1\"; all fields are model-wide analysis flags plus the equilibrium iteration count and truss convergence tolerance.",
+      "properties": {
+        "ARDC": {
+          "description": "Auto Rotational DOF Constraint. When true, automatically constrains rotational DOFs for elements with no rotational stiffness (Truss / Plane Stress / Solid).",
+          "type": "boolean",
+          "default": false
+        },
+        "ANRC": {
+          "description": "Auto Normal Rotation Constraint. When true, automatically constrains the drilling (normal) rotation DOF for plate elements.",
+          "type": "boolean",
+          "default": false
+        },
+        "CSECF": {
+          "description": "Consider Section Stiffness Scale Factor for stress calculation.",
+          "type": "boolean",
+          "default": false
+        },
+        "TRS": {
+          "description": "Transfer Reactions of slave node to the master node.",
+          "type": "boolean",
+          "default": false
+        },
+        "BMSTRESS": {
+          "description": "Calculate Equivalent Beam Stresses (Von-Mises and Max-Shear).",
+          "type": "boolean",
+          "default": false
+        },
+        "CRBAR": {
+          "description": "Consider Reinforcement for section stiffness calculation.",
+          "type": "boolean",
+          "default": false
+        },
+        "CLATS": {
+          "description": "Change Local Axis of Tapered Section for force / stress calculation.",
+          "type": "boolean",
+          "default": false
+        },
+        "ITER": {
+          "description": "Number of iterations per load case for equilibrium (nonlinear/iterative) solution.",
+          "type": "integer"
+        },
+        "TOL": {
+          "description": "Convergence tolerance (truss/iterative solution).",
+          "type": "number"
+        }
+      },
+      "required": [
+        "ITER",
+        "TOL"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ARDC": true,
+        "ANRC": true,
+        "CSECF": false,
+        "TRS": true,
+        "BMSTRESS": false,
+        "CRBAR": false,
+        "CLATS": false,
+        "ITER": 20,
+        "TOL": 0.001
+      }
+    }
+  }
+}

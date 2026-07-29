@@ -1,0 +1,84 @@
+{
+  "_group": "db",
+  "_name": "WSSF",
+  "uri": "db/WSSF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "WSSF": {
+      "type": "object",
+      "description": "Wall Stiffness Scale Factor (WSSF). The url key is the wall element ID; ITEMS holds one entry per boundary group with the per-direction stiffness scale factors applied to that wall element.",
+      "required": [
+        "ITEMS"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "ITEMS": {
+          "type": "array",
+          "description": "List of wall stiffness scale factor entries for the wall element identified by the url key. Each item pairs a boundary group with its scale factors.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "ID": {
+                "type": "integer",
+                "description": "Serial ID of the scale-factor entry within the wall element. If omitted, the key is resolved from GROUP_NAME."
+              },
+              "GROUP_NAME": {
+                "type": "string",
+                "description": "Name of the boundary group this scale factor applies to. Must reference an existing boundary group; an empty/omitted value uses the default (group key 0)."
+              },
+              "SHEAR": {
+                "type": "number",
+                "description": "In-plane shear stiffness scale factor.",
+                "default": 1.0
+              },
+              "BENDING": {
+                "type": "number",
+                "description": "In-plane bending stiffness scale factor.",
+                "default": 1.0
+              },
+              "AXIAL": {
+                "type": "number",
+                "description": "[WallType=1] Axial stiffness scale factor. Applies only to wall type 1 elements.",
+                "default": 1.0
+              },
+              "OUT_TORSION": {
+                "type": "number",
+                "description": "[WallType=1] Out-of-plane torsion stiffness scale factor. Applies only to wall type 1 elements.",
+                "default": 1.0
+              },
+              "OUT_SHEAR": {
+                "type": "number",
+                "description": "[WallType=1] Out-of-plane shear stiffness scale factor. Applies only to wall type 1 elements.",
+                "default": 1.0
+              },
+              "OUT_BENDING": {
+                "type": "number",
+                "description": "[WallType=1] Out-of-plane bending stiffness scale factor. Applies only to wall type 1 elements.",
+                "default": 1.0
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "SHEAR": 1.0,
+            "BENDING": 1.0,
+            "AXIAL": 1.0,
+            "OUT_TORSION": 1.0,
+            "OUT_SHEAR": 1.0,
+            "OUT_BENDING": 1.0
+          }
+        ]
+      }
+    }
+  }
+}

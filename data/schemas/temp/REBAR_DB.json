@@ -1,0 +1,22 @@
+{
+  "_group": "temp",
+  "_name": "REBAR_DB",
+  "uri": "temp/REBAR_DB",
+  "methods": "GET",
+  "schema": {
+    "REBAR_DB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Rebar DB (REBAR_DB). This is a business-logic query endpoint whose request body carries no fields; the rebar standard or ALL is supplied via the URL path parameter, not the request DTO.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body (DTO_EMPTY). The handler ignores the body and reads the '{STANDARD or ALL}' path parameter instead."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

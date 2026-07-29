@@ -1,0 +1,30 @@
+{
+  "_group": "db",
+  "_name": "IEPI",
+  "uri": "db/IEPI",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "IEPI": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Ignore Elements for Nonlinear Analysis Initial Load (IEPI). Keyed by element number; each entry carries the single flag that controls whether that element is excluded from the nonlinear analysis initial load stage.",
+      "properties": {
+        "B_IGNORE": {
+          "description": "When true, the element (identified by the map key) is ignored for the nonlinear analysis initial load. Optional; defaults to false.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "59": {
+        "B_IGNORE": true
+      },
+      "60": {
+        "B_IGNORE": false
+      }
+    }
+  }
+}

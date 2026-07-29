@@ -1,0 +1,91 @@
+{
+  "_group": "db",
+  "_name": "THOO-M1",
+  "uri": "db/THOO-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THOO-M1": {
+      "type": "object",
+      "description": "Time History Output Option (THOO-M1). A single-instance (key always 1) model-wide setting; OUT_OPT drives the inelastic hinge / fiber step-by-step output options and RESULT_SELECTION toggles which device results are stored.",
+      "properties": {
+        "OUT_OPT": {
+          "type": "object",
+          "description": "Nonlinear Analysis Result Output Option. Controls inelastic hinge and fiber-section step-by-step result output.",
+          "properties": {
+            "HINGE_OUT": {
+              "type": "integer",
+              "enum": [0, 1, 2],
+              "description": "Inelastic Hinge Output Option: 0 = All Inelastic Elements, 1 = Selected Elements in Hinge Result Output, 2 = No Step-by-Step Results."
+            },
+            "COMMON_OPT": {
+              "type": "boolean",
+              "description": "Common with Inelastic Results option. When true, FIBER_OUT is ignored and forced equal to HINGE_OUT. When false, FIBER_OUT must be supplied and must be >= HINGE_OUT."
+            },
+            "FIBER_OUT": {
+              "type": "integer",
+              "enum": [0, 1, 2],
+              "description": "[COMMON_OPT=false] Fiber Section Output Option: 0 = All Inelastic Elements, 1 = Selected Elements in Hinge Result Output, 2 = No Step-by-Step Results. Required when COMMON_OPT is false; hard constraint FIBER_OUT >= HINGE_OUT. Ignored (set equal to HINGE_OUT) when COMMON_OPT is true."
+            }
+          },
+          "required": ["HINGE_OUT", "COMMON_OPT"]
+        },
+        "RESULT_SELECTION": {
+          "type": "object",
+          "description": "Result Selection. Toggles which time-history device/energy results are stored.",
+          "properties": {
+            "ENERGY_RESULT": {
+              "type": "boolean",
+              "default": true,
+              "description": "Time History Energy Result."
+            },
+            "SDVI": {
+              "type": "boolean",
+              "default": true,
+              "description": "Viscous Damper / Oil Damper Result."
+            },
+            "SDVE": {
+              "type": "boolean",
+              "default": true,
+              "description": "Viscoelastic Damper Result."
+            },
+            "SDST": {
+              "type": "boolean",
+              "default": true,
+              "description": "Steel Damper Result."
+            },
+            "SDHY": {
+              "type": "boolean",
+              "default": true,
+              "description": "Hysteretic Isolator Result."
+            },
+            "SDIS": {
+              "type": "boolean",
+              "default": true,
+              "description": "Isolator Result."
+            }
+          }
+        }
+      },
+      "required": ["OUT_OPT", "RESULT_SELECTION"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "OUT_OPT": {
+          "HINGE_OUT": 0,
+          "COMMON_OPT": false,
+          "FIBER_OUT": 1
+        },
+        "RESULT_SELECTION": {
+          "ENERGY_RESULT": true,
+          "SDVI": true,
+          "SDVE": true,
+          "SDST": true,
+          "SDHY": true,
+          "SDIS": true
+        }
+      }
+    }
+  }
+}

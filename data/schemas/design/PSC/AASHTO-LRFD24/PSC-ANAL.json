@@ -1,0 +1,35 @@
+{
+  "_group": "design",
+  "_name": "PSC-ANAL",
+  "uri": "design/PSC/AASHTO-LRFD24/PSC-ANAL",
+  "methods": "POST",
+  "schema": {
+    "PSC-ANAL": {
+      "type": "object",
+      "description": "PSC Performance Design/Rating Analysis (PSC-ANAL). The single TYPE field selects the PSC business-logic action to execute.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request DTO (ANL_PSC).",
+          "properties": {
+            "TYPE": {
+              "type": "string",
+              "description": "PSC analysis action type (case-insensitive). Wire values from serialization. The handler only accepts PSC_PERFORM_DESIGN and throws LV_WRONG_FIELD for any other value.",
+              "enum": [
+                "PSC_PERFORM_DESIGN"
+              ]
+            }
+          },
+          "required": [
+            "TYPE"
+          ]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "TYPE": "PSC_PERFORM_DESIGN"
+    }
+  }
+}

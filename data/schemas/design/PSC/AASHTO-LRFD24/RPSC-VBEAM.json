@@ -1,0 +1,240 @@
+{
+  "_group": "design",
+  "_name": "RPSC-VBEAM",
+  "uri": "design/PSC/AASHTO-LRFD24/RPSC-VBEAM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "RPSC-VBEAM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Reinforcement of Virtual Beam Section (RPSC-VBEAM). Fields are driven by the DTO_RPSC structure: three top-level booleans plus the shear-reinforcement (SBAR_ITEMS) and longitudinal-reinforcement (MBARS) collections.",
+      "additionalProperties": false,
+      "required": [
+        "OPT_MBAR_J",
+        "OPT_SBAR_J",
+        "OPT_CRACKED",
+        "SBAR_ITEMS",
+        "MBARS"
+      ],
+      "properties": {
+        "OPT_MBAR_J": {
+          "type": "boolean",
+          "description": "MBarJ Boolean. When true the J-end longitudinal reinforcement is copied from the I-end (I==J)."
+        },
+        "OPT_SBAR_J": {
+          "type": "boolean",
+          "description": "SBarJ Boolean. When true the J-end shear reinforcement is copied from the I-end (I==J)."
+        },
+        "OPT_CRACKED": {
+          "type": "boolean",
+          "description": "Cracked Boolean."
+        },
+        "SBAR_ITEMS": {
+          "type": "array",
+          "description": "Shear Reinforcement Properties. One entry per end (I, and J when not same); at most 2 are processed.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "OPT_DR": {
+                "type": "boolean",
+                "default": false,
+                "description": "Diagonal Reinforcement flag."
+              },
+              "DR_PITCH": {
+                "type": "number",
+                "description": "[OPT_DR=true] Diagonal reinforcement pitch."
+              },
+              "DR_THETA": {
+                "type": "number",
+                "description": "[OPT_DR=true] Diagonal reinforcement angle."
+              },
+              "DR_AW": {
+                "type": "number",
+                "description": "[OPT_DR=true] Diagonal reinforcement Aw."
+              },
+              "OPT_SBW": {
+                "type": "boolean",
+                "default": false,
+                "description": "Steel Bar for Web flag."
+              },
+              "SBW_PITCH": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Steel bar for web pitch."
+              },
+              "SBW_ANGLE": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Steel bar for web angle."
+              },
+              "SBW_AP": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Steel bar for web Ap."
+              },
+              "SBW_PS": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Steel bar for web Pe."
+              },
+              "SBW_FACTOR": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Steel bar for web shear reduction factor."
+              },
+              "OPT_TR": {
+                "type": "boolean",
+                "default": false,
+                "description": "Torsional Reinforcement flag."
+              },
+              "TR_PITCH": {
+                "type": "number",
+                "description": "[OPT_TR=true] Torsional reinforcement pitch."
+              },
+              "TR_AWT": {
+                "type": "number",
+                "description": "[OPT_TR=true] Torsional reinforcement Awt."
+              },
+              "TR_ALT": {
+                "type": "number",
+                "description": "[OPT_TR=true] Torsional reinforcement Alt."
+              },
+              "OPT_SR": {
+                "type": "boolean",
+                "default": false,
+                "description": "Stir Exist flag."
+              },
+              "SR_PITCH": {
+                "type": "number",
+                "description": "[OPT_SR=true] Stirrup pitch."
+              },
+              "SR_AW": {
+                "type": "number",
+                "description": "[OPT_SR=true] Stirrup Aw."
+              },
+              "OPT_LBAR_FLG": {
+                "type": "boolean",
+                "default": false,
+                "description": "Enclosing Stirrup flag."
+              },
+              "LBAR_THICK": {
+                "type": "number",
+                "description": "[OPT_LBAR_FLG=true] Cover thickness for the enclosed section area."
+              },
+              "LBAR_INC_FC": {
+                "type": "boolean",
+                "description": "[OPT_LBAR_FLG=true] Include Flange/Cantilever."
+              }
+            }
+          }
+        },
+        "MBARS": {
+          "type": "array",
+          "description": "Longitudinal Reinforcement Properties. One wrapper per end (I, and J when not same); at most 2 are processed.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "MBAR_ITEMS"
+            ],
+            "properties": {
+              "MBAR_ITEMS": {
+                "type": "array",
+                "description": "Longitudinal Reinforcement Property Detail.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "IJ",
+                    "NAME",
+                    "REF_Y",
+                    "REF_Z",
+                    "NUM",
+                    "PART"
+                  ],
+                  "properties": {
+                    "IJ": {
+                      "type": "string",
+                      "enum": ["I", "J"],
+                      "description": "I / J end (case-insensitive)."
+                    },
+                    "NAME": {
+                      "type": "string",
+                      "description": "Bar Name."
+                    },
+                    "REF_Y": {
+                      "type": "integer",
+                      "description": "Ref. Y."
+                    },
+                    "Y": {
+                      "type": "number",
+                      "default": 0,
+                      "description": "Y."
+                    },
+                    "REF_Z": {
+                      "type": "integer",
+                      "description": "Ref. Z."
+                    },
+                    "Z": {
+                      "type": "number",
+                      "default": 0,
+                      "description": "Z."
+                    },
+                    "NUM": {
+                      "type": "integer",
+                      "description": "Num."
+                    },
+                    "SPACING": {
+                      "type": "number",
+                      "default": 0,
+                      "description": "Spacing."
+                    },
+                    "PART": {
+                      "type": "integer",
+                      "description": "Part."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "OPT_MBAR_J": true,
+        "OPT_SBAR_J": true,
+        "OPT_CRACKED": false,
+        "SBAR_ITEMS": [
+          {
+            "OPT_DR": false,
+            "OPT_SBW": false,
+            "OPT_TR": false,
+            "OPT_SR": true,
+            "SR_PITCH": 150.0,
+            "SR_AW": 253.4,
+            "OPT_LBAR_FLG": true,
+            "LBAR_THICK": 40.0,
+            "LBAR_INC_FC": true
+          }
+        ],
+        "MBARS": [
+          {
+            "MBAR_ITEMS": [
+              {
+                "IJ": "I",
+                "NAME": "D16",
+                "REF_Y": 0,
+                "Y": 0.0,
+                "REF_Z": 0,
+                "Z": 50.0,
+                "NUM": 4,
+                "SPACING": 100.0,
+                "PART": 1
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

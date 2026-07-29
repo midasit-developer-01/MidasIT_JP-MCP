@@ -1,0 +1,41 @@
+{
+  "_group": "ope",
+  "_name": "SECT_NAME",
+  "uri": "ope/SECT_NAME",
+  "methods": "POST",
+  "schema": {
+    "SECT_NAME": {
+      "type": "object",
+      "description": "Section Name List (SECT_NAME). Returns the list of DB section names available for a given section shape and DB standard; driven by the Shape name and DB name supplied in the request.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body. The handler validates SHAPE_NAME against the valid short shape names, then looks up section names for that shape and DB_NAME.",
+          "properties": {
+            "SHAPE_NAME": {
+              "type": "string",
+              "description": "Section shape name (short form, e.g. from OPE/SECT_SHAPE/short). Must be a valid shape; an invalid value is rejected."
+            },
+            "DB_NAME": {
+              "type": "string",
+              "description": "Section DB (standard) name for the given shape, e.g. from OPE/SECT_DBNAME/{shape}."
+            }
+          },
+          "required": [
+            "SHAPE_NAME",
+            "DB_NAME"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "SHAPE_NAME": "H",
+      "DB_NAME": "KS"
+    }
+  }
+}

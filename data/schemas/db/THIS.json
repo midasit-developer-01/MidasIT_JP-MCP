@@ -1,0 +1,439 @@
+{
+  "_group": "db",
+  "_name": "THIS",
+  "uri": "db/THIS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THIS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Time History Load Case (THIS). Field applicability is driven by COMMON.iATYPE (analysis type), COMMON.iAMETHOD (analysis method) and COMMON.iMDTYPE (damping method); the nested COMMON object holds the shared settings while the top-level fields hold damping/increment/nonlinear-iteration parameters that apply only under specific TYPE combinations.",
+      "type": "object",
+      "properties": {
+        "COMMON": {
+          "description": "Common time-history load-case settings shared by every analysis type.",
+          "type": "object",
+          "properties": {
+            "NAME": {
+              "description": "Time history load case name.",
+              "type": "string"
+            },
+            "DESC": {
+              "description": "Description.",
+              "type": "string",
+              "default": ""
+            },
+            "iATYPE": {
+              "description": "Analysis type. 1=Linear, 2=Nonlinear.",
+              "type": "integer"
+            },
+            "iAMETHOD": {
+              "description": "Analysis method. 1=Modal, 2=Direct Integration, 3=Static.",
+              "type": "integer"
+            },
+            "iTHTYPE": {
+              "description": "Time history type (e.g. 1=Transient). Applies to Modal & Direct Integration methods.",
+              "type": "integer"
+            },
+            "iGEOM": {
+              "description": "Geometric nonlinearity type. 0=None, 1=P-Delta, 2=Large Displacements.",
+              "type": "integer",
+              "default": 0
+            },
+            "iOUT": {
+              "description": "Step number increment for output.",
+              "type": "integer"
+            },
+            "INITLOAD": {
+              "description": "[INITMETHOD=INIT] Use initial load flag (0=off, 1=on).",
+              "type": "integer",
+              "default": 0
+            },
+            "INITMETHOD": {
+              "description": "Dynamic load type (case-insensitive). INIT=Initial Load (Global Control), ORDER=Order in Sequential Loading.",
+              "type": "string",
+              "enum": ["INIT", "ORDER"]
+            },
+            "bSUBSEQ": {
+              "description": "[INITMETHOD=ORDER] Subsequent-to option check box.",
+              "type": "boolean",
+              "default": false
+            },
+            "SUBSEQ": {
+              "description": "[bSUBSEQ=true] Subsequent-to type. 0=Load Case, 3=Initial Element Force for Grid.",
+              "type": "integer",
+              "default": 0
+            },
+            "iISTEP": {
+              "description": "[iAMETHOD=3 Static] Increment steps.",
+              "type": "integer",
+              "default": 1
+            },
+            "ENDTIME": {
+              "description": "[iAMETHOD!=3] End time.",
+              "type": "number"
+            },
+            "INC": {
+              "description": "[iAMETHOD!=3] Time increment.",
+              "type": "number"
+            },
+            "LCTYPE": {
+              "description": "[bSUBSEQ=true & SUBSEQ=0] Load case type. ST=Static Load, CS=Construction Stage, TH=Time History.",
+              "type": "string",
+              "enum": ["ST", "CS", "TH"]
+            },
+            "CASE": {
+              "description": "[bSUBSEQ=true & SUBSEQ=0] Referenced load case name (must exist for the given LCTYPE).",
+              "type": "string"
+            },
+            "aGILC": {
+              "description": "[bSUBSEQ=true & SUBSEQ=3] Grid load case name list (each name must exist).",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "bKEEP": {
+              "description": "Keep final step loads constant.",
+              "type": "boolean",
+              "default": false
+            },
+            "bDVA": {
+              "description": "Cumulate D/V/A results.",
+              "type": "boolean",
+              "default": false
+            },
+            "iMDTYPE": {
+              "description": "Damping method. 1=Modal (Direct), 2=Mass & Stiffness Proportional, 3=Strain Energy Proportional, 4=Element Mass & Stiffness Proportional.",
+              "type": "integer",
+              "default": 1
+            }
+          },
+          "required": ["NAME", "iATYPE", "iAMETHOD", "iTHTYPE", "iOUT", "INITMETHOD"]
+        },
+        "iINCCTRL": {
+          "description": "[iATYPE=2 Nonlinear & iAMETHOD=3 Static] Increment method. 0=Load Control, 1=Displacement Control.",
+          "type": "integer",
+          "default": 0
+        },
+        "bCUMULATE": {
+          "description": "[iATYPE=2 Nonlinear & iAMETHOD=3 Static] Cumulate load increment history for output.",
+          "type": "boolean",
+          "default": false
+        },
+        "SCALE": {
+          "description": "[iATYPE=2 & iAMETHOD=3 & iINCCTRL=0 Load Control] Control option scale factor.",
+          "type": "number"
+        },
+        "iCTRL": {
+          "description": "[iATYPE=2 & iAMETHOD=3 & iINCCTRL=1 Displacement Control] Displacement control option. 0=Global Control, other=Master Node Control.",
+          "type": "integer"
+        },
+        "TINC": {
+          "description": "[iATYPE=2 & iAMETHOD=3 & iINCCTRL=1] Maximum displacement (Global Control: maximum translational; Master Node Control: maximum).",
+          "type": "number"
+        },
+        "MNODE": {
+          "description": "[iATYPE=2 & iAMETHOD=3 & iINCCTRL=1 & iCTRL!=0 Master Node] Master node number.",
+          "type": "integer"
+        },
+        "MDIR": {
+          "description": "[iATYPE=2 & iAMETHOD=3 & iINCCTRL=1 & iCTRL!=0 Master Node] Master direction. 1=DX, 2=DY, 3=DZ.",
+          "type": "integer"
+        },
+        "DALL": {
+          "description": "[iMDTYPE=1 Direct Modal] Damping ratio for all modes.",
+          "type": "number"
+        },
+        "iCOEF": {
+          "description": "[iMDTYPE=2 Mass & Stiffness Proportional] Coefficient type. 1=Direct Specification, other=Calculate from Modal Damping.",
+          "type": "integer"
+        },
+        "bMASSP": {
+          "description": "[iMDTYPE=2] Mass proportional check box.",
+          "type": "boolean"
+        },
+        "bSTIFFP": {
+          "description": "[iMDTYPE=2] Stiffness proportional check box.",
+          "type": "boolean"
+        },
+        "MASSC": {
+          "description": "[iMDTYPE=2 & iCOEF=1 & bMASSP=true] Mass proportional coefficient value.",
+          "type": "number"
+        },
+        "STIFFC": {
+          "description": "[iMDTYPE=2 & iCOEF=1 & bSTIFFP=true] Stiffness proportional coefficient value.",
+          "type": "number"
+        },
+        "iCALC": {
+          "description": "[iMDTYPE=2 & iCOEF!=1] Coefficient calculation type. 1=Frequency, 2=Period.",
+          "type": "integer"
+        },
+        "FP1": {
+          "description": "[iMDTYPE=2 & iCOEF!=1 & bMASSP=true] Frequency / period for mode 1.",
+          "type": "number"
+        },
+        "DR1": {
+          "description": "[iMDTYPE=2 & iCOEF!=1 & bMASSP=true] Damping ratio for mode 1.",
+          "type": "number"
+        },
+        "FP2": {
+          "description": "[iMDTYPE=2 & iCOEF!=1 & bSTIFFP=true] Frequency / period for mode 2.",
+          "type": "number"
+        },
+        "DR2": {
+          "description": "[iMDTYPE=2 & iCOEF!=1 & bSTIFFP=true] Damping ratio for mode 2.",
+          "type": "number"
+        },
+        "iNMM": {
+          "description": "[iAMETHOD=2 Direct Integration or iAMETHOD=3 Static] Newmark method input type. 1=Constant Acceleration, 2=Linear Acceleration, 3=User Input.",
+          "type": "integer"
+        },
+        "GAMMA": {
+          "description": "[iNMM=3 User Input] Newmark gamma value.",
+          "type": "number",
+          "default": 0.5
+        },
+        "BETA": {
+          "description": "[iNMM=3 User Input] Newmark beta value.",
+          "type": "number",
+          "default": 0.25
+        },
+        "bITER": {
+          "description": "[iATYPE=2 Nonlinear] Perform iteration check box.",
+          "type": "boolean",
+          "default": true
+        },
+        "bCONV": {
+          "description": "[iATYPE=2 & bITER=true] Permit convergence failure check box.",
+          "type": "boolean",
+          "default": true
+        },
+        "iMSTEP": {
+          "description": "[iATYPE=2 & bITER=true & iAMETHOD=3 Static] Maximum number of sub-steps.",
+          "type": "integer"
+        },
+        "MINSSS": {
+          "description": "[iATYPE=2 & bITER=true & iAMETHOD!=3] Minimum sub-step size.",
+          "type": "number"
+        },
+        "iMAXITER": {
+          "description": "[iATYPE=2 & bITER=true] Maximum iteration count.",
+          "type": "integer"
+        },
+        "bDN": {
+          "description": "[iATYPE=2 & bITER=true] Displacement norm check box.",
+          "type": "boolean",
+          "default": true
+        },
+        "DN": {
+          "description": "[iATYPE=2 & bITER=true & bDN=true] Displacement norm value.",
+          "type": "number",
+          "default": 0.001
+        },
+        "bFN": {
+          "description": "[iATYPE=2 & bITER=true] Force norm check box.",
+          "type": "boolean",
+          "default": false
+        },
+        "FN": {
+          "description": "[iATYPE=2 & bITER=true & bFN=true] Force norm value.",
+          "type": "number",
+          "default": 0.001
+        },
+        "bEN": {
+          "description": "[iATYPE=2 & bITER=true] Energy norm check box.",
+          "type": "boolean",
+          "default": false
+        },
+        "EN": {
+          "description": "[iATYPE=2 & bITER=true & bEN=true] Energy norm value.",
+          "type": "number",
+          "default": 0.001
+        },
+        "DMUPDATE": {
+          "description": "[iATYPE=2 Nonlinear] Damping matrix update.",
+          "type": "boolean",
+          "default": false
+        },
+        "iRKM": {
+          "description": "[iATYPE=2 Nonlinear] Runge-Kutta method. 0=Fehlberg, 1=Cash-Karp.",
+          "type": "integer",
+          "default": 0
+        },
+        "dTOL": {
+          "description": "[iATYPE=2 Nonlinear] Runge-Kutta tolerance.",
+          "type": "number",
+          "default": 1e-08
+        },
+        "bULSM": {
+          "description": "[iATYPE=2 & bITER=true] Use line search method.",
+          "type": "boolean",
+          "default": false
+        },
+        "ULSM": {
+          "description": "[iATYPE=2 & bITER=true & bULSM=true] Number of iterations to start line search.",
+          "type": "integer",
+          "default": 5
+        },
+        "aDAMP": {
+          "description": "[iMDTYPE=1 Direct Modal] Modal damping overrides (mode-by-mode damping ratios).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "iMODE": {
+                "description": "Mode number.",
+                "type": "integer"
+              },
+              "DAMPING": {
+                "description": "Damping ratio for the mode.",
+                "type": "number"
+              }
+            },
+            "required": ["iMODE", "DAMPING"]
+          }
+        }
+      },
+      "required": ["COMMON"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "COMMON": {
+          "NAME": "TH_Modal",
+          "DESC": "",
+          "iATYPE": 1,
+          "iAMETHOD": 1,
+          "iTHTYPE": 1,
+          "iGEOM": 0,
+          "ENDTIME": 10,
+          "INC": 0.01,
+          "iOUT": 1,
+          "INITLOAD": 0,
+          "INITMETHOD": "ORDER",
+          "bSUBSEQ": false,
+          "bKEEP": false,
+          "bDVA": false,
+          "iMDTYPE": 1
+        },
+        "DALL": 0.05,
+        "aDAMP": [
+          { "iMODE": 1, "DAMPING": 0.02 },
+          { "iMODE": 2, "DAMPING": 0.03 }
+        ]
+      },
+      "2": {
+        "COMMON": {
+          "NAME": "TH_MassStiff_Direct",
+          "DESC": "",
+          "iATYPE": 1,
+          "iAMETHOD": 1,
+          "iTHTYPE": 1,
+          "iGEOM": 0,
+          "ENDTIME": 10,
+          "INC": 0.01,
+          "iOUT": 1,
+          "INITLOAD": 0,
+          "INITMETHOD": "ORDER",
+          "bSUBSEQ": true,
+          "SUBSEQ": 0,
+          "LCTYPE": "ST",
+          "CASE": "DeadLoad",
+          "bKEEP": false,
+          "bDVA": false,
+          "iMDTYPE": 2
+        },
+        "iCOEF": 1,
+        "bMASSP": true,
+        "MASSC": 0.5,
+        "bSTIFFP": true,
+        "STIFFC": 0.001
+      },
+      "3": {
+        "COMMON": {
+          "NAME": "TH_Direct_CalcModal",
+          "DESC": "",
+          "iATYPE": 1,
+          "iAMETHOD": 2,
+          "iTHTYPE": 1,
+          "iGEOM": 0,
+          "ENDTIME": 10,
+          "INC": 0.01,
+          "iOUT": 1,
+          "INITLOAD": 0,
+          "INITMETHOD": "ORDER",
+          "bSUBSEQ": false,
+          "bKEEP": false,
+          "bDVA": false,
+          "iMDTYPE": 2
+        },
+        "iCOEF": 2,
+        "bMASSP": true,
+        "bSTIFFP": true,
+        "iCALC": 1,
+        "FP1": 1.0,
+        "DR1": 0.05,
+        "FP2": 10.0,
+        "DR2": 0.05,
+        "iNMM": 1
+      },
+      "4": {
+        "COMMON": {
+          "NAME": "TH_Nonlinear_Static",
+          "DESC": "",
+          "iATYPE": 2,
+          "iAMETHOD": 3,
+          "iTHTYPE": 1,
+          "iGEOM": 0,
+          "iISTEP": 10,
+          "iOUT": 1,
+          "INITLOAD": 0,
+          "INITMETHOD": "ORDER",
+          "bSUBSEQ": false,
+          "bKEEP": false,
+          "bDVA": false,
+          "iMDTYPE": 1
+        },
+        "iINCCTRL": 0,
+        "bCUMULATE": false,
+        "SCALE": 1.0,
+        "bITER": true,
+        "bCONV": true,
+        "iMSTEP": 10,
+        "iMAXITER": 30,
+        "bDN": true,
+        "DN": 0.001,
+        "bFN": false,
+        "bEN": false,
+        "DMUPDATE": false,
+        "iRKM": 0,
+        "dTOL": 1e-08,
+        "bULSM": false,
+        "ULSM": 5
+      },
+      "5": {
+        "COMMON": {
+          "NAME": "TH_Grid_Subseq",
+          "DESC": "",
+          "iATYPE": 1,
+          "iAMETHOD": 1,
+          "iTHTYPE": 1,
+          "iGEOM": 0,
+          "ENDTIME": 10,
+          "INC": 0.01,
+          "iOUT": 1,
+          "INITLOAD": 0,
+          "INITMETHOD": "ORDER",
+          "bSUBSEQ": true,
+          "SUBSEQ": 3,
+          "aGILC": ["Grid1", "Grid2"],
+          "bKEEP": false,
+          "bDVA": false,
+          "iMDTYPE": 1
+        },
+        "DALL": 0.05
+      }
+    }
+  }
+}

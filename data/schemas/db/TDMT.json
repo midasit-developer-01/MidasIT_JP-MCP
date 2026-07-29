@@ -1,0 +1,675 @@
+{
+  "_group": "db",
+  "_name": "TDMT",
+  "uri": "db/TDMT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "TDMT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Time Dependent Material (TDMT). The CODE field selects the design code and drives which fields apply per the OnSet switch; for the ACI code the TYPE field further branches between code-computed (CODE) and user-defined (USER) ultimate creep/shrinkage values.",
+      "properties": {
+        "NAME": {
+          "description": "Time dependent material name.",
+          "type": "string"
+        },
+        "CODE": {
+          "description": "Design code that governs the creep/shrinkage model and determines which of the following fields are read. Case-insensitive. ELA and BS are declared but not used (they are rejected by the write handler).",
+          "type": "string",
+          "enum": [
+            "ACI",
+            "CEB",
+            "ELA",
+            "USER_DEFINED",
+            "KS",
+            "PCA",
+            "COMBINED",
+            "JAPAN",
+            "CHINESE",
+            "JSCE",
+            "JTG",
+            "AASHTO",
+            "CEB_FIP_1978",
+            "INDIA_IRC_18_2000",
+            "EUROPEAN",
+            "JSCE_07",
+            "KSCE_2010",
+            "KCI_USD12",
+            "AS_3600_2009",
+            "BS",
+            "AS_RTA_5100_5_2011",
+            "INDIA_IRC_112_2011",
+            "RUSSIAN",
+            "CEB_FIP_2010",
+            "CHINA_JTG3362_2018",
+            "AS_5100_5_2016",
+            "NEWZEALAND",
+            "AS_5100_5_2017",
+            "KDS_2016",
+            "JSCE_12",
+            "INDIA_IRC_112_2020",
+            "NEWZEALAND_2022",
+            "AS_2018_AMD_2021",
+            "AS_2017_AMD_2024",
+            "CHJTG_T_D65_2015",
+            "ABNT_NBR_6118_2023",
+            "ISRAEL"
+          ]
+        },
+        "STR": {
+          "description": "Compressive strength. Used by most codes (ACI, CEB family, KS/KSCE/KCI, PCA, COMBINED, JAPAN, CHINESE, JTG, AASHTO, INDIA, EUROPEAN, JSCE_07/12, Australia, RUSSIAN, CHINA_JTG3362, NZ, KDS, CHJTG, ABNT, ISRAEL). Not read for plain JSCE.",
+          "type": "number"
+        },
+        "HU": {
+          "description": "Relative humidity (%). Read by most codes; not read for the ACI USER subtype or CHJTG_T_D65_2015.",
+          "type": "number"
+        },
+        "HTYPE": {
+          "description": "[CODE=JAPAN, CHINESE] Type of relative humidity input. Case-insensitive.",
+          "type": "string",
+          "enum": ["CU", "RH"],
+          "default": "CU"
+        },
+        "AGE": {
+          "description": "Concrete age at loading. Read by most codes; not read for PCA, COMBINED, AASHTO(only), CHJTG_T_D65_2015.",
+          "type": "number"
+        },
+        "UCS": {
+          "description": "[CODE=PCA, COMBINED] Ultimate creep strain (E-6).",
+          "type": "number"
+        },
+        "VOL": {
+          "description": "[CODE=ACI, PCA, COMBINED, AASHTO, JSCE, JSCE_07, JSCE_12] Volume-surface ratio.",
+          "type": "number"
+        },
+        "RR": {
+          "description": "[CODE=PCA, COMBINED] Reinforcement ratio of the column cross-section (for COMBINED, when bRCE is true).",
+          "type": "number"
+        },
+        "MOD": {
+          "description": "[CODE=PCA, COMBINED] Modulus of elasticity of steel (for COMBINED, when bRCE is true).",
+          "type": "number"
+        },
+        "MSIZE": {
+          "description": "[CODE=CEB family, KS/KSCE/KCI, JAPAN, CHINESE, JTG, INDIA (all), EUROPEAN, KDS_2016, CHINA_JTG3362, CHJTG_T_D65_2015, ISRAEL] Notional/member size.",
+          "type": "number"
+        },
+        "CTYPE": {
+          "description": "[CODE=CEB family, KS/KSCE/KCI, JAPAN, EUROPEAN, INDIA_IRC_112 (2011/2020), KDS_2016, ABNT, ISRAEL] Cement type. Case-insensitive; wire values include spaces.",
+          "type": "string",
+          "enum": [
+            "RS",
+            "NR",
+            "SL",
+            "Class S",
+            "Class N",
+            "Class R",
+            "RH",
+            "NC",
+            "CPIII and IV",
+            "CPI and II",
+            "CPV-ARI"
+          ],
+          "default": "RS"
+        },
+        "VSR": {
+          "description": "[CODE=COMBINED] Volume-surface ratio basis for shrinkage strain. Case-insensitive.",
+          "type": "string",
+          "enum": ["ACI", "PCA"],
+          "default": "ACI"
+        },
+        "THIK": {
+          "description": "[CODE=Australia family, NEWZEALAND (2022 too), ABNT] Hypothetical thickness.",
+          "type": "number"
+        },
+        "iEPS_DRY": {
+          "description": "[CODE=Australia family, NEWZEALAND (2022 too)] Type of drying basic shrinkage strain input.",
+          "type": "integer",
+          "default": 0
+        },
+        "EPS_DRY": {
+          "description": "[CODE=Australia family, NEWZEALAND (2022 too)] Drying basic shrinkage strain.",
+          "type": "number"
+        },
+        "CEMCONTENT": {
+          "description": "[CODE=ACI(TYPE=CODE), JSCE, JSCE_07, JSCE_12] Cement content.",
+          "type": "number"
+        },
+        "WATERCONTENT": {
+          "description": "[CODE=JSCE, JSCE_07, JSCE_12] Water content.",
+          "type": "number"
+        },
+        "BSC": {
+          "description": "[CODE=JTG, CHINA_JTG3362_2018] Cement type coefficient.",
+          "type": "number"
+        },
+        "CFACTA": {
+          "description": "[CODE=ACI] Concrete compressive strength factor a.",
+          "type": "number"
+        },
+        "CFACTB": {
+          "description": "[CODE=ACI] Concrete compressive strength factor b.",
+          "type": "number"
+        },
+        "TYPE": {
+          "description": "[CODE=ACI] Ultimate value source. CODE = code-computed (uses SLUMP/FAPERCENT/AIRCONTENT/CEMCONTENT); USER = user-defined (uses CREEPCOEFF/SHRINKSTRAIN). Case-insensitive.",
+          "type": "string",
+          "enum": ["CODE", "USER"],
+          "default": "CODE"
+        },
+        "CMETHOD": {
+          "description": "[CODE=ACI] Curing method. Case-insensitive.",
+          "type": "string",
+          "enum": ["MOIST", "STEAM"],
+          "default": "MOIST"
+        },
+        "SLUMP": {
+          "description": "[CODE=ACI, TYPE=CODE] Slump.",
+          "type": "number"
+        },
+        "FAPERCENT": {
+          "description": "[CODE=ACI, TYPE=CODE] Fine aggregate percentage.",
+          "type": "number"
+        },
+        "AIRCONTENT": {
+          "description": "[CODE=ACI, TYPE=CODE] Air content.",
+          "type": "number"
+        },
+        "CREEPCOEFF": {
+          "description": "[CODE=ACI, TYPE=USER] Creep coefficient.",
+          "type": "number"
+        },
+        "SHRINKSTRAIN": {
+          "description": "[CODE=ACI, TYPE=USER] Shrinkage strain (E-6).",
+          "type": "number"
+        },
+        "TYPEOFAFFR": {
+          "description": "[CODE=CEB, CEB_FIP_1978, CEB_FIP_2010, INDIA_IRC_112_2020] Type of aggregate code: 0=basalt/dense limestone, 1=quartzite, 2=limestone, 3=sandstone.",
+          "type": "integer",
+          "default": 0
+        },
+        "USS": {
+          "description": "[CODE=PCA, COMBINED] Ultimate shrinkage strain (E-6).",
+          "type": "number"
+        },
+        "VSR1": {
+          "description": "[CODE=COMBINED] Volume-surface ratio basis for creep strain. Case-insensitive.",
+          "type": "string",
+          "enum": ["ACI", "PCA"],
+          "default": "ACI"
+        },
+        "LAF": {
+          "description": "[CODE=COMBINED] Loading-aged factor basis. Case-insensitive.",
+          "type": "string",
+          "enum": ["MOIST", "STEAM", "PCA"],
+          "default": "MOIST"
+        },
+        "US": {
+          "description": "Shrinkage. Declared in the DTO but not written by any OnSet branch.",
+          "type": "number"
+        },
+        "PST": {
+          "description": "[CODE=COMBINED] Progress of shrinkage with time basis. Case-insensitive.",
+          "type": "string",
+          "enum": ["MOIST", "STEAM", "PCA"],
+          "default": "MOIST"
+        },
+        "bRCE": {
+          "description": "[CODE=COMBINED] Reinforced concrete effect flag; when true, RR and MOD are used.",
+          "type": "boolean",
+          "default": false
+        },
+        "CM": {
+          "description": "[CODE=JAPAN] Calculation method for modulus of elasticity E. Case-insensitive.",
+          "type": "string",
+          "enum": ["JSCE", "AIJ"]
+        },
+        "LAMBDA": {
+          "description": "[CODE=JAPAN] Environmental (lambda) coefficient.",
+          "type": "number"
+        },
+        "bEXPOSE": {
+          "description": "[CODE=AASHTO] Exposed to drying before 5 days of curing.",
+          "type": "boolean",
+          "default": false
+        },
+        "TCODE": {
+          "description": "[CODE=EUROPEAN] Type of code: 0 = EN 1992-1 (general), 1 = EN 1992-2 (concrete bridge).",
+          "type": "integer"
+        },
+        "bSILICA": {
+          "description": "[CODE=EUROPEAN] Silica fume flag.",
+          "type": "boolean",
+          "default": false
+        },
+        "ALPHAFACT": {
+          "description": "[CODE=JSCE_07] Alpha factor per cement type.",
+          "type": "number"
+        },
+        "bAUTO": {
+          "description": "[CODE=JSCE_07] Autogenous shrinkage option; when true GAMMAFACT/AFACT/BFACT are used.",
+          "type": "boolean"
+        },
+        "GAMMAFACT": {
+          "description": "[CODE=JSCE_07] Gamma factor (when bAUTO is true).",
+          "type": "number"
+        },
+        "AFACT": {
+          "description": "[CODE=JSCE_07] a-factor (when bAUTO is true).",
+          "type": "number"
+        },
+        "BFACT": {
+          "description": "[CODE=JSCE_07] b-factor (when bAUTO is true).",
+          "type": "number"
+        },
+        "bGEN": {
+          "description": "[CODE=JSCE_07] General shrinkage option.",
+          "type": "boolean"
+        },
+        "EXPOSURE": {
+          "description": "[CODE=Australia family] Exposure environment code.",
+          "type": "integer"
+        },
+        "M": {
+          "description": "[CODE=RUSSIAN] Module of an exposed surface.",
+          "type": "number"
+        },
+        "CMETH": {
+          "description": "[CODE=RUSSIAN] Curing method: 0 = natural cure, 1 = steam cure.",
+          "type": "integer",
+          "default": 0
+        },
+        "iCTYPE": {
+          "description": "[CODE=RUSSIAN] Cement type index.",
+          "type": "integer"
+        },
+        "CREEP": {
+          "description": "[CODE=RUSSIAN] Fast-accumulating creep flag.",
+          "type": "boolean",
+          "default": false
+        },
+        "CONCT": {
+          "description": "[CODE=RUSSIAN] Concrete type: 0 = heavy concrete, 1 = fine-grained concrete.",
+          "type": "integer",
+          "default": 0
+        },
+        "W": {
+          "description": "[CODE=RUSSIAN] Water content.",
+          "type": "number"
+        },
+        "MAXS": {
+          "description": "[CODE=RUSSIAN] Maximum aggregate size.",
+          "type": "number"
+        },
+        "A": {
+          "description": "[CODE=RUSSIAN] Air content.",
+          "type": "number"
+        },
+        "PZ": {
+          "description": "[CODE=RUSSIAN] Specific content of the cement paste.",
+          "type": "number"
+        },
+        "FLYASH": {
+          "description": "[CODE=CHINA_JTG3362_2018, CHJTG_T_D65_2015] Amount of added fly ash.",
+          "type": "number"
+        },
+        "FS": {
+          "description": "[CODE=NEWZEALAND, NEWZEALAND_2022] Relative humidity thickness / shrinkage R factor.",
+          "type": "number"
+        },
+        "DENSITY": {
+          "description": "[CODE=KDS_2016] Weight density.",
+          "type": "number"
+        },
+        "IPFACT": {
+          "description": "[CODE=JSCE_12] Impact factor by cement type and mixture.",
+          "type": "number"
+        },
+        "AGESOL": {
+          "description": "[CODE=JSCE_12] Age of concrete at the beginning of solidification.",
+          "type": "number"
+        },
+        "SSFNAME": {
+          "description": "[CODE=USER_DEFINED] Shrinkage strain function name; must reference an existing time dependent material function (TDMF). Empty clears it.",
+          "type": "string"
+        },
+        "MFACT": {
+          "description": "[CODE=NEWZEALAND_2022] Modification factor for aggregate type.",
+          "type": "number"
+        },
+        "vCREEP_AGE": {
+          "description": "[CODE=USER_DEFINED] List of creep function references with loading ages; each referenced function name must already exist (TDMF).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "NAME": {
+                "description": "Creep function (material function) name.",
+                "type": "string"
+              },
+              "AGE": {
+                "description": "Loading age for this creep function.",
+                "type": "number"
+              }
+            },
+            "required": ["NAME", "AGE"]
+          }
+        },
+        "bGRAPHDATA": {
+          "description": "[CODE=CHJTG_T_D65_2015] Equivalent-modulus graph data flag; when true ELAST_RATIO/AREA_RATIO/EQUIVALENT_ELASTIC apply.",
+          "type": "boolean"
+        },
+        "ELAST_RATIO": {
+          "description": "[CODE=CHJTG_T_D65_2015, when bGRAPHDATA true] Elastic modulus ratio of steel pipe to concrete.",
+          "type": "number"
+        },
+        "AREA_RATIO": {
+          "description": "[CODE=CHJTG_T_D65_2015, when bGRAPHDATA true] Area ratio of steel pipe to concrete.",
+          "type": "number"
+        },
+        "EQUIVALENT_ELASTIC": {
+          "description": "[CODE=CHJTG_T_D65_2015, when bGRAPHDATA true] Equivalent elastic modulus.",
+          "type": "number"
+        },
+        "bINWATER": {
+          "description": "[CODE=ABNT_NBR_6118_2023] In-water condition flag.",
+          "type": "boolean",
+          "default": false
+        },
+        "ATYPE": {
+          "description": "[CODE=ABNT_NBR_6118_2023] Type of aggregate. Case-insensitive.",
+          "type": "string",
+          "enum": ["BASALT_DIA", "GRANITE_GNEISS", "LIMESTONE", "SANDSTONE"],
+          "default": "BASALT_DIA"
+        },
+        "TCEMENT": {
+          "description": "[CODE=ABNT_NBR_6118_2023] Concrete class (cement performance type). Case-insensitive.",
+          "type": "string",
+          "enum": ["C20_C45", "C50_C90"],
+          "default": "C20_C45"
+        },
+        "DEFLRNG": {
+          "description": "[CODE=ABNT_NBR_6118_2023] Deflection range. Case-insensitive.",
+          "type": "string",
+          "enum": ["CM_FROM_0_TO_4", "CM_FROM_5_TO_9", "CM_FROM_10_TO_15"],
+          "default": "CM_FROM_0_TO_4"
+        }
+      },
+      "required": ["NAME", "CODE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "ACI-Code",
+        "CODE": "ACI",
+        "STR": 40000,
+        "HU": 70,
+        "VOL": 100,
+        "AGE": 3,
+        "CMETHOD": "MOIST",
+        "CFACTA": 4.0,
+        "CFACTB": 0.85,
+        "TYPE": "CODE",
+        "SLUMP": 100,
+        "FAPERCENT": 40,
+        "AIRCONTENT": 6,
+        "CEMCONTENT": 400
+      },
+      "2": {
+        "NAME": "ACI-User",
+        "CODE": "ACI",
+        "STR": 40000,
+        "HU": 70,
+        "VOL": 100,
+        "AGE": 3,
+        "TYPE": "USER",
+        "CREEPCOEFF": 2.35,
+        "SHRINKSTRAIN": 780
+      },
+      "3": {
+        "NAME": "CEB-FIP(2010)",
+        "CODE": "CEB_FIP_2010",
+        "STR": 50000,
+        "HU": 70,
+        "MSIZE": 1.2,
+        "CTYPE": "NR",
+        "AGE": 3,
+        "TYPEOFAFFR": 0
+      },
+      "4": {
+        "NAME": "User-Defined",
+        "CODE": "USER_DEFINED",
+        "SSFNAME": "ShrinkFunc1",
+        "vCREEP_AGE": [
+          { "NAME": "CreepFunc1", "AGE": 3 },
+          { "NAME": "CreepFunc2", "AGE": 28 }
+        ]
+      },
+      "5": {
+        "NAME": "PCA",
+        "CODE": "PCA",
+        "STR": 40000,
+        "USS": 700,
+        "UCS": 4,
+        "HU": 70,
+        "VOL": 100,
+        "RR": 0.02,
+        "MOD": 200000
+      },
+      "6": {
+        "NAME": "Combined-ACI-PCA",
+        "CODE": "COMBINED",
+        "STR": 40000,
+        "HU": 70,
+        "VOL": 100,
+        "UCS": 4,
+        "VSR1": "ACI",
+        "LAF": "MOIST",
+        "USS": 700,
+        "VSR": "ACI",
+        "PST": "MOIST",
+        "bRCE": true,
+        "RR": 0.02,
+        "MOD": 200000
+      },
+      "7": {
+        "NAME": "Japan",
+        "CODE": "JAPAN",
+        "STR": 40000,
+        "CM": "JSCE",
+        "HTYPE": "CU",
+        "HU": 70,
+        "LAMBDA": 1.0,
+        "MSIZE": 1.2,
+        "CTYPE": "NR",
+        "AGE": 3
+      },
+      "8": {
+        "NAME": "Chinese",
+        "CODE": "CHINESE",
+        "STR": 40000,
+        "HTYPE": "RH",
+        "HU": 70,
+        "AGE": 3,
+        "MSIZE": 1.2
+      },
+      "9": {
+        "NAME": "JSCE",
+        "CODE": "JSCE",
+        "HU": 70,
+        "VOL": 100,
+        "CEMCONTENT": 400,
+        "WATERCONTENT": 180,
+        "AGE": 3
+      },
+      "10": {
+        "NAME": "JTG",
+        "CODE": "JTG",
+        "STR": 40000,
+        "HU": 70,
+        "AGE": 3,
+        "MSIZE": 1.2,
+        "BSC": 5.0
+      },
+      "11": {
+        "NAME": "AASHTO",
+        "CODE": "AASHTO",
+        "STR": 40000,
+        "HU": 70,
+        "VOL": 100,
+        "AGE": 3,
+        "bEXPOSE": false
+      },
+      "12": {
+        "NAME": "European",
+        "CODE": "EUROPEAN",
+        "STR": 40000,
+        "HU": 70,
+        "MSIZE": 1.2,
+        "CTYPE": "Class N",
+        "TCODE": 1,
+        "bSILICA": false,
+        "AGE": 3
+      },
+      "13": {
+        "NAME": "JSCE-07",
+        "CODE": "JSCE_07",
+        "HU": 70,
+        "VOL": 100,
+        "CEMCONTENT": 400,
+        "WATERCONTENT": 180,
+        "AGE": 3,
+        "STR": 40000,
+        "ALPHAFACT": 11,
+        "bAUTO": true,
+        "GAMMAFACT": 1.0,
+        "AFACT": 1.0,
+        "BFACT": 1.0,
+        "bGEN": true
+      },
+      "14": {
+        "NAME": "AS-3600-2009",
+        "CODE": "AS_3600_2009",
+        "STR": 40000,
+        "THIK": 200,
+        "iEPS_DRY": 0,
+        "EPS_DRY": 800,
+        "AGE": 3,
+        "EXPOSURE": 1
+      },
+      "15": {
+        "NAME": "Russian",
+        "CODE": "RUSSIAN",
+        "STR": 40000,
+        "HU": 70,
+        "M": 5,
+        "AGE": 3,
+        "CMETH": 0,
+        "CREEP": false,
+        "CONCT": 0,
+        "W": 180,
+        "MAXS": 20,
+        "A": 6,
+        "PZ": 0.3,
+        "iCTYPE": 1
+      },
+      "16": {
+        "NAME": "China-JTG3362-2018",
+        "CODE": "CHINA_JTG3362_2018",
+        "STR": 40000,
+        "HU": 70,
+        "AGE": 3,
+        "MSIZE": 1.2,
+        "BSC": 5.0,
+        "FLYASH": 15
+      },
+      "17": {
+        "NAME": "NewZealand",
+        "CODE": "NEWZEALAND",
+        "STR": 40000,
+        "FS": 0.5,
+        "THIK": 200,
+        "iEPS_DRY": 0,
+        "EPS_DRY": 800,
+        "AGE": 3
+      },
+      "18": {
+        "NAME": "KDS-2016",
+        "CODE": "KDS_2016",
+        "STR": 40000,
+        "HU": 70,
+        "AGE": 3,
+        "MSIZE": 1.2,
+        "CTYPE": "RS",
+        "DENSITY": 2400
+      },
+      "19": {
+        "NAME": "JSCE-12",
+        "CODE": "JSCE_12",
+        "HU": 70,
+        "VOL": 100,
+        "CEMCONTENT": 400,
+        "WATERCONTENT": 180,
+        "AGE": 3,
+        "STR": 40000,
+        "IPFACT": 1.0,
+        "AGESOL": 1
+      },
+      "20": {
+        "NAME": "India-IRC-112-2020",
+        "CODE": "INDIA_IRC_112_2020",
+        "STR": 40000,
+        "HU": 70,
+        "MSIZE": 1.2,
+        "CTYPE": "NR",
+        "AGE": 3,
+        "TYPEOFAFFR": 0
+      },
+      "21": {
+        "NAME": "NewZealand-2022",
+        "CODE": "NEWZEALAND_2022",
+        "STR": 40000,
+        "FS": 0.5,
+        "THIK": 200,
+        "iEPS_DRY": 0,
+        "EPS_DRY": 800,
+        "AGE": 3,
+        "MFACT": 1.0
+      },
+      "22": {
+        "NAME": "CHJTG-T-D65-2015",
+        "CODE": "CHJTG_T_D65_2015",
+        "STR": 40000,
+        "HU": 70,
+        "MSIZE": 1.2,
+        "FLYASH": 15,
+        "bGRAPHDATA": true,
+        "ELAST_RATIO": 6.0,
+        "AREA_RATIO": 0.1,
+        "EQUIVALENT_ELASTIC": 30000
+      },
+      "23": {
+        "NAME": "ABNT-NBR-6118-2023",
+        "CODE": "ABNT_NBR_6118_2023",
+        "STR": 40000,
+        "HU": 70,
+        "bINWATER": false,
+        "THIK": 200,
+        "CTYPE": "CPI and II",
+        "ATYPE": "GRANITE_GNEISS",
+        "TCEMENT": "C20_C45",
+        "DEFLRNG": "CM_FROM_0_TO_4"
+      },
+      "24": {
+        "NAME": "Israel",
+        "CODE": "ISRAEL",
+        "STR": 40000,
+        "HU": 70,
+        "MSIZE": 1.2,
+        "CTYPE": "Class N",
+        "AGE": 3
+      }
+    }
+  }
+}

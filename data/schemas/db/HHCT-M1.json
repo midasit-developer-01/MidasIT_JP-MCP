@@ -1,0 +1,202 @@
+{
+  "_group": "db",
+  "_name": "HHCT-M1",
+  "uri": "db/HHCT-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "HHCT-M1": {
+      "type": "object",
+      "description": "Heat of Hydration Analysis Control Data (HHCT-M1). A single-instance record; FINAL_STAGE selects the target construction stage, OPT_IS_CREEP_SHRINKAGE/ITEM drive the creep-shrinkage settings, and CONVERGENCE holds the per-criterion tolerance items.",
+      "properties": {
+        "FINAL_STAGE": {
+          "type": "boolean",
+          "default": true,
+          "description": "Analyze at the final (last) construction stage. When true, STAGE_NAME is ignored; when false, STAGE_NAME must be given and must reference an existing construction stage."
+        },
+        "STAGE_NAME": {
+          "type": "string",
+          "description": "Target construction stage name. Required and must match an existing stage when FINAL_STAGE is false; ignored when FINAL_STAGE is true."
+        },
+        "INIT_TEMP": {
+          "type": "number",
+          "default": 20,
+          "description": "Initial temperature."
+        },
+        "EVAL": {
+          "type": "string",
+          "enum": ["CENTER", "GAUSS", "NODAL"],
+          "default": "GAUSS",
+          "description": "Element stress evaluation location: CENTER, GAUSS, or NODAL. Case-insensitive."
+        },
+        "OPT_USE_EQUI_AGE": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use equivalent age accounting for time and temperature."
+        },
+        "OPT_INCL_SELF_WEIGHT": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include self-weight load. When false, SELF_WEIGHT_FACTOR is ignored."
+        },
+        "SELF_WEIGHT_FACTOR": {
+          "type": "number",
+          "default": -1,
+          "description": "Self-weight scale factor. Applied only when OPT_INCL_SELF_WEIGHT is true."
+        },
+        "OPT_IS_CREEP_SHRINKAGE": {
+          "type": "boolean",
+          "default": true,
+          "description": "Consider creep and shrinkage effects. When true, ITEM must be supplied; when false, ITEM is ignored."
+        },
+        "ITEM": {
+          "type": "object",
+          "description": "Creep & shrinkage settings. Required when OPT_IS_CREEP_SHRINKAGE is true.",
+          "properties": {
+            "TYPE": {
+              "type": "string",
+              "enum": ["CREEP", "SHRINKAGE", "BOTH"],
+              "default": "BOTH",
+              "description": "Which time-dependent effects to consider: CREEP only, SHRINKAGE only, or BOTH. Case-insensitive."
+            },
+            "CREEP_CALC_METHOD": {
+              "type": "integer",
+              "default": 0,
+              "description": "Creep calculation method: 0 = General, 1 = Effective Modulus. When 1, M_EFF_MOD must be supplied."
+            },
+            "M_EFF_MOD": {
+              "type": "object",
+              "description": "Effective-modulus parameters. Required when CREEP_CALC_METHOD is 1.",
+              "properties": {
+                "PHI1": {
+                  "type": "number",
+                  "description": "Creep coefficient phi at the first age point."
+                },
+                "DAY1": {
+                  "type": "integer",
+                  "description": "First age point in days."
+                },
+                "PHI2": {
+                  "type": "number",
+                  "description": "Creep coefficient phi at the second age point."
+                },
+                "DAY2": {
+                  "type": "integer",
+                  "description": "Second age point in days."
+                }
+              },
+              "required": ["PHI1", "DAY1", "PHI2", "DAY2"]
+            }
+          }
+        },
+        "ITER": {
+          "type": "integer",
+          "default": 50,
+          "description": "Maximum number of iterations per increment."
+        },
+        "CONVERGENCE": {
+          "type": "object",
+          "description": "Convergence criteria. Each of DISP, LOAD, WORK is an item with an on/off flag and tolerance; if CONVERGENCE is omitted, the solver defaults to LOAD and WORK enabled at 0.001 and 1e-6.",
+          "properties": {
+            "DISP": {
+              "type": "object",
+              "description": "Displacement (U) convergence criterion.",
+              "properties": {
+                "OPT_CHECK": {
+                  "type": "boolean",
+                  "description": "Enable the displacement convergence check. When false, VALUE is ignored."
+                },
+                "VALUE": {
+                  "type": "number",
+                  "description": "Displacement convergence tolerance. Used when OPT_CHECK is true (defaults to 0.001)."
+                }
+              }
+            },
+            "LOAD": {
+              "type": "object",
+              "description": "Load (P) convergence criterion.",
+              "properties": {
+                "OPT_CHECK": {
+                  "type": "boolean",
+                  "description": "Enable the load convergence check. When false, VALUE is ignored."
+                },
+                "VALUE": {
+                  "type": "number",
+                  "description": "Load convergence tolerance. Used when OPT_CHECK is true (defaults to 0.001)."
+                }
+              }
+            },
+            "WORK": {
+              "type": "object",
+              "description": "Work (W) convergence criterion.",
+              "properties": {
+                "OPT_CHECK": {
+                  "type": "boolean",
+                  "description": "Enable the work convergence check. When false, VALUE is ignored."
+                },
+                "VALUE": {
+                  "type": "number",
+                  "description": "Work convergence tolerance. Used when OPT_CHECK is true (defaults to 1e-6)."
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FINAL_STAGE": true,
+        "INIT_TEMP": 20,
+        "EVAL": "GAUSS",
+        "OPT_USE_EQUI_AGE": true,
+        "OPT_INCL_SELF_WEIGHT": false,
+        "OPT_IS_CREEP_SHRINKAGE": true,
+        "ITEM": {
+          "TYPE": "BOTH",
+          "CREEP_CALC_METHOD": 0
+        },
+        "ITER": 50,
+        "CONVERGENCE": {
+          "LOAD": {
+            "OPT_CHECK": true,
+            "VALUE": 0.001
+          },
+          "WORK": {
+            "OPT_CHECK": true,
+            "VALUE": 0.000001
+          }
+        }
+      },
+      "2": {
+        "FINAL_STAGE": false,
+        "STAGE_NAME": "CS3",
+        "INIT_TEMP": 15,
+        "EVAL": "NODAL",
+        "OPT_USE_EQUI_AGE": true,
+        "OPT_INCL_SELF_WEIGHT": true,
+        "SELF_WEIGHT_FACTOR": 1.0,
+        "OPT_IS_CREEP_SHRINKAGE": true,
+        "ITEM": {
+          "TYPE": "CREEP",
+          "CREEP_CALC_METHOD": 1,
+          "M_EFF_MOD": {
+            "PHI1": 1.5,
+            "DAY1": 3,
+            "PHI2": 2.0,
+            "DAY2": 28
+          }
+        },
+        "ITER": 30,
+        "CONVERGENCE": {
+          "DISP": {
+            "OPT_CHECK": true,
+            "VALUE": 0.001
+          }
+        }
+      }
+    }
+  }
+}

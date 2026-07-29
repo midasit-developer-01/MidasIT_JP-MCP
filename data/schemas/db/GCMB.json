@@ -1,0 +1,65 @@
+{
+  "_group": "db",
+  "_name": "GCMB",
+  "uri": "db/GCMB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "GCMB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "General Camber Control (GCMB). A single-key (Civil-only) record whose GCMB_BASE_ITEMS list pairs each structure group with a camber reference direction; bSTART_PT_ZERO controls whether the camber starts from zero at the start point.",
+      "type": "object",
+      "properties": {
+        "bSTART_PT_ZERO": {
+          "description": "Whether the camber starts from zero at the start point. Optional; defaults to true.",
+          "type": "boolean",
+          "default": true
+        },
+        "GCMB_BASE_ITEMS": {
+          "description": "List of general camber base entries; each entry binds one structure group to a camber reference direction.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "GRUP_NAME": {
+                "description": "Structure group name the camber applies to.",
+                "type": "string"
+              },
+              "DIRECTION": {
+                "description": "Camber reference direction (case-insensitive). Hard-enforced against the enum; an invalid value is rejected by the handler.",
+                "type": "string",
+                "enum": ["+DX", "-DX", "+DY", "-DY"]
+              }
+            },
+            "required": ["GRUP_NAME", "DIRECTION"]
+          }
+        }
+      },
+      "required": ["GCMB_BASE_ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bSTART_PT_ZERO": true,
+        "GCMB_BASE_ITEMS": [
+          {
+            "GRUP_NAME": "CS_0",
+            "DIRECTION": "+DX"
+          },
+          {
+            "GRUP_NAME": "CS_1",
+            "DIRECTION": "-DX"
+          },
+          {
+            "GRUP_NAME": "CS_2",
+            "DIRECTION": "+DY"
+          },
+          {
+            "GRUP_NAME": "CS_3",
+            "DIRECTION": "-DY"
+          }
+        ]
+      }
+    }
+  }
+}

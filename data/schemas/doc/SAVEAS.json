@@ -1,0 +1,25 @@
+{
+  "_group": "doc",
+  "_name": "SAVEAS",
+  "uri": "doc/SAVEAS",
+  "methods": "POST",
+  "schema": {
+    "SAVEAS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Save Document As (SAVEAS). Saves the currently open project to the file path supplied in Argument; the string value is passed directly as the destination path (DoSave).",
+      "properties": {
+        "Argument": {
+          "type": "string",
+          "description": "Full file path (including file name and extension) to save the currently open project to."
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": "C:/Users/Public/Documents/MyModel.mcb"
+  }
+}

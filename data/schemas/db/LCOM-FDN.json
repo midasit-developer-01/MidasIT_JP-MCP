@@ -1,0 +1,144 @@
+{
+  "_group": "db",
+  "_name": "LCOM-FDN",
+  "uri": "db/LCOM-FDN",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LCOM-FDN": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Load Combination for Foundation Design (LCOM-FDN). One entry per load combination keyed by combination id; each combination lists its member load cases and factors in vCOMB.",
+      "type": "object",
+      "properties": {
+        "NO": {
+          "description": "Read-only combination number assigned by the program on GET. Ignored on write.",
+          "type": "integer"
+        },
+        "NAME": {
+          "description": "Combination name. Must be unique when adding a new combination.",
+          "type": "string"
+        },
+        "ACTIVE": {
+          "description": "Active/design type of the combination (e.g. ACTIVE, INACTIVE, STRENGTH, SERVICE); converted to an internal code by the handler.",
+          "type": "string",
+          "default": "ACTIVE"
+        },
+        "bES": {
+          "description": "Elastic-stage flag, applied only for the concrete (CONCRETE) load-combination type; not applied for the foundation type. true enables the concrete-design elastic-stage option.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCB": {
+          "description": "Read-only flag set by the program: false = general combination, true = min/max/envelope combination. Ignored on write.",
+          "type": "boolean"
+        },
+        "iTYPE": {
+          "description": "Summation method for the combination: 0 = Add, 1 = Envelope, 2 = ABS, 3 = SRSS.",
+          "type": "integer",
+          "default": 0
+        },
+        "DESC": {
+          "description": "Free-text description of the combination.",
+          "type": "string",
+          "default": ""
+        },
+        "iSERV_TYPE": {
+          "description": "EC service type code (internal, not applied by the current handler).",
+          "type": "integer"
+        },
+        "nLCOMTYPE": {
+          "description": "EC load-combination type code (internal, not applied by the current handler).",
+          "type": "integer"
+        },
+        "nSEISTYPE": {
+          "description": "EC seismic type code (internal, not applied by the current handler).",
+          "type": "integer"
+        },
+        "vCOMB": {
+          "description": "List of member load cases making up this combination.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ANAL": {
+                "description": "Analysis type of the member load case (case-insensitive). ST=Static, RS=Response Spectrum, TH=Time History, MV=Moving, SM=Settlement, ENVL=Envelope, CB=Combination, CS=Construction Stage, etc. Validated at runtime.",
+                "type": "string",
+                "enum": [
+                  "ST",
+                  "RS",
+                  "TH",
+                  "MV",
+                  "SM",
+                  "ENVL",
+                  "CB",
+                  "CBS",
+                  "CBC",
+                  "CBF",
+                  "CBR",
+                  "PO",
+                  "CS",
+                  "ES",
+                  "GI",
+                  "CN",
+                  "CBA",
+                  "CBSC",
+                  "CBCF",
+                  "CBSM",
+                  "CBLN",
+                  "NRS",
+                  "NES"
+                ]
+              },
+              "LCNAME": {
+                "description": "Load case name; must match an existing load case of the given ANAL type.",
+                "type": "string"
+              },
+              "FACTOR": {
+                "description": "Load factor applied to this member load case.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "ANAL",
+              "LCNAME",
+              "FACTOR"
+            ]
+          }
+        }
+      },
+      "required": [
+        "NAME",
+        "vCOMB"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "fLCB1",
+        "ACTIVE": "STRENGTH",
+        "iTYPE": 0,
+        "DESC": "fLCB1",
+        "vCOMB": [
+          {
+            "ANAL": "ST",
+            "LCNAME": "DeadLoad",
+            "FACTOR": 1.25
+          }
+        ]
+      },
+      "2": {
+        "NAME": "fLCB2",
+        "ACTIVE": "SERVICE",
+        "iTYPE": 1,
+        "DESC": "fLCB2",
+        "vCOMB": [
+          {
+            "ANAL": "ST",
+            "LCNAME": "LiveLoad",
+            "FACTOR": 1.0
+          }
+        ]
+      }
+    }
+  }
+}

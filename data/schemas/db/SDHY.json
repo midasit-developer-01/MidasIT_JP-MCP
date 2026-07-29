@@ -1,0 +1,175 @@
+{
+  "_group": "db",
+  "_name": "SDHY",
+  "uri": "db/SDHY",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SDHY": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Hysteretic Isolator Property (SDHY). Defines a shear-spring hysteretic seismic isolator; SDHY_HYS_MODEL selects the hysteresis rule and the remaining scalar fields set its stiffness/strength parameters.",
+      "type": "object",
+      "properties": {
+        "COMMON": {
+          "description": "Common seismic device data block (name, description, input method, product info).",
+          "type": "object",
+          "properties": {
+            "NAME": {
+              "description": "Isolator property name.",
+              "type": "string"
+            },
+            "DESC": {
+              "description": "Description text.",
+              "type": "string",
+              "default": ""
+            },
+            "INPUT_METHOD": {
+              "description": "Input method: 0 = User Input, 1 = Import Reference Database.",
+              "type": "integer"
+            },
+            "COMPANY": {
+              "description": "Manufacturer company name (used with reference database import).",
+              "type": "string",
+              "default": ""
+            },
+            "PRODUCT_NAME": {
+              "description": "Product name (used with reference database import).",
+              "type": "string",
+              "default": ""
+            },
+            "TYPE_NUMBER": {
+              "description": "Product type number (used with reference database import).",
+              "type": "string",
+              "default": ""
+            }
+          },
+          "required": [
+            "NAME",
+            "INPUT_METHOD"
+          ]
+        },
+        "SDHY_HYS_MODEL": {
+          "description": "Hysteresis model for the shear springs. Case-insensitive. One of the listed wire strings.",
+          "type": "string",
+          "enum": [
+            "Degrading Bi Linear",
+            "NORMAL TRILINEAR",
+            "Modified Ramberg Osgood"
+          ]
+        },
+        "MSS": {
+          "description": "Number of shear springs (multi-shear-spring count).",
+          "type": "integer"
+        },
+        "K0": {
+          "description": "K0, initial stiffness.",
+          "type": "number"
+        },
+        "P1": {
+          "description": "P1, first yield strength (kN).",
+          "type": "number"
+        },
+        "P2": {
+          "description": "P2, second yield strength (kN).",
+          "type": "number"
+        },
+        "ALPHA1": {
+          "description": "Alpha1, first stiffness factor.",
+          "type": "number"
+        },
+        "ALPHA2": {
+          "description": "Alpha2, second stiffness factor.",
+          "type": "number"
+        },
+        "BETA": {
+          "description": "Beta, exponent used in unloading stiffness calculation.",
+          "type": "number"
+        },
+        "Phi": {
+          "description": "Phi parameter.",
+          "type": "number"
+        },
+        "LAMBDA": {
+          "description": "Lambda parameter.",
+          "type": "number"
+        }
+      },
+      "required": [
+        "COMMON",
+        "SDHY_HYS_MODEL",
+        "MSS",
+        "K0",
+        "P1",
+        "P2",
+        "ALPHA1",
+        "ALPHA2",
+        "BETA",
+        "Phi",
+        "LAMBDA"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "COMMON": {
+          "NAME": "HystereticIsolator01",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "SDHY_HYS_MODEL": "Degrading Bi Linear",
+        "MSS": 8,
+        "K0": 1000,
+        "P1": 100,
+        "P2": 0,
+        "ALPHA1": 1,
+        "ALPHA2": 0,
+        "BETA": 0.5,
+        "Phi": 0,
+        "LAMBDA": 8
+      },
+      "2": {
+        "COMMON": {
+          "NAME": "HystereticIsolator02",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "SDHY_HYS_MODEL": "NORMAL TRILINEAR",
+        "MSS": 8,
+        "K0": 1200,
+        "P1": 100,
+        "P2": 200,
+        "ALPHA1": 0.7,
+        "ALPHA2": 0.6,
+        "BETA": 0,
+        "Phi": 0,
+        "LAMBDA": 8
+      },
+      "3": {
+        "COMMON": {
+          "NAME": "HystereticIsolator03",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "SDHY_HYS_MODEL": "Modified Ramberg Osgood",
+        "MSS": 8,
+        "K0": 1500,
+        "P1": 120,
+        "P2": 0,
+        "ALPHA1": 0.5,
+        "ALPHA2": 0,
+        "BETA": 0.7,
+        "Phi": 0.1,
+        "LAMBDA": 8
+      }
+    }
+  }
+}

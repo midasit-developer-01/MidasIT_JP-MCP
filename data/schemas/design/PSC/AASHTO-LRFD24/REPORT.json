@@ -1,0 +1,41 @@
+{
+  "_group": "design",
+  "_name": "REPORT",
+  "uri": "design/PSC/AASHTO-LRFD24/REPORT",
+  "methods": "POST",
+  "schema": {
+    "REPORT": {
+      "type": "object",
+      "description": "PSC AASHTO-LRFD24 Design Report (REPORT). Fields come from the PSC_EXCEL_REQUEST DTO and control where the generated Excel report file is written; all fields are optional and defaults are applied internally, so an empty body is valid.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "properties": {
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Export directory path (e.g. C:\\Report\\). Empty = project file directory.",
+              "default": ""
+            },
+            "OUTPUT_NAME": {
+              "type": "string",
+              "description": "Output file name without extension. Empty = project file name.",
+              "default": ""
+            },
+            "SAVE_IMAGE_OPTION": {
+              "type": "boolean",
+              "description": "Save image option (Rating Report only). Design Report ignores this field.",
+              "default": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "EXPORT_PATH": "C:\\Report\\",
+      "OUTPUT_NAME": "PSC_Design_Report",
+      "SAVE_IMAGE_OPTION": false
+    }
+  }
+}

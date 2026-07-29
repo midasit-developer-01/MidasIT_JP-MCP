@@ -1,0 +1,234 @@
+{
+  "_group": "db",
+  "_name": "STAG",
+  "uri": "db/STAG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "STAG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Construction Stage (STAG). One stage per key; the vector fields (ACT_ELEM/DACT_ELEM/ACT_BNGR/DACT_BNGR/ACT_LOAD/DACT_LOAD) list the structure groups, boundary groups and load groups activated or deactivated at this stage.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Construction stage name.",
+          "type": "string"
+        },
+        "NO": {
+          "description": "Construction stage number. Read-only, assigned by the program on creation; ignored on write.",
+          "type": "integer"
+        },
+        "DURATION": {
+          "description": "Construction stage duration in days.",
+          "type": "number"
+        },
+        "bSV_RSLT": {
+          "description": "Whether to save analysis results at this stage.",
+          "type": "boolean",
+          "default": false
+        },
+        "bSV_STEP": {
+          "description": "Whether to save analysis results at each additional/incremental step within this stage.",
+          "type": "boolean",
+          "default": false
+        },
+        "bLOAD_STEP": {
+          "description": "Whether to apply load in incremental steps for material nonlinear analysis. INCRE_STEP is only used when this is true.",
+          "type": "boolean",
+          "default": false
+        },
+        "INCRE_STEP": {
+          "description": "[bLOAD_STEP=true] Number of load increment steps for material nonlinear analysis. Only applied when bLOAD_STEP is true.",
+          "type": "integer",
+          "default": 0
+        },
+        "ADD_STEP": {
+          "description": "User-defined additional step days within the stage.",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "default": []
+        },
+        "ACT_ELEM": {
+          "description": "Structure groups activated (added) at this stage.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "GRUP_NAME": {
+                "description": "Structure group name to activate.",
+                "type": "string"
+              },
+              "AGE": {
+                "description": "Age (days) of the activated elements at the time of activation.",
+                "type": "number",
+                "default": 0
+              }
+            },
+            "required": [
+              "GRUP_NAME"
+            ]
+          },
+          "default": []
+        },
+        "DACT_ELEM": {
+          "description": "Structure groups deactivated (removed) at this stage.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "GRUP_NAME": {
+                "description": "Structure group name to deactivate.",
+                "type": "string"
+              },
+              "REDIST": {
+                "description": "Internal-force redistribution ratio (%) applied when the group is removed.",
+                "type": "number",
+                "default": 0
+              }
+            },
+            "required": [
+              "GRUP_NAME"
+            ]
+          },
+          "default": []
+        },
+        "ACT_BNGR": {
+          "description": "Boundary groups activated at this stage.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "BNGR_NAME": {
+                "description": "Boundary group name to activate.",
+                "type": "string"
+              },
+              "POS": {
+                "description": "Support/spring position basis. ORIGINAL uses the original (undeformed) position; DEFORMED uses the current deformed position. Case-insensitive.",
+                "type": "string",
+                "enum": [
+                  "ORIGINAL",
+                  "DEFORMED"
+                ]
+              }
+            },
+            "required": [
+              "BNGR_NAME",
+              "POS"
+            ]
+          },
+          "default": []
+        },
+        "DACT_BNGR": {
+          "description": "Boundary group names deactivated at this stage.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "ACT_LOAD": {
+          "description": "Load groups activated at this stage.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LOAD_NAME": {
+                "description": "Load group name to activate.",
+                "type": "string"
+              },
+              "DAY": {
+                "description": "Activation day within the stage. \"FIRST\" = first day (0.0), \"LAST\" = last day (-1.0), or a numeric day as a string (e.g. \"5.000000\").",
+                "type": "string",
+                "default": "FIRST"
+              }
+            },
+            "required": [
+              "LOAD_NAME"
+            ]
+          },
+          "default": []
+        },
+        "DACT_LOAD": {
+          "description": "Load groups deactivated at this stage.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LOAD_NAME": {
+                "description": "Load group name to deactivate.",
+                "type": "string"
+              },
+              "DAY": {
+                "description": "Deactivation day within the stage. \"FIRST\" = first day (0.0), \"LAST\" = last day (-1.0), or a numeric day as a string (e.g. \"5.000000\").",
+                "type": "string",
+                "default": "FIRST"
+              }
+            },
+            "required": [
+              "LOAD_NAME"
+            ]
+          },
+          "default": []
+        }
+      },
+      "required": [
+        "NAME",
+        "DURATION"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "CS01",
+        "DURATION": 10,
+        "bSV_RSLT": true,
+        "bSV_STEP": true,
+        "bLOAD_STEP": true,
+        "INCRE_STEP": 5,
+        "ADD_STEP": [
+          5,
+          8
+        ],
+        "ACT_ELEM": [
+          {
+            "GRUP_NAME": "SG_01",
+            "AGE": 10
+          }
+        ],
+        "ACT_BNGR": [
+          {
+            "BNGR_NAME": "BG_01",
+            "POS": "DEFORMED"
+          }
+        ],
+        "ACT_LOAD": [
+          {
+            "LOAD_NAME": "LG_01",
+            "DAY": "5.000000"
+          }
+        ]
+      },
+      "2": {
+        "NAME": "CS02",
+        "DURATION": 20,
+        "DACT_ELEM": [
+          {
+            "GRUP_NAME": "SG_01",
+            "REDIST": 100
+          }
+        ],
+        "DACT_BNGR": [
+          "BG_01"
+        ],
+        "DACT_LOAD": [
+          {
+            "LOAD_NAME": "LG_01",
+            "DAY": "FIRST"
+          }
+        ]
+      }
+    }
+  }
+}

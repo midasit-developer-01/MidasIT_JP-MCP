@@ -1,0 +1,52 @@
+{
+  "_group": "ope",
+  "_name": "SMARTGRAPHVALUE",
+  "uri": "ope/SMARTGRAPHVALUE",
+  "methods": "POST",
+  "schema": {
+    "SMARTGRAPHVALUE": {
+      "type": "object",
+      "description": "Smart Graph Value (SMARTGRAPHVALUE). The TYPE selects which smart-graph result category to read, and the optional KEY narrows it to a single function; when KEY is omitted, all functions of that TYPE are returned.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body for reading smart graph values.",
+          "properties": {
+            "TYPE": {
+              "type": "string",
+              "description": "Smart Graph Data - Type. Selects the smart-graph result category (case-insensitive). THRG=Time History Global Result; THRI=Time History Inter-story Result; THRS=Time History Story-Drift/Shear Result; THEF/THRE=Time History Element Force Result; POEF=Pushover Element Force; PORG=Pushover Global Result; PORE=Pushover Element Result; PORI=Pushover Inter-story Result; THSF=Story Shear Force Result.",
+              "enum": [
+                "THRG",
+                "THRI",
+                "THRS",
+                "THEF",
+                "THRE",
+                "POEF",
+                "PORG",
+                "PORE",
+                "PORI",
+                "THSF"
+              ]
+            },
+            "KEY": {
+              "type": "integer",
+              "description": "Smart Graph Data - Key. Optional function key within the selected TYPE; must be a valid existing key for that TYPE or the request is rejected. When omitted, every function key of the selected TYPE is returned."
+            }
+          },
+          "required": [
+            "TYPE"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "TYPE": "THRG",
+      "KEY": 1
+    }
+  }
+}

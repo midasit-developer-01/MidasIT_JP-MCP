@@ -1,0 +1,36 @@
+{
+  "_group": "temp",
+  "_name": "OPEN_TABLE",
+  "uri": "temp/OPEN_TABLE",
+  "methods": "POST",
+  "schema": {
+    "OPEN_TABLE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Open Result Table (OPEN_TABLE). Opens a post-processing result table in the result view; driven by the single TABLE_TYPE field naming which result table to open.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body (DTO_OPEN_TABLE_REQUEST).",
+          "properties": {
+            "TABLE_TYPE": {
+              "type": "string",
+              "description": "Table Type to open in the result view (e.g. DISPLACEMENTG, BEAMFORCE, REACTIONG). Resolved against the same registry as post/TABLE (__caTableTypeMap, uppercase + strip-spaces) but restricted to RESULT tables: it must exist AND have GetDSKindByType>0 (a post/design result). Input tables (SECTION*, MATERIAL, FLOORLOADS, NODALBODYFORCE, SUPPORTS) have DSKind=0 and are rejected ('is not a post result table'). Story/seismic tables (STORY_*, STORY_DRIFT_*) are MIDAS Gen (_MGEN) only and do NOT exist on this Civil endpoint ('Unknown TABLE_TYPE'). Empty value is rejected (LV_WRONG_FIELD). Use requestinfo/POST/TABLE/TYPELIST to enumerate valid types for the running model."
+            }
+          },
+          "required": [
+            "TABLE_TYPE"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "TABLE_TYPE": "DISPLACEMENTG"
+    }
+  }
+}

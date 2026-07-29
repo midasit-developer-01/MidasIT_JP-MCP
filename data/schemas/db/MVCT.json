@@ -1,0 +1,220 @@
+{
+  "_group": "db",
+  "_name": "MVCT",
+  "uri": "db/MVCT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVCT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Analysis Control (MVCT). A single-instance control record (key is always 1); POINT/iIGP select the influence-line point strategy, the bREAC/bDISP/bFM/bL check-boxes plus their bRG/bDG/bFG/bLG flags drive which result groups and group-name fields apply, and the trailing RUSSIA-code fields apply only when the model's moving-load code is RUSSIA.",
+      "properties": {
+        "METHOD": {
+          "description": "Analysis method for moving load influence. Enum (case-insensitive): EXACT, QUICK, PIVOT.",
+          "type": "string",
+          "enum": ["EXACT", "QUICK", "PIVOT"],
+          "default": "EXACT"
+        },
+        "POINT": {
+          "description": "Load point selection. Enum (case-insensitive): INF (influence-line dependent point), ALL (all points).",
+          "type": "string",
+          "enum": ["INF", "ALL"]
+        },
+        "iIGP": {
+          "description": "Influence generating points mode. 0 = number of unit loads per line element (uses iIGPN); 1 = fixed distance between points (uses DIST).",
+          "type": "integer",
+          "default": 0
+        },
+        "iIGPN": {
+          "description": "[iIGP!=1] Number of unit-load division points per line element.",
+          "type": "integer",
+          "default": 0
+        },
+        "DIST": {
+          "description": "[iIGP=1] Distance between influence generating points.",
+          "type": "number",
+          "default": 0
+        },
+        "PLATE": {
+          "description": "Calculation position for plate elements. Enum (case-insensitive): CENTER (element center), NODAL (center + nodal).",
+          "type": "string",
+          "enum": ["CENTER", "NODAL"]
+        },
+        "bSTRCALC": {
+          "description": "Calculate plate-element stress.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCONCURRENT": {
+          "description": "Calculate concurrent forces for plate elements.",
+          "type": "boolean",
+          "default": false
+        },
+        "FRAME": {
+          "description": "Calculation position for frame elements. Enum (case-insensitive): NORMAL, AXIAL (normal + concurrent force/stress).",
+          "type": "string",
+          "enum": ["NORMAL", "AXIAL"]
+        },
+        "bCSTRCALC": {
+          "description": "Calculate combined stress for frame elements.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCONCLINK": {
+          "description": "Calculate concurrent force of elastic/general links.",
+          "type": "boolean",
+          "default": false
+        },
+        "bREAC": {
+          "description": "Enable reaction results.",
+          "type": "boolean",
+          "default": false
+        },
+        "bRG": {
+          "description": "Reaction result scope. false = all; true = restrict to structure group RGN (sets ReacFilter=1).",
+          "type": "boolean",
+          "default": false
+        },
+        "RGN": {
+          "description": "[bREAC && bRG] Structure group name for reaction results; must be an existing group. Ignored (may be empty) otherwise.",
+          "type": "string"
+        },
+        "bDISP": {
+          "description": "Enable displacement results.",
+          "type": "boolean",
+          "default": false
+        },
+        "bDG": {
+          "description": "Displacement result scope. false = all; true = restrict to structure group DGN (sets DispFilter=1).",
+          "type": "boolean",
+          "default": false
+        },
+        "DGN": {
+          "description": "[bDISP && bDG] Structure group name for displacement results; must be an existing group. Ignored (may be empty) otherwise.",
+          "type": "string"
+        },
+        "bFM": {
+          "description": "Enable force/moment results.",
+          "type": "boolean",
+          "default": false
+        },
+        "bFG": {
+          "description": "Force/moment result scope. false = all; true = restrict to structure group FGN (sets ForcFilter=1).",
+          "type": "boolean",
+          "default": false
+        },
+        "FGN": {
+          "description": "[bFM && bFG] Structure group name for force/moment results; must be an existing group. Ignored (may be empty) otherwise.",
+          "type": "string"
+        },
+        "bL": {
+          "description": "Enable elastic/general link results.",
+          "type": "boolean",
+          "default": false
+        },
+        "bLG": {
+          "description": "Elastic/general link result scope. false = all; true = restrict to boundary group LGN (sets LinkFilter=1).",
+          "type": "boolean",
+          "default": false
+        },
+        "LGN": {
+          "description": "[bL && bLG] Boundary group name for elastic/general link results; must be an existing group. Ignored (may be empty) otherwise.",
+          "type": "string"
+        },
+        "MATTYPE": {
+          "description": "[CODE=RUSSIA] Material type for dynamic factor (main). Applies only when the moving-load code is RUSSIA.",
+          "type": "integer",
+          "default": 0
+        },
+        "BRIDGETYPE": {
+          "description": "[CODE=RUSSIA] Bridge type for dynamic factor (main). Applies only when the moving-load code is RUSSIA.",
+          "type": "integer",
+          "default": 0
+        },
+        "AKMATTYPE": {
+          "description": "[CODE=RUSSIA] Material type for dynamic factor (AK loading). Applies only when the moving-load code is RUSSIA.",
+          "type": "integer",
+          "default": 0
+        },
+        "AKBRIDGETYPE": {
+          "description": "[CODE=RUSSIA] Bridge type for dynamic factor (AK loading). Applies only when the moving-load code is RUSSIA.",
+          "type": "integer",
+          "default": 0
+        },
+        "MINFACTS2": {
+          "description": "[CODE=RUSSIA] Minimum lane factor (s2). Applies only when the moving-load code is RUSSIA.",
+          "type": "number",
+          "default": 0
+        },
+        "MAXV": {
+          "description": "[CODE=RUSSIA] Maximum number of successive vehicles. Applies only when the moving-load code is RUSSIA.",
+          "type": "integer",
+          "default": 0
+        },
+        "MAXSPACE": {
+          "description": "[CODE=RUSSIA] Maximum spacing between trains. Applies only when the moving-load code is RUSSIA.",
+          "type": "number",
+          "default": 0
+        },
+        "INCV": {
+          "description": "[CODE=RUSSIA] Increment of moving vehicle at variable spacing. Applies only when the moving-load code is RUSSIA.",
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "required": ["POINT", "PLATE", "FRAME", "RGN", "DGN", "FGN", "LGN"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "METHOD": "EXACT",
+        "POINT": "INF",
+        "iIGP": 0,
+        "iIGPN": 3,
+        "PLATE": "NODAL",
+        "bSTRCALC": true,
+        "bCONCURRENT": true,
+        "FRAME": "AXIAL",
+        "bCSTRCALC": true,
+        "bCONCLINK": true,
+        "bREAC": true,
+        "bRG": false,
+        "RGN": "",
+        "bDISP": true,
+        "bDG": false,
+        "DGN": "",
+        "bFM": true,
+        "bFG": true,
+        "FGN": "Deck",
+        "bL": false,
+        "bLG": false,
+        "LGN": ""
+      },
+      "2": {
+        "METHOD": "QUICK",
+        "POINT": "ALL",
+        "iIGP": 1,
+        "DIST": 2.5,
+        "PLATE": "CENTER",
+        "bSTRCALC": false,
+        "bCONCURRENT": false,
+        "FRAME": "NORMAL",
+        "bCSTRCALC": false,
+        "bCONCLINK": false,
+        "bREAC": false,
+        "bRG": false,
+        "RGN": "",
+        "bDISP": false,
+        "bDG": false,
+        "DGN": "",
+        "bFM": false,
+        "bFG": false,
+        "FGN": "",
+        "bL": false,
+        "bLG": false,
+        "LGN": ""
+      }
+    }
+  }
+}

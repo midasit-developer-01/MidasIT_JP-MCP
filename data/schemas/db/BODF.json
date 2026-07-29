@@ -1,0 +1,50 @@
+{
+  "_group": "db",
+  "_name": "BODF",
+  "uri": "db/BODF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "BODF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Self Weight (BODF). Applies a static self-weight body-force load: LCNAME selects the static load case and FV gives the self-weight scale factors in the global X, Y, Z directions.",
+      "properties": {
+        "LCNAME": {
+          "description": "Name of the static load case this self-weight load belongs to. Must match an existing static load case (STLD).",
+          "type": "string"
+        },
+        "GROUP_NAME": {
+          "description": "Name of the load group this self-weight load is assigned to. Empty string means no load group.",
+          "type": "string",
+          "default": ""
+        },
+        "FV": {
+          "description": "Self-weight scale factors in the global directions [X, Y, Z]. Typically the gravity direction carries a negative factor (e.g. Z = -1). Maps to SX, SY, SZ internally.",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      },
+      "required": [
+        "LCNAME",
+        "FV"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "D",
+        "GROUP_NAME": "",
+        "FV": [
+          0,
+          0,
+          -1
+        ]
+      }
+    }
+  }
+}

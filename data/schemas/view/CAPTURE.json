@@ -1,0 +1,3327 @@
+{
+  "_group": "view",
+  "_name": "CAPTURE",
+  "uri": "view/CAPTURE",
+  "methods": "POST",
+  "schema": {
+    "CAPTURE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "View Capture (CAPTURE). Captures the current model view to an image; FIGURE_NAME selects a Smart Report figure, otherwise the supplied view-setup options drive the rendering, and URL_NAME/EXPORT_PATH control image export.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Capture request. All fields optional. If FIGURE_NAME is set, the Smart Report figure is used and other view-setup fields are ignored; otherwise ACTIVE/ANGLE/zoom/perspective/background/STAGE_NAME/SET_MODE/DISPLAY/RESULT_GRAPHIC are applied. The image is exported only if URL_NAME or EXPORT_PATH is set.",
+          "properties": {
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Output file path for the captured image. If set (and URL_NAME not set), the graphic is exported to this path."
+            },
+            "FIGURE_NAME": {
+              "type": "string",
+              "description": "Smart Report figure name. If set, the stored UFIG data for this figure is loaded and rendered, and ACTIVE/ANGLE/STAGE_NAME/SET_MODE/DISPLAY/RESULT_GRAPHIC are ignored."
+            },
+            "URL_NAME": {
+              "type": "string",
+              "description": "URL name. If set, the image is exported to a temp .jpg and returned as a base64 string (for M-Connector); takes precedence over EXPORT_PATH."
+            },
+            "STAGE_NAME": {
+              "type": "string",
+              "description": "Construction stage name shown in the view (e.g. a stage name, POSTCS, default, or MINMAX). Applied only when FIGURE_NAME is not given."
+            },
+            "SET_MODE": {
+              "type": "string",
+              "enum": [
+                "PRE",
+                "POST"
+              ],
+              "description": "Set mode option (case-insensitive). PRE switches to pre-processing mode; POST switches to post-processing mode (fails if post is unavailable). Applied only when FIGURE_NAME is not given."
+            },
+            "PERSPECTIVE": {
+              "type": "boolean",
+              "description": "Perspective mode on/off (true=perspective, false=orthogonal).",
+              "default": false
+            },
+            "SET_HIDDEN": {
+              "type": "boolean",
+              "description": "Hidden option.",
+              "default": false
+            },
+            "BGCOLOR_TOP": {
+              "type": "object",
+              "description": "Background color (top).",
+              "properties": {
+                "R": {
+                  "type": "integer",
+                  "description": "Red channel (0-255).",
+                  "default": 0
+                },
+                "G": {
+                  "type": "integer",
+                  "description": "Green channel (0-255).",
+                  "default": 0
+                },
+                "B": {
+                  "type": "integer",
+                  "description": "Blue channel (0-255).",
+                  "default": 0
+                }
+              }
+            },
+            "BGCOLOR_BOTTOM": {
+              "type": "object",
+              "description": "Background color (bottom).",
+              "properties": {
+                "R": {
+                  "type": "integer",
+                  "description": "Red channel (0-255).",
+                  "default": 0
+                },
+                "G": {
+                  "type": "integer",
+                  "description": "Green channel (0-255).",
+                  "default": 0
+                },
+                "B": {
+                  "type": "integer",
+                  "description": "Blue channel (0-255).",
+                  "default": 0
+                }
+              }
+            },
+            "WIDTH": {
+              "type": "integer",
+              "description": "Export figure width size (pixels)."
+            },
+            "HEIGHT": {
+              "type": "integer",
+              "description": "Export figure height size (pixels)."
+            },
+            "ACTIVE": {
+              "type": "object",
+              "description": "Active option. Applied only when FIGURE_NAME is not given. ACTIVE_MODE drives which other fields are consumed.",
+              "properties": {
+                "ACTIVE_MODE": {
+                  "type": "string",
+                  "enum": [
+                    "All",
+                    "Active",
+                    "Identity"
+                  ],
+                  "description": "Active operation mode (case-insensitive). 'All' activates everything; 'Active' activates objects in N_LIST/E_LIST; 'Identity' activates objects matched by IDENTITY_TYPE + IDENTITY_LIST."
+                },
+                "N_LIST": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "description": "[ACTIVE_MODE=Active] Node key list to activate."
+                },
+                "E_LIST": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "description": "[ACTIVE_MODE=Active] Element key list to activate."
+                },
+                "IDENTITY_TYPE": {
+                  "type": "string",
+                  "enum": [
+                    "Story",
+                    "Named Plane",
+                    "Group",
+                    "Boundary Group",
+                    "Load Group",
+                    "Loading Area Group"
+                  ],
+                  "description": "[ACTIVE_MODE=Identity] Category of identity to match (case-insensitive)."
+                },
+                "IDENTITY_LIST": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "[ACTIVE_MODE=Identity] Names of identity targets to activate."
+                },
+                "STORY_ACTIVE": {
+                  "type": "string",
+                  "enum": [
+                    "Floor",
+                    "Above",
+                    "Below",
+                    "Both"
+                  ],
+                  "description": "[ACTIVE_MODE=Identity, IDENTITY_TYPE=Story] Story activation option (case-insensitive)."
+                }
+              },
+              "required": [
+                "ACTIVE_MODE"
+              ]
+            },
+            "ANGLE": {
+              "type": "object",
+              "description": "View angle option. Applied only when FIGURE_NAME is not given.",
+              "properties": {
+                "HORIZONTAL": {
+                  "type": "number",
+                  "description": "Horizontal rotation angle (degrees).",
+                  "default": 0
+                },
+                "VERTICAL": {
+                  "type": "number",
+                  "description": "Vertical rotation angle (degrees).",
+                  "default": 0
+                }
+              }
+            },
+            "DISPLAY": {
+              "type": "object",
+              "description": "Display option. Applied only when FIGURE_NAME is not given; overwrites the pre-processing display data before rendering.",
+              "properties": {
+                "NODE": {
+                  "type": "object",
+                  "description": "Node display toggles.",
+                  "properties": {
+                    "NODE": {
+                      "type": "boolean",
+                      "description": "Show nodes.",
+                      "default": false
+                    },
+                    "NODE_NUMBER": {
+                      "type": "boolean",
+                      "description": "Show node numbers.",
+                      "default": false
+                    },
+                    "STORY_NAME": {
+                      "type": "boolean",
+                      "description": "Show story names.",
+                      "default": false
+                    },
+                    "NODE_LOCAL_AXIS": {
+                      "type": "boolean",
+                      "description": "Show node local axis.",
+                      "default": false
+                    }
+                  }
+                },
+                "ELEMENT": {
+                  "type": "object",
+                  "description": "Element display toggles.",
+                  "properties": {
+                    "ELEM_NUMBER": {
+                      "type": "boolean",
+                      "description": "Show element numbers.",
+                      "default": false
+                    },
+                    "WALL_ID": {
+                      "type": "boolean",
+                      "description": "Show wall ID.",
+                      "default": false
+                    },
+                    "GAP": {
+                      "type": "boolean",
+                      "description": "Show gap.",
+                      "default": false
+                    },
+                    "HOOK": {
+                      "type": "boolean",
+                      "description": "Show hook.",
+                      "default": false
+                    },
+                    "CABLE": {
+                      "type": "boolean",
+                      "description": "Show cable.",
+                      "default": false
+                    },
+                    "LOCAL_AXIS": {
+                      "type": "boolean",
+                      "description": "Show element local axis.",
+                      "default": false
+                    }
+                  }
+                },
+                "PROPERTY": {
+                  "type": "object",
+                  "description": "Property display toggles.",
+                  "properties": {
+                    "PROPERTY_NUMBER": {
+                      "type": "boolean",
+                      "description": "Show property number.",
+                      "default": false
+                    },
+                    "PROPERTY_NAME": {
+                      "type": "boolean",
+                      "description": "Show property name.",
+                      "default": false
+                    },
+                    "SECTION_SHAPE": {
+                      "type": "boolean",
+                      "description": "Show section shape.",
+                      "default": false
+                    },
+                    "INELASTIC_HINGE_SYMBOL": {
+                      "type": "boolean",
+                      "description": "Show inelastic hinge symbol.",
+                      "default": false
+                    },
+                    "INELASTIC_HINGE_NAME": {
+                      "type": "boolean",
+                      "description": "Show inelastic hinge name.",
+                      "default": false
+                    }
+                  }
+                },
+                "BOUNDARY": {
+                  "type": "object",
+                  "description": "Boundary condition display toggles.",
+                  "properties": {
+                    "GROUP_SELECTION": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Boundary group selection list."
+                    },
+                    "SUPPORT": {
+                      "type": "boolean",
+                      "description": "Support.",
+                      "default": false
+                    },
+                    "SUPPORT_BY_DIRECTION": {
+                      "type": "boolean",
+                      "description": "Support by Direction.",
+                      "default": false
+                    },
+                    "POINT_SPRING_SUPPORT": {
+                      "type": "boolean",
+                      "description": "Point Spring Support.",
+                      "default": false
+                    },
+                    "POINT_SPRING_SUPPORT_COMP_TENS": {
+                      "type": "boolean",
+                      "description": "Point Spring Support (Comp/Tens).",
+                      "default": false
+                    },
+                    "POINT_SPRING_SUPPORT_MULTI_LINEAR": {
+                      "type": "boolean",
+                      "description": "Point Spring Support (Multi-Linear).",
+                      "default": false
+                    },
+                    "POINT_SPRING_SUPPORT_BY_DIRECTION": {
+                      "type": "boolean",
+                      "description": "Point Spring Support by Direction.",
+                      "default": false
+                    },
+                    "POINT_SPRING_SUPPORT_BY_DIRECTION_COMP_TENS": {
+                      "type": "boolean",
+                      "description": "Point Spring Support by Direction (Comp/Tens).",
+                      "default": false
+                    },
+                    "POINT_SPRING_SUPPORT_BY_DIRECTION_MULTI_LINEAR": {
+                      "type": "boolean",
+                      "description": "Point Spring Support by Direction (Multi-Linear).",
+                      "default": false
+                    },
+                    "SURFACE_SPRING_SUPPORT_TYPE": {
+                      "type": "boolean",
+                      "description": "Surface Spring Support Type.",
+                      "default": false
+                    },
+                    "SURFACE_SPRING_SUPPORT_LINEAR": {
+                      "type": "boolean",
+                      "description": "Surface Spring Support (Linear).",
+                      "default": false
+                    },
+                    "SURFACE_SPRING_SUPPORT_COMP_TENS": {
+                      "type": "boolean",
+                      "description": "Surface Spring Support (Comp/Tens).",
+                      "default": false
+                    },
+                    "GENERAL_SPRING_SUPPORT": {
+                      "type": "boolean",
+                      "description": "General Spring Support.",
+                      "default": false
+                    },
+                    "ELASTIC_LINK": {
+                      "type": "boolean",
+                      "description": "Elastic Link.",
+                      "default": false
+                    },
+                    "ELASTIC_LINK_LOCAL_AXIS": {
+                      "type": "boolean",
+                      "description": "Elastic Link Local Axis.",
+                      "default": false
+                    },
+                    "ELASTIC_LINK_TYPE": {
+                      "type": "boolean",
+                      "description": "Elastic Link Type.",
+                      "default": false
+                    },
+                    "ELASTIC_LINK_NUMBER": {
+                      "type": "boolean",
+                      "description": "Elastic Link Number.",
+                      "default": false
+                    },
+                    "GENERAL_LINK": {
+                      "type": "boolean",
+                      "description": "General Link.",
+                      "default": false
+                    },
+                    "GENERAL_LINK_NUMBER": {
+                      "type": "boolean",
+                      "description": "General Link Number.",
+                      "default": false
+                    },
+                    "GENERAL_LINK_LOCAL_AXIS": {
+                      "type": "boolean",
+                      "description": "General Link Local Axis.",
+                      "default": false
+                    },
+                    "GENERAL_LINK_TYPE": {
+                      "type": "boolean",
+                      "description": "General Link Type.",
+                      "default": false
+                    },
+                    "CHANGE_GENERAL_LINK_PROPERTIES": {
+                      "type": "boolean",
+                      "description": "Change General Link Properties.",
+                      "default": false
+                    },
+                    "BEAM_END_RELEASE_SYMBOL": {
+                      "type": "boolean",
+                      "description": "Beam End release Symbol.",
+                      "default": false
+                    },
+                    "BEAM_END_RELEASE_DIGIT": {
+                      "type": "boolean",
+                      "description": "Beam End release Digit.",
+                      "default": false
+                    },
+                    "BEAM_END_OFFSET_SYMBOL": {
+                      "type": "boolean",
+                      "description": "Beam End offset Symbol.",
+                      "default": false
+                    },
+                    "BEAM_END_OFFSET_DIGIT": {
+                      "type": "boolean",
+                      "description": "Beam End offset Digit.",
+                      "default": false
+                    },
+                    "PLATE_END_RELEASE_SYMBOL": {
+                      "type": "boolean",
+                      "description": "Plate End Release Symbol.",
+                      "default": false
+                    },
+                    "PLATE_END_RELEASE_DIGIT": {
+                      "type": "boolean",
+                      "description": "Plate End Release Digit.",
+                      "default": false
+                    },
+                    "RIGID_LINK": {
+                      "type": "boolean",
+                      "description": "Rigid Link.",
+                      "default": false
+                    },
+                    "LINEAR_CONSTRAINTS": {
+                      "type": "boolean",
+                      "description": "Linear Constraints.",
+                      "default": false
+                    },
+                    "REACTION_POSITION": {
+                      "type": "boolean",
+                      "description": "Reaction Position.",
+                      "default": false
+                    },
+                    "STORY_DIAPHRAGM": {
+                      "type": "boolean",
+                      "description": "Story Diaphragm.",
+                      "default": false
+                    },
+                    "DIAPHRAGM_DISCONNECT": {
+                      "type": "boolean",
+                      "description": "Diaphragm Disconnect.",
+                      "default": false
+                    }
+                  }
+                },
+                "MISC": {
+                  "type": "object",
+                  "description": "Miscellaneous display toggles.",
+                  "properties": {
+                    "NODAL_MASS": {
+                      "type": "boolean",
+                      "description": "Nodal Mass.",
+                      "default": false
+                    },
+                    "LOAD_TO_MASS": {
+                      "type": "boolean",
+                      "description": "Load to Mass.",
+                      "default": false
+                    },
+                    "TENDON_PROFILE_NAMES": {
+                      "type": "boolean",
+                      "description": "Tendon Profile Names.",
+                      "default": false
+                    },
+                    "TENDON_PROFILE_POINT": {
+                      "type": "boolean",
+                      "description": "Tendon Profile Point.",
+                      "default": false
+                    },
+                    "SETTLEMENT_GROUP": {
+                      "type": "boolean",
+                      "description": "Settlement Group.",
+                      "default": false
+                    },
+                    "SETTLEMENT_GROUP_VALUE": {
+                      "type": "boolean",
+                      "description": "Settlement Group Value.",
+                      "default": false
+                    },
+                    "HEAT_OF_HYDRATION_VALUE": {
+                      "type": "boolean",
+                      "description": "Heat of Hydration Value.",
+                      "default": false
+                    },
+                    "HEAT_OF_HYDRATION_FUNC_NAME": {
+                      "type": "boolean",
+                      "description": "Heat of Hydration Func Name.",
+                      "default": false
+                    },
+                    "HEAT_OF_HYDRATION_ELEMENT_CONVECTION_BOUNDARY": {
+                      "type": "boolean",
+                      "description": "Heat of Hydration Element Convection Boundary.",
+                      "default": false
+                    },
+                    "HEAT_OF_HYDRATION_PRESCRIBED_TEMPERATURE": {
+                      "type": "boolean",
+                      "description": "Heat of Hydration Prescribed Temperature.",
+                      "default": false
+                    },
+                    "HEAT_OF_HYDRATION_HEAT_SOURCE": {
+                      "type": "boolean",
+                      "description": "Heat of Hydration Heat Source.",
+                      "default": false
+                    },
+                    "HEAT_OF_HYDRATION_PIPE_COOLING_ELEMENT": {
+                      "type": "boolean",
+                      "description": "Heat of Hydration Pipe Cooling Element.",
+                      "default": false
+                    },
+                    "GRID_MODEL_LOAD_LINE": {
+                      "type": "boolean",
+                      "description": "Grid Model Load Line.",
+                      "default": false
+                    }
+                  }
+                },
+                "LOAD": {
+                  "type": "object",
+                  "description": "Load display toggles.",
+                  "properties": {
+                    "CASE_SELECTION": {
+                      "type": "object",
+                      "description": "Load case selection.",
+                      "properties": {
+                        "TYPE": {
+                          "type": "string",
+                          "description": "Load case type."
+                        },
+                        "NAME": {
+                          "type": "string",
+                          "description": "Load case name."
+                        }
+                      },
+                      "required": [
+                        "TYPE",
+                        "NAME"
+                      ]
+                    },
+                    "GROUP_SELECTION": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Load group selection list."
+                    },
+                    "LOAD_VALUE": {
+                      "type": "object",
+                      "description": "Load value formatting options.",
+                      "properties": {
+                        "FORMAT": {
+                          "type": "string",
+                          "enum": [
+                            "Default",
+                            "Fixed",
+                            "Scientific"
+                          ],
+                          "description": "Load value number format (case-insensitive)."
+                        },
+                        "PLACE": {
+                          "type": "integer",
+                          "description": "Decimal place number."
+                        }
+                      },
+                      "required": [
+                        "FORMAT",
+                        "PLACE"
+                      ]
+                    },
+                    "NODAL_BODY_FORCE": {
+                      "type": "boolean",
+                      "description": "Nodal Body Force.",
+                      "default": false
+                    },
+                    "NODAL_LOAD": {
+                      "type": "boolean",
+                      "description": "Nodal Load.",
+                      "default": false
+                    },
+                    "SPECIFIED_DISPLACEMENT": {
+                      "type": "boolean",
+                      "description": "Specified Displacement.",
+                      "default": false
+                    },
+                    "BEAM_LOAD": {
+                      "type": "boolean",
+                      "description": "Beam Load.",
+                      "default": false
+                    },
+                    "PRESTRESS_LOAD": {
+                      "type": "boolean",
+                      "description": "Prestress Load.",
+                      "default": false
+                    },
+                    "PRETENSION_LOAD": {
+                      "type": "boolean",
+                      "description": "Pretension Load.",
+                      "default": false
+                    },
+                    "FLOOR_LOAD": {
+                      "type": "boolean",
+                      "description": "Floor Load.",
+                      "default": false
+                    },
+                    "FLOOR_LOAD_NAME": {
+                      "type": "boolean",
+                      "description": "Floor Load Name.",
+                      "default": false
+                    },
+                    "FLOOR_LOAD_AREA": {
+                      "type": "boolean",
+                      "description": "Floor Load Area.",
+                      "default": false
+                    },
+                    "LOADING_AREA_PLANE": {
+                      "type": "boolean",
+                      "description": "Loading Area Plane.",
+                      "default": false
+                    },
+                    "FINISHING_MATERIAL_LOAD": {
+                      "type": "boolean",
+                      "description": "Finishing Material Load.",
+                      "default": false
+                    },
+                    "PRESSURE_LOAD": {
+                      "type": "boolean",
+                      "description": "Pressure Load.",
+                      "default": false
+                    },
+                    "AREA_PRESSURE_LOADS": {
+                      "type": "boolean",
+                      "description": "Area Pressure Loads.",
+                      "default": false
+                    },
+                    "PLANE_LOAD": {
+                      "type": "boolean",
+                      "description": "Plane Load.",
+                      "default": false
+                    },
+                    "PLANE_LOAD_NAME": {
+                      "type": "boolean",
+                      "description": "Plane Load Name.",
+                      "default": false
+                    },
+                    "NODAL_TEMPERATURE": {
+                      "type": "boolean",
+                      "description": "Nodal Temperature.",
+                      "default": false
+                    },
+                    "ELEMENT_TEMPERATURE": {
+                      "type": "boolean",
+                      "description": "Element Temperature.",
+                      "default": false
+                    },
+                    "TEMPERATURE_GRADIENT": {
+                      "type": "boolean",
+                      "description": "Temperature Gradient.",
+                      "default": false
+                    },
+                    "BEAM_SECTION_TEMPERATURE": {
+                      "type": "boolean",
+                      "description": "Beam Section Temperature.",
+                      "default": false
+                    },
+                    "TENDON_PRESTRESS": {
+                      "type": "boolean",
+                      "description": "Tendon Prestress.",
+                      "default": false
+                    },
+                    "WIND_LOAD": {
+                      "type": "boolean",
+                      "description": "Wind Load.",
+                      "default": false
+                    },
+                    "AREA_WIND_PRESSURE": {
+                      "type": "boolean",
+                      "description": "Area Wind Pressure.",
+                      "default": false
+                    },
+                    "AREA_WIND_PRESSURE_NAME": {
+                      "type": "boolean",
+                      "description": "Area Wind Pressure Name.",
+                      "default": false
+                    },
+                    "BEAM_WIND_PRESSURE": {
+                      "type": "boolean",
+                      "description": "Beam Wind Pressure.",
+                      "default": false
+                    },
+                    "NODAL_WIND_PRESSURE": {
+                      "type": "boolean",
+                      "description": "Nodal Wind Pressure.",
+                      "default": false
+                    },
+                    "FUNCTION_WIND_PRESSURE": {
+                      "type": "boolean",
+                      "description": "Function Wind Pressure.",
+                      "default": false
+                    },
+                    "FUNCTION_WIND_PRESSURE_NAME": {
+                      "type": "boolean",
+                      "description": "Function Wind Pressure Name.",
+                      "default": false
+                    },
+                    "SEISMIC_EARTH_PRESSURE": {
+                      "type": "boolean",
+                      "description": "Seismic Earth Pressure.",
+                      "default": false
+                    },
+                    "STATIC_EARTH_PRESSRUE": {
+                      "type": "boolean",
+                      "description": "Static Earth Pressure.",
+                      "default": false
+                    },
+                    "SEISMIC_LOAD": {
+                      "type": "boolean",
+                      "description": "Seismic Load.",
+                      "default": false
+                    },
+                    "DYNAMIC_NODAL_LOAD": {
+                      "type": "boolean",
+                      "description": "Dynamic Nodal Load.",
+                      "default": false
+                    },
+                    "MULTIPLE_SUPPORT_EXCITATION": {
+                      "type": "boolean",
+                      "description": "Multiple Support Excitation.",
+                      "default": false
+                    },
+                    "MULTIPLE_SUPPORT_EXCITATION_FUNCTION_NAME": {
+                      "type": "boolean",
+                      "description": "Multiple Support Excitation Function Name.",
+                      "default": false
+                    },
+                    "DIR_X": {
+                      "type": "boolean",
+                      "description": "Dir. X.",
+                      "default": false
+                    },
+                    "DIR_Y": {
+                      "type": "boolean",
+                      "description": "Dir. Y.",
+                      "default": false
+                    },
+                    "DIR_Z": {
+                      "type": "boolean",
+                      "description": "Dir. Z.",
+                      "default": false
+                    }
+                  }
+                },
+                "VIEW": {
+                  "type": "object",
+                  "description": "View display toggles.",
+                  "properties": {
+                    "UCS_AXIS": {
+                      "type": "boolean",
+                      "description": "Show UCS axis.",
+                      "default": false
+                    },
+                    "VIEWPORT_GIZMO": {
+                      "type": "boolean",
+                      "description": "Show dynamic view control gizmo.",
+                      "default": false
+                    },
+                    "VIEW_POINT": {
+                      "type": "boolean",
+                      "description": "Show view point.",
+                      "default": false
+                    },
+                    "DESCRIPTION": {
+                      "type": "string",
+                      "description": "Description text."
+                    },
+                    "LABEL_ORIENTATION": {
+                      "type": "integer",
+                      "description": "Label orientation (0~180, divisible by 15)."
+                    }
+                  }
+                }
+              }
+            },
+            "ZOOM_LEVEL": {
+              "type": "number",
+              "description": "Zoom level (percent).",
+              "default": 100
+            },
+            "RESULT_GRAPHIC": {
+              "type": "object",
+              "description": "Result graphic (post-processing) option. Applied only when FIGURE_NAME is not given. CURRENT_MODE is required and selects the result type.",
+              "properties": {
+                "CURRENT_MODE": {
+                  "type": "string",
+                  "enum": [
+                    "REACTION FORCES/MOMENTS",
+                    "SOIL PRESSURE",
+                    "DEFORMED SHAPE",
+                    "DISPLACEMENT CONTOUR",
+                    "TRUSS FORCES",
+                    "BEAM FORCES/MOMENTS",
+                    "BEAM DIAGRAMS",
+                    "PLATE FORCES/MOMENTS",
+                    "RESULTANT FORCE DIAGRAM",
+                    "TRUSS STRESSES",
+                    "BEAM STRESSES",
+                    "BEAM STRESSES DIAGRAM",
+                    "BEAM STRESSES(EQUIVALENT)",
+                    "BEAM STRESSES DIAGRAM (EQUIVALENT)",
+                    "BEAM STRESSES(PSC)",
+                    "PLANE-STRESS/PLATE STRESSES",
+                    "PLANE STRAIN STRESSES",
+                    "AXISYMMETRIC STRESSES",
+                    "SOLID STRESSES",
+                    "HY_STRESS",
+                    "HY_TEMPERATURE",
+                    "HY_DISPLACEMENTS",
+                    "HY_ALLOWABLE TENSILE STRESS",
+                    "HY_CRACK RATIO",
+                    "VIBRATION MODE SHAPES",
+                    "BUCKLING MODE SHAPES",
+                    "MVLTRC_REACTIONS",
+                    "MVLTRC_DISPLACEMENTS",
+                    "MVLTRC_TRUSS FORCES",
+                    "MVLTRC_BEAM FORCES/MOMENTS",
+                    "MVLTRC_ELASTIC_LINK FORCES/MOMENTS",
+                    "MVLTRC_GENERAL_LINK FORCES/MOMENTS",
+                    "MVLTRC_PLATE FORCES/MOMENTS",
+                    "MVLTRC_BEAM STRESSES",
+                    "PLATE CUTTING LINE DIAGRAM",
+                    "INFLL_REACTIONS",
+                    "INFLL_DISPLACEMENTS",
+                    "INFLL_TRUSS FORCES",
+                    "INFLL_BEAM FORCES/MOMENTS",
+                    "INFLL_PLATE FORCES/MOMENTS",
+                    "INFLL_BEAM STRESSES",
+                    "INFLL_SOLID STRESSES",
+                    "INFLL_DESIGN_STEEL",
+                    "INFLL_DESIGN_RC",
+                    "INFLL_DESIGN_SRC"
+                  ],
+                  "description": "Result graphic mode (case-insensitive). Drives which COMPONENTS property is used and which result is drawn."
+                },
+                "LOAD_CASE_COMB": {
+                  "type": "object",
+                  "description": "Load cases/combinations selection.",
+                  "properties": {
+                    "MINMAX": {
+                      "type": "string",
+                      "enum": [
+                        "Min",
+                        "Max",
+                        "All"
+                      ],
+                      "description": "Load min/max type (case-insensitive).",
+                      "default": "Max"
+                    },
+                    "TYPE": {
+                      "type": "string",
+                      "enum": [
+                        "ST",
+                        "RS",
+                        "NRS",
+                        "TH",
+                        "LN",
+                        "SN",
+                        "MV",
+                        "SM",
+                        "PO",
+                        "CS",
+                        "ES",
+                        "NES",
+                        "IG",
+                        "GI",
+                        "TX",
+                        "TA",
+                        "TP",
+                        "CB",
+                        "CBS",
+                        "CBC",
+                        "CBF",
+                        "CBR",
+                        "CBA",
+                        "CBSC",
+                        "EN",
+                        "CN",
+                        "CBSM",
+                        "CBLN",
+                        "CBCF"
+                      ],
+                      "description": "Load case type (case-insensitive)."
+                    },
+                    "NAME": {
+                      "type": "string",
+                      "description": "Load case name."
+                    },
+                    "STEP_INDEX": {
+                      "type": "integer",
+                      "description": "Construction stage step index."
+                    },
+                    "STEP_NAME": {
+                      "type": "string",
+                      "description": "Construction stage step name."
+                    },
+                    "OPT_MAXMIN_DIAGRAM": {
+                      "type": "boolean",
+                      "description": "Max/Min diagram option.",
+                      "default": true
+                    },
+                    "TH_OPTION": {
+                      "type": "string",
+                      "enum": [
+                        "Displacement",
+                        "Velocity",
+                        "Acceleration",
+                        "Absolute Acceleration"
+                      ],
+                      "description": "Time history option (case-insensitive).",
+                      "default": "Displacement"
+                    },
+                    "OPT_CUMULATIVE_DISP_BY_INIT_LOAD": {
+                      "type": "boolean",
+                      "description": "Cumulative displacement by initial load option."
+                    },
+                    "KEY_NODE_ELEM": {
+                      "type": "integer",
+                      "description": "Key node or key element."
+                    },
+                    "KEY_ELASTIC_LINK": {
+                      "type": "integer",
+                      "description": "Elastic link key."
+                    },
+                    "KEY_GENERAL_LINK": {
+                      "type": "integer",
+                      "description": "General link key."
+                    },
+                    "SCALE_FACTOR": {
+                      "type": "number",
+                      "description": "Scale factor."
+                    }
+                  }
+                },
+                "COMPONENTS": {
+                  "type": "object",
+                  "description": "Result components. Set the property whose key matches CURRENT_MODE; other properties are ignored.",
+                  "properties": {
+                    "REACF": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=REACTION FORCES/MOMENTS] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fx",
+                            "Fy",
+                            "Fz",
+                            "Fxyz",
+                            "Mx",
+                            "My",
+                            "Mz",
+                            "Mxyz",
+                            "Mb"
+                          ],
+                          "description": "Reaction component (case-insensitive).",
+                          "default": "Fx"
+                        },
+                        "OPT_LOCAL_CHECK": {
+                          "type": "boolean",
+                          "description": "Use local coordinates if defined.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "SOIL_PRESSURE": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=SOIL PRESSURE] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Px",
+                            "Py",
+                            "Pz"
+                          ],
+                          "description": "Soil pressure component (case-insensitive).",
+                          "default": "Px"
+                        },
+                        "OPT_LOCAL_CHECK": {
+                          "type": "boolean",
+                          "description": "Use local coordinates if defined.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "DEFORM": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=DEFORMED SHAPE] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Dx",
+                            "Dy",
+                            "Dz",
+                            "Dxy",
+                            "Dyz",
+                            "Dxz",
+                            "Dxyz"
+                          ],
+                          "description": "Deformation component (case-insensitive).",
+                          "default": "Dx"
+                        },
+                        "OPT_LOCAL_CHECK": {
+                          "type": "boolean",
+                          "description": "Use local coordinates if defined.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "DCONTR": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=DISPLACEMENT CONTOUR] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Dx",
+                            "Dy",
+                            "Dz",
+                            "Rx",
+                            "Ry",
+                            "Rz",
+                            "RW",
+                            "Dxy",
+                            "Dyz",
+                            "Dxz",
+                            "Dxyz"
+                          ],
+                          "description": "Displacement component (case-insensitive).",
+                          "default": "Dx"
+                        },
+                        "OPT_LOCAL_CHECK": {
+                          "type": "boolean",
+                          "description": "Use local coordinates if defined.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "TFORC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=TRUSS FORCES] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "All",
+                            "Tens",
+                            "Comp",
+                            "Tens.",
+                            "Comp."
+                          ],
+                          "description": "Truss force component (case-insensitive).",
+                          "default": "All"
+                        }
+                      }
+                    },
+                    "BFORC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=BEAM FORCES/MOMENTS] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "description": "Construction stage part name (\"Total\" or \"Part N\").",
+                          "default": "Total"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fx",
+                            "Fy",
+                            "Fz",
+                            "Mx",
+                            "My",
+                            "Mz",
+                            "Mb",
+                            "Mt",
+                            "Mw"
+                          ],
+                          "description": "Beam force component (case-insensitive).",
+                          "default": "Fx"
+                        },
+                        "OPT_SHOW_TRUSS_FORCES": {
+                          "type": "boolean",
+                          "description": "Show truss forces.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "BDGRM": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=BEAM DIAGRAMS] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "description": "Construction stage part name (\"Total\" or \"Part N\").",
+                          "default": "Total"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fx",
+                            "Fy",
+                            "Fz",
+                            "Mx",
+                            "My",
+                            "Mz",
+                            "Mb",
+                            "Mt",
+                            "Mw",
+                            "Fyz",
+                            "Myz"
+                          ],
+                          "description": "Beam diagram component (case-insensitive).",
+                          "default": "Fx"
+                        },
+                        "OPT_SHOW_TRUSS_FORCES": {
+                          "type": "boolean",
+                          "description": "Show truss forces.",
+                          "default": false
+                        },
+                        "OPT_ONLY_TRUSS_FORCES": {
+                          "type": "boolean",
+                          "description": "Only truss forces.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "PFORC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=PLATE FORCES/MOMENTS] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fxx",
+                            "Fyy",
+                            "Fxy",
+                            "Fmax",
+                            "Fmin",
+                            "FMax",
+                            "Mxx",
+                            "Myy",
+                            "Mxy",
+                            "Mmax",
+                            "Mmin",
+                            "MMax",
+                            "Vxx",
+                            "Vyy",
+                            "VMax",
+                            "Wood Armer Moment",
+                            "Fvector",
+                            "Mvector"
+                          ],
+                          "description": "Plate force component (case-SENSITIVE).",
+                          "default": "Fxx"
+                        },
+                        "WOOD_ARMER_MOMENT_OPTION": {
+                          "type": "object",
+                          "description": "Wood Armer Moment option (used when COMP=Wood Armer Moment).",
+                          "properties": {
+                            "POSITION": {
+                              "type": "string",
+                              "enum": [
+                                "Top",
+                                "Bottom",
+                                "Both"
+                              ],
+                              "description": "Wood Armer moment position (case-insensitive).",
+                              "default": "Top"
+                            },
+                            "DIRECTION": {
+                              "type": "string",
+                              "enum": [
+                                "Dir. 1",
+                                "Dir. 2"
+                              ],
+                              "description": "Wood Armer moment direction (case-insensitive).",
+                              "default": "Dir. 1"
+                            }
+                          }
+                        },
+                        "VECTOR_OPTION": {
+                          "type": "object",
+                          "description": "Fvector/Mvector option (used when COMP=Fvector/Mvector/Vector).",
+                          "properties": {
+                            "OPT_POSITIVE": {
+                              "type": "boolean",
+                              "description": "Show positive vectors.",
+                              "default": true
+                            },
+                            "OPT_NEGATIVE": {
+                              "type": "boolean",
+                              "description": "Show negative vectors.",
+                              "default": false
+                            },
+                            "SCALE_FACTOR_LENGTH": {
+                              "type": "number",
+                              "description": "Vector scale factor - length.",
+                              "default": 1
+                            },
+                            "SCALE_FACTOR_THICKNESS": {
+                              "type": "integer",
+                              "description": "Vector scale factor - thickness.",
+                              "default": 1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "RESULTANT_FORCE": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=RESULTANT FORCE DIAGRAM] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fx",
+                            "Fy",
+                            "Fz",
+                            "Mx",
+                            "My",
+                            "Mz"
+                          ],
+                          "description": "Resultant force component (case-insensitive).",
+                          "default": "Fx"
+                        }
+                      }
+                    },
+                    "TSTRS": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=TRUSS STRESSES] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "All",
+                            "Tens",
+                            "Comp",
+                            "Tens.",
+                            "Comp."
+                          ],
+                          "description": "Truss stress component (case-insensitive).",
+                          "default": "All"
+                        }
+                      }
+                    },
+                    "BSTRS": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=BEAM STRESSES] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "description": "Construction stage part name (\"Total\" or \"Part N\").",
+                          "default": "Total"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Sax",
+                            "Ssy",
+                            "Ssz",
+                            "Sby",
+                            "Sbz",
+                            "Combined",
+                            "7th DOF"
+                          ],
+                          "description": "Beam stress component (case-insensitive).",
+                          "default": "Sax"
+                        },
+                        "COMP_7TH_DOF": {
+                          "type": "string",
+                          "enum": [
+                            "Sax(Warping)",
+                            "Ssy(Mt)",
+                            "Ssy(Mw)",
+                            "Ssz(Mt)",
+                            "Ssz(Mw)",
+                            "Combined(Ssy)",
+                            "Combined(Ssz)"
+                          ],
+                          "description": "Sub component of 7th DOF (case-insensitive).",
+                          "default": "Sax(Warping)"
+                        },
+                        "COMP_SUB": {
+                          "type": "string",
+                          "enum": [
+                            "Maximum",
+                            "1 (-y,+z)",
+                            "2 (+y,+z)",
+                            "3 (+y,-z)",
+                            "4 (-y,-z)"
+                          ],
+                          "description": "Sub component by combined (case-insensitive).",
+                          "default": "Maximum"
+                        }
+                      }
+                    },
+                    "BSTRSDGRM": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=BEAM STRESSES DIAGRAM] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "description": "Construction stage part name (\"Total\" or \"Part N\").",
+                          "default": "Total"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Sax",
+                            "Ssy",
+                            "Ssz",
+                            "Sby",
+                            "Sbz",
+                            "Combined",
+                            "7th DOF"
+                          ],
+                          "description": "Beam stress diagram component (case-insensitive).",
+                          "default": "Sax"
+                        },
+                        "COMP_7TH_DOF": {
+                          "type": "string",
+                          "enum": [
+                            "Sax(Warping)",
+                            "Ssy(Mt)",
+                            "Ssy(Mw)",
+                            "Ssz(Mt)",
+                            "Ssz(Mw)",
+                            "Combined(Ssy)",
+                            "Combined(Ssz)"
+                          ],
+                          "description": "Sub component of 7th DOF (case-insensitive).",
+                          "default": "Sax(Warping)"
+                        },
+                        "COMP_SUB": {
+                          "type": "string",
+                          "enum": [
+                            "Maximum",
+                            "1 (-y,+z)",
+                            "2 (+y,+z)",
+                            "3 (+y,-z)",
+                            "4 (-y,-z)"
+                          ],
+                          "description": "Sub component by combined (case-insensitive).",
+                          "default": "Maximum"
+                        }
+                      }
+                    },
+                    "BSTRSDETAIL": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=BEAM STRESSES(EQUIVALENT)] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Normal",
+                            "Von-Mises",
+                            "Tau_xy",
+                            "Max-Shear",
+                            "Tau_xz",
+                            "Princ.(max)",
+                            "Princ.(min)"
+                          ],
+                          "description": "Equivalent beam stress component (case-insensitive).",
+                          "default": "Normal"
+                        },
+                        "COMP_SUB": {
+                          "type": "string",
+                          "enum": [
+                            "1 (-y,+z)",
+                            "2 (+y,+z)",
+                            "3 (+y,-z)",
+                            "4 (-y,-z)",
+                            "5 (N.A.-y)",
+                            "6 (N.A.+y)",
+                            "7 (N.A.-z)",
+                            "8 (N.A.+z)",
+                            "Maximum"
+                          ],
+                          "description": "Sub component by combined (case-insensitive).",
+                          "default": "1 (-y,+z)"
+                        }
+                      }
+                    },
+                    "BSTRSDETAILDGRM": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=BEAM STRESSES DIAGRAM (EQUIVALENT)] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Normal",
+                            "Von-Mises",
+                            "Tau_xy",
+                            "Max-Shear",
+                            "Tau_xz",
+                            "Princ.(max)",
+                            "Princ.(min)"
+                          ],
+                          "description": "Equivalent beam stress diagram component (case-insensitive).",
+                          "default": "Normal"
+                        },
+                        "COMP_SUB": {
+                          "type": "string",
+                          "enum": [
+                            "1 (-y,+z)",
+                            "2 (+y,+z)",
+                            "3 (+y,-z)",
+                            "4 (-y,-z)",
+                            "5 (N.A.-y)",
+                            "6 (N.A.+y)",
+                            "7 (N.A.-z)",
+                            "8 (N.A.+z)",
+                            "Maximum"
+                          ],
+                          "description": "Sub component by combined (case-insensitive).",
+                          "default": "1 (-y,+z)"
+                        }
+                      }
+                    },
+                    "BSTRSINC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=BEAM STRESSES(PSC)] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Sig-xx(Axial)",
+                            "Sig-xx(Moment-y)",
+                            "Sig-xx(Moment-z)",
+                            "Sig-xx(Bar)",
+                            "Sig-xx(Summation)",
+                            "Sig-zz",
+                            "Sig-xz(shear)",
+                            "Sig-xz(torsion)",
+                            "Sig-xz(bar)",
+                            "Sig-ls(shear)",
+                            "Sig-ls(shear+torsion)",
+                            "Sig-p1",
+                            "Sig-p2",
+                            "7th DOF"
+                          ],
+                          "description": "PSC beam stress component (case-insensitive).",
+                          "default": "Sig-xx(Axial)"
+                        },
+                        "COMP_7TH_DOF": {
+                          "type": "string",
+                          "enum": [
+                            "Sax(Warping)",
+                            "Ssy(Mt)",
+                            "Ssy(Mw)",
+                            "Ssz(Mt)",
+                            "Ssz(Mw)",
+                            "Combined(Ssy)",
+                            "Combined(Ssz)"
+                          ],
+                          "description": "Sub component of 7th DOF (case-insensitive).",
+                          "default": "Sax(Warping)"
+                        },
+                        "COMP_SUB": {
+                          "type": "string",
+                          "enum": [
+                            "Position 1",
+                            "Position 2",
+                            "Position 3",
+                            "Position 4",
+                            "Position 5",
+                            "Position 6",
+                            "Position 7",
+                            "Position 8",
+                            "Position 9",
+                            "Position 10",
+                            "Position 11",
+                            "Position 12",
+                            "Position 13",
+                            "Position 14",
+                            "Position 15",
+                            "Position 16",
+                            "Max",
+                            "Min",
+                            "Max / Min",
+                            "Abs Max"
+                          ],
+                          "description": "Sub component by combined (case-insensitive).",
+                          "default": "Position 1"
+                        }
+                      }
+                    },
+                    "PSTRS": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=PLANE-STRESS/PLATE STRESSES] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Sig-xx",
+                            "Sig-yy",
+                            "Sig-zz",
+                            "Vector",
+                            "Sig-xy",
+                            "Sig-yz",
+                            "Sig-xz",
+                            "Sig-Max",
+                            "Sig-Min",
+                            "Sig-eff",
+                            "Max-Shear"
+                          ],
+                          "description": "Plane/plate stress component (case-insensitive).",
+                          "default": "Sig-xx"
+                        },
+                        "VECTOR_OPTION": {
+                          "type": "object",
+                          "description": "Fvector/Mvector option (used when COMP=Fvector/Mvector/Vector).",
+                          "properties": {
+                            "OPT_POSITIVE": {
+                              "type": "boolean",
+                              "description": "Show positive vectors.",
+                              "default": true
+                            },
+                            "OPT_NEGATIVE": {
+                              "type": "boolean",
+                              "description": "Show negative vectors.",
+                              "default": false
+                            },
+                            "SCALE_FACTOR_LENGTH": {
+                              "type": "number",
+                              "description": "Vector scale factor - length.",
+                              "default": 1
+                            },
+                            "SCALE_FACTOR_THICKNESS": {
+                              "type": "integer",
+                              "description": "Vector scale factor - thickness.",
+                              "default": 1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "PNSTRS": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=PLANE STRAIN STRESSES] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Sig-xx",
+                            "Sig-yy",
+                            "Sig-zz",
+                            "Sig-xy",
+                            "Vector",
+                            "Sig-yz",
+                            "Sig-xz",
+                            "Sig-p1",
+                            "Sig-p2",
+                            "Sig-p3",
+                            "Max-Shear",
+                            "Sig-eff",
+                            "Sig-pmax"
+                          ],
+                          "description": "Plane strain stress component (case-insensitive).",
+                          "default": "Sig-xx"
+                        },
+                        "VECTOR_OPTION": {
+                          "type": "object",
+                          "description": "Fvector/Mvector option (used when COMP=Fvector/Mvector/Vector).",
+                          "properties": {
+                            "OPT_POSITIVE": {
+                              "type": "boolean",
+                              "description": "Show positive vectors.",
+                              "default": true
+                            },
+                            "OPT_NEGATIVE": {
+                              "type": "boolean",
+                              "description": "Show negative vectors.",
+                              "default": false
+                            },
+                            "SCALE_FACTOR_LENGTH": {
+                              "type": "number",
+                              "description": "Vector scale factor - length.",
+                              "default": 1
+                            },
+                            "SCALE_FACTOR_THICKNESS": {
+                              "type": "integer",
+                              "description": "Vector scale factor - thickness.",
+                              "default": 1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "AXSTRS": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=AXISYMMETRIC STRESSES] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Sig-xx",
+                            "Sig-yy",
+                            "Sig-zz",
+                            "Sig-xy",
+                            "Vector",
+                            "Sig-yz",
+                            "Sig-xz",
+                            "Sig-p1",
+                            "Sig-p2",
+                            "Sig-p3",
+                            "Max-Shear",
+                            "Sig-eff",
+                            "Sig-pmax"
+                          ],
+                          "description": "Axisymmetric stress component (case-insensitive).",
+                          "default": "Sig-xx"
+                        },
+                        "VECTOR_OPTION": {
+                          "type": "object",
+                          "description": "Fvector/Mvector option (used when COMP=Fvector/Mvector/Vector).",
+                          "properties": {
+                            "OPT_POSITIVE": {
+                              "type": "boolean",
+                              "description": "Show positive vectors.",
+                              "default": true
+                            },
+                            "OPT_NEGATIVE": {
+                              "type": "boolean",
+                              "description": "Show negative vectors.",
+                              "default": false
+                            },
+                            "SCALE_FACTOR_LENGTH": {
+                              "type": "number",
+                              "description": "Vector scale factor - length.",
+                              "default": 1
+                            },
+                            "SCALE_FACTOR_THICKNESS": {
+                              "type": "integer",
+                              "description": "Vector scale factor - thickness.",
+                              "default": 1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "SSTRS": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=SOLID STRESSES] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Sig-xx",
+                            "Sig-yy",
+                            "Sig-zz",
+                            "Sig-xy",
+                            "Sig-yz",
+                            "Sig-xz",
+                            "Vector",
+                            "Sig-p1",
+                            "Sig-p2",
+                            "Sig-p3",
+                            "Max-Shear",
+                            "Sig-eff",
+                            "Sig-pmax"
+                          ],
+                          "description": "Solid stress component (case-insensitive).",
+                          "default": "Sig-xx"
+                        },
+                        "VECTOR_OPTION": {
+                          "type": "object",
+                          "description": "Fvector/Mvector option (used when COMP=Fvector/Mvector/Vector).",
+                          "properties": {
+                            "OPT_POSITIVE": {
+                              "type": "boolean",
+                              "description": "Show positive vectors.",
+                              "default": true
+                            },
+                            "OPT_NEGATIVE": {
+                              "type": "boolean",
+                              "description": "Show negative vectors.",
+                              "default": false
+                            },
+                            "SCALE_FACTOR_LENGTH": {
+                              "type": "number",
+                              "description": "Vector scale factor - length.",
+                              "default": 1
+                            },
+                            "SCALE_FACTOR_THICKNESS": {
+                              "type": "integer",
+                              "description": "Vector scale factor - thickness.",
+                              "default": 1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "HYDRAHEAT_SSTRS": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=HY_STRESS] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Sig-xx",
+                            "Sig-yy",
+                            "Sig-zz",
+                            "Sig-xy",
+                            "Sig-yz",
+                            "Sig-xz",
+                            "Vector",
+                            "Sig-p1",
+                            "Sig-p2",
+                            "Sig-p3",
+                            "Tresca",
+                            "Sig-eff",
+                            "Sig-pmax"
+                          ],
+                          "description": "Hydration heat solid stress component (case-insensitive).",
+                          "default": "Sig-xx"
+                        },
+                        "VECTOR_OPTION": {
+                          "type": "object",
+                          "description": "Fvector/Mvector option (used when COMP=Fvector/Mvector/Vector).",
+                          "properties": {
+                            "OPT_POSITIVE": {
+                              "type": "boolean",
+                              "description": "Show positive vectors.",
+                              "default": true
+                            },
+                            "OPT_NEGATIVE": {
+                              "type": "boolean",
+                              "description": "Show negative vectors.",
+                              "default": false
+                            },
+                            "SCALE_FACTOR_LENGTH": {
+                              "type": "number",
+                              "description": "Vector scale factor - length.",
+                              "default": 1
+                            },
+                            "SCALE_FACTOR_THICKNESS": {
+                              "type": "integer",
+                              "description": "Vector scale factor - thickness.",
+                              "default": 1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "HYDRAHEAT_DISPL": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=HY_DISPLACEMENTS] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Dx",
+                            "Dy",
+                            "Dz",
+                            "Rx",
+                            "Ry",
+                            "Rz",
+                            "Dxy",
+                            "Dyz",
+                            "Dxz",
+                            "Dxyz"
+                          ],
+                          "description": "Hydration heat displacement component (case-insensitive).",
+                          "default": "Dx"
+                        }
+                      }
+                    },
+                    "EGMDSHP": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=VIBRATION MODE SHAPES] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Md-X",
+                            "Md-Y",
+                            "Md-Z",
+                            "Md-XY",
+                            "Md-YZ",
+                            "Md-XZ",
+                            "Md-XYZ"
+                          ],
+                          "description": "Vibration mode shape component (case-insensitive).",
+                          "default": "Md-XYZ"
+                        }
+                      }
+                    },
+                    "BKMDSHP": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=BUCKLING MODE SHAPES] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Md-X",
+                            "Md-Y",
+                            "Md-Z",
+                            "Md-XY",
+                            "Md-YZ",
+                            "Md-XZ",
+                            "Md-XYZ"
+                          ],
+                          "description": "Buckling mode shape component (case-insensitive).",
+                          "default": "Md-X"
+                        }
+                      }
+                    },
+                    "MVLTRCREAC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=MVLTRC_REACTIONS] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fx",
+                            "Fy",
+                            "Fz",
+                            "Mx",
+                            "My",
+                            "Mz",
+                            "Mb"
+                          ],
+                          "description": "Moving load tracer reaction component (case-insensitive).",
+                          "default": "Fx"
+                        },
+                        "OPT_LOCAL_CHECK": {
+                          "type": "boolean",
+                          "description": "Use local coordinates if defined.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "MVLTRCDISP": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=MVLTRC_DISPLACEMENTS] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Dx",
+                            "Dy",
+                            "Dz",
+                            "Rx",
+                            "Ry",
+                            "Rz",
+                            "RW"
+                          ],
+                          "description": "Moving load tracer displacement component (case-insensitive).",
+                          "default": "Dx"
+                        }
+                      }
+                    },
+                    "MVLTRCBFORC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=MVLTRC_BEAM FORCES/MOMENTS] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "enum": [
+                            "i",
+                            "1/4",
+                            "1/2",
+                            "3/4",
+                            "j"
+                          ],
+                          "description": "Construction stage part (case-insensitive).",
+                          "default": "i"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fx",
+                            "Fy",
+                            "Fz",
+                            "Mx",
+                            "My",
+                            "Mz",
+                            "Mb",
+                            "Mt",
+                            "Mw"
+                          ],
+                          "description": "Component (case-insensitive).",
+                          "default": "Fx"
+                        }
+                      }
+                    },
+                    "MVLTRCELNKFORC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=MVLTRC_ELASTIC_LINK FORCES/MOMENTS] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "enum": [
+                            "i",
+                            "j"
+                          ],
+                          "description": "Construction stage part (case-insensitive).",
+                          "default": "i"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fx",
+                            "Fy",
+                            "Fz",
+                            "Mx",
+                            "My",
+                            "Mz"
+                          ],
+                          "description": "Component (case-insensitive).",
+                          "default": "Fx"
+                        }
+                      }
+                    },
+                    "MVLTRCNLNKFORC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=MVLTRC_GENERAL_LINK FORCES/MOMENTS] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "enum": [
+                            "i",
+                            "j"
+                          ],
+                          "description": "Construction stage part (case-insensitive).",
+                          "default": "i"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fx",
+                            "Fy",
+                            "Fz",
+                            "Mx",
+                            "My",
+                            "Mz"
+                          ],
+                          "description": "Component (case-insensitive).",
+                          "default": "Fx"
+                        }
+                      }
+                    },
+                    "MVLTRCPFORC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=MVLTRC_PLATE FORCES/MOMENTS] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "enum": [
+                            "cent",
+                            "cent.",
+                            "i",
+                            "j",
+                            "k",
+                            "l"
+                          ],
+                          "description": "Construction stage part (case-insensitive).",
+                          "default": "cent"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fxx",
+                            "Fyy",
+                            "Fxy",
+                            "Mxx",
+                            "Myy",
+                            "Mxy",
+                            "Vxx",
+                            "Vyy"
+                          ],
+                          "description": "Component (case-insensitive).",
+                          "default": "Fxx"
+                        }
+                      }
+                    },
+                    "MVLTRCBSTRS": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=MVLTRC_BEAM STRESSES] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "enum": [
+                            "i",
+                            "1/4",
+                            "1/2",
+                            "3/4",
+                            "j"
+                          ],
+                          "description": "Construction stage part (case-insensitive).",
+                          "default": "i"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "1 (-y, +z)",
+                            "2 (+y, +z)",
+                            "3 (+y, -z)",
+                            "4 (-y, -z)"
+                          ],
+                          "description": "Component (case-insensitive).",
+                          "default": "1 (-y, +z)"
+                        },
+                        "COMP_SUB": {
+                          "type": "string",
+                          "enum": [
+                            "Combined(Normal)",
+                            "Combined(Ssy)",
+                            "Combined(Ssz)"
+                          ],
+                          "description": "Sub component by combined (case-insensitive).",
+                          "default": "Combined(Normal)"
+                        }
+                      }
+                    },
+                    "PCLPD": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=PLATE CUTTING LINE DIAGRAM] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fxx",
+                            "Fyy",
+                            "Fxy",
+                            "Mxx",
+                            "Myy",
+                            "Mxy",
+                            "Vxx",
+                            "Vyy"
+                          ],
+                          "description": "Component (case-insensitive).",
+                          "default": "Fxx"
+                        }
+                      }
+                    },
+                    "INFLL_REAC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=INFLL_REACTIONS] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fx",
+                            "Fy",
+                            "Fz",
+                            "Mx",
+                            "My",
+                            "Mz",
+                            "Mb"
+                          ],
+                          "description": "Influence line reaction component (case-insensitive).",
+                          "default": "Fx"
+                        },
+                        "OPT_LOCAL_CHECK": {
+                          "type": "boolean",
+                          "description": "Use local coordinates if defined.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "INFLL_DISPL": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=INFLL_DISPLACEMENTS] Result component selection for this mode.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Dx",
+                            "Dy",
+                            "Dz",
+                            "Rx",
+                            "Ry",
+                            "Rz",
+                            "Rw"
+                          ],
+                          "description": "Influence line displacement component (case-insensitive).",
+                          "default": "Dx"
+                        }
+                      }
+                    },
+                    "INFLL_BFORC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=INFLL_BEAM FORCES/MOMENTS] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "enum": [
+                            "i",
+                            "1/4",
+                            "1/2",
+                            "3/4",
+                            "j"
+                          ],
+                          "description": "Construction stage part (case-insensitive).",
+                          "default": "i"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fx",
+                            "Fy",
+                            "Fz",
+                            "Mx",
+                            "My",
+                            "Mz",
+                            "Mb",
+                            "Mt",
+                            "Mw"
+                          ],
+                          "description": "Component (case-insensitive).",
+                          "default": "Fx"
+                        }
+                      }
+                    },
+                    "INFLL_PFORC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=INFLL_PLATE FORCES/MOMENTS] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "enum": [
+                            "cent.",
+                            "i",
+                            "j",
+                            "k",
+                            "l"
+                          ],
+                          "description": "Construction stage part (case-insensitive).",
+                          "default": "i"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Fxx",
+                            "Fyy",
+                            "Fxy",
+                            "Mxx",
+                            "Myy",
+                            "Mxy",
+                            "Vxx",
+                            "Vyy"
+                          ],
+                          "description": "Component (case-insensitive).",
+                          "default": "Fxx"
+                        }
+                      }
+                    },
+                    "INFLL_BSTRS": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=INFLL_BEAM STRESSES] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "enum": [
+                            "i",
+                            "1/4",
+                            "1/2",
+                            "3/4",
+                            "j"
+                          ],
+                          "description": "Construction stage part (case-insensitive).",
+                          "default": "i"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Maximum",
+                            "1 (-y, +z)",
+                            "2 (+y, +z)",
+                            "3 (+y, -z)",
+                            "4 (-y, -z)"
+                          ],
+                          "description": "Component (case-insensitive).",
+                          "default": "1 (-y, +z)"
+                        }
+                      }
+                    },
+                    "INFLL_SSTRS": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=INFLL_SOLID STRESSES] Result component selection for this mode.",
+                      "properties": {
+                        "PART": {
+                          "type": "string",
+                          "enum": [
+                            "Center",
+                            "i",
+                            "j",
+                            "k",
+                            "l",
+                            "m",
+                            "n",
+                            "o",
+                            "p"
+                          ],
+                          "description": "Construction stage part (case-insensitive).",
+                          "default": "i"
+                        },
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Sig-xx",
+                            "Sig-yy",
+                            "Sig-zz",
+                            "Sig-xy",
+                            "Sig-yz",
+                            "Sig-xz"
+                          ],
+                          "description": "Component (case-insensitive).",
+                          "default": "Sig-xx"
+                        }
+                      }
+                    },
+                    "INFLL_DESIGN_STEEL": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=INFLL_DESIGN_STEEL] Design ratio component.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Axial",
+                            "Shear-y",
+                            "Shear-z",
+                            "Bend-y",
+                            "Bend-z",
+                            "Combined"
+                          ],
+                          "description": "Ratio by components (case-insensitive).",
+                          "default": "Combined"
+                        }
+                      }
+                    },
+                    "INFLL_DESIGN_RC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=INFLL_DESIGN_RC] Design ratio component.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Axial",
+                            "Shear-y",
+                            "Shear-z",
+                            "Bend-y",
+                            "Bend-z",
+                            "Combined"
+                          ],
+                          "description": "Ratio by components (case-insensitive).",
+                          "default": "Combined"
+                        }
+                      }
+                    },
+                    "INFLL_DESIGN_SRC": {
+                      "type": "object",
+                      "description": "[CURRENT_MODE=INFLL_DESIGN_SRC] Design ratio component.",
+                      "properties": {
+                        "COMP": {
+                          "type": "string",
+                          "enum": [
+                            "Axial",
+                            "Shear-y",
+                            "Shear-z",
+                            "Bend-y",
+                            "Bend-z",
+                            "Combined"
+                          ],
+                          "description": "Ratio by components (case-insensitive).",
+                          "default": "Combined"
+                        }
+                      }
+                    }
+                  }
+                },
+                "DISPLAY_OPTIONS": {
+                  "type": "object",
+                  "description": "Display options.",
+                  "properties": {
+                    "FIDELITY": {
+                      "type": "string",
+                      "enum": [
+                        "Exact",
+                        "5 Points"
+                      ],
+                      "description": "Fidelity option (case-insensitive).",
+                      "default": "5 Points"
+                    },
+                    "FILL": {
+                      "type": "string",
+                      "enum": [
+                        "No",
+                        "Line",
+                        "Solid",
+                        "No Fill",
+                        "Line Fill",
+                        "Solid Fill"
+                      ],
+                      "description": "Fill option (case-insensitive).",
+                      "default": "Solid Fill"
+                    },
+                    "SCALE": {
+                      "type": "number",
+                      "description": "Scale factor value.",
+                      "default": 1
+                    }
+                  }
+                },
+                "TYPE_OF_DISPLAY": {
+                  "type": "object",
+                  "description": "Type of display options.",
+                  "properties": {
+                    "CONTOUR": {
+                      "type": "object",
+                      "description": "Contour display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "NUM_OF_COLOR": {
+                          "type": "integer",
+                          "description": "Number of colors.",
+                          "default": 12
+                        },
+                        "COLOR_TYPE": {
+                          "type": "string",
+                          "enum": [
+                            "vrgb",
+                            "rgb",
+                            "rbg",
+                            "gray scaled"
+                          ],
+                          "description": "Color table (case-insensitive).",
+                          "default": "vrgb"
+                        },
+                        "OPTIONS": {
+                          "type": "object",
+                          "description": "Contour options.",
+                          "properties": {
+                            "CONTOUR_FILL": {
+                              "type": "boolean",
+                              "description": "Contour fill.",
+                              "default": true
+                            },
+                            "GRADIENT_FILL": {
+                              "type": "boolean",
+                              "description": "Gradient fill.",
+                              "default": false
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "DEFORM": {
+                      "type": "object",
+                      "description": "Deform display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "SCALE_FACTOR": {
+                          "type": "number",
+                          "description": "Deformation scale factor.",
+                          "default": 0
+                        },
+                        "REAL_DEFORM": {
+                          "type": "boolean",
+                          "description": "Nodal deform.",
+                          "default": false
+                        },
+                        "REAL_DISP": {
+                          "type": "boolean",
+                          "description": "Real displacement (auto-scale off).",
+                          "default": false
+                        },
+                        "REL_DISP": {
+                          "type": "boolean",
+                          "description": "Relative displacement.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "VALUES": {
+                      "type": "object",
+                      "description": "Values display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "DECIMAL_PT": {
+                          "type": "integer",
+                          "description": "Decimal points.",
+                          "default": 0
+                        },
+                        "VALUE_EXP": {
+                          "type": "boolean",
+                          "description": "Value exponential.",
+                          "default": false
+                        },
+                        "MINMAX_ONLY": {
+                          "type": "object",
+                          "description": "MinMax only option.",
+                          "properties": {
+                            "MAXMIN": {
+                              "type": "string",
+                              "enum": [
+                                "Min & Max",
+                                "Abs Max",
+                                "Max",
+                                "Min"
+                              ],
+                              "description": "Min/Max option (case-insensitive).",
+                              "default": "Min & Max"
+                            },
+                            "LIMIT_SCALE": {
+                              "type": "integer",
+                              "description": "Limit scale (%).",
+                              "default": 0
+                            }
+                          }
+                        },
+                        "SET_ORIENT": {
+                          "type": "integer",
+                          "description": "Set orientation.",
+                          "default": 0
+                        },
+                        "RANGE_OPTION": {
+                          "type": "object",
+                          "description": "Range option.",
+                          "properties": {
+                            "VALUE_EXP": {
+                              "type": "boolean",
+                              "description": "Value exponential.",
+                              "default": false
+                            },
+                            "LOWER_LIMIT": {
+                              "type": "number",
+                              "description": "Lower limit.",
+                              "default": 1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "LEGEND": {
+                      "type": "object",
+                      "description": "Legend display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "POSITION": {
+                          "type": "string",
+                          "enum": [
+                            "left",
+                            "right"
+                          ],
+                          "description": "Legend position (case-insensitive).",
+                          "default": "left"
+                        },
+                        "DECIMAL_PT": {
+                          "type": "integer",
+                          "description": "Decimal point.",
+                          "default": 0
+                        },
+                        "VALUE_EXP": {
+                          "type": "boolean",
+                          "description": "Rank value type exponential.",
+                          "default": true
+                        }
+                      }
+                    },
+                    "UNDEFORMED": {
+                      "type": "object",
+                      "description": "Undeformed display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "MIRRORED": {
+                      "type": "object",
+                      "description": "Mirrored display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "MIRROR_BY_1": {
+                          "type": "object",
+                          "description": "Mirror by (Half).",
+                          "properties": {
+                            "DIRECTION": {
+                              "type": "string",
+                              "enum": [
+                                "XY",
+                                "YZ",
+                                "XZ"
+                              ],
+                              "description": "Mirror direction (case-insensitive)."
+                            },
+                            "OFFSET": {
+                              "type": "number",
+                              "description": "Offset."
+                            }
+                          }
+                        },
+                        "MIRROR_BY_2": {
+                          "type": "object",
+                          "description": "Mirror by (Quarter).",
+                          "properties": {
+                            "DIRECTION": {
+                              "type": "string",
+                              "enum": [
+                                "XY",
+                                "YZ",
+                                "XZ"
+                              ],
+                              "description": "Mirror direction (case-insensitive)."
+                            },
+                            "OFFSET": {
+                              "type": "number",
+                              "description": "Offset."
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "DISP_OPT": {
+                      "type": "object",
+                      "description": "Displacement option.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "ELEMENT_CENTER": {
+                          "type": "boolean",
+                          "description": "Contour: element center.",
+                          "default": false
+                        },
+                        "VALUE_MAX": {
+                          "type": "boolean",
+                          "description": "Value: max/element center.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "CUTTING_DIAGRAM": {
+                      "type": "object",
+                      "description": "Cutting diagram display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "CUTTING_MODE": {
+                          "type": "string",
+                          "enum": [
+                            "line",
+                            "plane"
+                          ],
+                          "description": "Cutting diagram mode (case-insensitive).",
+                          "default": "line"
+                        },
+                        "CUTTING_NAME": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Defined cutting lines."
+                        },
+                        "NORMAL_TO_PLANE": {
+                          "type": "boolean",
+                          "description": "Normal to plane.",
+                          "default": true
+                        },
+                        "DRAW_CONT_LINES": {
+                          "type": "boolean",
+                          "description": "Draw continuous lines."
+                        },
+                        "SCALE_FACTOR": {
+                          "type": "number",
+                          "description": "Scale factor.",
+                          "default": 0
+                        },
+                        "REVERSE": {
+                          "type": "boolean",
+                          "description": "Reverse.",
+                          "default": false
+                        },
+                        "VALUE_OUTPUT": {
+                          "type": "boolean",
+                          "description": "Value output.",
+                          "default": false
+                        },
+                        "MINMAX_ONLY": {
+                          "type": "boolean",
+                          "description": "MinMax only.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "CUTTING_PLANE": {
+                      "type": "object",
+                      "description": "Cutting plane display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "PLANE_NAME": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Named planes for cutting."
+                        },
+                        "FREE_EDGE": {
+                          "type": "boolean",
+                          "description": "Free edge.",
+                          "default": true
+                        }
+                      }
+                    },
+                    "YIELD_POINT": {
+                      "type": "object",
+                      "description": "Yield point display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "OPT_CUR_STEP_FORCE": {
+                      "type": "boolean",
+                      "description": "Current step force.",
+                      "default": false
+                    },
+                    "ISO_SURFACE": {
+                      "type": "object",
+                      "description": "Iso surface display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "VALUE_MODE": {
+                          "type": "object",
+                          "description": "Value mode.",
+                          "properties": {
+                            "VALUE_TYPE": {
+                              "type": "string",
+                              "enum": [
+                                "relative",
+                                "values"
+                              ],
+                              "description": "Iso value mode (case-insensitive).",
+                              "default": "relative"
+                            },
+                            "VALUE": {
+                              "type": "array",
+                              "items": {
+                                "type": "number"
+                              },
+                              "description": "IsoSurface values."
+                            }
+                          }
+                        },
+                        "DRAW_POLYLINE": {
+                          "type": "boolean",
+                          "description": "Draw polygon outline.",
+                          "default": false
+                        },
+                        "TRANSPARENCY": {
+                          "type": "integer",
+                          "description": "Transparency (screen only).",
+                          "default": 255
+                        },
+                        "FREE_EDGE": {
+                          "type": "boolean",
+                          "description": "Free edge.",
+                          "default": true
+                        }
+                      }
+                    },
+                    "MODE_SHAPE": {
+                      "type": "object",
+                      "description": "Mode shape display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "SCALE_FACTOR": {
+                          "type": "number",
+                          "description": "Mode shape scale factor."
+                        },
+                        "OPT_CUBIC_INTERPOLATION": {
+                          "type": "boolean",
+                          "description": "Cubic interpolation option."
+                        },
+                        "CUBIC_INTERPOLATION_FACTOR": {
+                          "type": "number",
+                          "description": "Cubic interpolation factor."
+                        }
+                      }
+                    },
+                    "APPLIED_LOADS": {
+                      "type": "object",
+                      "description": "Moving load tracer detail (applied loads) display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "SCALE_FACTOR": {
+                          "type": "number",
+                          "description": "Load scale factor.",
+                          "default": 0
+                        },
+                        "OPT_LOAD_VALUES": {
+                          "type": "boolean",
+                          "description": "Load values option.",
+                          "default": false
+                        },
+                        "VALUE_TYPE": {
+                          "type": "string",
+                          "enum": [
+                            "Exponential",
+                            "Fixed"
+                          ],
+                          "description": "Value type (case-insensitive).",
+                          "default": "Exponential"
+                        },
+                        "VALUE_DECIMAL_PT": {
+                          "type": "integer",
+                          "description": "Value decimal point.",
+                          "default": 0
+                        }
+                      }
+                    },
+                    "THREED_CONT": {
+                      "type": "object",
+                      "description": "3D contour display (influence surface).",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "SCALE_FACTOR": {
+                          "type": "number",
+                          "description": "3D contour scale factor.",
+                          "default": 1.0
+                        },
+                        "DRAW_VERTICAL_LINES": {
+                          "type": "boolean",
+                          "description": "Draw vertical lines.",
+                          "default": true
+                        }
+                      }
+                    },
+                    "ARROW_SCALE_FACTOR": {
+                      "type": "number",
+                      "description": "Arrow scale factor.",
+                      "default": 1
+                    },
+                    "OPT_CUR_STEP_DISPLACEMENT": {
+                      "type": "boolean",
+                      "description": "Current step displacement option.",
+                      "default": false
+                    },
+                    "OPT_STAGE_STEP_REAL_DISPLACEMENT": {
+                      "type": "boolean",
+                      "description": "Stage/step real displacement option.",
+                      "default": false
+                    },
+                    "OPT_INCLUDING_CAMBER_DISPLACEMENT": {
+                      "type": "boolean",
+                      "description": "Including camber displacement option.",
+                      "default": false
+                    },
+                    "OPT_INCLUDE_IMPACT_FACTOR": {
+                      "type": "boolean",
+                      "description": "Include impact factor option.",
+                      "default": false
+                    },
+                    "OPT_INCLUDE_PSI_FACTOR": {
+                      "type": "boolean",
+                      "description": "Include psi factor option."
+                    },
+                    "REINFORCEMENT": {
+                      "type": "object",
+                      "description": "Design reinforcement display.",
+                      "properties": {
+                        "CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "REINFORCEMENT_TYPE": {
+                          "type": "string",
+                          "enum": [
+                            "REBAR",
+                            "AREA",
+                            "RATIO"
+                          ],
+                          "description": "Reinforcement type (case-insensitive).",
+                          "default": "REBAR"
+                        },
+                        "DISPLAY_MEMBERS": {
+                          "type": "object",
+                          "description": "Display members.",
+                          "properties": {
+                            "BEAM": {
+                              "type": "boolean",
+                              "description": "Beam.",
+                              "default": true
+                            },
+                            "COLUMN": {
+                              "type": "boolean",
+                              "description": "Column.",
+                              "default": true
+                            },
+                            "BRACE": {
+                              "type": "boolean",
+                              "description": "Brace.",
+                              "default": true
+                            },
+                            "WALL": {
+                              "type": "boolean",
+                              "description": "Wall.",
+                              "default": true
+                            }
+                          }
+                        },
+                        "OUTPUT_COMPONENT": {
+                          "type": "object",
+                          "description": "Output component.",
+                          "properties": {
+                            "RATIO_AXIAL_STRESS": {
+                              "type": "boolean",
+                              "description": "Ratio of axial stress.",
+                              "default": true
+                            },
+                            "MAIN_REBAR": {
+                              "type": "boolean",
+                              "description": "Main rebar.",
+                              "default": true
+                            },
+                            "SHEAR_REINFORCEMENT": {
+                              "type": "boolean",
+                              "description": "Shear reinforcement.",
+                              "default": true
+                            }
+                          }
+                        },
+                        "COLUMN_SECTION_SIZE": {
+                          "type": "object",
+                          "description": "Column section size.",
+                          "properties": {
+                            "SCALE_FACTOR": {
+                              "type": "number",
+                              "description": "Scale factor.",
+                              "default": 1.0
+                            }
+                          }
+                        },
+                        "VALUE_OPTION": {
+                          "type": "object",
+                          "description": "Value option.",
+                          "properties": {
+                            "DECIMAL_PLACES": {
+                              "type": "integer",
+                              "description": "Decimal points.",
+                              "default": 2
+                            },
+                            "EXPONENTIAL": {
+                              "type": "boolean",
+                              "description": "Exponential.",
+                              "default": false
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "CODE_CHECKING_RATIO": {
+                      "type": "object",
+                      "description": "Design code-checking ratio display.",
+                      "properties": {
+                        "CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "REINFORCEMENT_TYPE": {
+                          "type": "string",
+                          "enum": [
+                            "REBAR",
+                            "AREA",
+                            "RATIO"
+                          ],
+                          "description": "Reinforcement type (case-insensitive).",
+                          "default": "REBAR"
+                        },
+                        "DISPLAY_MEMBERS": {
+                          "type": "object",
+                          "description": "Display members.",
+                          "properties": {
+                            "BEAM": {
+                              "type": "boolean",
+                              "description": "Beam.",
+                              "default": true
+                            },
+                            "COLUMN": {
+                              "type": "boolean",
+                              "description": "Column.",
+                              "default": true
+                            },
+                            "BRACE": {
+                              "type": "boolean",
+                              "description": "Brace.",
+                              "default": true
+                            },
+                            "WALL": {
+                              "type": "boolean",
+                              "description": "Wall.",
+                              "default": true
+                            }
+                          }
+                        },
+                        "OUTPUT_COMPONENT": {
+                          "type": "object",
+                          "description": "Output component.",
+                          "properties": {
+                            "RATIO_AXIAL_STRESS": {
+                              "type": "boolean",
+                              "description": "Ratio of axial stress.",
+                              "default": true
+                            },
+                            "MAIN_REBAR": {
+                              "type": "boolean",
+                              "description": "Main rebar.",
+                              "default": true
+                            },
+                            "SHEAR_REINFORCEMENT": {
+                              "type": "boolean",
+                              "description": "Shear reinforcement.",
+                              "default": true
+                            }
+                          }
+                        },
+                        "COLUMN_SECTION_SIZE": {
+                          "type": "object",
+                          "description": "Column section size.",
+                          "properties": {
+                            "SCALE_FACTOR": {
+                              "type": "number",
+                              "description": "Scale factor.",
+                              "default": 1.0
+                            }
+                          }
+                        },
+                        "VALUE_OPTION": {
+                          "type": "object",
+                          "description": "Value option.",
+                          "properties": {
+                            "DECIMAL_PLACES": {
+                              "type": "integer",
+                              "description": "Decimal points.",
+                              "default": 2
+                            },
+                            "EXPONENTIAL": {
+                              "type": "boolean",
+                              "description": "Exponential.",
+                              "default": false
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "OPTIONS": {
+                  "type": "object",
+                  "description": "Options.",
+                  "properties": {
+                    "SCALE_FACTOR": {
+                      "type": "number",
+                      "description": "Scale factor."
+                    },
+                    "VALUES": {
+                      "type": "object",
+                      "description": "Values display.",
+                      "properties": {
+                        "OPT_CHECK": {
+                          "type": "boolean",
+                          "description": "Checked.",
+                          "default": false
+                        },
+                        "DECIMAL_PT": {
+                          "type": "integer",
+                          "description": "Decimal points.",
+                          "default": 0
+                        },
+                        "VALUE_EXP": {
+                          "type": "boolean",
+                          "description": "Value exponential.",
+                          "default": false
+                        },
+                        "MINMAX_ONLY": {
+                          "type": "object",
+                          "description": "MinMax only option.",
+                          "properties": {
+                            "MAXMIN": {
+                              "type": "string",
+                              "enum": [
+                                "Min & Max",
+                                "Abs Max",
+                                "Max",
+                                "Min"
+                              ],
+                              "description": "Min/Max option (case-insensitive).",
+                              "default": "Min & Max"
+                            },
+                            "LIMIT_SCALE": {
+                              "type": "integer",
+                              "description": "Limit scale (%).",
+                              "default": 0
+                            }
+                          }
+                        },
+                        "SET_ORIENT": {
+                          "type": "integer",
+                          "description": "Set orientation.",
+                          "default": 0
+                        },
+                        "RANGE_OPTION": {
+                          "type": "object",
+                          "description": "Range option.",
+                          "properties": {
+                            "VALUE_EXP": {
+                              "type": "boolean",
+                              "description": "Value exponential.",
+                              "default": false
+                            },
+                            "LOWER_LIMIT": {
+                              "type": "number",
+                              "description": "Lower limit.",
+                              "default": 1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "OPT_REVERSE": {
+                      "type": "boolean",
+                      "description": "Reverse."
+                    },
+                    "OPT_TOP_ALIGNMENT": {
+                      "type": "boolean",
+                      "description": "Top alignment."
+                    },
+                    "GLOBAL_LOCAL": {
+                      "type": "object",
+                      "description": "Global/Local option.",
+                      "properties": {
+                        "TYPE": {
+                          "type": "string",
+                          "enum": [
+                            "Global",
+                            "Local"
+                          ],
+                          "description": "Global or local (case-insensitive)."
+                        }
+                      }
+                    },
+                    "LOCAL_UCS": {
+                      "type": "object",
+                      "description": "Local/UCS option.",
+                      "properties": {
+                        "TYPE": {
+                          "type": "string",
+                          "enum": [
+                            "Local",
+                            "UCS"
+                          ],
+                          "description": "Local or UCS type (case-insensitive).",
+                          "default": "UCS"
+                        },
+                        "UCS_NAME": {
+                          "type": "string",
+                          "description": "UCS name."
+                        },
+                        "OPT_PRINT_UCS_AXIS": {
+                          "type": "boolean",
+                          "description": "Print UCS axis.",
+                          "default": true
+                        }
+                      }
+                    },
+                    "AVERAGE_NODAL": {
+                      "type": "object",
+                      "description": "Average nodal option.",
+                      "properties": {
+                        "TYPE": {
+                          "type": "string",
+                          "enum": [
+                            "Element",
+                            "Avg. Nodal"
+                          ],
+                          "description": "Element or avg. nodal (case-insensitive).",
+                          "default": "Element"
+                        },
+                        "OPT_ACTIVE_ONLY": {
+                          "type": "boolean",
+                          "description": "Avg. nodal active only option.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "PLATE_DIAGRAM": {
+                      "type": "object",
+                      "description": "Plate cutting line diagram option.",
+                      "properties": {
+                        "NORMAL_TO_PLANE": {
+                          "type": "boolean",
+                          "description": "Normal to plane."
+                        },
+                        "SCALE_FACTOR": {
+                          "type": "number",
+                          "description": "Scale factor.",
+                          "default": 1
+                        },
+                        "REVERSE": {
+                          "type": "boolean",
+                          "description": "Reverse.",
+                          "default": false
+                        },
+                        "VALUE_OUTPUT": {
+                          "type": "boolean",
+                          "description": "Value output.",
+                          "default": false
+                        },
+                        "MINMAX_ONLY": {
+                          "type": "boolean",
+                          "description": "MinMax only.",
+                          "default": false
+                        }
+                      }
+                    },
+                    "SURFACE": {
+                      "type": "string",
+                      "enum": [
+                        "Top",
+                        "Bottom",
+                        "Both Sides",
+                        "Abs Max"
+                      ],
+                      "description": "Surface option (case-insensitive)."
+                    }
+                  }
+                },
+                "OUTPUT_SECT_LOCATION": {
+                  "type": "object",
+                  "description": "Output section location.",
+                  "properties": {
+                    "OPT_I": {
+                      "type": "boolean",
+                      "description": "I option.",
+                      "default": false
+                    },
+                    "OPT_CENTER_MID": {
+                      "type": "boolean",
+                      "description": "Center / Mid option.",
+                      "default": false
+                    },
+                    "OPT_J": {
+                      "type": "boolean",
+                      "description": "J option.",
+                      "default": false
+                    },
+                    "OPT_MAX_MINMAX_ALL": {
+                      "type": "string",
+                      "enum": [
+                        "All",
+                        "Abs Max",
+                        "Min/Max"
+                      ],
+                      "description": "One of abs Max, min/max, all (case-insensitive)."
+                    },
+                    "OPT_BY_MEMBER": {
+                      "type": "boolean",
+                      "description": "By member option.",
+                      "default": false
+                    },
+                    "OPT_I_J_MAX_ALL": {
+                      "type": "string",
+                      "enum": [
+                        "I",
+                        "J",
+                        "Max",
+                        "All"
+                      ],
+                      "description": "One of I, J, Max, All (case-insensitive)."
+                    },
+                    "OPT_I_J_ALL": {
+                      "type": "string",
+                      "enum": [
+                        "I",
+                        "J",
+                        "All"
+                      ],
+                      "description": "One of I, J, All (case-insensitive)."
+                    },
+                    "OPT_MAX_ALL": {
+                      "type": "string",
+                      "enum": [
+                        "Max",
+                        "All"
+                      ],
+                      "description": "One of Max, All (case-insensitive)."
+                    }
+                  }
+                },
+                "CUTTING_NAME": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Defined cutting lines."
+                }
+              },
+              "required": [
+                "CURRENT_MODE"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "URL_NAME": "capture_result",
+      "STAGE_NAME": "CS1",
+      "SET_MODE": "POST",
+      "PERSPECTIVE": true,
+      "ZOOM_LEVEL": 100,
+      "BGCOLOR_TOP": {
+        "R": 255,
+        "G": 255,
+        "B": 255
+      },
+      "BGCOLOR_BOTTOM": {
+        "R": 200,
+        "G": 200,
+        "B": 255
+      },
+      "WIDTH": 1920,
+      "HEIGHT": 1080,
+      "ACTIVE": {
+        "ACTIVE_MODE": "All"
+      },
+      "ANGLE": {
+        "HORIZONTAL": 30,
+        "VERTICAL": 15
+      },
+      "DISPLAY": {
+        "NODE": {
+          "NODE": true,
+          "NODE_NUMBER": true
+        }
+      },
+      "RESULT_GRAPHIC": {
+        "CURRENT_MODE": "DISPLACEMENT CONTOUR",
+        "LOAD_CASE_COMB": {
+          "TYPE": "ST",
+          "NAME": "DL",
+          "MINMAX": "Max"
+        },
+        "COMPONENTS": {
+          "DCONTR": {
+            "COMP": "Dz"
+          }
+        },
+        "TYPE_OF_DISPLAY": {
+          "CONTOUR": {
+            "OPT_CHECK": true
+          },
+          "LEGEND": {
+            "OPT_CHECK": true
+          }
+        }
+      }
+    }
+  }
+}

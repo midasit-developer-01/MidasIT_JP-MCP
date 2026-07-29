@@ -1,0 +1,42 @@
+{
+  "_group": "rating",
+  "_name": "RTGS",
+  "uri": "rating/PSC/AASHTO-LRFR19/RTGS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "RTGS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "PSC Rating Group Setting (RTGS). Fields are driven by the selected rating group, its check position, and the condition factor for PSC load rating per AASHTO LRFR19.",
+      "properties": {
+        "GROUP": {
+          "type": "string",
+          "description": "Selected Rating Group name. Must match the group resolved from the Assign key; the group must already exist."
+        },
+        "POSITION": {
+          "type": "integer",
+          "enum": [0, 1, 2],
+          "description": "Check Position: 0 = I-End, 1 = J-End, 2 = All."
+        },
+        "FACTOR": {
+          "type": "number",
+          "default": 1.0,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "description": "Condition Factor. Allowed range (0, 1]. Defaults to 1.0."
+        }
+      },
+      "required": ["GROUP", "POSITION"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "GROUP": "RatingGroup1",
+        "POSITION": 2,
+        "FACTOR": 0.85
+      }
+    }
+  }
+}

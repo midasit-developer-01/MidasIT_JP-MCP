@@ -1,0 +1,104 @@
+{
+  "_group": "db",
+  "_name": "GTMP",
+  "uri": "db/GTMP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "GTMP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Temperature Gradient Loads (GTMP). Each entry is keyed by an element key and carries an ITEMS array; each item's TYPE (1: Beam / 2: Plate) selects which fields apply, with TY/USE_HY/HY used only when TYPE=1.",
+      "type": "object",
+      "properties": {
+        "ITEMS": {
+          "description": "List of temperature gradient load items assigned to the element key.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of this item within the element key.",
+                "type": "integer",
+                "default": 0
+              },
+              "LCNAME": {
+                "description": "Static load case name; must reference an existing load case.",
+                "type": "string"
+              },
+              "GROUP_NAME": {
+                "description": "Load group name; if non-empty must reference an existing load group. Empty string means no group.",
+                "type": "string",
+                "default": ""
+              },
+              "TYPE": {
+                "description": "Temperature gradient type: 1 = Beam, 2 = Plate. Selects which fields apply (TY/USE_HY/HY apply only when TYPE=1).",
+                "type": "integer"
+              },
+              "TZ": {
+                "description": "Temperature gradient in the local z-direction (T2z - T1z).",
+                "type": "number"
+              },
+              "USE_HZ": {
+                "description": "When true, use the section property height Hz instead of the supplied HZ value.",
+                "type": "boolean",
+                "default": false
+              },
+              "HZ": {
+                "description": "Height Hz in the local z-direction (used when USE_HZ is false).",
+                "type": "number"
+              },
+              "TY": {
+                "description": "[TYPE=1] Temperature gradient in the local y-direction (T2y - T1y). Beam type only.",
+                "type": "number"
+              },
+              "USE_HY": {
+                "description": "[TYPE=1] When true, use the section property height Hy instead of the supplied HY value. Beam type only.",
+                "type": "boolean",
+                "default": false
+              },
+              "HY": {
+                "description": "[TYPE=1] Height Hy in the local y-direction (used when USE_HY is false). Beam type only.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "LCNAME",
+              "TYPE",
+              "TZ"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LCNAME": "Temp(+)",
+            "GROUP_NAME": "",
+            "TYPE": 1,
+            "TZ": 10.0,
+            "USE_HZ": false,
+            "HZ": 1.2,
+            "TY": -10.0,
+            "USE_HY": false,
+            "HY": 0.5
+          },
+          {
+            "ID": 2,
+            "LCNAME": "Temp(-)",
+            "GROUP_NAME": "",
+            "TYPE": 2,
+            "TZ": 15.0,
+            "USE_HZ": true
+          }
+        ]
+      }
+    }
+  }
+}

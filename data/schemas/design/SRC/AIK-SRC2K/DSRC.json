@@ -1,0 +1,29 @@
+{
+  "_group": "design",
+  "_name": "DSRC",
+  "uri": "design/SRC/AIK-SRC2K/DSRC",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "DSRC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "SRC Design Code (DSRC). The single field selects the SRC design code standard applied to the model.",
+      "properties": {
+        "DGNCODE": {
+          "type": "string",
+          "enum": ["AIK-SRC2K"],
+          "description": "SRC design code (case-insensitive on input). Serialized wire value for the AIK_SRC2K standard."
+        }
+      },
+      "required": ["DGNCODE"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DGNCODE": "AIK-SRC2K"
+      }
+    }
+  }
+}

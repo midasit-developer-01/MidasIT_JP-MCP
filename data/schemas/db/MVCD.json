@@ -1,0 +1,49 @@
+{
+  "_group": "db",
+  "_name": "MVCD",
+  "uri": "db/MVCD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVCD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Moving Load Code (MVCD). Single-entry setting (key 1) that selects the national design code governing the moving-load database; the CODE field drives the entire record.",
+      "type": "object",
+      "properties": {
+        "CODE": {
+          "description": "National design code for moving loads. Case-insensitive; the value must be one of the listed wire strings (note the embedded spaces, e.g. \"AASHTO STANDARD\", \"AASHTO LRFD(PENDOT)\", \"SOUTH AFRICA\"). \"TRANS\" selects the transitional/custom code path.",
+          "type": "string",
+          "enum": [
+            "NONE",
+            "AASHTO STANDARD",
+            "AASHTO LRFD",
+            "CHINA",
+            "TAIWAN",
+            "JAPAN",
+            "KOREA",
+            "INDIA",
+            "CANADA",
+            "AASHTO LRFD(PENDOT)",
+            "BS",
+            "EUROCODE",
+            "RUSSIA",
+            "KSCE-LSD15",
+            "AUSTRALIA",
+            "POLAND",
+            "SOUTH AFRICA",
+            "TRANS"
+          ]
+        }
+      },
+      "required": [
+        "CODE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "CODE": "EUROCODE"
+      }
+    }
+  }
+}

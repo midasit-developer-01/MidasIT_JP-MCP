@@ -1,0 +1,249 @@
+{
+  "_group": "db",
+  "_name": "RPSC",
+  "uri": "db/RPSC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "RPSC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Reinforcement of Section (RPSC). Keyed by section id; SBAR_ITEMS carries shear/web/torsion/stirrup reinforcement (index 0 = i-section, index 1 = j-section) whose sub-fields apply only when their OPT_* flag is true, and MBARS carries longitudinal reinforcement wrappers (index 0 = i-section, index 1 = j-section), each holding MBAR_ITEMS bar rows.",
+      "type": "object",
+      "properties": {
+        "OPT_MBAR_J": {
+          "description": "Use separate longitudinal (main-bar) reinforcement data at the j-end. When false, the i-end data is copied to the j-end.",
+          "type": "boolean"
+        },
+        "OPT_SBAR_J": {
+          "description": "Use separate shear reinforcement data at the j-end. When false, the i-end data is copied to the j-end.",
+          "type": "boolean"
+        },
+        "OPT_CRACKED": {
+          "description": "Consider the section as cracked.",
+          "type": "boolean"
+        },
+        "SBAR_ITEMS": {
+          "description": "Shear reinforcement per section end. Index 0 = i-section, index 1 = j-section (max 2, backed by a fixed 2-slot array).",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "properties": {
+              "OPT_DR": {
+                "description": "Enable diagonal reinforcement (DR). DR_PITCH, DR_THETA and DR_AW are applied only when this is true.",
+                "type": "boolean",
+                "default": false
+              },
+              "DR_PITCH": {
+                "description": "[OPT_DR=true] Diagonal reinforcement pitch (spacing).",
+                "type": "number"
+              },
+              "DR_THETA": {
+                "description": "[OPT_DR=true] Diagonal reinforcement angle.",
+                "type": "number"
+              },
+              "DR_AW": {
+                "description": "[OPT_DR=true] Diagonal reinforcement area (Aw).",
+                "type": "number"
+              },
+              "OPT_SBW": {
+                "description": "Enable steel bar for web / tendon (SBW). SBW_PITCH, SBW_ANGLE, SBW_AP, SBW_PS and SBW_FACTOR are applied only when this is true.",
+                "type": "boolean",
+                "default": false
+              },
+              "SBW_PITCH": {
+                "description": "[OPT_SBW=true] Web steel bar pitch (spacing).",
+                "type": "number"
+              },
+              "SBW_ANGLE": {
+                "description": "[OPT_SBW=true] Web steel bar angle.",
+                "type": "number"
+              },
+              "SBW_AP": {
+                "description": "[OPT_SBW=true] Web steel bar area (Ap).",
+                "type": "number"
+              },
+              "SBW_PS": {
+                "description": "[OPT_SBW=true] Web steel bar prestress / effective force (Pe).",
+                "type": "number"
+              },
+              "SBW_FACTOR": {
+                "description": "[OPT_SBW=true] Web steel bar shear reduction factor.",
+                "type": "number"
+              },
+              "OPT_TR": {
+                "description": "Enable torsional reinforcement (TR). TR_PITCH, TR_AWT and TR_ALT are applied only when this is true.",
+                "type": "boolean",
+                "default": false
+              },
+              "TR_PITCH": {
+                "description": "[OPT_TR=true] Torsional reinforcement pitch (spacing).",
+                "type": "number"
+              },
+              "TR_AWT": {
+                "description": "[OPT_TR=true] Torsional reinforcement web area (Awt).",
+                "type": "number"
+              },
+              "TR_ALT": {
+                "description": "[OPT_TR=true] Torsional reinforcement longitudinal area (Alt).",
+                "type": "number"
+              },
+              "OPT_SR": {
+                "description": "Enable stirrup reinforcement (SR). SR_PITCH and SR_AW are applied only when this is true.",
+                "type": "boolean",
+                "default": false
+              },
+              "SR_PITCH": {
+                "description": "[OPT_SR=true] Stirrup pitch (spacing).",
+                "type": "number"
+              },
+              "SR_AW": {
+                "description": "[OPT_SR=true] Stirrup area (Aw).",
+                "type": "number"
+              },
+              "OPT_LBAR_FLG": {
+                "description": "Enable enclosing stirrup. LBAR_THICK and LBAR_INC_FC are applied only when this is true.",
+                "type": "boolean",
+                "default": false
+              },
+              "LBAR_THICK": {
+                "description": "[OPT_LBAR_FLG=true] Cover thickness for the enclosed section area.",
+                "type": "number"
+              },
+              "LBAR_INC_FC": {
+                "description": "[OPT_LBAR_FLG=true] Include flange/cantilever in the enclosed section.",
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "MBARS": {
+          "description": "Longitudinal reinforcement per section end, as wrappers around MBAR_ITEMS. Index 0 = i-section, index 1 = j-section (handler processes at most 2 entries).",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "properties": {
+              "MBAR_ITEMS": {
+                "description": "Longitudinal reinforcement bar rows for this section end.",
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "IJ": {
+                      "description": "Section end this bar belongs to. Case-insensitive; \"I\" = i-section, \"J\" = j-section.",
+                      "type": "string",
+                      "enum": ["I", "J"]
+                    },
+                    "NAME": {
+                      "description": "Rebar (bar) name/designation.",
+                      "type": "string"
+                    },
+                    "REF_Y": {
+                      "description": "Y-direction reference for positioning the bar (integer code, e.g. 0 = centroid, 1 = left).",
+                      "type": "integer"
+                    },
+                    "Y": {
+                      "description": "Distance from the Y reference.",
+                      "type": "number",
+                      "default": 0
+                    },
+                    "REF_Z": {
+                      "description": "Z-direction reference for positioning the bar (integer code, e.g. 0 = top, 1 = bottom).",
+                      "type": "integer"
+                    },
+                    "Z": {
+                      "description": "Distance from the Z reference.",
+                      "type": "number",
+                      "default": 0
+                    },
+                    "NUM": {
+                      "description": "Number of rebars in this row.",
+                      "type": "integer"
+                    },
+                    "SPACING": {
+                      "description": "Spacing between rebars in this row.",
+                      "type": "number",
+                      "default": 0
+                    },
+                    "PART": {
+                      "description": "Section part index the bar is assigned to.",
+                      "type": "integer"
+                    }
+                  },
+                  "required": ["IJ", "NAME", "REF_Y", "REF_Z", "NUM", "PART"]
+                }
+              }
+            },
+            "required": ["MBAR_ITEMS"]
+          }
+        }
+      },
+      "required": ["OPT_MBAR_J", "OPT_SBAR_J", "OPT_CRACKED", "SBAR_ITEMS", "MBARS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "OPT_MBAR_J": false,
+        "OPT_SBAR_J": false,
+        "OPT_CRACKED": false,
+        "SBAR_ITEMS": [
+          {
+            "OPT_DR": false,
+            "OPT_SBW": false,
+            "OPT_TR": false,
+            "OPT_SR": true,
+            "SR_PITCH": 0.1,
+            "SR_AW": 0.000253,
+            "OPT_LBAR_FLG": false
+          }
+        ],
+        "MBARS": [
+          {
+            "MBAR_ITEMS": [
+              {
+                "IJ": "I",
+                "NAME": "#11",
+                "REF_Y": 1,
+                "Y": 3.53,
+                "REF_Z": 1,
+                "Z": 0.0481,
+                "NUM": 1,
+                "SPACING": 0,
+                "PART": 0
+              },
+              {
+                "IJ": "I",
+                "NAME": "#11",
+                "REF_Y": 0,
+                "Y": 0,
+                "REF_Z": 0,
+                "Z": 0.1,
+                "NUM": 2,
+                "SPACING": 0.1,
+                "PART": 0
+              }
+            ]
+          },
+          {
+            "MBAR_ITEMS": [
+              {
+                "IJ": "J",
+                "NAME": "#11",
+                "REF_Y": 1,
+                "Y": 3.53,
+                "REF_Z": 1,
+                "Z": 0.0481,
+                "NUM": 1,
+                "SPACING": 0,
+                "PART": 0
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

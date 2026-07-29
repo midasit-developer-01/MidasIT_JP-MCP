@@ -1,0 +1,273 @@
+{
+  "_group": "ope",
+  "_name": "LINEBMLD",
+  "uri": "ope/LINEBMLD",
+  "methods": "POST",
+  "schema": {
+    "LINEBMLD": {
+      "type": "object",
+      "description": "Line Beam Load (LINEBMLD). Adds a line/beam load to elements or along a loading line; the load geometry, direction, eccentricity, additional-H and copy options are driven by TYPE (load kind) and TARGET.METHOD (element selection vs loading line).",
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Line beam load request.",
+          "properties": {
+            "LCNAME": {
+              "type": "string",
+              "description": "Load Case Name. Must reference an existing static load case."
+            },
+            "GROUP_NAME": {
+              "type": "string",
+              "description": "Load Group Name.",
+              "default": ""
+            },
+            "TYPE": {
+              "type": "string",
+              "description": "Load Type (case-insensitive). Drives load geometry and which sub-fields apply: CONLOAD/CONMOMENT concentrated force/moment, UNILOAD/UNIMOMENT uniform force/moment, TRALOAD/TRAMOMENT trapezoidal force/moment, CURVED curved line load (uses LOAD.A/B/C instead of D/P), UNIPRESSURE/TRAPRESSURE pressure (enables ADD_H, disables eccentricity).",
+              "enum": [
+                "CONLOAD",
+                "CONMOMENT",
+                "UNILOAD",
+                "UNIMOMENT",
+                "TRALOAD",
+                "TRAMOMENT",
+                "CURVED",
+                "UNIPRESSURE",
+                "TRAPRESSURE"
+              ]
+            },
+            "TARGET": {
+              "type": "object",
+              "description": "Target of the load.",
+              "properties": {
+                "METHOD": {
+                  "type": "integer",
+                  "description": "Element Selection method: 0 = loading line (defined by NODE pair), 1 = select element (ELEM required and non-empty)."
+                },
+                "NODE": {
+                  "type": "array",
+                  "description": "Nodes for Loading Line: [I-node, J-node]. Both must be existing node numbers.",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "ELEM": {
+                  "type": "array",
+                  "description": "[METHOD=1] Element numbers the load is applied to; required and non-empty when METHOD == 1.",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "required": [
+                "METHOD",
+                "NODE"
+              ]
+            },
+            "ECCEN": {
+              "type": "object",
+              "description": "Eccentricity settings. Only applied for non-pressure TYPEs; ignored for UNIPRESSURE/TRAPRESSURE.",
+              "properties": {
+                "USE": {
+                  "type": "boolean",
+                  "description": "Use Eccentricity.",
+                  "default": false
+                },
+                "TYPE": {
+                  "type": "integer",
+                  "description": "Eccentricity Type; must be 0 or 1 when USE is true."
+                },
+                "DIR": {
+                  "type": "string",
+                  "description": "Eccentricity Direction (case-insensitive): LX/LY/LZ local, GX/GY/GZ global.",
+                  "enum": [
+                    "LX",
+                    "LY",
+                    "LZ",
+                    "GX",
+                    "GY",
+                    "GZ"
+                  ]
+                },
+                "I_END": {
+                  "type": "number",
+                  "description": "Eccentricity distance at I-end."
+                },
+                "J_END": {
+                  "type": "number",
+                  "description": "Eccentricity distance at J-end; used only when USE_J_END is true."
+                },
+                "USE_J_END": {
+                  "type": "boolean",
+                  "description": "Use J_END eccentricity distance."
+                }
+              },
+              "required": [
+                "TYPE",
+                "DIR",
+                "I_END",
+                "J_END",
+                "USE_J_END"
+              ]
+            },
+            "ADD_H": {
+              "type": "object",
+              "description": "Additional H from Top. Only applied for pressure TYPEs (UNIPRESSURE/TRAPRESSURE).",
+              "properties": {
+                "USE": {
+                  "type": "boolean",
+                  "description": "Use Additional H from Top.",
+                  "default": false
+                },
+                "I_END": {
+                  "type": "number",
+                  "description": "Additional distance at I-end; required when USE is true."
+                },
+                "J_END": {
+                  "type": "number",
+                  "description": "Additional distance at J-end; used only when USE_J_END is true."
+                },
+                "USE_J_END": {
+                  "type": "boolean",
+                  "description": "Use J_END additional distance."
+                }
+              },
+              "required": [
+                "I_END",
+                "J_END",
+                "USE_J_END"
+              ]
+            },
+            "LOAD": {
+              "type": "object",
+              "description": "Load definition.",
+              "properties": {
+                "DIR": {
+                  "type": "string",
+                  "description": "Load Direction (case-insensitive): LX/LY/LZ local, GX/GY/GZ global. For METHOD=1 (select element) only GX/GY/GZ are valid; for pressure TYPEs only LY/LZ are valid.",
+                  "enum": [
+                    "LX",
+                    "LY",
+                    "LZ",
+                    "GX",
+                    "GY",
+                    "GZ"
+                  ]
+                },
+                "USE_PROJECTION": {
+                  "type": "boolean",
+                  "description": "Use Projection. Defaults to false for METHOD=0 (loading line) and true for METHOD=1 (select element); projection must be enabled when METHOD == 1."
+                },
+                "TYPE": {
+                  "type": "integer",
+                  "description": "Value type: 0 = relative (distance ratios), non-zero = absolute distances. For CURVED this is the curve method (0 or 1); C is required when it equals 1."
+                },
+                "D": {
+                  "type": "array",
+                  "description": "[TYPE!=CURVED] Distance positions/ratios (up to 4 used). Required when TYPE is not CURVED.",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "P": {
+                  "type": "array",
+                  "description": "[TYPE!=CURVED] Load values at the corresponding distances (up to 4 used). Required when TYPE is not CURVED.",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "A": {
+                  "type": "number",
+                  "description": "[TYPE=CURVED] Curved load parameter A. Required when TYPE is CURVED."
+                },
+                "B": {
+                  "type": "number",
+                  "description": "[TYPE=CURVED] Curved load parameter B. Required when TYPE is CURVED."
+                },
+                "C": {
+                  "type": "number",
+                  "description": "[TYPE=CURVED] Curved load parameter C. Required when TYPE is CURVED and LOAD.TYPE == 1."
+                }
+              },
+              "required": [
+                "DIR",
+                "TYPE"
+              ]
+            },
+            "COPY": {
+              "type": "object",
+              "description": "Copy Load settings. Only applied when METHOD=0 (loading line) and USE is true.",
+              "properties": {
+                "USE": {
+                  "type": "boolean",
+                  "description": "Use Copy Load."
+                },
+                "AXIS": {
+                  "type": "string",
+                  "description": "Copy Axis (case-insensitive): X, Y or Z. Required when USE is true.",
+                  "enum": [
+                    "X",
+                    "Y",
+                    "Z"
+                  ]
+                },
+                "DIST": {
+                  "type": "string",
+                  "description": "Copy Distances expression. Required when USE is true."
+                }
+              },
+              "required": [
+                "USE",
+                "AXIS",
+                "DIST"
+              ]
+            }
+          },
+          "required": [
+            "LCNAME",
+            "TYPE",
+            "TARGET",
+            "LOAD"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "LCNAME": "DL",
+      "GROUP_NAME": "",
+      "TYPE": "UNILOAD",
+      "TARGET": {
+        "METHOD": 0,
+        "NODE": [
+          1,
+          2
+        ]
+      },
+      "LOAD": {
+        "DIR": "GZ",
+        "USE_PROJECTION": false,
+        "TYPE": 0,
+        "D": [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        "P": [
+          -10.0,
+          -10.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  }
+}

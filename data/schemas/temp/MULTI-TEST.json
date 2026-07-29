@@ -1,0 +1,111 @@
+{
+  "_group": "temp",
+  "_name": "MULTI-TEST",
+  "uri": "temp/MULTI-TEST",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MULTI-TEST": {
+      "type": "object",
+      "description": "Multi Field Test (MULTI-TEST). Test endpoint exercising condition-aware multi-DTO fields: DGNCODE (design code) selects which sub-key of OPTION applies and whether that sub-key is required.",
+      "additionalProperties": false,
+      "required": [
+        "DGNCODE"
+      ],
+      "properties": {
+        "DGNCODE": {
+          "type": "string",
+          "enum": [
+            "KDS(41-12:2022)",
+            "KDS2019",
+            "AIK2K",
+            "KCI"
+          ],
+          "description": "Design Code (case-insensitive). Discriminator that selects the active OPTION variant: KDS(41-12:2022) -> OPTION.KDS2022 (required), AIK2K -> OPTION.AIK2K (optional), KCI -> OPTION.KCI (optional). KDS2019 has no OPTION variant."
+        },
+        "OPTION": {
+          "type": "object",
+          "description": "Test Option, keyed by DGNCODE. Provide only the sub-key matching DGNCODE; each variant is condition-aware.",
+          "additionalProperties": false,
+          "properties": {
+            "KDS2022": {
+              "type": "array",
+              "description": "[DGNCODE=KDS(41-12:2022)] Required for this design code. List of numeric values.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "AIK2K": {
+              "type": "array",
+              "description": "[DGNCODE=AIK2K] Optional. List of numeric values.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "KCI": {
+              "type": "array",
+              "description": "[DGNCODE=KCI] Optional. List of item objects.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "VALUE"
+                ],
+                "properties": {
+                  "VALUE": {
+                    "type": "number",
+                    "description": "Value."
+                  },
+                  "NAME": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Name."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DGNCODE": "KDS(41-12:2022)",
+        "OPTION": {
+          "KDS2022": [
+            1.1,
+            2.2,
+            3.3
+          ]
+        }
+      },
+      "2": {
+        "DGNCODE": "AIK2K",
+        "OPTION": {
+          "AIK2K": [
+            10.0,
+            20.0
+          ]
+        }
+      },
+      "3": {
+        "DGNCODE": "KCI",
+        "OPTION": {
+          "KCI": [
+            {
+              "VALUE": 5.0,
+              "NAME": "Item A"
+            },
+            {
+              "VALUE": 7.5
+            }
+          ]
+        }
+      },
+      "4": {
+        "DGNCODE": "KDS2019"
+      }
+    }
+  }
+}

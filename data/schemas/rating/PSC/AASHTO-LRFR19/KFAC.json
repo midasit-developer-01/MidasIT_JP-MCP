@@ -1,0 +1,35 @@
+{
+  "_group": "rating",
+  "_name": "KFAC",
+  "uri": "rating/PSC/AASHTO-LRFR19/KFAC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "KFAC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Effective Length Factor (KFAC). Holds the member effective length factors used in PSC rating; all fields are optional and default to 1.0. Kt is excluded from the PSC schema.",
+      "properties": {
+        "Ky": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor about the member y-axis. Stored as BKy."
+        },
+        "Kz": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor about the member z-axis. Stored as BKz."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "Ky": 1.0,
+        "Kz": 0.85
+      }
+    }
+  }
+}

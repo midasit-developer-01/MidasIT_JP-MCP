@@ -1,0 +1,178 @@
+{
+  "_group": "db",
+  "_name": "MVLDID",
+  "uri": "db/MVLDID",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVLDID": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Case - India (MVLDID). Fields are driven by OPT_LC_FOR_PERMIT_LOAD (permit-vehicle vs. standard sub-load items) and OPT_AUTO_LL (auto live-load combination inside each sub-load item).",
+      "properties": {
+        "LCNAME": {
+          "type": "string",
+          "description": "Load Case Name."
+        },
+        "DESC": {
+          "type": "string",
+          "default": "",
+          "description": "Description."
+        },
+        "OPT_AUTO_LL": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auto Live Load Combination Boolean. When true, each sub-load item uses the auto live-load fields (VEHICLE_CLASS_2, FOOTWAY, carriageway values, selected footway lanes); when false, the sub-load item uses MIN/MAX number of loaded lanes."
+        },
+        "SCALE_FACTOR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "Scale Factors. Exactly 4 values."
+        },
+        "OPT_LC_FOR_PERMIT_LOAD": {
+          "type": "boolean",
+          "default": false,
+          "description": "Load Case for Permit Vehicle Boolean. When true, the load case is defined by the permit-vehicle fields (PERMIT_VEHICLE, REF_LANE, ECCEN, PERMIT_SCALE_FACTOR); when false, it is defined by NUM_LOADED_LANES and SUB_LOAD_ITEMS."
+        },
+        "NUM_LOADED_LANES": {
+          "type": "integer",
+          "description": "[OPT_LC_FOR_PERMIT_LOAD=false] Number of Design Lanes."
+        },
+        "SUB_LOAD_ITEMS": {
+          "type": "array",
+          "description": "[OPT_LC_FOR_PERMIT_LOAD=false] Sub Load Items.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "SCALE_FACTOR": {
+                "type": "number",
+                "description": "Scale Factor for this sub-load item."
+              },
+              "MIN_NUM_LOADED_LANES": {
+                "type": "integer",
+                "description": "[OPT_AUTO_LL=false] Min. Number of Loaded Lanes."
+              },
+              "MAX_NUM_LOADED_LANES": {
+                "type": "integer",
+                "description": "[OPT_AUTO_LL=false] Max. Number of Loaded Lanes."
+              },
+              "VEHICLE_CLASS_1": {
+                "type": "string",
+                "description": "Class 1 vehicle load name (must reference an existing moving-vehicle load)."
+              },
+              "VEHICLE_CLASS_2": {
+                "type": "string",
+                "description": "[OPT_AUTO_LL=true] Class 2 vehicle load name."
+              },
+              "FOOTWAY": {
+                "type": "string",
+                "description": "[OPT_AUTO_LL=true] Footway vehicle load name."
+              },
+              "CARRIAGE_WAY_WIDTH": {
+                "type": "number",
+                "description": "[OPT_AUTO_LL=true, NUM_LOADED_LANES=1] Carriageway width."
+              },
+              "CARRIAGE_WAY_LOADING": {
+                "type": "number",
+                "description": "[OPT_AUTO_LL=true, NUM_LOADED_LANES=1] Carriageway loading."
+              },
+              "SELECTED_LANES": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Selected lane names."
+              },
+              "SELECTED_FOOTWAY_LANES": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "[OPT_AUTO_LL=true] Selected footway lane names."
+              }
+            },
+            "required": [
+              "SCALE_FACTOR",
+              "VEHICLE_CLASS_1"
+            ]
+          }
+        },
+        "PERMIT_VEHICLE": {
+          "type": "integer",
+          "description": "[OPT_LC_FOR_PERMIT_LOAD=true] Permit Vehicle key."
+        },
+        "REF_LANE": {
+          "type": "integer",
+          "description": "[OPT_LC_FOR_PERMIT_LOAD=true] Ref. Lane key."
+        },
+        "ECCEN": {
+          "type": "number",
+          "description": "[OPT_LC_FOR_PERMIT_LOAD=true] Eccentricity."
+        },
+        "PERMIT_SCALE_FACTOR": {
+          "type": "number",
+          "description": "[OPT_LC_FOR_PERMIT_LOAD=true] Scale Factor (Permit Vehicle)."
+        }
+      },
+      "required": [
+        "LCNAME",
+        "SCALE_FACTOR"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "Moving Load Case 1",
+        "DESC": "Standard sub-load items, non-auto live load",
+        "OPT_AUTO_LL": false,
+        "SCALE_FACTOR": [1.0, 1.0, 1.0, 1.0],
+        "OPT_LC_FOR_PERMIT_LOAD": false,
+        "NUM_LOADED_LANES": 2,
+        "SUB_LOAD_ITEMS": [
+          {
+            "SCALE_FACTOR": 1.0,
+            "MIN_NUM_LOADED_LANES": 1,
+            "MAX_NUM_LOADED_LANES": 2,
+            "VEHICLE_CLASS_1": "Class A",
+            "SELECTED_LANES": ["Lane1", "Lane2"]
+          }
+        ]
+      },
+      "2": {
+        "LCNAME": "Moving Load Case 2",
+        "DESC": "Auto live load combination",
+        "OPT_AUTO_LL": true,
+        "SCALE_FACTOR": [1.0, 1.0, 1.0, 1.0],
+        "OPT_LC_FOR_PERMIT_LOAD": false,
+        "NUM_LOADED_LANES": 1,
+        "SUB_LOAD_ITEMS": [
+          {
+            "SCALE_FACTOR": 1.0,
+            "VEHICLE_CLASS_1": "Class A",
+            "VEHICLE_CLASS_2": "Class B",
+            "FOOTWAY": "Footway Load",
+            "CARRIAGE_WAY_WIDTH": 7.5,
+            "CARRIAGE_WAY_LOADING": 5.0,
+            "SELECTED_LANES": ["Lane1"],
+            "SELECTED_FOOTWAY_LANES": ["Footway1"]
+          }
+        ]
+      },
+      "3": {
+        "LCNAME": "Permit Vehicle Case",
+        "DESC": "Load case for permit vehicle",
+        "OPT_AUTO_LL": false,
+        "SCALE_FACTOR": [1.0, 1.0, 1.0, 1.0],
+        "OPT_LC_FOR_PERMIT_LOAD": true,
+        "PERMIT_VEHICLE": 1,
+        "REF_LANE": 1,
+        "ECCEN": 0.5,
+        "PERMIT_SCALE_FACTOR": 1.0
+      }
+    }
+  }
+}

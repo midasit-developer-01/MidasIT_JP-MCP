@@ -1,0 +1,233 @@
+{
+  "_group": "db",
+  "_name": "POLC",
+  "uri": "db/POLC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "POLC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Pushover Load Case (POLC). INCRE_METHOD selects load- vs displacement-control fields, DISPCTRLOPTION selects global vs master-node displacement fields, and LOADPATTERNTYPE selects which sub-field of each LOADPATTERN item is used.",
+      "properties": {
+        "LCNAME": {
+          "description": "Load Case Name.",
+          "type": "string"
+        },
+        "DESC": {
+          "description": "Description of the pushover load case.",
+          "type": "string",
+          "default": ""
+        },
+        "INCRE_STEP": {
+          "description": "Number of increment steps.",
+          "type": "integer"
+        },
+        "bCONS_PDELTA": {
+          "description": "Consider P-Delta effect.",
+          "type": "boolean"
+        },
+        "bUSEINITIAL": {
+          "description": "Use initial load.",
+          "type": "boolean",
+          "default": false
+        },
+        "bREACOUTPUT": {
+          "description": "Output cumulative reaction / story shear by initial load.",
+          "type": "boolean",
+          "default": false
+        },
+        "INCRE_METHOD": {
+          "description": "Increment method (case-insensitive). LOAD = load control, DISP = displacement control.",
+          "type": "string",
+          "enum": ["LOAD", "DISP"]
+        },
+        "STEPCTRLOPTION": {
+          "description": "[INCRE_METHOD=LOAD] Stepping control option (case-insensitive). AUTO = auto-stepping, EQUAL = equal step (1/nstep), INC_FUNC = incremental control function.",
+          "type": "string",
+          "enum": ["AUTO", "EQUAL", "INC_FUNC"]
+        },
+        "INCFUNC_KEY": {
+          "description": "[INCRE_METHOD=LOAD, STEPCTRLOPTION=INC_FUNC] Key of the incremental control function.",
+          "type": "integer"
+        },
+        "STIFF_RATIO": {
+          "description": "[INCRE_METHOD=LOAD] Analysis stopping condition: current stiffness ratio.",
+          "type": "number"
+        },
+        "DISPCTRLOPTION": {
+          "description": "[INCRE_METHOD=DISP] Displacement control option (case-insensitive). GLOBAL = global displacement, NODE = master node.",
+          "type": "string",
+          "enum": ["GLOBAL", "NODE"]
+        },
+        "GLOBAL_MAX_DISP": {
+          "description": "[INCRE_METHOD=DISP, DISPCTRLOPTION=GLOBAL] Global maximum translational displacement.",
+          "type": "number"
+        },
+        "MASTERNODE": {
+          "description": "[INCRE_METHOD=DISP, DISPCTRLOPTION=NODE] Master node key (node ID).",
+          "type": "integer"
+        },
+        "MASTERDIRECTION": {
+          "description": "[INCRE_METHOD=DISP, DISPCTRLOPTION=NODE] Master node direction. Empty string means unset.",
+          "type": "string",
+          "enum": ["", "DX", "DY", "DZ"]
+        },
+        "MASTERMAXDISP": {
+          "description": "[INCRE_METHOD=DISP, DISPCTRLOPTION=NODE] Master node maximum displacement.",
+          "type": "number"
+        },
+        "LOADPATTERNTYPE": {
+          "description": "Load pattern type (case-insensitive). LOAD = static load cases, ACC = uniform acceleration, MODE = mode shape, NOR_MODE = normalized mode shape * mass. Determines which LOADPATTERN item field is used.",
+          "type": "string",
+          "enum": ["LOAD", "ACC", "MODE", "NOR_MODE"]
+        },
+        "LOADPATTERN": {
+          "description": "Load pattern data list. Each item uses a different field depending on LOADPATTERNTYPE.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LCNAME": {
+                "description": "[LOADPATTERNTYPE=LOAD] Static load case name.",
+                "type": "string",
+                "default": ""
+              },
+              "DIR": {
+                "description": "[LOADPATTERNTYPE=ACC] Acceleration direction. Empty string means unset.",
+                "type": "string",
+                "enum": ["", "DX", "DY", "DZ"],
+                "default": ""
+              },
+              "MODE": {
+                "description": "[LOADPATTERNTYPE=MODE or NOR_MODE] Mode number.",
+                "type": "integer",
+                "default": 0
+              },
+              "SF": {
+                "description": "Scale factor.",
+                "type": "number",
+                "default": 0
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "LCNAME",
+        "INCRE_STEP",
+        "bCONS_PDELTA",
+        "INCRE_METHOD",
+        "STEPCTRLOPTION",
+        "INCFUNC_KEY",
+        "STIFF_RATIO",
+        "DISPCTRLOPTION",
+        "GLOBAL_MAX_DISP",
+        "MASTERNODE",
+        "MASTERDIRECTION",
+        "MASTERMAXDISP",
+        "LOADPATTERNTYPE",
+        "LOADPATTERN"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "Mode_X",
+        "DESC": "",
+        "INCRE_STEP": 10,
+        "bCONS_PDELTA": true,
+        "bUSEINITIAL": false,
+        "bREACOUTPUT": false,
+        "INCRE_METHOD": "DISP",
+        "STEPCTRLOPTION": "AUTO",
+        "INCFUNC_KEY": 0,
+        "STIFF_RATIO": 0,
+        "DISPCTRLOPTION": "NODE",
+        "GLOBAL_MAX_DISP": 0,
+        "MASTERNODE": 134,
+        "MASTERDIRECTION": "DX",
+        "MASTERMAXDISP": 1,
+        "LOADPATTERNTYPE": "MODE",
+        "LOADPATTERN": [
+          {
+            "MODE": 1,
+            "SF": 1
+          }
+        ]
+      },
+      "2": {
+        "LCNAME": "Static_X",
+        "DESC": "",
+        "INCRE_STEP": 10,
+        "bCONS_PDELTA": false,
+        "bUSEINITIAL": false,
+        "bREACOUTPUT": false,
+        "INCRE_METHOD": "LOAD",
+        "STEPCTRLOPTION": "AUTO",
+        "INCFUNC_KEY": 0,
+        "STIFF_RATIO": 0,
+        "DISPCTRLOPTION": "GLOBAL",
+        "GLOBAL_MAX_DISP": 0,
+        "MASTERNODE": 0,
+        "MASTERDIRECTION": "",
+        "MASTERMAXDISP": 0,
+        "LOADPATTERNTYPE": "LOAD",
+        "LOADPATTERN": [
+          {
+            "LCNAME": "LOAD1",
+            "SF": 1
+          }
+        ]
+      },
+      "3": {
+        "LCNAME": "Uni_X",
+        "DESC": "",
+        "INCRE_STEP": 10,
+        "bCONS_PDELTA": false,
+        "bUSEINITIAL": false,
+        "bREACOUTPUT": false,
+        "INCRE_METHOD": "LOAD",
+        "STEPCTRLOPTION": "INC_FUNC",
+        "INCFUNC_KEY": 1,
+        "STIFF_RATIO": 0.001,
+        "DISPCTRLOPTION": "GLOBAL",
+        "GLOBAL_MAX_DISP": 0,
+        "MASTERNODE": 0,
+        "MASTERDIRECTION": "",
+        "MASTERMAXDISP": 0,
+        "LOADPATTERNTYPE": "ACC",
+        "LOADPATTERN": [
+          {
+            "DIR": "DX",
+            "SF": 1
+          }
+        ]
+      },
+      "4": {
+        "LCNAME": "NorMode_Y",
+        "DESC": "",
+        "INCRE_STEP": 10,
+        "bCONS_PDELTA": true,
+        "bUSEINITIAL": false,
+        "bREACOUTPUT": false,
+        "INCRE_METHOD": "DISP",
+        "STEPCTRLOPTION": "AUTO",
+        "INCFUNC_KEY": 0,
+        "STIFF_RATIO": 0,
+        "DISPCTRLOPTION": "GLOBAL",
+        "GLOBAL_MAX_DISP": 1,
+        "MASTERNODE": 0,
+        "MASTERDIRECTION": "",
+        "MASTERMAXDISP": 0,
+        "LOADPATTERNTYPE": "NOR_MODE",
+        "LOADPATTERN": [
+          {
+            "MODE": 2,
+            "SF": 1
+          }
+        ]
+      }
+    }
+  }
+}

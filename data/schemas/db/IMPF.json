@@ -1,0 +1,99 @@
+{
+  "_group": "db",
+  "_name": "IMPF",
+  "uri": "db/IMPF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "IMPF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Impact Factor (IMPF). Assigned per element key; ITEMS holds one entry per lane, whose fields depend on FACT_TYPE (impact factor / user effective span length / auto effective span length with element type).",
+      "properties": {
+        "ITEMS": {
+          "description": "List of impact-factor definitions for this element key. Each item targets a lane (LANE_TYPE + LANE_NAME) and specifies how the factor is determined via FACT_TYPE.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the impact-factor item within this element key.",
+                "type": "integer"
+              },
+              "LANE_TYPE": {
+                "description": "Lane type. Case-insensitive. LINE = line lane (LANE_NAME must match an existing line-lane name), SURFACE = surface lane (LANE_NAME must match an existing surface-lane name).",
+                "type": "string",
+                "enum": ["LINE", "SURFACE"]
+              },
+              "LANE_NAME": {
+                "description": "Name of the lane. Must reference an existing line-lane (when LANE_TYPE=LINE) or surface-lane (when LANE_TYPE=SURFACE); otherwise the request is rejected.",
+                "type": "string"
+              },
+              "FACT_TYPE": {
+                "description": "How the impact factor is determined. Case-insensitive. IMPACT_FACT = user impact factor (uses FACTOR), EFF_SPAN_LEN_USER = user effective span length (uses FACTOR), EFF_SPAN_LEN_AUTO = auto effective span length (uses ELEMTYPE, PARTS, COMPONENTS).",
+                "type": "string",
+                "enum": ["EFF_SPAN_LEN_USER", "IMPACT_FACT", "EFF_SPAN_LEN_AUTO"]
+              },
+              "FACTOR": {
+                "description": "[FACT_TYPE=IMPACT_FACT] impact factor value; [FACT_TYPE=EFF_SPAN_LEN_USER] user-defined effective span length. Ignored when FACT_TYPE=EFF_SPAN_LEN_AUTO.",
+                "type": "number",
+                "default": 0.0
+              },
+              "ELEMTYPE": {
+                "description": "[FACT_TYPE=EFF_SPAN_LEN_AUTO] element type used for auto effective span length. Case-insensitive. TRUSS uses 0 parts / 2 components, BEAM uses 5 parts / 6 components, PLATE uses 5 parts / 8 components.",
+                "type": "string",
+                "enum": ["TRUSS", "BEAM", "PLATE"]
+              },
+              "PARTS": {
+                "description": "[FACT_TYPE=EFF_SPAN_LEN_AUTO] part on/off flags. BEAM: [i, 1/4, 1/2, 3/4, j] (5 used); PLATE: [cent, i, j, k, l] (5 used); TRUSS uses none. Fixed length 5.",
+                "type": "array",
+                "items": { "type": "boolean" },
+                "minItems": 5,
+                "maxItems": 5
+              },
+              "COMPONENTS": {
+                "description": "[FACT_TYPE=EFF_SPAN_LEN_AUTO] component on/off flags. TRUSS: [Max, Min] (2 used); BEAM: [My_max, My_min, Mz_max, Mz_min, Fx_max, Fx_min] (6 used); PLATE: [Mxx_max, Mxx_min, Myy_max, Myy_min, Fxx_max, Fxx_min, Fyy_max, Fyy_min] (8 used). Fixed length 8.",
+                "type": "array",
+                "items": { "type": "boolean" },
+                "minItems": 8,
+                "maxItems": 8
+              }
+            },
+            "required": ["ID", "LANE_TYPE", "LANE_NAME", "FACT_TYPE"]
+          }
+        }
+      },
+      "required": ["ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "82": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "LANE_TYPE": "LINE",
+            "LANE_NAME": "LL_01",
+            "FACT_TYPE": "IMPACT_FACT",
+            "FACTOR": 0.3
+          },
+          {
+            "ID": 2,
+            "LANE_TYPE": "LINE",
+            "LANE_NAME": "LL_02",
+            "FACT_TYPE": "EFF_SPAN_LEN_USER",
+            "FACTOR": 10.0
+          },
+          {
+            "ID": 3,
+            "LANE_TYPE": "SURFACE",
+            "LANE_NAME": "SL_01",
+            "FACT_TYPE": "EFF_SPAN_LEN_AUTO",
+            "ELEMTYPE": "BEAM",
+            "PARTS": [true, true, true, true, true],
+            "COMPONENTS": [true, true, true, true, true, true, false, false]
+          }
+        ]
+      }
+    }
+  }
+}

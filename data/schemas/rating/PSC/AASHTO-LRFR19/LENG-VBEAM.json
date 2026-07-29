@@ -1,0 +1,58 @@
+{
+  "_group": "rating",
+  "_name": "LENG-VBEAM",
+  "uri": "rating/PSC/AASHTO-LRFR19/LENG-VBEAM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LENG-VBEAM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Unbraced Length - Virtual Beam (LENG-VBEAM). All fields are optional unbraced-length values applied to a virtual beam, keyed by virtual-beam element id.",
+      "properties": {
+        "LY": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced Length Ly."
+        },
+        "LZ": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced Length Lz."
+        },
+        "LB": {
+          "type": "number",
+          "default": 0,
+          "description": "Laterally Unbraced Length."
+        },
+        "bNOTUSE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Do not consider."
+        },
+        "bAUTOCALC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate by Code."
+        },
+        "LT": {
+          "type": "number",
+          "default": 0,
+          "description": "Torsional Unbraced Length."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LY": 5.0,
+        "LZ": 5.0,
+        "LB": 5.0,
+        "bNOTUSE": false,
+        "bAUTOCALC": true,
+        "LT": 5.0
+      }
+    }
+  }
+}

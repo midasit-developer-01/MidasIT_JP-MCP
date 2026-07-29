@@ -1,0 +1,37 @@
+{
+  "_group": "design",
+  "_name": "DIDP",
+  "uri": "design/PSC/AASHTO-LRFD24/DIDP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DIDP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "PSC Design Input for Design Position (DIDP). Fields select which element ends are checked for moment and shear design; both are element-end flags applied to a PSC design target element.",
+      "properties": {
+        "MOMENT_TYPE": {
+          "type": "integer",
+          "enum": [0, 1, 2, 3],
+          "description": "Moment check position. 0=None, 1=I, 2=J, 3=I&J. Rejected if outside 0..3."
+        },
+        "SHEAR_TYPE": {
+          "type": "integer",
+          "enum": [0, 1, 2, 3],
+          "description": "Shear check position. 0=None, 1=I, 2=J, 3=I&J. Rejected if outside 0..3."
+        }
+      },
+      "required": [
+        "MOMENT_TYPE",
+        "SHEAR_TYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "MOMENT_TYPE": 3,
+        "SHEAR_TYPE": 3
+      }
+    }
+  }
+}

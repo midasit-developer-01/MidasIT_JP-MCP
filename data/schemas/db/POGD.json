@@ -1,0 +1,349 @@
+{
+  "_group": "db",
+  "_name": "POGD",
+  "uri": "db/POGD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "POGD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Pushover Global Control (POGD). Single global-setting record (only key 1 exists); its behavior is driven by the two required nested option objects NONL_OPT (nonlinear analysis control) and PHOP_OPT (pushover hinge option), plus the initial-load list INITLOAD.",
+      "type": "object",
+      "properties": {
+        "GEOMNONLINEAR_TYPE": {
+          "description": "Geometric nonlinearity type. Case-insensitive enum. NONE = none, LARGE_DISP = large displacements, P_DELTA = P-Delta.",
+          "type": "string",
+          "enum": ["NONE", "LARGE_DISP", "P_DELTA"],
+          "default": "NONE"
+        },
+        "INITLOADMETHOD": {
+          "description": "Initial load analysis method. Case-insensitive enum. PERFORM_ANAL = perform nonlinear static analysis, IMPORT_RESULT = import static/construction-stage analysis result.",
+          "type": "string",
+          "enum": ["PERFORM_ANAL", "IMPORT_RESULT"],
+          "default": "PERFORM_ANAL"
+        },
+        "INITLOAD": {
+          "description": "Initial load case list. Each item names a load case, its type, and a scale factor applied as the pushover initial load.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LC_NAME": {
+                "description": "Load case name (resolved to an internal load-case key at write time).",
+                "type": "string"
+              },
+              "LC_TYPE": {
+                "description": "Load case type. Case-insensitive enum; value is the wire string (e.g. ST=Static, CS=Construction Stage). ST=Static, RS=Response Spectrum, TH=Time History, MV=Moving, SM=Settlement, ENVL=Envelope, CB=Load Combination, CBS=Steel Comb., CBC=Concrete Comb., CBF=Footing Comb., CBR=SRC Comb., PO=Pushover, CS=Construction Stage, ES=Eccentric Spectrum, GI=Grid Model, THEX/THAM/THPO=Time History variants, CN=Crane, CBA=Aluminum Comb., CBSC=StlComp Comb., CBCF=CFSteel Comb., CBSM=Seismic Comb., CBTH=History Comb., CBLN=Linear Eval Comb., NRS=Spectrum(ND), NES=Eccentric Spectrum(ND).",
+                "type": "string",
+                "enum": [
+                  "ST", "RS", "TH", "MV", "SM", "ENVL", "CB", "CBS", "CBC", "CBF",
+                  "CBR", "PO", "CS", "ES", "GI", "THEX", "THAM", "THPO", "CN", "CBA",
+                  "CBSC", "CBCF", "CBSM", "CBTH", "CBLN", "NRS", "NES"
+                ]
+              },
+              "SF": {
+                "description": "Scale factor applied to this initial load case.",
+                "type": "number"
+              }
+            },
+            "required": ["LC_NAME", "LC_TYPE", "SF"]
+          }
+        },
+        "bCONSIGNOREELEM": {
+          "description": "Consider ignored elements for the nonlinear-analysis initial load (relevant when INITLOADMETHOD = PERFORM_ANAL).",
+          "type": "boolean",
+          "default": false
+        },
+        "NONL_OPT": {
+          "description": "Nonlinear analysis option block. SUBSTEP and MAXITER are required; convergence-norm and analysis-stop flags are optional toggles.",
+          "type": "object",
+          "properties": {
+            "bPERMITFAIL": {
+              "description": "Permit convergence failure during nonlinear analysis.",
+              "type": "boolean",
+              "default": false
+            },
+            "SUBSTEP": {
+              "description": "Nonlinear analysis maximum number of substeps.",
+              "type": "integer"
+            },
+            "MAXITER": {
+              "description": "Maximum number of iterations.",
+              "type": "integer"
+            },
+            "bDISPLNORM": {
+              "description": "Use displacement-norm convergence criterion.",
+              "type": "boolean",
+              "default": false
+            },
+            "DISPLNORM": {
+              "description": "Displacement norm tolerance (used when bDISPLNORM = true).",
+              "type": "number",
+              "default": 0
+            },
+            "bFORCENORM": {
+              "description": "Use force-norm convergence criterion.",
+              "type": "boolean",
+              "default": false
+            },
+            "FORCENORM": {
+              "description": "Force norm tolerance (used when bFORCENORM = true).",
+              "type": "number",
+              "default": 0
+            },
+            "bENERGYNORM": {
+              "description": "Use energy-norm convergence criterion.",
+              "type": "boolean",
+              "default": false
+            },
+            "ENERGYNORM": {
+              "description": "Energy norm tolerance (used when bENERGYNORM = true).",
+              "type": "number",
+              "default": 0
+            },
+            "bSHEARYIELDSTOP": {
+              "description": "Analysis stop on shear component yield.",
+              "type": "boolean",
+              "default": false
+            },
+            "BSHEARYIELDSTOPBEAM": {
+              "description": "Analysis stop on shear component yield - Beam/Column (relevant when bSHEARYIELDSTOP = true).",
+              "type": "boolean",
+              "default": false
+            },
+            "bAXIALYIELDSTOP": {
+              "description": "Analysis stop on axial component collapse/buckling.",
+              "type": "boolean",
+              "default": false
+            },
+            "bAXIALYIELDSTOPBEAM": {
+              "description": "Analysis stop on axial component collapse/buckling - Beam/Column (relevant when bAXIALYIELDSTOP = true).",
+              "type": "boolean",
+              "default": false
+            },
+            "bAXIALYIELDSTOPTRUSS": {
+              "description": "Analysis stop on axial component collapse/buckling - Truss (relevant when bAXIALYIELDSTOP = true).",
+              "type": "boolean",
+              "default": false
+            },
+            "bSUPPORTDZDIRSTOP": {
+              "description": "Analysis stop on support uplifting/collapse in the Dz-direction.",
+              "type": "boolean",
+              "default": false
+            },
+            "bSUPPORTSTOPUPLIFTING": {
+              "description": "Analysis stop on support uplifting: Dz-direction (relevant when bSUPPORTDZDIRSTOP = true).",
+              "type": "boolean",
+              "default": false
+            },
+            "bSUPPORTSTOPCOLLAPSE": {
+              "description": "Analysis stop on support collapse: Dz-direction (relevant when bSUPPORTDZDIRSTOP = true).",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "required": ["SUBSTEP", "MAXITER"]
+        },
+        "PHOP_OPT": {
+          "description": "Pushover hinge option block. Trilinear/bilinear stiffness-reduction values, apply types, reference locations, and confidence factor are required; the ultimate-rotation scale factors are optional and only take effect under Eurocode concrete+steel design codes.",
+          "type": "object",
+          "properties": {
+            "bASSIGNBYMEMBER": {
+              "description": "Assign hinge properties to member only for Moment-Rotation Beam/Column.",
+              "type": "boolean"
+            },
+            "bTRI_SYM": {
+              "description": "Use trilinear default stiffness-reduction symmetrical.",
+              "type": "boolean"
+            },
+            "TRI_TENS_A1": {
+              "description": "Trilinear default stiffness reduction - Tension a1.",
+              "type": "number"
+            },
+            "TRI_TENS_A2": {
+              "description": "Trilinear default stiffness reduction - Tension a2.",
+              "type": "number"
+            },
+            "TRI_COMP_A1": {
+              "description": "Trilinear default stiffness reduction - Compression a1.",
+              "type": "number"
+            },
+            "TRI_COMP_A2": {
+              "description": "Trilinear default stiffness reduction - Compression a2.",
+              "type": "number"
+            },
+            "bBI_SYM": {
+              "description": "Use bilinear default stiffness-reduction symmetrical.",
+              "type": "boolean"
+            },
+            "BI_TENS_A1": {
+              "description": "Bilinear default stiffness reduction - Tension a1.",
+              "type": "number"
+            },
+            "BI_COMP_A1": {
+              "description": "Bilinear default stiffness reduction - Compression a1.",
+              "type": "number"
+            },
+            "PSPR_APPLY_TYPE": {
+              "description": "Point spring support apply type. Case-insensitive enum. APPLY = apply nonlinearity, ASSUME = assume elastic.",
+              "type": "string",
+              "enum": ["APPLY", "ASSUME"]
+            },
+            "ELNK_APPLY_TYPE": {
+              "description": "Elastic link apply type. Case-insensitive enum. APPLY = apply nonlinearity, ASSUME = assume elastic.",
+              "type": "string",
+              "enum": ["APPLY", "ASSUME"]
+            },
+            "LOC_BEAM": {
+              "description": "Reference location of beam/distributed hinges. Case-insensitive enum. I = I-end, J = J-end, M = center/mid.",
+              "type": "string",
+              "enum": ["I", "J", "M"]
+            },
+            "LOC_COLUMN": {
+              "description": "Reference location of column. Case-insensitive enum. I = I-end, J = J-end.",
+              "type": "string",
+              "enum": ["I", "J"]
+            },
+            "SF_WALL": {
+              "description": "[Eurocode design only] Scale factor for ultimate rotation - wall scale factor. Ignored unless both concrete and steel design codes are Eurocode.",
+              "type": "number"
+            },
+            "bSF_BRITTLE": {
+              "description": "[Eurocode design only] Use brittle scale factor for ultimate rotation.",
+              "type": "boolean"
+            },
+            "SF_BRITTLE": {
+              "description": "[Eurocode design only] Brittle scale factor for ultimate rotation.",
+              "type": "number"
+            },
+            "bSF_EARTHQUAKE": {
+              "description": "[Eurocode design only] Use earthquake scale factor for ultimate rotation.",
+              "type": "boolean"
+            },
+            "SF_EARTHQUAKE": {
+              "description": "[Eurocode design only] Earthquake scale factor for ultimate rotation.",
+              "type": "number"
+            },
+            "bSF_SMOOTH_BAR": {
+              "description": "[Eurocode design only] Use smooth-bar scale factor for ultimate rotation.",
+              "type": "boolean"
+            },
+            "SF_SMOOTH_BAR": {
+              "description": "[Eurocode design only] Smooth-bar scale factor for ultimate rotation.",
+              "type": "number"
+            },
+            "SND_SEIS_GRUP": {
+              "description": "[Eurocode design only] Secondary seismic elements group name.",
+              "type": "string"
+            },
+            "CONFIDENCE": {
+              "description": "Confidence factor.",
+              "type": "number"
+            },
+            "bBUCKLING": {
+              "description": "Calculate yield surface of beam considering buckling.",
+              "type": "boolean"
+            },
+            "bCALCAXIALFORCE": {
+              "description": "Calculate Mc considering axial force (AIJ).",
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "bASSIGNBYMEMBER",
+            "bTRI_SYM",
+            "TRI_TENS_A1",
+            "TRI_TENS_A2",
+            "TRI_COMP_A1",
+            "TRI_COMP_A2",
+            "bBI_SYM",
+            "BI_TENS_A1",
+            "BI_COMP_A1",
+            "PSPR_APPLY_TYPE",
+            "ELNK_APPLY_TYPE",
+            "LOC_BEAM",
+            "LOC_COLUMN",
+            "CONFIDENCE",
+            "bBUCKLING",
+            "bCALCAXIALFORCE"
+          ]
+        },
+        "NODECONNECTIVITY": {
+          "description": "Wall node connectivity. Case-insensitive enum. PINNED = pinned, FIXED = fixed.",
+          "type": "string",
+          "enum": ["PINNED", "FIXED"]
+        },
+        "bSHOWGRAPHAFTER": {
+          "description": "Misc - show pushover curve result dialog after analysis finishes.",
+          "type": "boolean"
+        },
+        "bSHOWGRAPGHDURING": {
+          "description": "Misc - show real-time pushover curve during analysis.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "NONL_OPT",
+        "PHOP_OPT",
+        "NODECONNECTIVITY",
+        "bSHOWGRAPHAFTER",
+        "bSHOWGRAPGHDURING"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "GEOMNONLINEAR_TYPE": "NONE",
+        "INITLOADMETHOD": "PERFORM_ANAL",
+        "INITLOAD": [
+          {
+            "LC_NAME": "Dead Load",
+            "LC_TYPE": "ST",
+            "SF": 1.0
+          }
+        ],
+        "bCONSIGNOREELEM": true,
+        "NONL_OPT": {
+          "bPERMITFAIL": false,
+          "SUBSTEP": 10,
+          "MAXITER": 30,
+          "bDISPLNORM": true,
+          "DISPLNORM": 0.001,
+          "bFORCENORM": false,
+          "FORCENORM": 0,
+          "bENERGYNORM": false,
+          "ENERGYNORM": 0,
+          "bSHEARYIELDSTOP": true,
+          "BSHEARYIELDSTOPBEAM": true,
+          "bAXIALYIELDSTOP": false,
+          "bAXIALYIELDSTOPBEAM": false,
+          "bAXIALYIELDSTOPTRUSS": false,
+          "bSUPPORTDZDIRSTOP": false,
+          "bSUPPORTSTOPUPLIFTING": false,
+          "bSUPPORTSTOPCOLLAPSE": false
+        },
+        "PHOP_OPT": {
+          "bASSIGNBYMEMBER": true,
+          "bTRI_SYM": true,
+          "TRI_TENS_A1": 0.1,
+          "TRI_TENS_A2": 0.05,
+          "TRI_COMP_A1": 0.1,
+          "TRI_COMP_A2": 0.05,
+          "bBI_SYM": true,
+          "BI_TENS_A1": 0.05,
+          "BI_COMP_A1": 0.05,
+          "PSPR_APPLY_TYPE": "ASSUME",
+          "ELNK_APPLY_TYPE": "APPLY",
+          "LOC_BEAM": "M",
+          "LOC_COLUMN": "I",
+          "CONFIDENCE": 1.0,
+          "bBUCKLING": true,
+          "bCALCAXIALFORCE": true
+        },
+        "NODECONNECTIVITY": "PINNED",
+        "bSHOWGRAPHAFTER": true,
+        "bSHOWGRAPGHDURING": false
+      }
+    }
+  }
+}

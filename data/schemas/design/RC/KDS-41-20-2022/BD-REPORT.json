@@ -1,0 +1,118 @@
+{
+  "_group": "design",
+  "_name": "BD-REPORT",
+  "uri": "design/RC/KDS-41-20-2022/BD-REPORT",
+  "methods": "POST",
+  "schema": {
+    "BD-REPORT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "RC Beam Design Report (BD-REPORT). Fields come from the REPORT_REQUEST DTO, which drives the report type, export target, report mode, and the element/section scope of the generated RC beam design report.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Report request payload (REPORT_REQUEST).",
+          "properties": {
+            "REPORT_TYPE": {
+              "type": "string",
+              "enum": ["MEMB", "PROP"],
+              "description": "Report Type: MEMB or PROP. Enum values are matched case-insensitively."
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Export Path (e.g. C:\\MIDAS\\Report\\)."
+            },
+            "OUTPUT_NAME": {
+              "type": "string",
+              "description": "Output File Name."
+            },
+            "CURRENT_MODE": {
+              "type": "string",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"],
+              "description": "Report Mode. Enum values are matched case-insensitively."
+            },
+            "CURRENT_MODE_MEMB": {
+              "type": "string",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"],
+              "description": "Report Mode (MEMB). Enum values are matched case-insensitively."
+            },
+            "CURRENT_MODE_PROP": {
+              "type": "string",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"],
+              "description": "Report Mode (PROP). Enum values are matched case-insensitively."
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "Element Numbers (DESIGN_ANAL_ELEM_SELECTION).",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "description": "Specify Each ID - Element No.",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "description": "Section Numbers.",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "DETAIL_POSITIONS": {
+              "type": "object",
+              "description": "Detail Print Positions (for RC Beam Design MEMB mode).",
+              "properties": {
+                "END_I": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Include End I position."
+                },
+                "MID": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Include Mid position."
+                },
+                "END_J": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Include End J position."
+                }
+              }
+            }
+          },
+          "required": ["REPORT_TYPE", "EXPORT_PATH", "OUTPUT_NAME"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "REPORT_TYPE": "MEMB",
+      "EXPORT_PATH": "C:\\MIDAS\\Report\\",
+      "OUTPUT_NAME": "RC_Beam_Design_Report",
+      "CURRENT_MODE": "Detail",
+      "ELEMS": {
+        "KEYS": [1, 2, 3],
+        "TO": "1-10",
+        "STRUCTURE_GROUP_NAME": "Beam Group 1"
+      },
+      "SECTIONS": [1, 2],
+      "DETAIL_POSITIONS": {
+        "END_I": true,
+        "MID": false,
+        "END_J": true
+      }
+    }
+  }
+}

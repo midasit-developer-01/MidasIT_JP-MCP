@@ -1,0 +1,391 @@
+{
+  "_group": "db",
+  "_name": "CSCS",
+  "uri": "db/CSCS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CSCS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Composite Section for Construction Stage (CSCS). The TYPE (composite type) and each vPARTINFO entry's MTYPE drive which fields apply; the USER type additionally consumes the neutral-axis (CY/CZ) and user-stiffness (STIFF_*) fields.",
+      "type": "object",
+      "properties": {
+        "SEC": {
+          "description": "Section ID the composite section is attached to. The referenced section must already exist.",
+          "type": "integer"
+        },
+        "ASTAGE": {
+          "description": "Active construction-stage name. Must match an existing construction stage name.",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Composite type (case-insensitive). NORMAL=general composite-for-normal (internal code -2), USER=user-defined stiffness (-1), A=composite type A (0), B=composite type B (1), GENERAL=general section (2). USER enables the CY/CZ and STIFF_* fields.",
+          "type": "string",
+          "enum": ["NORMAL", "USER", "A", "B", "GENERAL"]
+        },
+        "bTAP": {
+          "description": "Whether the composite section is tapered. The engine ultimately derives tapered-ness from the referenced section; this flag is only cross-checked.",
+          "type": "boolean",
+          "default": false
+        },
+        "vPARTINFO": {
+          "description": "List of composite section parts. Each object describes one part (material assignment, age, notional size, stiffness scale factors, and — for TYPE=USER — user stiffness).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "PART": {
+                "description": "Composite section part number (1-based).",
+                "type": "integer"
+              },
+              "MTYPE": {
+                "description": "Material source (case-insensitive). ELEM = take material from the element (MAT left blank; for part 1 the material is auto-resolved). MATL = use an explicit material given in MAT.",
+                "type": "string",
+                "enum": ["ELEM", "MATL"]
+              },
+              "MAT": {
+                "description": "[MTYPE=MATL] Material ID as a string; the material must exist. [MTYPE=ELEM] leave blank.",
+                "type": "string",
+                "default": ""
+              },
+              "CSTAGE": {
+                "description": "Composite (target) construction-stage name. Blank means the active stage; otherwise must match an existing stage name.",
+                "type": "string",
+                "default": ""
+              },
+              "AGE": {
+                "description": "Material age at composition.",
+                "type": "number",
+                "default": 0
+              },
+              "PARTINFO_H": {
+                "description": "Notional size of member, h. If omitted it is auto-calculated (0.0 for TYPE=USER).",
+                "type": "number"
+              },
+              "PARTINFO_VS": {
+                "description": "Volume-to-surface ratio, v/s.",
+                "type": "number",
+                "default": 0
+              },
+              "PARTINFO_M": {
+                "description": "Modulus of an exposed surface, M.",
+                "type": "number",
+                "default": 0
+              },
+              "AREA": {
+                "description": "Stiffness scale factor for area. Defaults to 1.0 if omitted.",
+                "type": "number"
+              },
+              "ASY": {
+                "description": "Stiffness scale factor for effective shear area (y). Defaults to 1.0 if omitted.",
+                "type": "number"
+              },
+              "ASZ": {
+                "description": "Stiffness scale factor for effective shear area (z). Defaults to 1.0 if omitted.",
+                "type": "number"
+              },
+              "IXX": {
+                "description": "Stiffness scale factor for torsional resistance. Defaults to 1.0 if omitted.",
+                "type": "number"
+              },
+              "IYY": {
+                "description": "Stiffness scale factor for moment of inertia (y). Defaults to 1.0 if omitted.",
+                "type": "number"
+              },
+              "IZZ": {
+                "description": "Stiffness scale factor for moment of inertia (z). Defaults to 1.0 if omitted.",
+                "type": "number"
+              },
+              "WAREA": {
+                "description": "Stiffness scale factor for weight (area). Defaults to 1.0 if omitted.",
+                "type": "number"
+              },
+              "IW": {
+                "description": "Stiffness scale factor for warping constant. Defaults to 1.0 if omitted.",
+                "type": "number"
+              },
+              "CY": {
+                "description": "[TYPE=USER] Y-direction distance to the neutral axis.",
+                "type": "number"
+              },
+              "CZ": {
+                "description": "[TYPE=USER] Z-direction distance to the neutral axis.",
+                "type": "number"
+              },
+              "CYI": {
+                "description": "[TYPE=USER, tapered] Y-direction distance to the neutral axis at end I.",
+                "type": "number"
+              },
+              "CZI": {
+                "description": "[TYPE=USER, tapered] Z-direction distance to the neutral axis at end I.",
+                "type": "number"
+              },
+              "CYJ": {
+                "description": "[TYPE=USER, tapered] Y-direction distance to the neutral axis at end J.",
+                "type": "number"
+              },
+              "CZJ": {
+                "description": "[TYPE=USER, tapered] Z-direction distance to the neutral axis at end J.",
+                "type": "number"
+              },
+              "STIFF_USER": {
+                "description": "[TYPE=USER, non-tapered] User-defined section stiffness for this part.",
+                "type": "object",
+                "properties": {
+                  "AREA": {"description": "Cross-sectional area.", "type": "number"},
+                  "ASY": {"description": "Effective shear area, y-axis.", "type": "number"},
+                  "ASZ": {"description": "Effective shear area, z-axis.", "type": "number"},
+                  "IXX": {"description": "Torsional resistance.", "type": "number"},
+                  "IYY": {"description": "Moment of inertia, y-axis.", "type": "number"},
+                  "IZZ": {"description": "Moment of inertia, z-axis.", "type": "number"},
+                  "CYP": {"description": "Distance from neutral axis to extreme fiber, +y.", "type": "number"},
+                  "CYM": {"description": "Distance from neutral axis to extreme fiber, -y.", "type": "number"},
+                  "CZP": {"description": "Distance from neutral axis to extreme fiber, +z.", "type": "number"},
+                  "CZM": {"description": "Distance from neutral axis to extreme fiber, -z.", "type": "number"},
+                  "QYB": {"description": "First moment of area / shear coefficient, y.", "type": "number"},
+                  "QZB": {"description": "First moment of area / shear coefficient, z.", "type": "number"},
+                  "X1": {"description": "Stress calculation coordinate x1.", "type": "number"},
+                  "X2": {"description": "Stress calculation coordinate x2.", "type": "number"},
+                  "X3": {"description": "Stress calculation coordinate x3.", "type": "number"},
+                  "X4": {"description": "Stress calculation coordinate x4.", "type": "number"},
+                  "Y1": {"description": "Stress calculation coordinate y1.", "type": "number"},
+                  "Y2": {"description": "Stress calculation coordinate y2.", "type": "number"},
+                  "Y3": {"description": "Stress calculation coordinate y3.", "type": "number"},
+                  "Y4": {"description": "Stress calculation coordinate y4.", "type": "number"},
+                  "IW": {"description": "Warping constant.", "type": "number"}
+                },
+                "required": ["AREA", "ASY", "ASZ", "IXX", "IYY", "IZZ", "CYP", "CYM", "CZP", "CZM", "QYB", "QZB", "X1", "X2", "X3", "X4", "Y1", "Y2", "Y3", "Y4", "IW"]
+              },
+              "STIFF_USER_TAPERED_I": {
+                "description": "[TYPE=USER, tapered] User-defined section stiffness at end I.",
+                "type": "object",
+                "properties": {
+                  "AREA": {"description": "Cross-sectional area.", "type": "number"},
+                  "ASY": {"description": "Effective shear area, y-axis.", "type": "number"},
+                  "ASZ": {"description": "Effective shear area, z-axis.", "type": "number"},
+                  "IXX": {"description": "Torsional resistance.", "type": "number"},
+                  "IYY": {"description": "Moment of inertia, y-axis.", "type": "number"},
+                  "IZZ": {"description": "Moment of inertia, z-axis.", "type": "number"},
+                  "CYP": {"description": "Distance from neutral axis to extreme fiber, +y.", "type": "number"},
+                  "CYM": {"description": "Distance from neutral axis to extreme fiber, -y.", "type": "number"},
+                  "CZP": {"description": "Distance from neutral axis to extreme fiber, +z.", "type": "number"},
+                  "CZM": {"description": "Distance from neutral axis to extreme fiber, -z.", "type": "number"},
+                  "QYB": {"description": "First moment of area / shear coefficient, y.", "type": "number"},
+                  "QZB": {"description": "First moment of area / shear coefficient, z.", "type": "number"},
+                  "X1": {"description": "Stress calculation coordinate x1.", "type": "number"},
+                  "X2": {"description": "Stress calculation coordinate x2.", "type": "number"},
+                  "X3": {"description": "Stress calculation coordinate x3.", "type": "number"},
+                  "X4": {"description": "Stress calculation coordinate x4.", "type": "number"},
+                  "Y1": {"description": "Stress calculation coordinate y1.", "type": "number"},
+                  "Y2": {"description": "Stress calculation coordinate y2.", "type": "number"},
+                  "Y3": {"description": "Stress calculation coordinate y3.", "type": "number"},
+                  "Y4": {"description": "Stress calculation coordinate y4.", "type": "number"},
+                  "IW": {"description": "Warping constant.", "type": "number"}
+                },
+                "required": ["AREA", "ASY", "ASZ", "IXX", "IYY", "IZZ", "CYP", "CYM", "CZP", "CZM", "QYB", "QZB", "X1", "X2", "X3", "X4", "Y1", "Y2", "Y3", "Y4", "IW"]
+              },
+              "STIFF_USER_TAPERED_J": {
+                "description": "[TYPE=USER, tapered] User-defined section stiffness at end J.",
+                "type": "object",
+                "properties": {
+                  "AREA": {"description": "Cross-sectional area.", "type": "number"},
+                  "ASY": {"description": "Effective shear area, y-axis.", "type": "number"},
+                  "ASZ": {"description": "Effective shear area, z-axis.", "type": "number"},
+                  "IXX": {"description": "Torsional resistance.", "type": "number"},
+                  "IYY": {"description": "Moment of inertia, y-axis.", "type": "number"},
+                  "IZZ": {"description": "Moment of inertia, z-axis.", "type": "number"},
+                  "CYP": {"description": "Distance from neutral axis to extreme fiber, +y.", "type": "number"},
+                  "CYM": {"description": "Distance from neutral axis to extreme fiber, -y.", "type": "number"},
+                  "CZP": {"description": "Distance from neutral axis to extreme fiber, +z.", "type": "number"},
+                  "CZM": {"description": "Distance from neutral axis to extreme fiber, -z.", "type": "number"},
+                  "QYB": {"description": "First moment of area / shear coefficient, y.", "type": "number"},
+                  "QZB": {"description": "First moment of area / shear coefficient, z.", "type": "number"},
+                  "X1": {"description": "Stress calculation coordinate x1.", "type": "number"},
+                  "X2": {"description": "Stress calculation coordinate x2.", "type": "number"},
+                  "X3": {"description": "Stress calculation coordinate x3.", "type": "number"},
+                  "X4": {"description": "Stress calculation coordinate x4.", "type": "number"},
+                  "Y1": {"description": "Stress calculation coordinate y1.", "type": "number"},
+                  "Y2": {"description": "Stress calculation coordinate y2.", "type": "number"},
+                  "Y3": {"description": "Stress calculation coordinate y3.", "type": "number"},
+                  "Y4": {"description": "Stress calculation coordinate y4.", "type": "number"},
+                  "IW": {"description": "Warping constant.", "type": "number"}
+                },
+                "required": ["AREA", "ASY", "ASZ", "IXX", "IYY", "IZZ", "CYP", "CYM", "CZP", "CZM", "QYB", "QZB", "X1", "X2", "X3", "X4", "Y1", "Y2", "Y3", "Y4", "IW"]
+              }
+            },
+            "required": ["PART", "MTYPE"]
+          }
+        }
+      },
+      "required": ["SEC", "ASTAGE", "TYPE", "vPARTINFO"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SEC": 1,
+        "ASTAGE": "CS1",
+        "TYPE": "NORMAL",
+        "bTAP": false,
+        "vPARTINFO": [
+          {
+            "PART": 1,
+            "MTYPE": "ELEM",
+            "MAT": "",
+            "CSTAGE": "",
+            "AGE": 0,
+            "PARTINFO_VS": 0,
+            "PARTINFO_M": 0,
+            "AREA": 1,
+            "ASY": 1,
+            "ASZ": 1,
+            "IXX": 1,
+            "IYY": 1,
+            "IZZ": 1,
+            "WAREA": 1,
+            "IW": 1
+          },
+          {
+            "PART": 2,
+            "MTYPE": "MATL",
+            "MAT": "3",
+            "CSTAGE": "CS2",
+            "AGE": 5,
+            "PARTINFO_H": 0.245
+          }
+        ]
+      },
+      "2": {
+        "SEC": 2,
+        "ASTAGE": "CS1",
+        "TYPE": "USER",
+        "bTAP": false,
+        "vPARTINFO": [
+          {
+            "PART": 1,
+            "MTYPE": "MATL",
+            "MAT": "1",
+            "CSTAGE": "",
+            "AGE": 3,
+            "CY": 0.5,
+            "CZ": 0.5,
+            "STIFF_USER": {
+              "AREA": 0.25,
+              "ASY": 0.2,
+              "ASZ": 0.2,
+              "IXX": 0.001,
+              "IYY": 0.005,
+              "IZZ": 0.005,
+              "CYP": 0.25,
+              "CYM": 0.25,
+              "CZP": 0.25,
+              "CZM": 0.25,
+              "QYB": 0.1,
+              "QZB": 0.1,
+              "X1": 0.1,
+              "X2": 0.2,
+              "X3": 0.3,
+              "X4": 0.4,
+              "Y1": 0.1,
+              "Y2": 0.2,
+              "Y3": 0.3,
+              "Y4": 0.4,
+              "IW": 0.0001
+            }
+          }
+        ]
+      },
+      "3": {
+        "SEC": 3,
+        "ASTAGE": "CS1",
+        "TYPE": "USER",
+        "bTAP": true,
+        "vPARTINFO": [
+          {
+            "PART": 1,
+            "MTYPE": "MATL",
+            "MAT": "1",
+            "CSTAGE": "",
+            "AGE": 3,
+            "CYI": 0.5,
+            "CZI": 0.5,
+            "CYJ": 0.6,
+            "CZJ": 0.6,
+            "STIFF_USER_TAPERED_I": {
+              "AREA": 0.25,
+              "ASY": 0.2,
+              "ASZ": 0.2,
+              "IXX": 0.001,
+              "IYY": 0.005,
+              "IZZ": 0.005,
+              "CYP": 0.25,
+              "CYM": 0.25,
+              "CZP": 0.25,
+              "CZM": 0.25,
+              "QYB": 0.1,
+              "QZB": 0.1,
+              "X1": 0.1,
+              "X2": 0.2,
+              "X3": 0.3,
+              "X4": 0.4,
+              "Y1": 0.1,
+              "Y2": 0.2,
+              "Y3": 0.3,
+              "Y4": 0.4,
+              "IW": 0.0001
+            },
+            "STIFF_USER_TAPERED_J": {
+              "AREA": 0.3,
+              "ASY": 0.25,
+              "ASZ": 0.25,
+              "IXX": 0.0012,
+              "IYY": 0.006,
+              "IZZ": 0.006,
+              "CYP": 0.3,
+              "CYM": 0.3,
+              "CZP": 0.3,
+              "CZM": 0.3,
+              "QYB": 0.12,
+              "QZB": 0.12,
+              "X1": 0.1,
+              "X2": 0.2,
+              "X3": 0.3,
+              "X4": 0.4,
+              "Y1": 0.1,
+              "Y2": 0.2,
+              "Y3": 0.3,
+              "Y4": 0.4,
+              "IW": 0.00012
+            }
+          }
+        ]
+      },
+      "4": {
+        "SEC": 4,
+        "ASTAGE": "CS1",
+        "TYPE": "A",
+        "vPARTINFO": [
+          {"PART": 1, "MTYPE": "ELEM"},
+          {"PART": 2, "MTYPE": "MATL", "MAT": "2"},
+          {"PART": 3, "MTYPE": "MATL", "MAT": "3"}
+        ]
+      },
+      "5": {
+        "SEC": 5,
+        "ASTAGE": "CS1",
+        "TYPE": "B",
+        "vPARTINFO": [
+          {"PART": 1, "MTYPE": "ELEM"},
+          {"PART": 2, "MTYPE": "MATL", "MAT": "2"}
+        ]
+      },
+      "6": {
+        "SEC": 6,
+        "ASTAGE": "CS1",
+        "TYPE": "GENERAL",
+        "vPARTINFO": [
+          {"PART": 1, "MTYPE": "MATL", "MAT": "1"}
+        ]
+      }
+    }
+  }
+}

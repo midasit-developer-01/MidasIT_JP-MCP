@@ -1,0 +1,112 @@
+{
+  "_group": "design",
+  "_name": "BRD-REPORT",
+  "uri": "design/RC/KDS-41-20-2022/BRD-REPORT",
+  "methods": "POST",
+  "schema": {
+    "BRD-REPORT": {
+      "type": "object",
+      "description": "Brace Design Report (BRD-REPORT). Generates an RC brace design report; fields are driven by the REPORT_REQUEST DTO (report type/mode, export target, and element/section selection).",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "properties": {
+            "REPORT_TYPE": {
+              "type": "string",
+              "enum": ["MEMB", "PROP"],
+              "description": "Report Type: MEMB or PROP (case-insensitive)."
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Export Path (e.g. C:\\MIDAS\\Report\\)."
+            },
+            "OUTPUT_NAME": {
+              "type": "string",
+              "description": "Output File Name."
+            },
+            "CURRENT_MODE": {
+              "type": "string",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"],
+              "description": "Report Mode (case-insensitive)."
+            },
+            "CURRENT_MODE_MEMB": {
+              "type": "string",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"],
+              "description": "Report Mode for MEMB report type (case-insensitive)."
+            },
+            "CURRENT_MODE_PROP": {
+              "type": "string",
+              "enum": ["Graphic", "Detail", "Summary", "PMCurve"],
+              "description": "Report Mode for PROP report type (case-insensitive)."
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "Element Numbers selection.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "items": { "type": "integer" },
+                  "description": "Specify Each ID - Element No."
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "description": "Section Numbers."
+            },
+            "DETAIL_POSITIONS": {
+              "type": "object",
+              "description": "Detail Print Positions (for RC Beam Design MEMB mode).",
+              "properties": {
+                "END_I": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Include End I position."
+                },
+                "MID": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Include Mid position."
+                },
+                "END_J": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Include End J position."
+                }
+              }
+            }
+          },
+          "required": ["REPORT_TYPE", "EXPORT_PATH", "OUTPUT_NAME"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "REPORT_TYPE": "MEMB",
+      "EXPORT_PATH": "C:\\MIDAS\\Report\\",
+      "OUTPUT_NAME": "BraceDesignReport",
+      "CURRENT_MODE": "Detail",
+      "ELEMS": {
+        "KEYS": [1, 2, 3],
+        "TO": "1-10",
+        "STRUCTURE_GROUP_NAME": "Braces"
+      },
+      "SECTIONS": [1, 2],
+      "DETAIL_POSITIONS": {
+        "END_I": true,
+        "MID": false,
+        "END_J": false
+      }
+    }
+  }
+}

@@ -1,0 +1,247 @@
+{
+  "_group": "db",
+  "_name": "SDST",
+  "uri": "db/SDST",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SDST": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Steel Damper (SDST). The SDST_HYS_MODEL selects which hysteresis sub-object (BL2/LY2/LY3/IK2) supplies the model-specific parameters, while COMMON, DIR, and the base stiffness/strength values apply to every model.",
+      "properties": {
+        "COMMON": {
+          "description": "Common seismic device data (name, description, input method, product identification).",
+          "type": "object",
+          "properties": {
+            "NAME": {
+              "description": "Name of the steel damper property.",
+              "type": "string"
+            },
+            "DESC": {
+              "description": "Description text.",
+              "type": "string",
+              "default": ""
+            },
+            "INPUT_METHOD": {
+              "description": "Input method: User Input = 0, Import Reference Database = 1.",
+              "type": "integer"
+            },
+            "COMPANY": {
+              "description": "Company name (used when importing from a reference database).",
+              "type": "string",
+              "default": ""
+            },
+            "PRODUCT_NAME": {
+              "description": "Product name (used when importing from a reference database).",
+              "type": "string",
+              "default": ""
+            },
+            "TYPE_NUMBER": {
+              "description": "Product type number (used when importing from a reference database).",
+              "type": "string",
+              "default": ""
+            }
+          },
+          "required": [
+            "NAME",
+            "INPUT_METHOD"
+          ]
+        },
+        "DIR": {
+          "description": "Acting direction of the damper. Case-insensitive.",
+          "type": "string",
+          "enum": [
+            "Dx",
+            "Dy",
+            "Dz"
+          ]
+        },
+        "SDST_HYS_MODEL": {
+          "description": "Hysteresis model. Case-insensitive. BL2 = Degrading Bilinear Model (default/fallback, uses BL2), LY2 = Low Yielding Strength Steel Model (uses LY2), LY3 = Low Yielding Strength Steel Model (uses LY3), IK2 = Steel Isotropic-Kinematic Hardening Model (uses IK2).",
+          "type": "string",
+          "enum": [
+            "BL2",
+            "LY2",
+            "LY3",
+            "IK2"
+          ]
+        },
+        "K0": {
+          "description": "K0 - Initial stiffness (kN/m).",
+          "type": "number"
+        },
+        "P1": {
+          "description": "P1 - Yield strength (kN).",
+          "type": "number"
+        },
+        "ALPHA1": {
+          "description": "Alpha1 - Post-yield stiffness factor.",
+          "type": "number"
+        },
+        "KB": {
+          "description": "Kb - Mounting parts stiffness (kN/m).",
+          "type": "number"
+        },
+        "BL2": {
+          "description": "[SDST_HYS_MODEL=BL2] Degrading Bilinear Model parameters. Used when SDST_HYS_MODEL is BL2 or any value not matching LY2/LY3/IK2.",
+          "type": "object",
+          "properties": {
+            "BETA": {
+              "description": "Beta - Exponent in the unloading stiffness calculation.",
+              "type": "number"
+            }
+          },
+          "required": [
+            "BETA"
+          ]
+        },
+        "LY2": {
+          "description": "[SDST_HYS_MODEL=LY2] Low Yielding Strength Steel Model (LY2) parameters.",
+          "type": "object",
+          "properties": {
+            "ALPHA2": {
+              "description": "Alpha2 - Stiffness factor.",
+              "type": "number"
+            },
+            "THETA": {
+              "description": "Theta - Strength factor.",
+              "type": "number"
+            }
+          },
+          "required": [
+            "ALPHA2",
+            "THETA"
+          ]
+        },
+        "LY3": {
+          "description": "[SDST_HYS_MODEL=LY3] Low Yielding Strength Steel Model (LY3) parameters.",
+          "type": "object",
+          "properties": {
+            "ALPHA2": {
+              "description": "Alpha2 - Stiffness factor.",
+              "type": "number"
+            },
+            "THETA": {
+              "description": "Theta - Strength factor.",
+              "type": "number"
+            },
+            "GAMMA": {
+              "description": "Gamma - Stiffness ratio.",
+              "type": "number"
+            }
+          },
+          "required": [
+            "ALPHA2",
+            "THETA",
+            "GAMMA"
+          ]
+        },
+        "IK2": {
+          "description": "[SDST_HYS_MODEL=IK2] Steel Isotropic-Kinematic Hardening Model parameters.",
+          "type": "object",
+          "properties": {
+            "GAMMA": {
+              "description": "Gamma - Isotropic factor.",
+              "type": "number"
+            }
+          },
+          "required": [
+            "GAMMA"
+          ]
+        }
+      },
+      "required": [
+        "COMMON",
+        "DIR",
+        "SDST_HYS_MODEL",
+        "K0",
+        "P1",
+        "ALPHA1",
+        "KB"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "COMMON": {
+          "NAME": "SteelDamper01",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "DIR": "Dx",
+        "SDST_HYS_MODEL": "BL2",
+        "K0": 1000,
+        "P1": 100,
+        "ALPHA1": 0.2,
+        "KB": 2000,
+        "BL2": {
+          "BETA": 0
+        }
+      },
+      "2": {
+        "COMMON": {
+          "NAME": "SteelDamper02",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "DIR": "Dx",
+        "SDST_HYS_MODEL": "LY2",
+        "K0": 1000,
+        "P1": 100,
+        "ALPHA1": 0.8,
+        "KB": 2000,
+        "LY2": {
+          "ALPHA2": 0.7,
+          "THETA": 1.5
+        }
+      },
+      "3": {
+        "COMMON": {
+          "NAME": "SteelDamper03",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "DIR": "Dy",
+        "SDST_HYS_MODEL": "LY3",
+        "K0": 1000,
+        "P1": 100,
+        "ALPHA1": 0.8,
+        "KB": 2000,
+        "LY3": {
+          "ALPHA2": 0.7,
+          "THETA": 1.5,
+          "GAMMA": 0.5
+        }
+      },
+      "4": {
+        "COMMON": {
+          "NAME": "SteelDamper04",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "DIR": "Dz",
+        "SDST_HYS_MODEL": "IK2",
+        "K0": 1000,
+        "P1": 100,
+        "ALPHA1": 0.8,
+        "KB": 2000,
+        "IK2": {
+          "GAMMA": 0.5
+        }
+      }
+    }
+  }
+}

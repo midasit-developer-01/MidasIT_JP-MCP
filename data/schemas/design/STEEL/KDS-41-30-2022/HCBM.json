@@ -1,0 +1,114 @@
+{
+  "_group": "design",
+  "_name": "HCBM",
+  "uri": "design/STEEL/KDS-41-30-2022/HCBM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "HCBM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Haunched Beam (HCBM). Fields describe the three haunch parts (A, B, C), each specifying its member elements either by explicit keys or by a range string, plus the design position and haunch lengths.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Haunched beam name."
+        },
+        "PART_A": {
+          "$ref": "#/definitions/PART_INPUT",
+          "description": "Part A element input."
+        },
+        "PART_B": {
+          "$ref": "#/definitions/PART_INPUT",
+          "description": "Part B element input."
+        },
+        "PART_C": {
+          "$ref": "#/definitions/PART_INPUT",
+          "description": "Part C element input."
+        },
+        "POS_TYPE": {
+          "type": "integer",
+          "description": "Design position type."
+        },
+        "L1": {
+          "type": "number",
+          "default": 1,
+          "description": "Haunch length L1."
+        },
+        "L2": {
+          "type": "number",
+          "default": 1,
+          "description": "Haunch length L2."
+        }
+      },
+      "required": [
+        "NAME",
+        "PART_A",
+        "PART_B",
+        "PART_C",
+        "POS_TYPE"
+      ],
+      "additionalProperties": false,
+      "definitions": {
+        "PART_INPUT": {
+          "type": "object",
+          "properties": {
+            "INPUT_METHOD": {
+              "type": "string",
+              "enum": [
+                "KEYS",
+                "TO"
+              ],
+              "description": "Input method for the part's elements (case-insensitive). KEYS uses the explicit KEYS list; TO parses the TO range string into element ids."
+            },
+            "KEYS": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": [],
+              "description": "[INPUT_METHOD=KEYS] Explicit element ids for this part."
+            },
+            "TO": {
+              "type": "string",
+              "default": "",
+              "description": "[INPUT_METHOD=TO] Range string of the form \"start TO end\" (e.g. \"1 TO 5\"), expanded to element ids."
+            }
+          },
+          "required": [
+            "INPUT_METHOD"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Haunch1",
+        "PART_A": {
+          "INPUT_METHOD": "KEYS",
+          "KEYS": [
+            1,
+            2,
+            3
+          ]
+        },
+        "PART_B": {
+          "INPUT_METHOD": "KEYS",
+          "KEYS": [
+            4,
+            5
+          ]
+        },
+        "PART_C": {
+          "INPUT_METHOD": "TO",
+          "TO": "6 TO 8"
+        },
+        "POS_TYPE": 0,
+        "L1": 1.5,
+        "L2": 2.0
+      }
+    }
+  }
+}

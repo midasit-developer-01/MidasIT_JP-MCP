@@ -1,0 +1,29 @@
+{
+  "_group": "design",
+  "_name": "MCMB",
+  "uri": "design/RC/KDS-41-20-2022/MCMB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MCMB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Member Calculation Method (MCMB). The only field is the calculation method that drives how member forces are evaluated for RC design. Assignable only to BEAM type elements.",
+      "properties": {
+        "CALC_METHOD": {
+          "type": "string",
+          "enum": ["EQUI", "EACH"],
+          "description": "Calculation Method. EQUI = equivalent, EACH = each. Enum matching is case-insensitive."
+        }
+      },
+      "required": ["CALC_METHOD"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "CALC_METHOD": "EQUI"
+      }
+    }
+  }
+}

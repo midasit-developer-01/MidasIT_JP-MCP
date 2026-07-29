@@ -1,0 +1,50 @@
+{
+  "_group": "design",
+  "_name": "CMFT",
+  "uri": "design/SRC/AIK-SRC2K/CMFT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CMFT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Equivalent Moment Correction Factor Cm (CMFT). Fields hold the auto-calculate flag and the manual Cm factors about the member local y and z axes.",
+      "properties": {
+        "OPT_AUTO": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auto Calculate. When true, Cm is computed automatically and CMY/CMZ are ignored."
+        },
+        "CMY": {
+          "type": "number",
+          "default": 0.0,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Equivalent moment correction factor Cm about the member local y-axis. Must satisfy 0.0 <= value <= 1.0."
+        },
+        "CMZ": {
+          "type": "number",
+          "default": 0.0,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Equivalent moment correction factor Cm about the member local z-axis. Must satisfy 0.0 <= value <= 1.0."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "OPT_AUTO": false,
+        "CMY": 0.85,
+        "CMZ": 0.6
+      },
+      "2": {
+        "OPT_AUTO": true,
+        "CMY": 0.0,
+        "CMZ": 0.0
+      }
+    }
+  }
+}

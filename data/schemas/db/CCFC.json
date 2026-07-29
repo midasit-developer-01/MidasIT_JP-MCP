@@ -1,0 +1,75 @@
+{
+  "_group": "db",
+  "_name": "CCFC",
+  "uri": "db/CCFC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CCFC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Convection Coefficient Function (CCFC). The TYPE field selects which fields apply: CONST uses COEF; USER uses SCALE_FACTOR and the ITEM time-value list.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Convection coefficient function name.",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Function type. \"CONST\" = constant coefficient (uses COEF). \"USER\" = user-defined time-varying function (uses SCALE_FACTOR and ITEM). Case-insensitive.",
+          "type": "string",
+          "enum": ["CONST", "USER"]
+        },
+        "COEF": {
+          "description": "[TYPE=CONST] Constant convection coefficient value.",
+          "type": "number"
+        },
+        "SCALE_FACTOR": {
+          "description": "[TYPE=USER] Scale factor applied to the user-defined function values.",
+          "type": "number"
+        },
+        "ITEM": {
+          "description": "[TYPE=USER] User-defined function data as a list of time-value points. Required (must contain at least one entry) when TYPE=USER.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "TIME": {
+                "description": "Time value of the data point.",
+                "type": "number"
+              },
+              "VALUE": {
+                "description": "Convection coefficient value at the given time.",
+                "type": "number"
+              }
+            },
+            "required": ["TIME", "VALUE"]
+          }
+        }
+      },
+      "required": ["NAME", "TYPE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "ConvectionCoeff",
+        "TYPE": "CONST",
+        "COEF": 15.0
+      },
+      "2": {
+        "NAME": "UserConvection",
+        "TYPE": "USER",
+        "SCALE_FACTOR": 1.2,
+        "ITEM": [
+          {
+            "TIME": 0.0,
+            "VALUE": 25.0
+          },
+          {
+            "TIME": 1.0,
+            "VALUE": 35.0
+          }
+        ]
+      }
+    }
+  }
+}

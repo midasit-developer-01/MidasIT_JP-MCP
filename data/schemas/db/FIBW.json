@@ -1,0 +1,209 @@
+{
+  "_group": "db",
+  "_name": "FIBW",
+  "uri": "db/FIBW",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "FIBW": {
+      "type": "object",
+      "description": "Fiber Wall Section Division (FIBW). Defines the fiber-based section division of a wall: the per-fiber material names/colors (up to 6), the base fiber/rebar entries (FIBW_BASE), and the optional monitored-fiber set. Each FIBW_BASE entry is either a fiber region (OPT_IS_REBAR=false, requiring POINT_Y/POINT_Z polygon coordinates) or a rebar (OPT_IS_REBAR=true, using AREA and CENTER_Y/Z).",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Name of the fiber wall section division."
+        },
+        "WALL_ID": {
+          "type": "integer",
+          "description": "Wall ID that this fiber section division is assigned to."
+        },
+        "STOR_KEY": {
+          "type": "integer",
+          "description": "Story key that this fiber section division belongs to."
+        },
+        "ASSIGN_TYPE": {
+          "type": "integer",
+          "description": "Assign type code for the fiber wall section division."
+        },
+        "FIMP_NAME": {
+          "type": "array",
+          "description": "Fiber (inelastic) material names, one per fiber-material slot. Each non-empty name must reference an existing FIMP (fiber inelastic material property); empty strings are allowed for unused slots.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 6,
+          "maxItems": 6
+        },
+        "FIMP_COLOR": {
+          "type": "array",
+          "description": "Display color (RGB) for each of the 6 fiber-material slots. Optional; each component defaults to 0 when omitted.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "R": {
+                "type": "number",
+                "description": "Red component (default 0)."
+              },
+              "G": {
+                "type": "number",
+                "description": "Green component (default 0)."
+              },
+              "B": {
+                "type": "number",
+                "description": "Blue component (default 0)."
+              }
+            },
+            "additionalProperties": false
+          },
+          "minItems": 6,
+          "maxItems": 6
+        },
+        "FIBW_BASE": {
+          "type": "array",
+          "description": "Base fiber/rebar entries composing the wall section division. Required and must be assigned.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "FIBR_BASE_KEY": {
+                "type": "integer",
+                "description": "Key identifying this base fiber/rebar entry."
+              },
+              "REBAR_NAME": {
+                "type": "string",
+                "description": "Rebar name associated with this entry (used when OPT_IS_REBAR=true)."
+              },
+              "AREA": {
+                "type": "number",
+                "description": "Cross-sectional area of the fiber/rebar."
+              },
+              "CENTER_Y": {
+                "type": "number",
+                "description": "Center Y coordinate of the fiber/rebar."
+              },
+              "CENTER_Z": {
+                "type": "number",
+                "description": "Center Z coordinate of the fiber/rebar."
+              },
+              "FIBER_MATL_ID": {
+                "type": "number",
+                "description": "Fiber material ID (slot index/id into the FIMP material set)."
+              },
+              "AREA_CONSIDER_REBAR": {
+                "type": "number",
+                "description": "Area considering rebar deduction."
+              },
+              "OPT_IS_REBAR": {
+                "type": "boolean",
+                "description": "True if this entry is a rebar; false if it is a fiber region. When false, POINT_Y and POINT_Z are required and define the fiber polygon."
+              },
+              "POINT_Y": {
+                "type": "array",
+                "description": "[OPT_IS_REBAR=false] Polygon Y coordinates of the fiber region. Required when OPT_IS_REBAR is false; ignored for rebar entries. Paired element-wise with POINT_Z (shorter length is used).",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "POINT_Z": {
+                "type": "array",
+                "description": "[OPT_IS_REBAR=false] Polygon Z coordinates of the fiber region. Required when OPT_IS_REBAR is false; ignored for rebar entries. Paired element-wise with POINT_Y (shorter length is used).",
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "required": [
+              "FIBR_BASE_KEY",
+              "REBAR_NAME",
+              "AREA",
+              "CENTER_Y",
+              "CENTER_Z",
+              "FIBER_MATL_ID",
+              "AREA_CONSIDER_REBAR",
+              "OPT_IS_REBAR"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "OPT_MONITORED_FIBER": {
+          "type": "boolean",
+          "description": "True if a monitored fiber set is defined. MONITORED_FIBER is applied only when this is true."
+        },
+        "MONITORED_FIBER": {
+          "type": "array",
+          "description": "Monitored fiber indices (fixed set of 8). Applied only when OPT_MONITORED_FIBER is true.",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 8,
+          "maxItems": 8
+        }
+      },
+      "required": [
+        "NAME",
+        "WALL_ID",
+        "STOR_KEY",
+        "ASSIGN_TYPE",
+        "FIMP_NAME",
+        "FIBW_BASE",
+        "OPT_MONITORED_FIBER",
+        "MONITORED_FIBER"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "FiberWall1",
+        "WALL_ID": 1,
+        "STOR_KEY": 1,
+        "ASSIGN_TYPE": 0,
+        "FIMP_NAME": ["Concrete01", "", "", "", "", ""],
+        "FIMP_COLOR": [
+          { "R": 200, "G": 200, "B": 200 },
+          { "R": 0, "G": 0, "B": 0 },
+          { "R": 0, "G": 0, "B": 0 },
+          { "R": 0, "G": 0, "B": 0 },
+          { "R": 0, "G": 0, "B": 0 },
+          { "R": 0, "G": 0, "B": 0 }
+        ],
+        "FIBW_BASE": [
+          {
+            "FIBR_BASE_KEY": 1,
+            "REBAR_NAME": "",
+            "AREA": 0.04,
+            "CENTER_Y": 0.0,
+            "CENTER_Z": 0.0,
+            "FIBER_MATL_ID": 0.0,
+            "AREA_CONSIDER_REBAR": 0.04,
+            "OPT_IS_REBAR": false,
+            "POINT_Y": [-0.1, 0.1, 0.1, -0.1],
+            "POINT_Z": [-0.2, -0.2, 0.2, 0.2]
+          }
+        ],
+        "OPT_MONITORED_FIBER": true,
+        "MONITORED_FIBER": [1, 2, 3, 4, 5, 6, 7, 8]
+      },
+      "2": {
+        "NAME": "FiberWall2",
+        "WALL_ID": 2,
+        "STOR_KEY": 1,
+        "ASSIGN_TYPE": 0,
+        "FIMP_NAME": ["Concrete01", "Rebar01", "", "", "", ""],
+        "FIBW_BASE": [
+          {
+            "FIBR_BASE_KEY": 1,
+            "REBAR_NAME": "HD25",
+            "AREA": 0.0005,
+            "CENTER_Y": 0.05,
+            "CENTER_Z": 0.05,
+            "FIBER_MATL_ID": 1.0,
+            "AREA_CONSIDER_REBAR": 0.0005,
+            "OPT_IS_REBAR": true
+          }
+        ],
+        "OPT_MONITORED_FIBER": false,
+        "MONITORED_FIBER": [0, 0, 0, 0, 0, 0, 0, 0]
+      }
+    }
+  }
+}

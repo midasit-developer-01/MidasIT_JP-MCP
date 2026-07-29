@@ -1,0 +1,105 @@
+{
+  "_group": "db",
+  "_name": "LCOM-GEN",
+  "uri": "db/LCOM-GEN",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LCOM-GEN": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Load Combination for General analysis results (LCOM-GEN). One combination per key; NAME and the vCOMB list of (analysis type, load case, factor) triples drive the definition, and iTYPE selects how the listed cases are summed.",
+      "type": "object",
+      "properties": {
+        "NO": {
+          "description": "Read-only combination number assigned by the program. Ignored on write (populated only on GET).",
+          "type": "integer"
+        },
+        "NAME": {
+          "description": "Combination name. Must be unique when adding a new combination.",
+          "type": "string"
+        },
+        "ACTIVE": {
+          "description": "Active state of the combination, e.g. \"ACTIVE\" or \"INACTIVE\".",
+          "type": "string",
+          "default": "ACTIVE"
+        },
+        "bES": {
+          "description": "Elastic-stage flag (E, Concrete design only). Applied by the handler only for the CONCRETE load-combination type; ignored for LCOM-GEN.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCB": {
+          "description": "Read-only min/max/CB result-type flag computed by the program (General: false, Min/Max/All: true). Ignored on write.",
+          "type": "boolean"
+        },
+        "iTYPE": {
+          "description": "Summation method for the listed cases. 0: Add, 1: Envelope, 2: ABS, 3: SRSS.",
+          "type": "integer",
+          "default": 0
+        },
+        "DESC": {
+          "description": "Free-text description of the combination.",
+          "type": "string",
+          "default": ""
+        },
+        "iSERV_TYPE": {
+          "description": "EC serviceability type code. Internal/reserved; not currently applied by the handler.",
+          "type": "integer"
+        },
+        "nLCOMTYPE": {
+          "description": "EC load-combination type code. Internal/reserved; not currently applied by the handler.",
+          "type": "integer"
+        },
+        "nSEISTYPE": {
+          "description": "EC seismic type code. Internal/reserved; not currently applied by the handler.",
+          "type": "integer"
+        },
+        "vCOMB": {
+          "description": "List of component cases making up the combination. Each entry is an (analysis type, load case name, factor) triple.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ANAL": {
+                "description": "Analysis type of the referenced load case (case-insensitive). ST: Static, RS: Response Spectrum, TH: Time History, MV: Moving, SM: Settlement, ENVL: Envelope, CB: General Combination, CBS/CBC/CBF/CBR/CBA/CBSC/CBCF/CBSM/CBLN: design combinations, PO: Pushover, CS: Construction Stage, ES: Elastic-stage, GI: Geometric-stiffness Initial, CN: Nonlinear, NRS/NES: nonlinear response/elastic-stage.",
+                "type": "string",
+                "enum": ["ST", "RS", "TH", "MV", "SM", "ENVL", "CB", "CBS", "CBC", "CBF", "CBR", "PO", "CS", "ES", "GI", "CN", "CBA", "CBSC", "CBCF", "CBSM", "CBLN", "NRS", "NES"]
+              },
+              "LCNAME": {
+                "description": "Name of the referenced load case. Must exist for the given ANAL type.",
+                "type": "string"
+              },
+              "FACTOR": {
+                "description": "Scale factor applied to the referenced load case.",
+                "type": "number"
+              }
+            },
+            "required": ["ANAL", "LCNAME", "FACTOR"]
+          }
+        }
+      },
+      "required": ["NAME", "vCOMB"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "cLCB1",
+        "ACTIVE": "ACTIVE",
+        "iTYPE": 0,
+        "DESC": "General load combination",
+        "vCOMB": [
+          {
+            "ANAL": "ST",
+            "LCNAME": "DL",
+            "FACTOR": 1.25
+          },
+          {
+            "ANAL": "ST",
+            "LCNAME": "LL",
+            "FACTOR": 1.5
+          }
+        ]
+      }
+    }
+  }
+}

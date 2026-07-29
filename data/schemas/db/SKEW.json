@@ -1,0 +1,226 @@
+{
+  "_group": "db",
+  "_name": "SKEW",
+  "uri": "db/SKEW",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SKEW": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Node Local Axis (SKEW). The iMETHOD field selects the input method (1=Angle, 2=3 Points, 3=Vector, 4=Line Vector) and determines which of the remaining fields are used to define the node local axis.",
+      "type": "object",
+      "properties": {
+        "iMETHOD": {
+          "description": "Input method that drives which fields are used. 1 = Angle (uses ANGLE_X/Y/Z); 2 = 3 Points (uses P0X..P2Z); 3 = Vector (uses V1X..V2Z); 4 = Line Vector (uses P0X..P2Z, LV0X..LV2Z, REFTYPE, G_DIR, L_DIR).",
+          "type": "integer",
+          "default": 1
+        },
+        "ANGLE_X": {
+          "description": "[iMETHOD=1] Rotation angle about the x axis (degrees).",
+          "type": "number",
+          "default": 0.0
+        },
+        "ANGLE_Y": {
+          "description": "[iMETHOD=1] Rotation angle about the y axis (degrees).",
+          "type": "number",
+          "default": 0.0
+        },
+        "ANGLE_Z": {
+          "description": "[iMETHOD=1] Rotation angle about the z axis (degrees).",
+          "type": "number",
+          "default": 0.0
+        },
+        "P0X": {
+          "description": "[iMETHOD=2 or 4] Point P0 coordinate x.",
+          "type": "number",
+          "default": 0.0
+        },
+        "P0Y": {
+          "description": "[iMETHOD=2 or 4] Point P0 coordinate y.",
+          "type": "number",
+          "default": 0.0
+        },
+        "P0Z": {
+          "description": "[iMETHOD=2 or 4] Point P0 coordinate z.",
+          "type": "number",
+          "default": 0.0
+        },
+        "P1X": {
+          "description": "[iMETHOD=2 or 4] Point P1 coordinate x.",
+          "type": "number",
+          "default": 0.0
+        },
+        "P1Y": {
+          "description": "[iMETHOD=2 or 4] Point P1 coordinate y.",
+          "type": "number",
+          "default": 0.0
+        },
+        "P1Z": {
+          "description": "[iMETHOD=2 or 4] Point P1 coordinate z.",
+          "type": "number",
+          "default": 0.0
+        },
+        "P2X": {
+          "description": "[iMETHOD=2 or 4] Point P2 coordinate x.",
+          "type": "number",
+          "default": 0.0
+        },
+        "P2Y": {
+          "description": "[iMETHOD=2 or 4] Point P2 coordinate y.",
+          "type": "number",
+          "default": 0.0
+        },
+        "P2Z": {
+          "description": "[iMETHOD=2 or 4] Point P2 coordinate z.",
+          "type": "number",
+          "default": 0.0
+        },
+        "V1X": {
+          "description": "[iMETHOD=3] Direction vector V1 component x.",
+          "type": "number",
+          "default": 0.0
+        },
+        "V1Y": {
+          "description": "[iMETHOD=3] Direction vector V1 component y.",
+          "type": "number",
+          "default": 0.0
+        },
+        "V1Z": {
+          "description": "[iMETHOD=3] Direction vector V1 component z.",
+          "type": "number",
+          "default": 0.0
+        },
+        "V2X": {
+          "description": "[iMETHOD=3] Direction vector V2 component x.",
+          "type": "number",
+          "default": 0.0
+        },
+        "V2Y": {
+          "description": "[iMETHOD=3] Direction vector V2 component y.",
+          "type": "number",
+          "default": 0.0
+        },
+        "V2Z": {
+          "description": "[iMETHOD=3] Direction vector V2 component z.",
+          "type": "number",
+          "default": 0.0
+        },
+        "LV0X": {
+          "description": "[iMETHOD=4] Local vector 0 component x.",
+          "type": "number",
+          "default": 0.0
+        },
+        "LV0Y": {
+          "description": "[iMETHOD=4] Local vector 0 component y.",
+          "type": "number",
+          "default": 0.0
+        },
+        "LV0Z": {
+          "description": "[iMETHOD=4] Local vector 0 component z.",
+          "type": "number",
+          "default": 0.0
+        },
+        "LV1X": {
+          "description": "[iMETHOD=4] Local vector 1 component x.",
+          "type": "number",
+          "default": 0.0
+        },
+        "LV1Y": {
+          "description": "[iMETHOD=4] Local vector 1 component y.",
+          "type": "number",
+          "default": 0.0
+        },
+        "LV1Z": {
+          "description": "[iMETHOD=4] Local vector 1 component z.",
+          "type": "number",
+          "default": 0.0
+        },
+        "LV2X": {
+          "description": "[iMETHOD=4] Local vector 2 component x.",
+          "type": "number",
+          "default": 0.0
+        },
+        "LV2Y": {
+          "description": "[iMETHOD=4] Local vector 2 component y.",
+          "type": "number",
+          "default": 0.0
+        },
+        "LV2Z": {
+          "description": "[iMETHOD=4] Local vector 2 component z.",
+          "type": "number",
+          "default": 0.0
+        },
+        "REFTYPE": {
+          "description": "[iMETHOD=4] Reference type used with the line vector definition.",
+          "type": "integer",
+          "default": 0
+        },
+        "G_DIR": {
+          "description": "[iMETHOD=4] Global direction code (e.g. 0=Global X, 1=Global Y, 2=Global Z).",
+          "type": "integer",
+          "default": 0
+        },
+        "L_DIR": {
+          "description": "[iMETHOD=4] Local direction code (e.g. 0=Local x, 1=Local y, 2=Local z).",
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "iMETHOD": 1,
+        "ANGLE_X": 45.0,
+        "ANGLE_Y": 0.0,
+        "ANGLE_Z": 90.0
+      },
+      "2": {
+        "iMETHOD": 2,
+        "P0X": 0.0,
+        "P0Y": 0.0,
+        "P0Z": 0.0,
+        "P1X": 1.0,
+        "P1Y": 0.0,
+        "P1Z": 0.0,
+        "P2X": 0.0,
+        "P2Y": 1.0,
+        "P2Z": 0.0
+      },
+      "3": {
+        "iMETHOD": 3,
+        "V1X": 1.0,
+        "V1Y": 0.0,
+        "V1Z": 0.0,
+        "V2X": 0.0,
+        "V2Y": 1.0,
+        "V2Z": 0.0
+      },
+      "4": {
+        "iMETHOD": 4,
+        "P0X": 0.0,
+        "P0Y": 0.0,
+        "P0Z": 0.0,
+        "P1X": 1.0,
+        "P1Y": 0.0,
+        "P1Z": 0.0,
+        "P2X": 0.0,
+        "P2Y": 1.0,
+        "P2Z": 0.0,
+        "LV0X": 1.0,
+        "LV0Y": 0.0,
+        "LV0Z": 0.0,
+        "LV1X": 0.0,
+        "LV1Y": 1.0,
+        "LV1Z": 0.0,
+        "LV2X": 0.0,
+        "LV2Y": 0.0,
+        "LV2Z": 1.0,
+        "REFTYPE": 1,
+        "G_DIR": 0,
+        "L_DIR": 0
+      }
+    }
+  }
+}

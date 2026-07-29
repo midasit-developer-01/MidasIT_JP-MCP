@@ -1,0 +1,29 @@
+{
+  "_group": "design",
+  "_name": "DSPSC",
+  "uri": "design/PSC/DSPSC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DSPSC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "PSC Design Code (DSPSC). The only field is the design code name, which OnSet enforces to be exactly \"AASHTO-LRFD24\".",
+      "properties": {
+        "DGNCODE": {
+          "type": "string",
+          "enum": ["AASHTO-LRFD24"],
+          "description": "Design code name. OnSet throws LV_WRONG_FIELD unless this equals \"AASHTO-LRFD24\"; on GET other codes may be read back but only \"AASHTO-LRFD24\" can be set."
+        }
+      },
+      "required": ["DGNCODE"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DGNCODE": "AASHTO-LRFD24"
+      }
+    }
+  }
+}

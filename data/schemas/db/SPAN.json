@@ -1,0 +1,95 @@
+{
+  "_group": "db",
+  "_name": "SPAN",
+  "uri": "db/SPAN",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SPAN": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Span (SPAN). Defines a span line used for construction-stage/bridge analysis; the exact-span flag together with the SPAN_LIST lengths and the SPAN_BASE_ITEMS element/support assignments drive the geometry.",
+      "properties": {
+        "NAME": {
+          "description": "Span name (identifier label for this span).",
+          "type": "string"
+        },
+        "bEXACTSPAN": {
+          "description": "Exact span option. When true, span lengths are given explicitly in SPAN_LIST.",
+          "type": "boolean"
+        },
+        "DIRECTION": {
+          "description": "Inner direction of multiple girders. (-) Local y: 0, (+) Local y: 1, Both: 2, None: 3.",
+          "type": "integer"
+        },
+        "SECTTYPE": {
+          "description": "How elements are assigned to the span. By Selection: 0, By Number: 1.",
+          "type": "integer"
+        },
+        "SPAN_LIST": {
+          "description": "Span lengths (typically used when bEXACTSPAN is true). Ordered list of span segment lengths.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "description": "Length of one span segment."
+          }
+        },
+        "SPAN_BASE_ITEMS": {
+          "description": "Span base items: the elements that make up the span and their support locations. Each element key must exist in the model.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ELEM_KEY": {
+                "description": "Element number belonging to this span (must be an existing element).",
+                "type": "integer"
+              },
+              "SUPPORT": {
+                "description": "Support location at this element. None: 0, I-end: 1, J-end: 2.",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "ELEM_KEY",
+              "SUPPORT"
+            ]
+          }
+        }
+      },
+      "required": [
+        "NAME",
+        "bEXACTSPAN",
+        "DIRECTION",
+        "SECTTYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "s1",
+        "bEXACTSPAN": true,
+        "DIRECTION": 0,
+        "SECTTYPE": 0,
+        "SPAN_LIST": [
+          2.5,
+          5.0,
+          32.5
+        ],
+        "SPAN_BASE_ITEMS": [
+          {
+            "ELEM_KEY": 1,
+            "SUPPORT": 1
+          },
+          {
+            "ELEM_KEY": 2,
+            "SUPPORT": 0
+          },
+          {
+            "ELEM_KEY": 3,
+            "SUPPORT": 2
+          }
+        ]
+      }
+    }
+  }
+}

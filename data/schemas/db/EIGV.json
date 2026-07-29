@@ -1,0 +1,131 @@
+{
+  "_group": "db",
+  "_name": "EIGV",
+  "uri": "db/EIGV",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EIGV": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Eigenvalue Analysis (EIGV). The analysis method is chosen by TYPE (EIGEN subspace iteration, LANCZOS, or RITZ vectors); TYPE decides which of the remaining fields apply.",
+      "properties": {
+        "TYPE": {
+          "description": "Eigenvalue analysis method. Case-insensitive. EIGEN = subspace iteration (uses iFREQ, iITER, iDIM, TOL); LANCZOS = Lanczos (uses iFREQ, bMINMAX, FRMIN, FRMAX, bSTRUM); RITZ = Ritz vectors (uses bINCNL, iGNUM, vRITZ).",
+          "type": "string",
+          "enum": ["EIGEN", "RITZ", "LANCZOS"]
+        },
+        "iFREQ": {
+          "description": "[TYPE=EIGEN|LANCZOS] Number of frequencies (modes) to extract.",
+          "type": "integer",
+          "default": 1
+        },
+        "iITER": {
+          "description": "[TYPE=EIGEN] Number of iterations for subspace iteration.",
+          "type": "integer",
+          "default": 20
+        },
+        "iDIM": {
+          "description": "[TYPE=EIGEN] Subspace dimension.",
+          "type": "integer",
+          "default": 0
+        },
+        "TOL": {
+          "description": "[TYPE=EIGEN] Convergence tolerance.",
+          "type": "number",
+          "default": 0
+        },
+        "bMINMAX": {
+          "description": "[TYPE=LANCZOS] Restrict to a frequency range of interest. When true, FRMIN and FRMAX define the search band.",
+          "type": "boolean",
+          "default": false
+        },
+        "FRMIN": {
+          "description": "[TYPE=LANCZOS] Search-from frequency [cps], used when bMINMAX is true (expected FRMIN < FRMAX).",
+          "type": "number",
+          "default": 0
+        },
+        "FRMAX": {
+          "description": "[TYPE=LANCZOS] Search-to frequency [cps], used when bMINMAX is true (expected FRMIN < FRMAX).",
+          "type": "number",
+          "default": 1600
+        },
+        "bSTRUM": {
+          "description": "[TYPE=LANCZOS] Sturm sequence check.",
+          "type": "boolean",
+          "default": false
+        },
+        "bINCNL": {
+          "description": "[TYPE=RITZ] Include GL-link (general link) force vectors.",
+          "type": "boolean",
+          "default": false
+        },
+        "iGNUM": {
+          "description": "[TYPE=RITZ] Number of generations for each GL-link force.",
+          "type": "integer",
+          "default": 0
+        },
+        "vRITZ": {
+          "description": "[TYPE=RITZ] Load cases used to generate Ritz vectors. Required (and must be non-empty) when TYPE=RITZ; at most 50 entries.",
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "description": "One Ritz load case entry.",
+            "properties": {
+              "KIND": {
+                "description": "Load case source. Case-insensitive. CASE = a defined static load case (name in CASE); GROUND = ground acceleration direction (in GROUND).",
+                "type": "string",
+                "enum": ["CASE", "GROUND"]
+              },
+              "CASE": {
+                "description": "[KIND=CASE] Name of the defined static load case.",
+                "type": "string",
+                "default": ""
+              },
+              "GROUND": {
+                "description": "[KIND=GROUND] Ground acceleration direction. Case-insensitive. ACCX = X, ACCY = Y, ACCZ = Z.",
+                "type": "string",
+                "enum": ["ACCX", "ACCY", "ACCZ"]
+              },
+              "iNOG": {
+                "description": "Number of generations for this load case.",
+                "type": "integer",
+                "default": 0
+              }
+            },
+            "required": ["KIND"]
+          }
+        }
+      },
+      "required": ["TYPE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TYPE": "EIGEN",
+        "iFREQ": 10,
+        "iITER": 20,
+        "iDIM": 0,
+        "TOL": 1e-10
+      },
+      "2": {
+        "TYPE": "LANCZOS",
+        "iFREQ": 30,
+        "bMINMAX": true,
+        "FRMIN": 0,
+        "FRMAX": 1600,
+        "bSTRUM": false
+      },
+      "3": {
+        "TYPE": "RITZ",
+        "bINCNL": true,
+        "iGNUM": 2,
+        "vRITZ": [
+          { "KIND": "CASE", "CASE": "Self Weight", "iNOG": 3 },
+          { "KIND": "GROUND", "GROUND": "ACCX", "iNOG": 2 }
+        ]
+      }
+    }
+  }
+}

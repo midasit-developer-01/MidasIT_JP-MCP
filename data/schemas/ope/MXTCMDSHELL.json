@@ -1,0 +1,25 @@
+{
+  "_group": "ope",
+  "_name": "MXTCMDSHELL",
+  "uri": "ope/MXTCMDSHELL",
+  "methods": "POST",
+  "schema": {
+    "MXTCMDSHELL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "MXT Command Shell (MXTCMDSHELL). Imports raw MXT command-shell text into the currently open project; the request body carries the MXT command data as a single string that is parsed and applied to the model.",
+      "properties": {
+        "Argument": {
+          "type": "string",
+          "description": "MXT command-shell data as a single text string. The value is passed verbatim to the MXT import routine (OnImportMxt); a project must already be open. Wrong or unparseable input fails the request."
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": "*UNIT\n   KN, M, KJ, C\n*NODE\n   1, 0, 0, 0\n   2, 5, 0, 0"
+  }
+}

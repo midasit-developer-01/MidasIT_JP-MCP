@@ -1,0 +1,205 @@
+{
+  "_group": "db",
+  "_name": "MVLDCH",
+  "uri": "db/MVLDCH",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVLDCH": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Case - China (MVLDCH). OPT_AUTO_OPTIMIZE drives which sub-fields apply: false uses SUB_LOAD_ITEMS; true uses the vehicle-distance/count fields, LOADED_LANE_NAME and AUTO_OPTIMIZE_ITEMS.",
+      "properties": {
+        "LCNAME": {
+          "type": "string",
+          "description": "Load Case Name."
+        },
+        "DESC": {
+          "type": "string",
+          "default": "",
+          "description": "Description."
+        },
+        "OPT_AUTO_OPTIMIZE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Moving Load Optimization flag. When false, SUB_LOAD_ITEMS applies; when true, MIN_VEHICLE_DIST, MIN_NUM_VEHICLE, MAX_NUM_VEHICLE, LOADED_LANE_NAME and AUTO_OPTIMIZE_ITEMS apply."
+        },
+        "BRIDGE_TYPE": {
+          "type": "integer",
+          "description": "Bridge Type. Selects which scale-factor set applies: Old Urban Bridge (SCALE_FACTOR_O), Highway / New Urban Bridge (SCALE_FACTOR_N), or JTG B01-2014 (SCALE_FACTOR_JTG)."
+        },
+        "SCALE_FACTOR_O": {
+          "type": "array",
+          "description": "Scale Factors - Old Urban Bridge. Exactly 8 values.",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 8,
+          "maxItems": 8
+        },
+        "SCALE_FACTOR_N": {
+          "type": "array",
+          "description": "Scale Factors - Highway / New Urban Bridge. Exactly 8 values.",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 8,
+          "maxItems": 8
+        },
+        "SCALE_FACTOR_JTG": {
+          "type": "array",
+          "description": "Scale Factors - JTG B01-2014. Exactly 8 values.",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 8,
+          "maxItems": 8
+        },
+        "LOADING_EFFECT": {
+          "type": "integer",
+          "description": "Loading Effect - Combined/Independent."
+        },
+        "SUB_LOAD_ITEMS": {
+          "type": "array",
+          "description": "[OPT_AUTO_OPTIMIZE=false] Sub Load Items. Each item defines a vehicle class assignment with loaded-lane limits.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "VEHICLE_CLASS": {
+                "type": "string",
+                "description": "Vehicle Class (vehicle class name when VEHICLE_TYPE=VC, vehicle load name when VEHICLE_TYPE=VL)."
+              },
+              "VEHICLE_TYPE": {
+                "type": "string",
+                "enum": ["VC", "VL"],
+                "description": "Vehicle Type (case-insensitive). VC = vehicle class, VL = vehicle load."
+              },
+              "SCALE_FACTOR": {
+                "type": "number",
+                "description": "Scale Factor."
+              },
+              "MIN_NUM_LOADED_LANES": {
+                "type": "integer",
+                "description": "Min. Number of Loaded Lanes."
+              },
+              "MAX_NUM_LOADED_LANES": {
+                "type": "integer",
+                "description": "Max. Number of Loaded Lanes."
+              },
+              "SELECTED_LANES": {
+                "type": "array",
+                "description": "Selected Lanes (lane names).",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "VEHICLE_CLASS",
+              "VEHICLE_TYPE",
+              "SCALE_FACTOR",
+              "MIN_NUM_LOADED_LANES",
+              "MAX_NUM_LOADED_LANES",
+              "SELECTED_LANES"
+            ]
+          }
+        },
+        "MIN_VEHICLE_DIST": {
+          "type": "integer",
+          "description": "[OPT_AUTO_OPTIMIZE=true] Min. Vehicle Distance."
+        },
+        "MIN_NUM_VEHICLE": {
+          "type": "integer",
+          "description": "[OPT_AUTO_OPTIMIZE=true] Min. Number of Vehicle."
+        },
+        "MAX_NUM_VEHICLE": {
+          "type": "integer",
+          "description": "[OPT_AUTO_OPTIMIZE=true] Max. Number of Vehicle."
+        },
+        "LOADED_LANE_NAME": {
+          "type": "string",
+          "description": "[OPT_AUTO_OPTIMIZE=true] Loaded Lane Name (optimize lane). Must reference an existing lane name."
+        },
+        "AUTO_OPTIMIZE_ITEMS": {
+          "type": "array",
+          "description": "[OPT_AUTO_OPTIMIZE=true] Auto Optimize Items. Each item defines a vehicle to auto-optimize.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "VEHICLE_NAME": {
+                "type": "string",
+                "description": "Vehicle Name (vehicle class name when VEHICLE_TYPE=VC, vehicle load name when VEHICLE_TYPE=VL)."
+              },
+              "VEHICLE_TYPE": {
+                "type": "string",
+                "enum": ["VC", "VL"],
+                "description": "Vehicle Type (case-insensitive). VC = vehicle class, VL = vehicle load."
+              },
+              "SCALE_FACTOR": {
+                "type": "number",
+                "description": "Scale Factor."
+              }
+            },
+            "required": [
+              "VEHICLE_NAME",
+              "VEHICLE_TYPE",
+              "SCALE_FACTOR"
+            ]
+          }
+        }
+      },
+      "required": [
+        "LCNAME",
+        "BRIDGE_TYPE",
+        "SCALE_FACTOR_O",
+        "SCALE_FACTOR_N",
+        "SCALE_FACTOR_JTG",
+        "LOADING_EFFECT"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LCNAME": "MVL-Standard",
+        "DESC": "China moving load, sub-load items",
+        "OPT_AUTO_OPTIMIZE": false,
+        "BRIDGE_TYPE": 1,
+        "SCALE_FACTOR_O": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+        "SCALE_FACTOR_N": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+        "SCALE_FACTOR_JTG": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+        "LOADING_EFFECT": 0,
+        "SUB_LOAD_ITEMS": [
+          {
+            "VEHICLE_CLASS": "VC-1",
+            "VEHICLE_TYPE": "VC",
+            "SCALE_FACTOR": 1.0,
+            "MIN_NUM_LOADED_LANES": 1,
+            "MAX_NUM_LOADED_LANES": 2,
+            "SELECTED_LANES": ["Lane1", "Lane2"]
+          }
+        ]
+      },
+      "2": {
+        "LCNAME": "MVL-AutoOptimize",
+        "DESC": "China moving load, auto optimize",
+        "OPT_AUTO_OPTIMIZE": true,
+        "BRIDGE_TYPE": 2,
+        "SCALE_FACTOR_O": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+        "SCALE_FACTOR_N": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+        "SCALE_FACTOR_JTG": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+        "LOADING_EFFECT": 1,
+        "MIN_VEHICLE_DIST": 5,
+        "MIN_NUM_VEHICLE": 1,
+        "MAX_NUM_VEHICLE": 3,
+        "LOADED_LANE_NAME": "OptimLane1",
+        "AUTO_OPTIMIZE_ITEMS": [
+          {
+            "VEHICLE_NAME": "VL-1",
+            "VEHICLE_TYPE": "VL",
+            "SCALE_FACTOR": 1.0
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,574 @@
+{
+  "_group": "db",
+  "_name": "STCT-M1",
+  "uri": "db/STCT-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "STCT-M1": {
+      "type": "object",
+      "description": "Construction Stage Analysis Control (STCT-M1). A single global control record for construction-stage (MEC) analysis; the analysis type (iINC_NLA) and the various on/off (OPT_USE) sub-toggles drive which nested control objects apply.",
+      "properties": {
+        "bLAST_FINAL": {
+          "type": "boolean",
+          "description": "Last Stage (true) uses the final construction stage; Other Stage (false) requires FINAL_STAGE to name the stage to analyze up to."
+        },
+        "FINAL_STAGE": {
+          "type": "string",
+          "description": "Final stage name. Required by the handler when bLAST_FINAL is false; must reference an existing construction stage."
+        },
+        "RESTART_CS_ANAL": {
+          "type": "object",
+          "description": "Restart CS Analysis control.",
+          "properties": {
+            "OPT_USE": {
+              "type": "boolean",
+              "description": "Turn Restart CS Analysis on/off."
+            },
+            "RESTART_STAGE": {
+              "type": "array",
+              "description": "Names of construction stages to restart from; used only when OPT_USE is true. Each must reference an existing stage.",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["OPT_USE"]
+        },
+        "ANAL_TYPE": {
+          "type": "object",
+          "description": "Analysis Type control.",
+          "properties": {
+            "iINC_NLA": {
+              "type": "integer",
+              "description": "Nonlinear analysis type: 0=No NL, 1=Geometric NL, 2=Material NL, 3=Geometric+Material NL."
+            },
+            "iNLA_TYPE": {
+              "type": "integer",
+              "description": "Stage option: 0=Independent, 1=Accumulative. Material NL (iINC_NLA 2 or 3) is auto-forced to Accumulative (1).",
+              "default": 1
+            },
+            "bINC_PDL": {
+              "type": "boolean",
+              "description": "[iINC_NLA=0] Include P-Delta Effect. Auto-cleared to false when iINC_NLA >= 1."
+            },
+            "bINC_TDE": {
+              "type": "boolean",
+              "description": "[iINC_NLA in {0,1} and iNLA_TYPE=1] Include Time Dependent Effect. Auto-cleared when Material NL."
+            },
+            "bIEMF": {
+              "type": "boolean",
+              "description": "[iINC_NLA=1 and iNLA_TYPE=0] Include Equilibrium Member Force."
+            }
+          },
+          "required": ["iINC_NLA"]
+        },
+        "ERECTION_LOAD": {
+          "type": "array",
+          "description": "Erection load cases: load cases to be distinguished from dead load for C.S. output.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "LTYPECC": {
+                "type": "string",
+                "description": "Erection load case (group) name."
+              },
+              "EREC": {
+                "type": "string",
+                "description": "Erection load type (case-insensitive): D=Dead, DC=Dead Component, DW=Dead Wearing, EP=Erection Permanent, L=Live, W=Wind, T=Temperature, TPG=Temp Gradient, E=Earthquake, ER=Erection.",
+                "enum": ["D", "DC", "DW", "EP", "L", "W", "T", "TPG", "E", "ER"]
+              },
+              "vLCNAME": {
+                "type": "array",
+                "description": "List of load case names assigned to this erection type; each must reference an existing load case.",
+                "items": { "type": "string" }
+              }
+            },
+            "required": ["LTYPECC", "EREC", "vLCNAME"]
+          }
+        },
+        "bSDLE": {
+          "type": "boolean",
+          "description": "[iINC_NLA=0 and iNLA_TYPE=1] Secondary Dead Load Effect. Ignored for other analysis configurations."
+        },
+        "vSDLE": {
+          "type": "array",
+          "description": "[iINC_NLA=0 and iNLA_TYPE=1] SDL load case names; required by the handler when bSDLE is true. Each must reference an existing load case.",
+          "items": { "type": "string" }
+        },
+        "TIME_DEP_CONTROL": {
+          "type": "object",
+          "description": "Time Dependent Effect control. Applied only when bINC_TDE is true.",
+          "properties": {
+            "CREEP_SHRINKAGE": {
+              "type": "object",
+              "description": "Creep & Shrinkage settings.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Turn Creep & Shrinkage on/off."
+                },
+                "TYPE": {
+                  "type": "string",
+                  "description": "Creep & Shrinkage type (case-insensitive): CREEP, SHRINKAGE, or BOTH.",
+                  "enum": ["CREEP", "SHRINKAGE", "BOTH"]
+                },
+                "bOUCC": {
+                  "type": "boolean",
+                  "description": "Only User Creep Coefficient."
+                },
+                "INTERNAL_STEP": {
+                  "type": "object",
+                  "description": "Internal time step. Applied only when not Shrinkage-only and bOUCC is false.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Turn internal time step on/off."
+                    },
+                    "iITS": {
+                      "type": "integer",
+                      "description": "Number of internal time steps; used when OPT_USE is true."
+                    }
+                  },
+                  "required": ["OPT_USE"]
+                },
+                "AUTO_TIME_STEP": {
+                  "type": "object",
+                  "description": "Auto time step generation for large time gaps. Applied only when not Shrinkage-only and bOUCC is false.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Turn auto time step on/off."
+                    },
+                    "iT10": {
+                      "type": "integer",
+                      "description": "Number of steps for time gap > 10 (default 2 when omitted and OPT_USE true)."
+                    },
+                    "iT100": {
+                      "type": "integer",
+                      "description": "Number of steps for time gap > 100 (default 5)."
+                    },
+                    "iT1K": {
+                      "type": "integer",
+                      "description": "Number of steps for time gap > 1000 (default 7)."
+                    },
+                    "iT5K": {
+                      "type": "integer",
+                      "description": "Number of steps for time gap > 5000 (default 10)."
+                    },
+                    "iT10K": {
+                      "type": "integer",
+                      "description": "Number of steps for time gap > 10000 (default 20)."
+                    }
+                  },
+                  "required": ["OPT_USE"]
+                },
+                "bTTLE_CS": {
+                  "type": "boolean",
+                  "description": "Tendon tension loss effect due to creep & shrinkage."
+                },
+                "bRCE": {
+                  "type": "boolean",
+                  "description": "Consider confinement by reinforcement."
+                }
+              },
+              "required": ["OPT_USE"]
+            },
+            "bVAR": {
+              "type": "boolean",
+              "description": "Variation of material (compressive strength) properties."
+            },
+            "bAPPLY_ELA": {
+              "type": "boolean",
+              "description": "[bVAR=true] Apply time-dependent elastic modulus to Post C.S."
+            },
+            "bTTLE_ES": {
+              "type": "boolean",
+              "description": "Tendon tension loss effect due to elastic shortening."
+            },
+            "iTTLE_ES": {
+              "type": "integer",
+              "description": "[bTTLE_ES=true] Tendon tension type: 0=Change, 1=Constant."
+            }
+          },
+          "required": ["CREEP_SHRINKAGE"]
+        },
+        "CABLE_CONTROL": {
+          "type": "object",
+          "description": "Cable pretension force control.",
+          "properties": {
+            "CPFC": {
+              "type": "string",
+              "description": "Cable pretension force type (case-insensitive): INTERNAL or EXTERNAL.",
+              "enum": ["INTERNAL", "EXTERNAL"],
+              "default": "INTERNAL"
+            },
+            "bEXT_REPL": {
+              "type": "boolean",
+              "description": "[CPFC=EXTERNAL] External force handling: false=Add, true=Replace."
+            }
+          }
+        },
+        "INITIAL_CONTROL": {
+          "type": "object",
+          "description": "Initial force control.",
+          "properties": {
+            "bCONV": {
+              "type": "boolean",
+              "description": "Convert final stage member forces to initial forces for Post C.S."
+            },
+            "bTRUSS": {
+              "type": "boolean",
+              "description": "[bCONV=true] Convert truss elements (defaults to true). If both bTRUSS and bBEAM are false, bCONV is forced false."
+            },
+            "bBEAM": {
+              "type": "boolean",
+              "description": "[bCONV=true] Convert beam elements (defaults to true)."
+            },
+            "bCHANGE_CABLE": {
+              "type": "boolean",
+              "description": "Change cable element to equivalent truss element for Post C.S."
+            },
+            "bAPPLY_IMF": {
+              "type": "boolean",
+              "description": "Apply initial member force to C.S. (auto-cleared for Geometric NL)."
+            }
+          }
+        },
+        "INITIAL_DISP": {
+          "type": "object",
+          "description": "Initial displacement control.",
+          "properties": {
+            "ITD_CONTROL": {
+              "type": "object",
+              "description": "Initial Tangent Displacement control for erected structures.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Turn initial tangent displacement on/off."
+                },
+                "ITD": {
+                  "type": "string",
+                  "description": "Application scope (case-insensitive): ALL elements or GROUP.",
+                  "enum": ["ALL", "GROUP"]
+                },
+                "GROUP": {
+                  "type": "string",
+                  "description": "[ITD=GROUP] Structure group name; must reference an existing structure group."
+                },
+                "LFFC_OPT_USE": {
+                  "type": "boolean",
+                  "description": "Lack-of-fit force control on/off."
+                },
+                "LFFGR": {
+                  "type": "string",
+                  "description": "[LFFC_OPT_USE=true] Lack-of-fit force structure group name; must reference an existing structure group."
+                }
+              },
+              "required": ["OPT_USE"]
+            },
+            "bCAMBER": {
+              "type": "boolean",
+              "description": "Apply camber displacement to C.S."
+            }
+          }
+        },
+        "STRESS_DECREASE": {
+          "type": "object",
+          "description": "Stress decrease at transfer length zone by post-tension.",
+          "properties": {
+            "OPT_USE": {
+              "type": "boolean",
+              "description": "Consider end-part stress decrease on/off."
+            },
+            "iSDOPT": {
+              "type": "integer",
+              "description": "[OPT_USE=true] Method: 0=Linear Interpolation, 1=Constant."
+            },
+            "SDCONST": {
+              "type": "number",
+              "description": "[iSDOPT=1] Constant stress ratio value."
+            }
+          }
+        },
+        "iBSC": {
+          "type": "integer",
+          "description": "Beam section property over stages: 0=Constant, 1=Change.",
+          "default": 1
+        },
+        "FRAME_OUTPUT": {
+          "type": "object",
+          "description": "Frame output control.",
+          "properties": {
+            "bCALC_CFF": {
+              "type": "boolean",
+              "description": "Calculate concurrent forces of frame."
+            },
+            "bCALC_CSP": {
+              "type": "boolean",
+              "description": "Calculate output of each part of composite section."
+            },
+            "bSELFCONS": {
+              "type": "boolean",
+              "description": "[bCALC_CSP=true] Self-constrained forces & stresses."
+            }
+          }
+        },
+        "bSAVE_OCS": {
+          "type": "boolean",
+          "description": "Save output of current stage (beam/truss)."
+        },
+        "NONL_CONTROL": {
+          "type": "object",
+          "description": "Nonlinear analysis control.",
+          "properties": {
+            "iLSTEP": {
+              "type": "integer",
+              "description": "Number of load increments."
+            },
+            "INTOUT": {
+              "type": "string",
+              "description": "Intermediate output request (case-insensitive): EVERY increment or LAST increment.",
+              "enum": ["EVERY", "LAST"]
+            },
+            "ADVANCED": {
+              "type": "object",
+              "description": "Advanced nonlinear parameters.",
+              "properties": {
+                "USE_DEF_SETTINGS": {
+                  "type": "boolean",
+                  "description": "Use default settings. When true, the remaining advanced fields are ignored."
+                },
+                "STIFF_UPD_SCHEME": {
+                  "type": "integer",
+                  "description": "[USE_DEF_SETTINGS=false] Stiffness update scheme: 0=Custom, 1=Full Newton-Raphson, 2=Initial Stiffness."
+                },
+                "ITER_BEF_UPDATE": {
+                  "type": "integer",
+                  "description": "[STIFF_UPD_SCHEME=0] Number of iterations before stiffness update."
+                },
+                "TERMINATE_ON_FAIL_CONV": {
+                  "type": "boolean",
+                  "description": "[USE_DEF_SETTINGS=false] Terminate analysis on failed convergence."
+                },
+                "MAX_ITER_INCREMENT": {
+                  "type": "integer",
+                  "description": "[USE_DEF_SETTINGS=false] Max iterations per increment."
+                },
+                "MAX_BISECT_LEVEL": {
+                  "type": "integer",
+                  "description": "[USE_DEF_SETTINGS=false] Max bisection level."
+                },
+                "SMART_BISECT": {
+                  "type": "boolean",
+                  "description": "[USE_DEF_SETTINGS=false] Smart bisection."
+                },
+                "DIVERG_THRESH": {
+                  "type": "number",
+                  "description": "[USE_DEF_SETTINGS=false] Divergence threshold."
+                },
+                "ENABLE_LINE_SEARCH": {
+                  "type": "boolean",
+                  "description": "[USE_DEF_SETTINGS=false] Enable line search. The handler expects the LINE_SEARCH object to be present when USE_DEF_SETTINGS is false."
+                },
+                "LINE_SEARCH": {
+                  "type": "object",
+                  "description": "Line search parameters (expected when USE_DEF_SETTINGS is false).",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Line search enabled flag."
+                    },
+                    "LINE_SEARCH_TYPE": {
+                      "type": "string",
+                      "description": "Line search type (case-insensitive): AUTO or USER.",
+                      "enum": ["AUTO", "USER"]
+                    },
+                    "MAX_LN_SRCH_ITER": {
+                      "type": "integer",
+                      "description": "[LINE_SEARCH_TYPE=USER] Max line search iterations per iteration."
+                    },
+                    "LN_SEARCH_TOL": {
+                      "type": "number",
+                      "description": "[LINE_SEARCH_TYPE=USER] Line search tolerance."
+                    }
+                  },
+                  "required": ["OPT_USE"]
+                }
+              },
+              "required": ["USE_DEF_SETTINGS"]
+            },
+            "DISP": {
+              "type": "object",
+              "description": "Displacement convergence norm.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Turn displacement norm on/off."
+                },
+                "VALUE": {
+                  "type": "number",
+                  "description": "Tolerance value; required by the handler when OPT_USE is true."
+                }
+              },
+              "required": ["OPT_USE"]
+            },
+            "LOAD": {
+              "type": "object",
+              "description": "Load convergence norm.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Turn load norm on/off."
+                },
+                "VALUE": {
+                  "type": "number",
+                  "description": "Tolerance value; required by the handler when OPT_USE is true."
+                }
+              },
+              "required": ["OPT_USE"]
+            },
+            "WORK": {
+              "type": "object",
+              "description": "Work convergence norm.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Turn work norm on/off."
+                },
+                "VALUE": {
+                  "type": "number",
+                  "description": "Tolerance value; required by the handler when OPT_USE is true."
+                }
+              },
+              "required": ["OPT_USE"]
+            }
+          }
+        }
+      },
+      "required": ["bLAST_FINAL"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bLAST_FINAL": true,
+        "ANAL_TYPE": {
+          "iINC_NLA": 0,
+          "iNLA_TYPE": 1,
+          "bINC_PDL": false,
+          "bINC_TDE": true
+        },
+        "RESTART_CS_ANAL": {
+          "OPT_USE": false
+        },
+        "ERECTION_LOAD": [
+          {
+            "LTYPECC": "Erection Group 1",
+            "EREC": "D",
+            "vLCNAME": ["Self Weight", "Dead Load"]
+          }
+        ],
+        "bSDLE": true,
+        "vSDLE": ["SDL"],
+        "TIME_DEP_CONTROL": {
+          "CREEP_SHRINKAGE": {
+            "OPT_USE": true,
+            "TYPE": "BOTH",
+            "bOUCC": false,
+            "INTERNAL_STEP": {
+              "OPT_USE": true,
+              "iITS": 5
+            },
+            "AUTO_TIME_STEP": {
+              "OPT_USE": true,
+              "iT10": 2,
+              "iT100": 5,
+              "iT1K": 7,
+              "iT5K": 10,
+              "iT10K": 20
+            },
+            "bTTLE_CS": true,
+            "bRCE": false
+          },
+          "bVAR": true,
+          "bAPPLY_ELA": true,
+          "bTTLE_ES": true,
+          "iTTLE_ES": 0
+        },
+        "CABLE_CONTROL": {
+          "CPFC": "INTERNAL"
+        },
+        "INITIAL_CONTROL": {
+          "bCONV": true,
+          "bTRUSS": true,
+          "bBEAM": true,
+          "bCHANGE_CABLE": false,
+          "bAPPLY_IMF": false
+        },
+        "INITIAL_DISP": {
+          "ITD_CONTROL": {
+            "OPT_USE": true,
+            "ITD": "ALL",
+            "LFFC_OPT_USE": false
+          },
+          "bCAMBER": false
+        },
+        "STRESS_DECREASE": {
+          "OPT_USE": true,
+          "iSDOPT": 1,
+          "SDCONST": 0.5
+        },
+        "iBSC": 1,
+        "FRAME_OUTPUT": {
+          "bCALC_CFF": false,
+          "bCALC_CSP": true,
+          "bSELFCONS": false
+        },
+        "bSAVE_OCS": true,
+        "NONL_CONTROL": {
+          "iLSTEP": 10,
+          "INTOUT": "LAST",
+          "ADVANCED": {
+            "USE_DEF_SETTINGS": false,
+            "STIFF_UPD_SCHEME": 0,
+            "ITER_BEF_UPDATE": 1,
+            "TERMINATE_ON_FAIL_CONV": true,
+            "MAX_ITER_INCREMENT": 30,
+            "MAX_BISECT_LEVEL": 0,
+            "SMART_BISECT": true,
+            "DIVERG_THRESH": 1000000.0,
+            "ENABLE_LINE_SEARCH": true,
+            "LINE_SEARCH": {
+              "OPT_USE": true,
+              "LINE_SEARCH_TYPE": "USER",
+              "MAX_LN_SRCH_ITER": 10,
+              "LN_SEARCH_TOL": 0.5
+            }
+          },
+          "DISP": {
+            "OPT_USE": true,
+            "VALUE": 0.001
+          },
+          "LOAD": {
+            "OPT_USE": false
+          },
+          "WORK": {
+            "OPT_USE": false
+          }
+        }
+      },
+      "2": {
+        "bLAST_FINAL": false,
+        "FINAL_STAGE": "CS10",
+        "ANAL_TYPE": {
+          "iINC_NLA": 1,
+          "iNLA_TYPE": 0,
+          "bIEMF": true
+        },
+        "CABLE_CONTROL": {
+          "CPFC": "EXTERNAL",
+          "bEXT_REPL": true
+        },
+        "iBSC": 1
+      }
+    }
+  }
+}

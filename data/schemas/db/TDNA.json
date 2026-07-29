@@ -1,0 +1,430 @@
+{
+  "_group": "db",
+  "_name": "TDNA",
+  "uri": "db/TDNA",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "TDNA": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Tendon Profile (TDNA). The INPUT key (2D vs 3D) selects which profile arrays apply (PROFY+PROFZ for 2D, PROF for 3D), and the SHAPE key (STRAIGHT/CURVE/ELEMENT) selects which reference-axis fields apply.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Tendon name.",
+          "type": "string"
+        },
+        "TDN_PROP": {
+          "description": "Tendon property (tendon type) key.",
+          "type": "integer"
+        },
+        "ELEM": {
+          "description": "Element key list the tendon is assigned to. Duplicates are removed on write.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "BELENG": {
+          "description": "Straight length of tendon at the begin (I) end.",
+          "type": "number",
+          "default": 0.0
+        },
+        "ELENG": {
+          "description": "Straight length of tendon at the end (J) end.",
+          "type": "number",
+          "default": 0.0
+        },
+        "CURVE": {
+          "description": "Curve type (case-insensitive). SPLINE maps to internal type 0, ROUND to 1. When SPLINE, the per-point add-option (OPT) on 2D profile points is forced to NONE.",
+          "type": "string",
+          "enum": ["SPLINE", "ROUND"]
+        },
+        "INPUT": {
+          "description": "Input type (case-insensitive). 2D uses PROFY and PROFZ (both required); 3D uses PROF (required).",
+          "type": "string",
+          "enum": ["2D", "3D"]
+        },
+        "TDN_GRUP": {
+          "description": "Tendon group key.",
+          "type": "integer",
+          "default": 0
+        },
+        "LENG_OPT": {
+          "description": "No-tension (transfer) length calculation option (case-insensitive). USER maps to 0 (user-defined; BLEN/ELEN apply), AUTO1 to 1, AUTO2 to 2.",
+          "type": "string",
+          "enum": ["USER", "AUTO1", "AUTO2"]
+        },
+        "BLEN": {
+          "description": "[LENG_OPT=USER] No-tension (transfer) length at the begin end.",
+          "type": "number",
+          "default": 0.0
+        },
+        "ELEN": {
+          "description": "[LENG_OPT=USER] No-tension (transfer) length at the end end.",
+          "type": "number",
+          "default": 0.0
+        },
+        "bTP": {
+          "description": "Whether this is a typical tendon. When true, CNT applies.",
+          "type": "boolean",
+          "default": false
+        },
+        "CNT": {
+          "description": "[bTP=true] Number of tendons.",
+          "type": "number"
+        },
+        "DeBondBLEN": {
+          "description": "Debonded length at the begin end. Only applied when the tendon property is internal pre-tension or internal post-tension.",
+          "type": "number",
+          "default": 0.0
+        },
+        "DeBondELEN": {
+          "description": "Debonded length at the end end. Only applied when the tendon property is internal pre-tension or internal post-tension.",
+          "type": "number",
+          "default": 0.0
+        },
+        "SHAPE": {
+          "description": "Tendon shape / reference axis (case-insensitive). STRAIGHT maps to 0, CURVE to 1, ELEMENT to 2. Selects which reference-axis fields apply.",
+          "type": "string",
+          "enum": ["STRAIGHT", "CURVE", "ELEMENT"]
+        },
+        "XAR_ANGLE": {
+          "description": "X-axis rotation angle. Applies for all SHAPE types.",
+          "type": "number",
+          "default": 0.0
+        },
+        "bPJ": {
+          "description": "Whether the profile is projected. Applies for all SHAPE types.",
+          "type": "boolean",
+          "default": false
+        },
+        "IP": {
+          "description": "[SHAPE=STRAIGHT|CURVE] Profile insert point [x, y, z].",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3,
+          "default": [0.0, 0.0, 0.0]
+        },
+        "GR_AXIS": {
+          "description": "[SHAPE=STRAIGHT|CURVE] Gradient rotate axis (case-insensitive). X maps to 0, Y to 1. Defaults to Y internally when omitted.",
+          "type": "string",
+          "enum": ["X", "Y"]
+        },
+        "GR_ANGLE": {
+          "description": "[SHAPE=STRAIGHT|CURVE] Gradient rotate angle.",
+          "type": "number",
+          "default": 0.0
+        },
+        "AXIS": {
+          "description": "[SHAPE=STRAIGHT] X-axis direction (case-insensitive). X maps to 0, Y to 1, VECTOR to 2.",
+          "type": "string",
+          "enum": ["X", "Y", "VECTOR"],
+          "default": "X"
+        },
+        "VEC": {
+          "description": "[SHAPE=STRAIGHT] Axis vector [x, y] (used when AXIS=VECTOR).",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "default": [0.0, 0.0]
+        },
+        "RC": {
+          "description": "[SHAPE=CURVE] Radius center [x, y].",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "default": [0.0, 0.0]
+        },
+        "OFFSET": {
+          "description": "[SHAPE=CURVE] Offset.",
+          "type": "number",
+          "default": 0.0
+        },
+        "DIR": {
+          "description": "[SHAPE=CURVE] Curve direction (case-insensitive). CW maps to 0, CCW to 1.",
+          "type": "string",
+          "enum": ["CW", "CCW"],
+          "default": "CW"
+        },
+        "INS_PT": {
+          "description": "[SHAPE=ELEMENT] Insert point (case-insensitive). END-I maps to 0, END-J to 1.",
+          "type": "string",
+          "enum": ["END-I", "END-J"]
+        },
+        "INS_ELEM": {
+          "description": "[SHAPE=ELEMENT] Insert element key.",
+          "type": "integer"
+        },
+        "AXIS_IJ": {
+          "description": "[SHAPE=ELEMENT] X-axis direction along the element (case-insensitive). I-J maps to 0, J-I to 1.",
+          "type": "string",
+          "enum": ["I-J", "J-I"],
+          "default": "I-J"
+        },
+        "OFF_YZ": {
+          "description": "[SHAPE=ELEMENT] Offset [y, z].",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "default": [0.0, 0.0]
+        },
+        "PROF": {
+          "description": "[INPUT=3D] 3D profile control points. Required when INPUT=3D.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "PT": {
+                "description": "Local coordinate [x, y, z].",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "bFIX": {
+                "description": "Whether the point is fixed.",
+                "type": "boolean"
+              },
+              "R": {
+                "description": "Radius in degrees [Ry, Rz].",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2,
+                "default": [0.0, 0.0]
+              },
+              "RADIUS": {
+                "description": "Radius (length).",
+                "type": "number",
+                "default": 0.0
+              }
+            },
+            "required": ["PT", "bFIX"]
+          }
+        },
+        "PROFY": {
+          "description": "[INPUT=2D] Profile in the x-y plane. Required (with PROFZ) when INPUT=2D.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "PT": {
+                "description": "Local coordinate [x, yz].",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "bFIX": {
+                "description": "Whether the point is fixed.",
+                "type": "boolean",
+                "default": false
+              },
+              "R": {
+                "description": "Radius in degrees.",
+                "type": "number",
+                "default": 0.0
+              },
+              "RADIUS": {
+                "description": "Radius (length).",
+                "type": "number",
+                "default": 0.0
+              },
+              "OPT": {
+                "description": "Add option (case-insensitive). NONE maps to 0, LEFT to 1, RIGHT to 2. Forced to NONE when CURVE=SPLINE. When not NONE, ANGLE/HEIGHT/RADIUS2 apply.",
+                "type": "string",
+                "enum": ["NONE", "LEFT", "RIGHT"],
+                "default": "NONE"
+              },
+              "ANGLE": {
+                "description": "[OPT=LEFT|RIGHT] Angle.",
+                "type": "number",
+                "default": 0.0
+              },
+              "HEIGHT": {
+                "description": "[OPT=LEFT|RIGHT] Height.",
+                "type": "number",
+                "default": 0.0
+              },
+              "RADIUS2": {
+                "description": "[OPT=LEFT|RIGHT] Radius (length).",
+                "type": "number",
+                "default": 0.0
+              },
+              "bBOTZ": {
+                "description": "[SHAPE=ELEMENT] Whether measured from bottom Z.",
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "required": ["PT"]
+          }
+        },
+        "PROFZ": {
+          "description": "[INPUT=2D] Profile in the x-z plane. Required (with PROFY) when INPUT=2D.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "PT": {
+                "description": "Local coordinate [x, yz].",
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 2,
+                "maxItems": 2
+              },
+              "bFIX": {
+                "description": "Whether the point is fixed.",
+                "type": "boolean",
+                "default": false
+              },
+              "R": {
+                "description": "Radius in degrees.",
+                "type": "number",
+                "default": 0.0
+              },
+              "RADIUS": {
+                "description": "Radius (length).",
+                "type": "number",
+                "default": 0.0
+              },
+              "OPT": {
+                "description": "Add option (case-insensitive). NONE maps to 0, LEFT to 1, RIGHT to 2. When not NONE, ANGLE/HEIGHT/RADIUS2 apply.",
+                "type": "string",
+                "enum": ["NONE", "LEFT", "RIGHT"],
+                "default": "NONE"
+              },
+              "ANGLE": {
+                "description": "[OPT=LEFT|RIGHT] Angle.",
+                "type": "number",
+                "default": 0.0
+              },
+              "HEIGHT": {
+                "description": "[OPT=LEFT|RIGHT] Height.",
+                "type": "number",
+                "default": 0.0
+              },
+              "RADIUS2": {
+                "description": "[OPT=LEFT|RIGHT] Radius (length).",
+                "type": "number",
+                "default": 0.0
+              },
+              "bBOTZ": {
+                "description": "[SHAPE=ELEMENT] Whether measured from bottom Z.",
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "required": ["PT"]
+          }
+        }
+      },
+      "required": [
+        "NAME",
+        "TDN_PROP",
+        "ELEM",
+        "CURVE",
+        "INPUT",
+        "LENG_OPT",
+        "SHAPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "2D-Spline-Element",
+        "TDN_PROP": 1,
+        "ELEM": [1101, 1102, 1103, 1104, 1105],
+        "BELENG": 0.3,
+        "ELENG": 0.3,
+        "CURVE": "SPLINE",
+        "INPUT": "2D",
+        "TDN_GRUP": 1,
+        "LENG_OPT": "USER",
+        "BLEN": 0.0,
+        "ELEN": 0.0,
+        "bTP": true,
+        "CNT": 1,
+        "DeBondBLEN": 0.0,
+        "DeBondELEN": 0.0,
+        "SHAPE": "ELEMENT",
+        "XAR_ANGLE": 0.0,
+        "bPJ": true,
+        "INS_PT": "END-I",
+        "INS_ELEM": 1101,
+        "AXIS_IJ": "I-J",
+        "OFF_YZ": [0.0, 0.0],
+        "PROFY": [
+          { "PT": [0.0, -0.5], "bFIX": true, "R": 1.2, "bBOTZ": false },
+          { "PT": [30.0, -0.5], "bFIX": true, "R": 1.2, "bBOTZ": false }
+        ],
+        "PROFZ": [
+          { "PT": [0.0, -0.6], "bFIX": true, "R": 1.3, "bBOTZ": false },
+          { "PT": [30.0, -0.6], "bFIX": true, "R": 1.3, "bBOTZ": false }
+        ]
+      },
+      "2": {
+        "NAME": "3D-Straight",
+        "TDN_PROP": 1,
+        "ELEM": [2001, 2002, 2003],
+        "CURVE": "ROUND",
+        "INPUT": "3D",
+        "LENG_OPT": "AUTO1",
+        "SHAPE": "STRAIGHT",
+        "XAR_ANGLE": 0.0,
+        "bPJ": false,
+        "IP": [0.0, 0.0, 0.0],
+        "GR_AXIS": "Y",
+        "GR_ANGLE": 0.0,
+        "AXIS": "X",
+        "VEC": [0.0, 0.0],
+        "PROF": [
+          { "PT": [0.0, 0.0, -0.5], "bFIX": true, "R": [0.0, 0.0], "RADIUS": 0.0 },
+          { "PT": [10.0, 0.0, -0.5], "bFIX": true, "R": [0.0, 0.0], "RADIUS": 0.0 }
+        ]
+      },
+      "3": {
+        "NAME": "3D-Curve",
+        "TDN_PROP": 1,
+        "ELEM": [3001, 3002],
+        "CURVE": "ROUND",
+        "INPUT": "3D",
+        "LENG_OPT": "AUTO2",
+        "SHAPE": "CURVE",
+        "XAR_ANGLE": 0.0,
+        "bPJ": false,
+        "IP": [0.0, 0.0, 0.0],
+        "GR_AXIS": "Y",
+        "GR_ANGLE": 0.0,
+        "RC": [5.0, 0.0],
+        "OFFSET": 0.0,
+        "DIR": "CW",
+        "PROF": [
+          { "PT": [0.0, 0.0, -0.4], "bFIX": true, "R": [0.0, 0.0], "RADIUS": 2.0 },
+          { "PT": [8.0, 0.0, -0.4], "bFIX": false, "R": [0.0, 0.0], "RADIUS": 2.0 }
+        ]
+      }
+    }
+  }
+}

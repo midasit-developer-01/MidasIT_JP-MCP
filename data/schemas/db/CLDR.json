@@ -1,0 +1,44 @@
+{
+  "_group": "db",
+  "_name": "CLDR",
+  "uri": "db/CLDR",
+  "methods": "POST, GET, PUT",
+  "schema": {
+    "CLDR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Constraint Label Direction (CLDR). Keyed by element number; each entry sets the local constraint label direction via the DIR integer code.",
+      "properties": {
+        "DIR": {
+          "type": "integer",
+          "description": "Constraint label direction as a local-axis integer code: 0 = Local x (+), 1 = Local x (-), 2 = Local y (+), 3 = Local y (-), 4 = Local z (+), 5 = Local z (-)."
+        }
+      },
+      "required": [
+        "DIR"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "53": {
+        "DIR": 0
+      },
+      "55": {
+        "DIR": 1
+      },
+      "57": {
+        "DIR": 2
+      },
+      "59": {
+        "DIR": 3
+      },
+      "61": {
+        "DIR": 4
+      },
+      "63": {
+        "DIR": 5
+      }
+    }
+  }
+}

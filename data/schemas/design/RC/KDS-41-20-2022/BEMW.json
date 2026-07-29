@@ -1,0 +1,49 @@
+{
+  "_group": "design",
+  "_name": "BEMW",
+  "uri": "design/RC/KDS-41-20-2022/BEMW",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "BEMW": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Boundary Element for Wall (BEMW). Fields are driven by two toggles: BBNDR_ELEM_METHOD enables the boundary-element method (requiring NMETHOD_TYPE) and BBOT_STOR marks the bottom story (requiring STOR_NAME).",
+      "properties": {
+        "BBNDR_ELEM_METHOD": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether the boundary element method is applied to the wall. When true, NMETHOD_TYPE must be provided."
+        },
+        "BBOT_STOR": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this wall is at the bottom story. When true, STOR_NAME must be provided and must reference an existing story."
+        },
+        "NMETHOD_TYPE": {
+          "type": "string",
+          "enum": [
+            "Displacement Based Method",
+            "Stress Based Method"
+          ],
+          "description": "[BBNDR_ELEM_METHOD=true] Boundary element method type. Case-insensitive."
+        },
+        "STOR_NAME": {
+          "type": "string",
+          "description": "[BBOT_STOR=true] Name of the existing story used as the bottom story."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "BBNDR_ELEM_METHOD": true,
+        "NMETHOD_TYPE": "Displacement Based Method",
+        "BBOT_STOR": true,
+        "STOR_NAME": "1F"
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "_group": "design",
+  "_name": "MEMB-VBEAM",
+  "uri": "design/PSC/AASHTO-LRFD24/MEMB-VBEAM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MEMB-VBEAM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "PSC Virtual Beam Member (PSCMEMB). Fields are driven by the list of Virtual Beam elements grouped as one design member and its joint type.",
+      "properties": {
+        "AELEM": {
+          "type": "array",
+          "description": "Element Lists. List of Virtual Beam element IDs that make up this member; each ID must reference an existing Virtual Beam. Requires at least 1 element when ELEM_MEMBER is true, otherwise at least 2 elements.",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "ELEM_MEMBER": {
+          "type": "boolean",
+          "description": "Allow Single Element Member. When true, AELEM may contain a single element; when false, AELEM must contain at least 2 elements. Not stored in the database; used only for AELEM size validation on set and excluded from GET responses.",
+          "default": false
+        },
+        "JOINT_TYPE": {
+          "type": "integer",
+          "description": "Joint Type (0=Resin, 1=Cement). Must be 0 (Resin) or 1 (Cement).",
+          "default": 0,
+          "enum": [
+            0,
+            1
+          ]
+        }
+      },
+      "required": [
+        "AELEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "AELEM": [
+          11,
+          12,
+          13
+        ],
+        "ELEM_MEMBER": false,
+        "JOINT_TYPE": 0
+      },
+      "2": {
+        "AELEM": [
+          21
+        ],
+        "ELEM_MEMBER": true,
+        "JOINT_TYPE": 1
+      }
+    }
+  }
+}

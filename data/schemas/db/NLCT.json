@@ -1,0 +1,251 @@
+{
+  "_group": "db",
+  "_name": "NLCT",
+  "uri": "db/NLCT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "NLCT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Nonlinear Analysis Control Data (NLCT). A single global record (key 1); ITERATION_METHOD selects the global solution scheme (NEWTON/ARC/DISP) and controls which scalar fields apply, while the per-load-case item arrays NEWTON_ITEMS, ARCLEN_ITEMS and DISPCT_ITEMS carry the method-specific control data.",
+      "properties": {
+        "NONLINEAR_TYPE": {
+          "description": "Nonlinear type. Case-insensitive. \"GEOM\" = geometric nonlinear, \"MATL\" = material nonlinear, \"GEOM+MATL\" = geometric and material nonlinear.",
+          "type": "string",
+          "enum": ["GEOM", "MATL", "GEOM+MATL"],
+          "default": "GEOM"
+        },
+        "ITERATION_METHOD": {
+          "description": "Global iteration method. Case-insensitive. \"NEWTON\" = Newton-Raphson, \"ARC\" = Arc-Length, \"DISP\" = Displacement-Control. Determines which of the method-specific scalar fields below apply.",
+          "type": "string",
+          "enum": ["NEWTON", "ARC", "DISP"],
+          "default": "NEWTON"
+        },
+        "OPT_ENERGY_NORM": {
+          "description": "Whether the energy norm convergence criterion is active.",
+          "type": "boolean",
+          "default": false
+        },
+        "ENERGY_NORM": {
+          "description": "Energy norm convergence tolerance.",
+          "type": "number"
+        },
+        "OPT_DISPLACEMENT_NORM": {
+          "description": "Whether the displacement norm convergence criterion is active.",
+          "type": "boolean",
+          "default": false
+        },
+        "DISPLACEMENT_NORM": {
+          "description": "Displacement norm convergence tolerance.",
+          "type": "number"
+        },
+        "OPT_FORCE_NORM": {
+          "description": "Whether the force norm convergence criterion is active.",
+          "type": "boolean",
+          "default": false
+        },
+        "FORCE_NORM": {
+          "description": "Force norm convergence tolerance.",
+          "type": "number"
+        },
+        "NUMBER_STEPS": {
+          "description": "Number of load/displacement steps for the global iteration method.",
+          "type": "integer"
+        },
+        "MAX_ITERATIONS": {
+          "description": "Maximum number of iterations per load step for the global iteration method.",
+          "type": "integer"
+        },
+        "INITIAL_FORCE_RATIO_ARC_LEN": {
+          "description": "[ITERATION_METHOD=ARC] Initial force ratio for the unit arc-length.",
+          "type": "number"
+        },
+        "MASTER_NODE": {
+          "description": "[ITERATION_METHOD=DISP] Master node number for displacement control.",
+          "type": "integer"
+        },
+        "DIRECTION": {
+          "description": "[ITERATION_METHOD=DISP] Master node displacement direction. 0 = Dx, 1 = Dy, 2 = Dz.",
+          "type": "integer"
+        },
+        "MAXIMUM_DISPLACEMENT": {
+          "description": "[ITERATION_METHOD=ARC or DISP] Maximum displacement bound.",
+          "type": "number"
+        },
+        "NEWTON_ITEMS": {
+          "description": "Per-load-case Newton-Raphson control data. On PUT the existing Newton list is fully replaced by this array.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ITERATION_METHOD": {
+                "description": "Iteration method for this item. Case-insensitive. Should be \"NEWTON\".",
+                "type": "string",
+                "enum": ["NEWTON", "ARC", "DISP"],
+                "default": "NEWTON"
+              },
+              "LCNAME": {
+                "description": "Static load case name this control data applies to.",
+                "type": "string"
+              },
+              "NUMBER_STEPS": {
+                "description": "Number of load steps for this load case.",
+                "type": "number"
+              },
+              "MAX_ITERATIONS": {
+                "description": "Maximum number of iterations per load step for this load case.",
+                "type": "integer"
+              },
+              "LOAD_FACTORS": {
+                "description": "Load factor per step (index = step).",
+                "type": "array",
+                "items": { "type": "number" },
+                "default": [1.0]
+              }
+            },
+            "required": ["LCNAME", "NUMBER_STEPS", "MAX_ITERATIONS"]
+          }
+        },
+        "ARCLEN_ITEMS": {
+          "description": "Per-load-case Arc-Length control data. On PUT the existing Arc-Length list is fully replaced by this array.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ITERATION_METHOD": {
+                "description": "Iteration method for this item. Case-insensitive. Should be \"ARC\".",
+                "type": "string",
+                "enum": ["NEWTON", "ARC", "DISP"],
+                "default": "ARC"
+              },
+              "LCNAME": {
+                "description": "Static load case name this control data applies to.",
+                "type": "string"
+              },
+              "INITIAL_FORCE_RATIO_ARC_LEN": {
+                "description": "Initial force ratio for the unit arc-length.",
+                "type": "number",
+                "default": 0.0
+              },
+              "NUMBER_STEPS": {
+                "description": "Maximum number of increment steps for this load case.",
+                "type": "number"
+              },
+              "MAX_ITERATIONS": {
+                "description": "Maximum number of iterations per increment step for this load case.",
+                "type": "integer"
+              },
+              "MAXIMUM_DISPLACEMENT": {
+                "description": "Maximum displacement bound.",
+                "type": "number",
+                "default": 0.0
+              }
+            },
+            "required": ["LCNAME", "NUMBER_STEPS", "MAX_ITERATIONS"]
+          }
+        },
+        "DISPCT_ITEMS": {
+          "description": "Per-load-case Displacement-Control control data. On PUT the existing Displacement-Control list is fully replaced by this array.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ITERATION_METHOD": {
+                "description": "Iteration method for this item. Case-insensitive. Should be \"DISP\".",
+                "type": "string",
+                "enum": ["NEWTON", "ARC", "DISP"],
+                "default": "DISP"
+              },
+              "LCNAME": {
+                "description": "Static load case name this control data applies to.",
+                "type": "string"
+              },
+              "NUMBER_STEPS": {
+                "description": "Number of displacement steps for this load case.",
+                "type": "number"
+              },
+              "MAX_ITERATIONS": {
+                "description": "Maximum number of iterations per increment step for this load case.",
+                "type": "integer"
+              },
+              "MASTER_NODE": {
+                "description": "Master node number for displacement control.",
+                "type": "integer"
+              },
+              "DIRECTION": {
+                "description": "Master node displacement direction. 0 = Dx, 1 = Dy, 2 = Dz.",
+                "type": "integer",
+                "default": 0
+              },
+              "MAXIMUM_DISPLACEMENT": {
+                "description": "Maximum displacement of the master node.",
+                "type": "number"
+              },
+              "LOAD_FACTORS": {
+                "description": "Master node displacement per step (index = step).",
+                "type": "array",
+                "items": { "type": "number" },
+                "default": [1.0]
+              }
+            },
+            "required": ["LCNAME", "NUMBER_STEPS", "MAX_ITERATIONS", "MASTER_NODE", "MAXIMUM_DISPLACEMENT"]
+          }
+        }
+      },
+      "required": [
+        "ENERGY_NORM",
+        "DISPLACEMENT_NORM",
+        "FORCE_NORM",
+        "NUMBER_STEPS",
+        "MAX_ITERATIONS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NONLINEAR_TYPE": "GEOM+MATL",
+        "ITERATION_METHOD": "NEWTON",
+        "OPT_ENERGY_NORM": true,
+        "ENERGY_NORM": 0.001,
+        "OPT_DISPLACEMENT_NORM": true,
+        "DISPLACEMENT_NORM": 0.001,
+        "OPT_FORCE_NORM": true,
+        "FORCE_NORM": 0.001,
+        "NUMBER_STEPS": 10,
+        "MAX_ITERATIONS": 30,
+        "NEWTON_ITEMS": [
+          {
+            "ITERATION_METHOD": "NEWTON",
+            "LCNAME": "PUSH_X",
+            "NUMBER_STEPS": 10.0,
+            "MAX_ITERATIONS": 30,
+            "LOAD_FACTORS": [0.2, 0.4, 0.6, 0.8, 1.0]
+          }
+        ],
+        "ARCLEN_ITEMS": [
+          {
+            "ITERATION_METHOD": "ARC",
+            "LCNAME": "PUSH_Y",
+            "INITIAL_FORCE_RATIO_ARC_LEN": 0.5,
+            "NUMBER_STEPS": 20.0,
+            "MAX_ITERATIONS": 30,
+            "MAXIMUM_DISPLACEMENT": 0.1
+          }
+        ],
+        "DISPCT_ITEMS": [
+          {
+            "ITERATION_METHOD": "DISP",
+            "LCNAME": "PUSH_Z",
+            "NUMBER_STEPS": 10.0,
+            "MAX_ITERATIONS": 25,
+            "MASTER_NODE": 101,
+            "DIRECTION": 2,
+            "MAXIMUM_DISPLACEMENT": 0.05,
+            "LOAD_FACTORS": [1.0]
+          }
+        ]
+      }
+    }
+  }
+}

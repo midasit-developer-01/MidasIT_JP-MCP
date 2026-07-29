@@ -1,0 +1,22 @@
+{
+  "_group": "ope",
+  "_name": "MATL_DB",
+  "uri": "ope/MATL_DB",
+  "methods": "GET",
+  "schema": {
+    "MATL_DB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Material DB Lookup (MATL_DB). Retrieves the built-in material database name list for a given material type or design standard; the type/standard is supplied via the URL path parameter ({TYPE or STANDARD}), so the request body carries no fields.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body (DTO_EMPTY). All input is provided through the URL path parameter (e.g. CONC/STEEL/ALUMINUM for the full standard list, or a specific standard like 'ASTM(S)')."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

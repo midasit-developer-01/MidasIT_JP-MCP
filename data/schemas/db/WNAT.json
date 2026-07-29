@@ -1,0 +1,209 @@
+{
+  "_group": "db",
+  "_name": "WNAT",
+  "uri": "db/WNAT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "WNAT": {
+      "type": "object",
+      "description": "Wind Load Auto Calculation (WNAT). A single entity holds a list of per-story wind items (WNAT_ITEMS); each item's STRUCT_TYPE (and for some cases SUB_TYPE1) selects which of SUB_TYPE1..3, X_DIR, Y_DIR, HEIGHT and AREA are actually consumed by the solver.",
+      "properties": {
+        "WNAT_ITEMS": {
+          "type": "array",
+          "description": "List of per-story wind auto-calculation items. Must contain at least one item; each item must reference a distinct, existing story (duplicate story names are rejected).",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "description": "One story's wind auto-calculation definition.",
+            "properties": {
+              "STORY_NAME": {
+                "type": "string",
+                "description": "Name of an existing story (resolved to a story key at write time). The story must already exist; unknown names are rejected."
+              },
+              "STRUCT_TYPE": {
+                "type": "number",
+                "description": "Structure type code that selects which fields are used. Known branches: 0/7 (standard building; SUB_TYPE1 governs), 2 (SUB_TYPE1 governs), 3, 4, 5, 6, 8. See MIDAS documents for the full code meanings."
+              },
+              "SUB_TYPE1": {
+                "type": "number",
+                "description": "Sub type 1 code (see documents). Used for STRUCT_TYPE 3, 5, 6, 8, and for STRUCT_TYPE 0/2/7 branches; for STRUCT_TYPE 0/7 the value 4 selects the HEIGHT/AREA branch and value 3 disables the X/Y-direction branch. Ignored for STRUCT_TYPE 4."
+              },
+              "SUB_TYPE2": {
+                "type": "number",
+                "description": "Sub type 2 code (see documents). Consumed only for STRUCT_TYPE 3 and STRUCT_TYPE 6; ignored otherwise."
+              },
+              "SUB_TYPE3": {
+                "type": "number",
+                "description": "Sub type 3 code (see documents). Consumed only for STRUCT_TYPE 6; ignored otherwise."
+              },
+              "X_DIR": {
+                "type": "array",
+                "description": "X-direction values. Count consumed depends on STRUCT_TYPE: 1 for type 3 and for the 0/2/7 single-value branch, 2 for the default branch, 3 for type 4, 4 for type 5. Not consumed for types 6, 8 or the HEIGHT/AREA branch.",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "Y_DIR": {
+                "type": "array",
+                "description": "Y-direction values. Count consumed depends on STRUCT_TYPE: 1 for type 3 and for the 0/2/7 single-value branch, 2 for the default branch, 4 for type 5. Not consumed for types 4, 6, 8 or the HEIGHT/AREA branch.",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "HEIGHT": {
+                "type": "number",
+                "description": "Height. Consumed only for STRUCT_TYPE 0/7 when SUB_TYPE1 == 4; ignored otherwise."
+              },
+              "AREA": {
+                "type": "number",
+                "description": "Area. Consumed only for STRUCT_TYPE 0/7 when SUB_TYPE1 == 4; ignored otherwise."
+              }
+            },
+            "required": [
+              "STORY_NAME",
+              "STRUCT_TYPE",
+              "SUB_TYPE1",
+              "SUB_TYPE2",
+              "SUB_TYPE3",
+              "X_DIR",
+              "Y_DIR",
+              "HEIGHT",
+              "AREA"
+            ]
+          }
+        }
+      },
+      "required": [
+        "WNAT_ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "WNAT_ITEMS": [
+          {
+            "STORY_NAME": "3F",
+            "STRUCT_TYPE": 3,
+            "SUB_TYPE1": 1,
+            "SUB_TYPE2": 1,
+            "SUB_TYPE3": 0,
+            "X_DIR": [
+              10.0
+            ],
+            "Y_DIR": [
+              8.0
+            ],
+            "HEIGHT": 0.0,
+            "AREA": 0.0
+          },
+          {
+            "STORY_NAME": "4F",
+            "STRUCT_TYPE": 4,
+            "SUB_TYPE1": 0,
+            "SUB_TYPE2": 0,
+            "SUB_TYPE3": 0,
+            "X_DIR": [
+              10.0,
+              8.0,
+              6.0
+            ],
+            "Y_DIR": [],
+            "HEIGHT": 0.0,
+            "AREA": 0.0
+          },
+          {
+            "STORY_NAME": "5F",
+            "STRUCT_TYPE": 5,
+            "SUB_TYPE1": 2,
+            "SUB_TYPE2": 0,
+            "SUB_TYPE3": 0,
+            "X_DIR": [
+              10.0,
+              8.0,
+              6.0,
+              4.0
+            ],
+            "Y_DIR": [
+              9.0,
+              7.0,
+              5.0,
+              3.0
+            ],
+            "HEIGHT": 0.0,
+            "AREA": 0.0
+          },
+          {
+            "STORY_NAME": "6F",
+            "STRUCT_TYPE": 6,
+            "SUB_TYPE1": 1,
+            "SUB_TYPE2": 2,
+            "SUB_TYPE3": 3,
+            "X_DIR": [
+              10.0
+            ],
+            "Y_DIR": [
+              8.0
+            ],
+            "HEIGHT": 0.0,
+            "AREA": 0.0
+          },
+          {
+            "STORY_NAME": "8F",
+            "STRUCT_TYPE": 8,
+            "SUB_TYPE1": 1,
+            "SUB_TYPE2": 0,
+            "SUB_TYPE3": 0,
+            "X_DIR": [],
+            "Y_DIR": [],
+            "HEIGHT": 0.0,
+            "AREA": 0.0
+          },
+          {
+            "STORY_NAME": "RF",
+            "STRUCT_TYPE": 0,
+            "SUB_TYPE1": 4,
+            "SUB_TYPE2": 0,
+            "SUB_TYPE3": 0,
+            "X_DIR": [],
+            "Y_DIR": [],
+            "HEIGHT": 30.0,
+            "AREA": 250.0
+          },
+          {
+            "STORY_NAME": "7F",
+            "STRUCT_TYPE": 0,
+            "SUB_TYPE1": 1,
+            "SUB_TYPE2": 0,
+            "SUB_TYPE3": 0,
+            "X_DIR": [
+              10.0
+            ],
+            "Y_DIR": [
+              8.0
+            ],
+            "HEIGHT": 0.0,
+            "AREA": 0.0
+          },
+          {
+            "STORY_NAME": "2F",
+            "STRUCT_TYPE": 1,
+            "SUB_TYPE1": 1,
+            "SUB_TYPE2": 0,
+            "SUB_TYPE3": 0,
+            "X_DIR": [
+              10.0,
+              8.0
+            ],
+            "Y_DIR": [
+              9.0,
+              7.0
+            ],
+            "HEIGHT": 0.0,
+            "AREA": 0.0
+          }
+        ]
+      }
+    }
+  }
+}

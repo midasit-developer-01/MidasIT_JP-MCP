@@ -1,0 +1,152 @@
+{
+  "_group": "rating",
+  "_name": "RCO",
+  "uri": "rating/PSC/AASHTO-LRFR19/RCO",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "RCO": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Rating Code Option (RCO). Fields configure AASHTO-LRFR19 PSC rating limit states (Strength/Service stresses, load test, system factor); this is a singleton keyed by id 1 and all fields are optional with defaults.",
+      "properties": {
+        "SLS_FLEX": {
+          "type": "boolean",
+          "default": true,
+          "description": "Strength Limit State Flexure."
+        },
+        "NOMINAL_FLEX_RESIST": {
+          "type": "integer",
+          "enum": [0, 1],
+          "default": 0,
+          "description": "Nominal Flexural Resistance method: 0=Code, 1=Strain Compatibility. Applies when SLS_FLEX is true."
+        },
+        "SLS_SHEAR": {
+          "type": "boolean",
+          "default": true,
+          "description": "Strength Limit State Shear."
+        },
+        "SLS_SHEAR_TYPE": {
+          "type": "integer",
+          "enum": [0, 1],
+          "default": 0,
+          "description": "Strength Limit State Shear Type: 0=Non-Segmental Bridge, 1=Segmental Bridge. Applies when SLS_SHEAR is true."
+        },
+        "DESIGN_LOAD_STRESS": {
+          "type": "boolean",
+          "default": true,
+          "description": "Design Load Stress check enabled."
+        },
+        "COMP_STRESS_DESIGN": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Compressive Stress - Design Load. Applies when DESIGN_LOAD_STRESS is true."
+        },
+        "TENSILE_STRESS_DESIGN": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Tensile Stress - Design Load. Applies when DESIGN_LOAD_STRESS is true."
+        },
+        "STRESS_COMPSITE_SECTION_DESIGN": {
+          "type": "boolean",
+          "default": false,
+          "description": "Stress for Composite Section (Slab) - Design Load."
+        },
+        "COMP_STRESS_SLAB_DESIGN": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Compressive Stress (Slab) - Design Load. Applies when STRESS_COMPSITE_SECTION_DESIGN is true."
+        },
+        "TENSILE_STRESS_SLAB_DESIGN": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Tensile Stress (Slab) - Design Load. Applies when STRESS_COMPSITE_SECTION_DESIGN is true."
+        },
+        "LEGAL_LOAD_STRESS": {
+          "type": "boolean",
+          "default": true,
+          "description": "Legal Load Stress check enabled."
+        },
+        "COMP_STRESS_LEGAL": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Compressive Stress - Legal Load. Applies when LEGAL_LOAD_STRESS is true."
+        },
+        "TENSILE_STRESS_LEGAL": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Tensile Stress - Legal Load. Applies when LEGAL_LOAD_STRESS is true."
+        },
+        "STRESS_COMPSITE_SECTION_LEGAL": {
+          "type": "boolean",
+          "default": false,
+          "description": "Stress for Composite Section (Slab) - Legal Load."
+        },
+        "COMP_STRESS_SLAB_LEGAL": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Compressive Stress (Slab) - Legal Load. Applies when STRESS_COMPSITE_SECTION_LEGAL is true."
+        },
+        "TENSILE_STRESS_SLAB_LEGAL": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Tensile Stress (Slab) - Legal Load. Applies when STRESS_COMPSITE_SECTION_LEGAL is true."
+        },
+        "PERMIT_LOAD_STRESS": {
+          "type": "boolean",
+          "default": true,
+          "description": "Permit Load Stress check enabled."
+        },
+        "PRESTRESSING_STEEL": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Prestressing Steel Stress - Permit Load. Applies when PERMIT_LOAD_STRESS is true."
+        },
+        "REINFORCEMENT": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Reinforcement Stress - Permit Load. Applies when PERMIT_LOAD_STRESS is true."
+        },
+        "LOAD_TEST_MEASUREMENT": {
+          "type": "integer",
+          "enum": [0, 1],
+          "default": 0,
+          "description": "Load Test Measurement: 0=Strain, 1=Displacement."
+        },
+        "SYSTEM_FACTOR": {
+          "type": "number",
+          "minimum": 0.0,
+          "default": 1.0,
+          "description": "System Factor (must be >= 0)."
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SLS_FLEX": true,
+        "NOMINAL_FLEX_RESIST": 0,
+        "SLS_SHEAR": true,
+        "SLS_SHEAR_TYPE": 0,
+        "DESIGN_LOAD_STRESS": true,
+        "COMP_STRESS_DESIGN": 0.6,
+        "TENSILE_STRESS_DESIGN": 0.19,
+        "STRESS_COMPSITE_SECTION_DESIGN": true,
+        "COMP_STRESS_SLAB_DESIGN": 0.45,
+        "TENSILE_STRESS_SLAB_DESIGN": 0.19,
+        "LEGAL_LOAD_STRESS": true,
+        "COMP_STRESS_LEGAL": 0.6,
+        "TENSILE_STRESS_LEGAL": 0.19,
+        "STRESS_COMPSITE_SECTION_LEGAL": true,
+        "COMP_STRESS_SLAB_LEGAL": 0.45,
+        "TENSILE_STRESS_SLAB_LEGAL": 0.19,
+        "PERMIT_LOAD_STRESS": true,
+        "PRESTRESSING_STEEL": 0.9,
+        "REINFORCEMENT": 0.75,
+        "LOAD_TEST_MEASUREMENT": 1,
+        "SYSTEM_FACTOR": 1.0
+      }
+    }
+  }
+}

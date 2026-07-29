@@ -1,0 +1,40 @@
+{
+  "_group": "db",
+  "_name": "MVHC",
+  "uri": "db/MVHC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MVHC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Vehicle Class (MVHC). Groups named moving-load vehicle definitions into a class by listing the vehicle load names that belong to it.",
+      "properties": {
+        "VEHICLE_CLS_NAME": {
+          "description": "Name of the vehicle class.",
+          "type": "string"
+        },
+        "VEHICLE_LD_NAMES": {
+          "description": "Names of the vehicle loads that make up this class. Each name is resolved to an existing vehicle load (MVHL); names that do not resolve are silently skipped on write.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "VEHICLE_CLS_NAME",
+        "VEHICLE_LD_NAMES"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "VEHICLE_CLS_NAME": "VCN1",
+        "VEHICLE_LD_NAMES": [
+          "DB-18"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "_group": "db",
+  "_name": "IEHG-TRUSS-M1",
+  "uri": "db/IEHG-TRUSS-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "IEHG-TRUSS-M1": {
+      "type": "object",
+      "description": "Inelastic Hinge Property Assignment for Truss elements (IEHG-TRUSS-M1). Assigns an existing inelastic hinge property (by name) to truss-type hinge objects; the assignment is keyed by object number and references a property defined in the Inelastic Hinge Property table.",
+      "additionalProperties": false,
+      "required": [
+        "INEL_PROP_NAME"
+      ],
+      "properties": {
+        "INEL_PROP_NAME": {
+          "type": "string",
+          "description": "Name of the inelastic hinge property to assign. Must reference an existing Inelastic Hinge Property; the name is resolved to its key at set time and an unknown name is rejected as wrong data."
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "INEL_PROP_NAME": "Truss Hinge 1"
+      }
+    }
+  }
+}

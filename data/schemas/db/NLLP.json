@@ -1,0 +1,415 @@
+{
+  "_group": "db",
+  "_name": "NLLP",
+  "uri": "db/NLLP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "NLLP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "General Link Property (NLLP). APPLICATION_TYPE selects the category (ELEMENT / FORCE / ELEMENT2), APPLICATION_TYPE_D names the concrete device/type within that category, and for FORCE that type name drives which nonlinear sub-object (VD/GAP/HOOK/HS/LRBI/FPSI/TFPSI/DFPSI) each of the 6 ITEMS entries carries.",
+      "properties": {
+        "PROPERTY_NAME": {
+          "description": "General Link Property name.",
+          "type": "string"
+        },
+        "APPLICATION_TYPE": {
+          "description": "Application type category (case-insensitive). ELEMENT = element-type general link; FORCE = force-type general link whose nonlinear behavior is set per ITEMS component; ELEMENT2 = seismic control device (uses SEIS_TYPE/SEIS_PROP).",
+          "type": "string",
+          "enum": ["ELEMENT", "FORCE", "ELEMENT2"]
+        },
+        "APPLICATION_TYPE_D": {
+          "description": "Concrete type/device name within APPLICATION_TYPE. [APPLICATION_TYPE=FORCE] the name maps to an internal type index 0..7 -> 0 Visco-elastic Damper (VD), 1 Gap (GAP), 2 Hook (HOOK), 3 Hysteretic System (HS), 4 Lead Rubber Bearing Isolator (LRBI), 5 Friction Pendulum System Isolator (FPSI), 6 Triple FPS Isolator (TFPSI), 7 Double FPS Isolator (DFPSI). [APPLICATION_TYPE=ELEMENT] element spring/dashpot type name. [APPLICATION_TYPE=ELEMENT2] seismic device sub-type name.",
+          "type": "string"
+        },
+        "DESC": {
+          "description": "Description text.",
+          "type": "string"
+        },
+        "TOTAL_WEIGHT": {
+          "description": "Total self-weight of the general link.",
+          "type": "number"
+        },
+        "L_WEIGHT_RATIO": {
+          "description": "Lumped weight ratio at End I (I-End : J-End).",
+          "type": "number"
+        },
+        "OPT_USE_MASS": {
+          "description": "Whether mass input is used. When false, total mass is treated as 0.",
+          "type": "boolean"
+        },
+        "TOTAL_MASS": {
+          "description": "Total mass of the general link (used only when OPT_USE_MASS is true).",
+          "type": "number"
+        },
+        "L_MASS_RATIO": {
+          "description": "Lumped mass ratio at End I (I-End : J-End).",
+          "type": "number"
+        },
+        "OPT_SHEAR_SPR_LOC": {
+          "description": "Shear spring location option.",
+          "type": "boolean"
+        },
+        "COUPLED_INPUT_METHOD": {
+          "description": "Coupled input method flag for the linear effective stiffness/damping matrices.",
+          "type": "integer"
+        },
+        "DIST_RATIO_DY": {
+          "description": "Distance ratio from End I for the shear spring in the Dy direction.",
+          "type": "number"
+        },
+        "DIST_RATIO_DZ": {
+          "description": "Distance ratio from End I for the shear spring in the Dz direction.",
+          "type": "number"
+        },
+        "SEIS_TYPE": {
+          "description": "Seismic control device type (case-insensitive). Hard-validated: must be one of the listed wire values. ISOLATOR_GB ('Isolator(GB)') is not supported on write and will be rejected. Meaningful when APPLICATION_TYPE=ELEMENT2, but a valid value must always be supplied.",
+          "type": "string",
+          "enum": [
+            "Viscous/Oil Damper",
+            "Viscoelastic Damper",
+            "Steel Damper",
+            "Hysteresis Isolator(MSS)",
+            "Isolator(MSS)",
+            "Isolator(GB)"
+          ]
+        },
+        "SEIS_PROP": {
+          "description": "Seismic control device property reference. [APPLICATION_TYPE=ELEMENT2] name of the referenced device property (SDVI/SDVE/SDST/SDHY) or the numeric key string for Isolator(MSS); must resolve to an existing property (non-zero key) or the request is rejected.",
+          "type": "string"
+        },
+        "LDP_EFF_STIFF_COUPLED_ITEMS": {
+          "description": "Coupled effective-stiffness matrix (linear properties). Exactly 15 values are consumed (upper/lower triangle of the 6x6 coupled matrix); fewer than 15 is rejected.",
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 15
+        },
+        "LDP_EFF_DAMPING_COUPLED_ITEMS": {
+          "description": "Coupled effective-damping matrix (linear properties). Exactly 15 values are consumed; fewer than 15 is rejected.",
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 15
+        },
+        "ITEMS": {
+          "description": "Per-component properties in fixed order [Dx, Dy, Dz, Rx, Ry, Rz]. At least 6 entries must be supplied (only the first 6 are used). Each entry holds linear properties and, when NONLINEAR_PROP is true, the nonlinear sub-object selected by APPLICATION_TYPE_D (FORCE only).",
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "properties": {
+              "INDEX": {
+                "description": "Component index 0..5 ([Dx,Dy,Dz,Rx,Ry,Rz]). Informational only; overwritten by position on write.",
+                "type": "integer"
+              },
+              "LINEAR_PROP": {
+                "description": "Whether linear properties (EFF_STIFF/EFF_DAMPING) are active for this component.",
+                "type": "boolean"
+              },
+              "EFF_STIFF": {
+                "description": "Effective (linear) stiffness for this component.",
+                "type": "number"
+              },
+              "EFF_DAMPING": {
+                "description": "Effective (linear) damping for this component.",
+                "type": "number"
+              },
+              "NONLINEAR_PROP": {
+                "description": "Whether nonlinear properties are active. When true, the sub-object required by the FORCE type must be supplied for this component.",
+                "type": "boolean"
+              },
+              "VD": {
+                "description": "[APPLICATION_TYPE=FORCE type=0] Visco-elastic Damper nonlinear properties. Required for every nonlinear component when the type is VD.",
+                "type": "object",
+                "properties": {
+                  "DAMPER_STIFFNESS": { "description": "Damper stiffness (kd).", "type": "number" },
+                  "DAMPING": { "description": "Reference damping force.", "type": "number" },
+                  "DAMPING_EXP": { "description": "Damping exponent (s).", "type": "number" },
+                  "BRACING_STIFFNESS": { "description": "Bracing stiffness (kb).", "type": "number" },
+                  "REF_VELOCITY": { "description": "Reference velocity (V0).", "type": "number" },
+                  "DAMPER_TYPE": { "description": "Damper type index.", "type": "integer" }
+                }
+              },
+              "GAP": {
+                "description": "[APPLICATION_TYPE=FORCE type=1] Gap nonlinear properties. Also used for the translational/rotational components Dx, Rx, Ry, Rz (ITEMS indices 0,3,4,5) when the type is LRBI/FPSI/TFPSI/DFPSI (types 4..7).",
+                "type": "object",
+                "properties": {
+                  "STIFFNESS": { "description": "Stiffness (k).", "type": "number" },
+                  "OPN": { "description": "Open distance (o).", "type": "number" }
+                }
+              },
+              "HOOK": {
+                "description": "[APPLICATION_TYPE=FORCE type=2] Hook nonlinear properties.",
+                "type": "object",
+                "properties": {
+                  "STIFFNESS": { "description": "Stiffness (k).", "type": "number" },
+                  "OPN": { "description": "Open distance (o).", "type": "number" }
+                }
+              },
+              "HS": {
+                "description": "[APPLICATION_TYPE=FORCE type=3] Hysteretic System nonlinear properties.",
+                "type": "object",
+                "properties": {
+                  "STIFFNESS": { "description": "Stiffness (kd).", "type": "number" },
+                  "YIELD_STRENGTH": { "description": "Yield strength (Fy).", "type": "number" },
+                  "POST_YIELD_STIFF_RATIO": { "description": "Post-yield stiffness ratio (r).", "type": "number" },
+                  "YIELD_EXP": { "description": "Yielding exponent (s).", "type": "number" },
+                  "LOOP_PARAM_A": { "description": "Hysteretic loop parameter (a).", "type": "number" },
+                  "LOOP_PARAM_B": { "description": "Hysteretic loop parameter (b).", "type": "number" }
+                }
+              },
+              "LRBI": {
+                "description": "[APPLICATION_TYPE=FORCE type=4] Lead Rubber Bearing Isolator nonlinear properties. Applies to the shear components Dy, Dz (ITEMS indices 1,2); the other components use GAP.",
+                "type": "object",
+                "properties": {
+                  "STIFFNESS": { "description": "Stiffness (kd).", "type": "number" },
+                  "YIELD_STRENGTH": { "description": "Yield strength (Fy).", "type": "number" },
+                  "POST_YIELD_STIFF_RATIO": { "description": "Post-yield stiffness ratio (r).", "type": "number" },
+                  "LOOP_PARAM_A": { "description": "Hysteretic loop parameter (a).", "type": "number" },
+                  "LOOP_PARAM_B": { "description": "Hysteretic loop parameter (b).", "type": "number" }
+                }
+              },
+              "FPSI": {
+                "description": "[APPLICATION_TYPE=FORCE type=5] Friction Pendulum System Isolator nonlinear properties. Applies to the shear components Dy, Dz (ITEMS indices 1,2); the other components use GAP.",
+                "type": "object",
+                "properties": {
+                  "STIFFNESS": { "description": "Stiffness (k).", "type": "number" },
+                  "FRIC_COEFF_SLOW": { "description": "Frictional coefficient, slow (us).", "type": "number" },
+                  "FRIC_COEFF_FAST": { "description": "Frictional coefficient, fast (uf).", "type": "number" },
+                  "RATE_PARAMETER": { "description": "Rate parameter (r).", "type": "number" },
+                  "RADIUS_OF_SLIDING_SURFACE": { "description": "Radius of sliding surface (R).", "type": "number" },
+                  "LOOP_PARAM_A": { "description": "Hysteretic loop parameter (a).", "type": "number" },
+                  "LOOP_PARAM_B": { "description": "Hysteretic loop parameter (b).", "type": "number" }
+                }
+              },
+              "TFPSI": {
+                "description": "[APPLICATION_TYPE=FORCE type=6] Triple Friction Pendulum System Isolator nonlinear properties. Applies to the shear components Dy, Dz (ITEMS indices 1,2); the other components use GAP. The *_ITEMS arrays carry one value per sliding surface (up to 4 used).",
+                "type": "object",
+                "properties": {
+                  "OPT_SYM_OUT": { "description": "Symmetric outer surface option.", "type": "boolean" },
+                  "STIFFNESS_ITEMS": { "description": "Stiffness (k) per surface; first 4 used.", "type": "array", "items": { "type": "number" }, "maxItems": 4 },
+                  "FRIC_COEFF_SLOW_ITEMS": { "description": "Frictional coefficient, slow (us) per surface; first 4 used.", "type": "array", "items": { "type": "number" }, "maxItems": 4 },
+                  "FRIC_COEFF_FAST_ITEMS": { "description": "Frictional coefficient, fast (uf) per surface; first 4 used.", "type": "array", "items": { "type": "number" }, "maxItems": 4 },
+                  "RATE_PARAMETER_ITEMS": { "description": "Rate parameter (r) per surface; first 4 used.", "type": "array", "items": { "type": "number" }, "maxItems": 4 },
+                  "RADIUS_OF_SLIDING_SURFACE_ITEMS": { "description": "Radius of sliding surface (R) per surface; first 4 used.", "type": "array", "items": { "type": "number" }, "maxItems": 4 },
+                  "STOP_DISTANCE_ITEMS": { "description": "Stop distance (d) per surface; first 4 used.", "type": "array", "items": { "type": "number" }, "maxItems": 4 },
+                  "HEIGHT_IN": { "description": "Height, inner.", "type": "number" },
+                  "HEIGHT_OUT": { "description": "Height, outer.", "type": "number" }
+                }
+              },
+              "DFPSI": {
+                "description": "[APPLICATION_TYPE=FORCE type=7] Double Friction Pendulum System Isolator nonlinear properties. Applies to the shear components Dy, Dz (ITEMS indices 1,2); the other components use GAP. The *_ITEMS arrays carry one value per sliding surface (up to 2 used).",
+                "type": "object",
+                "properties": {
+                  "AREA_PRESSURE": { "description": "Area for pressure.", "type": "number" },
+                  "REF_AXIAL_PRESSURE": { "description": "Reference axial pressure (po).", "type": "number" },
+                  "STIFFNESS_ITEMS": { "description": "Stiffness (k) per surface; first 2 used.", "type": "array", "items": { "type": "number" }, "maxItems": 2 },
+                  "COEFF_UREF_ITEMS": { "description": "High-velocity coefficient of friction at reference axial pressure (uref) per surface; first 2 used.", "type": "array", "items": { "type": "number" }, "maxItems": 2 },
+                  "RATE_PARAMETER_ITEMS": { "description": "Rate parameter (a) per surface; first 2 used.", "type": "array", "items": { "type": "number" }, "maxItems": 2 },
+                  "RADIUS_ITEMS": { "description": "Radius of sliding surface (R) per surface; first 2 used.", "type": "array", "items": { "type": "number" }, "maxItems": 2 },
+                  "STOP_DISTANCE_ITEMS": { "description": "Stop distance (d) per surface; first 2 used.", "type": "array", "items": { "type": "number" }, "maxItems": 2 },
+                  "RATIO_COEFF_UV_ITEMS": { "description": "Ratio of coefficient of friction at small velocity to uref (uv) per surface; first 2 used.", "type": "array", "items": { "type": "number" }, "maxItems": 2 },
+                  "RATIO_COEFF_UP_ITEMS": { "description": "Ratio of coefficient of friction at high pressure to uref (up) per surface; first 2 used.", "type": "array", "items": { "type": "number" }, "maxItems": 2 },
+                  "PARAM_COEFF_AP_ITEMS": { "description": "Parameter for pressure-dependent coefficient (ap) per surface; first 2 used.", "type": "array", "items": { "type": "number" }, "maxItems": 2 },
+                  "PARAM_COEFF_HP_ITEMS": { "description": "Parameter for pressure-dependent coefficient (hp) per surface; first 2 used.", "type": "array", "items": { "type": "number" }, "maxItems": 2 }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "PROPERTY_NAME": "GL01",
+        "APPLICATION_TYPE": "ELEMENT",
+        "APPLICATION_TYPE_D": "SPG",
+        "DESC": "Elem_Spring (linear only)",
+        "TOTAL_WEIGHT": 100,
+        "L_WEIGHT_RATIO": 0.5,
+        "OPT_USE_MASS": true,
+        "TOTAL_MASS": 10,
+        "L_MASS_RATIO": 0.5,
+        "OPT_SHEAR_SPR_LOC": true,
+        "COUPLED_INPUT_METHOD": 1,
+        "DIST_RATIO_DY": 0.5,
+        "DIST_RATIO_DZ": 0.5,
+        "SEIS_TYPE": "Viscous/Oil Damper",
+        "SEIS_PROP": "",
+        "LDP_EFF_STIFF_COUPLED_ITEMS": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        "LDP_EFF_DAMPING_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "ITEMS": [
+          { "LINEAR_PROP": true, "EFF_STIFF": 1100, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1200, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1300, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 110000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 120000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 130000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false }
+        ]
+      },
+      "2": {
+        "PROPERTY_NAME": "GL02",
+        "APPLICATION_TYPE": "FORCE",
+        "APPLICATION_TYPE_D": "Visco-elastic Damper",
+        "DESC": "Force_VD (nonlinear visco-elastic damper)",
+        "TOTAL_WEIGHT": 0,
+        "L_WEIGHT_RATIO": 0.5,
+        "OPT_USE_MASS": false,
+        "TOTAL_MASS": 0,
+        "L_MASS_RATIO": 0.5,
+        "OPT_SHEAR_SPR_LOC": false,
+        "COUPLED_INPUT_METHOD": 0,
+        "DIST_RATIO_DY": 0.5,
+        "DIST_RATIO_DZ": 0.5,
+        "SEIS_TYPE": "Viscous/Oil Damper",
+        "SEIS_PROP": "",
+        "LDP_EFF_STIFF_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "LDP_EFF_DAMPING_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "ITEMS": [
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "VD": { "DAMPER_STIFFNESS": 1000, "DAMPING": 50, "DAMPING_EXP": 0.5, "BRACING_STIFFNESS": 100000, "REF_VELOCITY": 1, "DAMPER_TYPE": 0 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "VD": { "DAMPER_STIFFNESS": 1000, "DAMPING": 50, "DAMPING_EXP": 0.5, "BRACING_STIFFNESS": 100000, "REF_VELOCITY": 1, "DAMPER_TYPE": 0 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false }
+        ]
+      },
+      "3": {
+        "PROPERTY_NAME": "GL03",
+        "APPLICATION_TYPE": "FORCE",
+        "APPLICATION_TYPE_D": "Hysteretic System",
+        "DESC": "Force_HS (nonlinear hysteretic system)",
+        "TOTAL_WEIGHT": 0,
+        "L_WEIGHT_RATIO": 0.5,
+        "OPT_USE_MASS": false,
+        "TOTAL_MASS": 0,
+        "L_MASS_RATIO": 0.5,
+        "OPT_SHEAR_SPR_LOC": false,
+        "COUPLED_INPUT_METHOD": 0,
+        "DIST_RATIO_DY": 0.5,
+        "DIST_RATIO_DZ": 0.5,
+        "SEIS_TYPE": "Viscous/Oil Damper",
+        "SEIS_PROP": "",
+        "LDP_EFF_STIFF_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "LDP_EFF_DAMPING_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "ITEMS": [
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "HS": { "STIFFNESS": 1000, "YIELD_STRENGTH": 50, "POST_YIELD_STIFF_RATIO": 0.05, "YIELD_EXP": 5, "LOOP_PARAM_A": 0.5, "LOOP_PARAM_B": 0.5 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false }
+        ]
+      },
+      "4": {
+        "PROPERTY_NAME": "GL04",
+        "APPLICATION_TYPE": "FORCE",
+        "APPLICATION_TYPE_D": "Friction Pendulum System Isolator",
+        "DESC": "Force_FPSI (GAP on Dx/Rx/Ry/Rz, FPSI on Dy/Dz)",
+        "TOTAL_WEIGHT": 0,
+        "L_WEIGHT_RATIO": 0.5,
+        "OPT_USE_MASS": false,
+        "TOTAL_MASS": 0,
+        "L_MASS_RATIO": 0.5,
+        "OPT_SHEAR_SPR_LOC": false,
+        "COUPLED_INPUT_METHOD": 0,
+        "DIST_RATIO_DY": 0.5,
+        "DIST_RATIO_DZ": 0.5,
+        "SEIS_TYPE": "Viscous/Oil Damper",
+        "SEIS_PROP": "",
+        "LDP_EFF_STIFF_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "LDP_EFF_DAMPING_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "ITEMS": [
+          { "LINEAR_PROP": true, "EFF_STIFF": 100000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "GAP": { "STIFFNESS": 100000, "OPN": 0 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "FPSI": { "STIFFNESS": 1000, "FRIC_COEFF_SLOW": 0.03, "FRIC_COEFF_FAST": 0.05, "RATE_PARAMETER": 0.1, "RADIUS_OF_SLIDING_SURFACE": 2.2, "LOOP_PARAM_A": 0.5, "LOOP_PARAM_B": 0.5 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "FPSI": { "STIFFNESS": 1000, "FRIC_COEFF_SLOW": 0.03, "FRIC_COEFF_FAST": 0.05, "RATE_PARAMETER": 0.1, "RADIUS_OF_SLIDING_SURFACE": 2.2, "LOOP_PARAM_A": 0.5, "LOOP_PARAM_B": 0.5 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 100000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "GAP": { "STIFFNESS": 100000, "OPN": 0 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 100000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "GAP": { "STIFFNESS": 100000, "OPN": 0 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 100000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "GAP": { "STIFFNESS": 100000, "OPN": 0 } }
+        ]
+      },
+      "5": {
+        "PROPERTY_NAME": "GL05",
+        "APPLICATION_TYPE": "FORCE",
+        "APPLICATION_TYPE_D": "Triple Friction Pendulum System Isolator",
+        "DESC": "Force_TFPSI (GAP on Dx/Rx/Ry/Rz, TFPSI on Dy/Dz)",
+        "TOTAL_WEIGHT": 0,
+        "L_WEIGHT_RATIO": 0.5,
+        "OPT_USE_MASS": false,
+        "TOTAL_MASS": 0,
+        "L_MASS_RATIO": 0.5,
+        "OPT_SHEAR_SPR_LOC": false,
+        "COUPLED_INPUT_METHOD": 0,
+        "DIST_RATIO_DY": 0.5,
+        "DIST_RATIO_DZ": 0.5,
+        "SEIS_TYPE": "Viscous/Oil Damper",
+        "SEIS_PROP": "",
+        "LDP_EFF_STIFF_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "LDP_EFF_DAMPING_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "ITEMS": [
+          { "LINEAR_PROP": true, "EFF_STIFF": 100000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "GAP": { "STIFFNESS": 100000, "OPN": 0 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "TFPSI": { "OPT_SYM_OUT": true, "STIFFNESS_ITEMS": [1000, 1000, 1000, 1000], "FRIC_COEFF_SLOW_ITEMS": [0.02, 0.03, 0.03, 0.02], "FRIC_COEFF_FAST_ITEMS": [0.04, 0.05, 0.05, 0.04], "RATE_PARAMETER_ITEMS": [0.1, 0.1, 0.1, 0.1], "RADIUS_OF_SLIDING_SURFACE_ITEMS": [0.5, 2.2, 2.2, 0.5], "STOP_DISTANCE_ITEMS": [0.1, 0.3, 0.3, 0.1], "HEIGHT_IN": 0.1, "HEIGHT_OUT": 0.2 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "TFPSI": { "OPT_SYM_OUT": true, "STIFFNESS_ITEMS": [1000, 1000, 1000, 1000], "FRIC_COEFF_SLOW_ITEMS": [0.02, 0.03, 0.03, 0.02], "FRIC_COEFF_FAST_ITEMS": [0.04, 0.05, 0.05, 0.04], "RATE_PARAMETER_ITEMS": [0.1, 0.1, 0.1, 0.1], "RADIUS_OF_SLIDING_SURFACE_ITEMS": [0.5, 2.2, 2.2, 0.5], "STOP_DISTANCE_ITEMS": [0.1, 0.3, 0.3, 0.1], "HEIGHT_IN": 0.1, "HEIGHT_OUT": 0.2 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 100000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "GAP": { "STIFFNESS": 100000, "OPN": 0 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 100000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "GAP": { "STIFFNESS": 100000, "OPN": 0 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 100000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "GAP": { "STIFFNESS": 100000, "OPN": 0 } }
+        ]
+      },
+      "6": {
+        "PROPERTY_NAME": "GL06",
+        "APPLICATION_TYPE": "FORCE",
+        "APPLICATION_TYPE_D": "Double Friction Pendulum System Isolator",
+        "DESC": "Force_DFPSI (GAP on Dx/Rx/Ry/Rz, DFPSI on Dy/Dz)",
+        "TOTAL_WEIGHT": 0,
+        "L_WEIGHT_RATIO": 0.5,
+        "OPT_USE_MASS": false,
+        "TOTAL_MASS": 0,
+        "L_MASS_RATIO": 0.5,
+        "OPT_SHEAR_SPR_LOC": false,
+        "COUPLED_INPUT_METHOD": 0,
+        "DIST_RATIO_DY": 0.5,
+        "DIST_RATIO_DZ": 0.5,
+        "SEIS_TYPE": "Viscous/Oil Damper",
+        "SEIS_PROP": "",
+        "LDP_EFF_STIFF_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "LDP_EFF_DAMPING_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "ITEMS": [
+          { "LINEAR_PROP": true, "EFF_STIFF": 100000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "GAP": { "STIFFNESS": 100000, "OPN": 0 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "DFPSI": { "AREA_PRESSURE": 0.5, "REF_AXIAL_PRESSURE": 20, "STIFFNESS_ITEMS": [1000, 1000], "COEFF_UREF_ITEMS": [0.05, 0.05], "RATE_PARAMETER_ITEMS": [0.1, 0.1], "RADIUS_ITEMS": [2.2, 2.2], "STOP_DISTANCE_ITEMS": [0.3, 0.3], "RATIO_COEFF_UV_ITEMS": [0.5, 0.5], "RATIO_COEFF_UP_ITEMS": [0.5, 0.5], "PARAM_COEFF_AP_ITEMS": [0.1, 0.1], "PARAM_COEFF_HP_ITEMS": [0.1, 0.1] } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "DFPSI": { "AREA_PRESSURE": 0.5, "REF_AXIAL_PRESSURE": 20, "STIFFNESS_ITEMS": [1000, 1000], "COEFF_UREF_ITEMS": [0.05, 0.05], "RATE_PARAMETER_ITEMS": [0.1, 0.1], "RADIUS_ITEMS": [2.2, 2.2], "STOP_DISTANCE_ITEMS": [0.3, 0.3], "RATIO_COEFF_UV_ITEMS": [0.5, 0.5], "RATIO_COEFF_UP_ITEMS": [0.5, 0.5], "PARAM_COEFF_AP_ITEMS": [0.1, 0.1], "PARAM_COEFF_HP_ITEMS": [0.1, 0.1] } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 100000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "GAP": { "STIFFNESS": 100000, "OPN": 0 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 100000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "GAP": { "STIFFNESS": 100000, "OPN": 0 } },
+          { "LINEAR_PROP": true, "EFF_STIFF": 100000, "EFF_DAMPING": 0, "NONLINEAR_PROP": true, "GAP": { "STIFFNESS": 100000, "OPN": 0 } }
+        ]
+      },
+      "7": {
+        "PROPERTY_NAME": "GL07",
+        "APPLICATION_TYPE": "ELEMENT2",
+        "APPLICATION_TYPE_D": "Isolator(MSS)",
+        "DESC": "Seismic control device (references SEIS_PROP)",
+        "TOTAL_WEIGHT": 0,
+        "L_WEIGHT_RATIO": 0.5,
+        "OPT_USE_MASS": false,
+        "TOTAL_MASS": 0,
+        "L_MASS_RATIO": 0.5,
+        "OPT_SHEAR_SPR_LOC": false,
+        "COUPLED_INPUT_METHOD": 0,
+        "DIST_RATIO_DY": 0.5,
+        "DIST_RATIO_DZ": 0.5,
+        "SEIS_TYPE": "Isolator(MSS)",
+        "SEIS_PROP": "1",
+        "LDP_EFF_STIFF_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "LDP_EFF_DAMPING_COUPLED_ITEMS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "ITEMS": [
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false },
+          { "LINEAR_PROP": true, "EFF_STIFF": 1000, "EFF_DAMPING": 0, "NONLINEAR_PROP": false }
+        ]
+      }
+    }
+  }
+}

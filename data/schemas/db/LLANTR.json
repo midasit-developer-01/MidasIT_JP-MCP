@@ -1,0 +1,101 @@
+{
+  "_group": "db",
+  "_name": "LLANTR",
+  "uri": "db/LLANTR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LLANTR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Traffic Line Lane - Transverse (LLANTR). Defines a transverse moving-load traffic lane by name and its lane data; lane elements/factors are provided either directly via LANE_ITEMS or in bulk (import) via SPECIAL_LANE_ITEMS, which are mutually exclusive.",
+      "properties": {
+        "LL_NAME": {
+          "type": "string",
+          "description": "Name of the traffic line lane (transverse)."
+        },
+        "LANE_ITEMS": {
+          "type": "array",
+          "description": "Lane Data (TR): list of lane elements with load factors. Mutually exclusive with SPECIAL_LANE_ITEMS - providing both is an error. Optional (default empty).",
+          "default": [],
+          "items": {
+            "type": "object",
+            "description": "A single lane element entry.",
+            "properties": {
+              "ELEM": {
+                "type": "integer",
+                "description": "Element number for this lane item."
+              },
+              "FACTOR": {
+                "type": "number",
+                "description": "Load factor applied to this element."
+              }
+            },
+            "required": [
+              "ELEM",
+              "FACTOR"
+            ]
+          }
+        },
+        "SPECIAL_LANE_ITEMS": {
+          "type": "array",
+          "description": "Used only when importing: bulk input that expands into LANE_ITEMS (each key element in ELEMS gets FACTOR). Mutually exclusive with LANE_ITEMS - providing both is an error. Optional (default empty).",
+          "default": [],
+          "items": {
+            "type": "object",
+            "description": "A group of key elements sharing one load factor.",
+            "properties": {
+              "ELEMS": {
+                "type": "array",
+                "description": "Key Elements: element numbers that share the same factor.",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "FACTOR": {
+                "type": "number",
+                "description": "Load factor applied to every element in ELEMS."
+              }
+            },
+            "required": [
+              "ELEMS",
+              "FACTOR"
+            ]
+          }
+        }
+      },
+      "required": [
+        "LL_NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LL_NAME": "Lane-TR-1",
+        "LANE_ITEMS": [
+          {
+            "ELEM": 101,
+            "FACTOR": 1.0
+          },
+          {
+            "ELEM": 102,
+            "FACTOR": 0.9
+          }
+        ]
+      },
+      "2": {
+        "LL_NAME": "Lane-TR-Import",
+        "SPECIAL_LANE_ITEMS": [
+          {
+            "ELEMS": [
+              201,
+              202,
+              203
+            ],
+            "FACTOR": 1.0
+          }
+        ]
+      }
+    }
+  }
+}

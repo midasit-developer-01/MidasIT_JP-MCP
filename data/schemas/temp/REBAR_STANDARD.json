@@ -1,0 +1,22 @@
+{
+  "_group": "temp",
+  "_name": "REBAR_STANDARD",
+  "uri": "temp/REBAR_STANDARD",
+  "methods": "GET",
+  "schema": {
+    "REBAR_STANDARD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Rebar Standard (REBAR_STANDARD). Request takes no body (DTO_EMPTY); the handler returns the list of available rebar design-code standards that have registered rebar names.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body. No fields are consumed by the handler."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

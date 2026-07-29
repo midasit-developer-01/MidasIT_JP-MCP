@@ -1,0 +1,60 @@
+{
+  "_group": "db",
+  "_name": "THRG",
+  "uri": "db/THRG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THRG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Time History Analysis Results Graph - General Link (THRG). Defines a time-history result graph item for a General Link, keyed by item id; THIS_NAME selects the time-history load case and GENERAL_LINK the target link, while TYPE_RES/LOCATION/COMP select which result quantity is plotted.",
+      "properties": {
+        "THIS_NAME": {
+          "description": "Name of the time-history (load case) to read results from; resolved to the internal time-history load case key.",
+          "type": "string"
+        },
+        "TYPE_RES": {
+          "description": "Type of result to graph, integer code (e.g. 0 = Force-Deformation, 1 = Force, 2 = Deformation).",
+          "type": "integer",
+          "default": 0
+        },
+        "LOCATION": {
+          "description": "Location along the General Link element, integer code (e.g. 0 = i-end, 1 = j-end).",
+          "type": "integer",
+          "default": 0
+        },
+        "COMP": {
+          "description": "Result component, integer code selecting the direction/degree of freedom (e.g. 0 = Fx/Dx, 1 = Fy/Dy, 2 = Fz/Dz, 3 = Mx/Rx, 4 = My/Ry, 5 = Mz/Rz).",
+          "type": "integer",
+          "default": 0
+        },
+        "GENERAL_LINK": {
+          "description": "General Link element number to read results from.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "THIS_NAME",
+        "GENERAL_LINK"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "THIS_NAME": "HIST1",
+        "TYPE_RES": 0,
+        "LOCATION": 0,
+        "COMP": 0,
+        "GENERAL_LINK": 1
+      },
+      "2": {
+        "THIS_NAME": "HIST1",
+        "TYPE_RES": 1,
+        "LOCATION": 1,
+        "COMP": 3,
+        "GENERAL_LINK": 4
+      }
+    }
+  }
+}

@@ -1,0 +1,229 @@
+{
+  "_group": "design",
+  "_name": "OCHECK",
+  "uri": "design/STEEL/KDS-41-30-2022/OCHECK",
+  "methods": "POST",
+  "schema": {
+    "OCHECK": {
+      "type": "object",
+      "description": "Steel Optimal Design / Section Check (OCHECK). Fields are driven by the ODS_RUN_REQUEST DTO: a required section list plus optional analysis, column-design, output, plate-thickness and user-defined-section blocks.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Steel optimal design run request (ODS_RUN_REQUEST).",
+          "properties": {
+            "SECT_LIST": {
+              "type": "array",
+              "description": "Section List & Design Criteria. Each entry references an existing section and its optimal-design criteria.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "SECT_NO": {
+                    "type": "integer",
+                    "description": "Section No. Must reference an existing section in the model."
+                  },
+                  "ALLOW": {
+                    "type": "number",
+                    "description": "Allowable design ratio.",
+                    "default": 1.0
+                  },
+                  "SECT_DB": {
+                    "type": "string",
+                    "description": "Section DB. Case-insensitive. BUILT requires PLATE_THICKNESS; USER requires the section to be defined in USER_DEFINED_SECT.",
+                    "enum": ["BUILT", "KS21", "USER"]
+                  },
+                  "SHAPE": {
+                    "type": "string",
+                    "description": "Shape. Case-insensitive. If omitted, the model section's shape is used.",
+                    "enum": ["L", "C", "H", "T", "B", "P", "SR", "SB", "2L", "2C"]
+                  },
+                  "D1": {
+                    "type": "number",
+                    "description": "Section dimension D1. If omitted, the model section's dimension is used."
+                  },
+                  "D2": {
+                    "type": "number",
+                    "description": "Section dimension D2. If omitted, the model section's dimension is used."
+                  },
+                  "D3": {
+                    "type": "number",
+                    "description": "Section dimension D3. If omitted, the model section's dimension is used."
+                  },
+                  "D4": {
+                    "type": "number",
+                    "description": "Section dimension D4. If omitted, the model section's dimension is used."
+                  },
+                  "D5": {
+                    "type": "number",
+                    "description": "Section dimension D5. If omitted, the model section's dimension is used."
+                  },
+                  "D6": {
+                    "type": "number",
+                    "description": "Section dimension D6. If omitted, the model section's dimension is used."
+                  }
+                },
+                "required": ["SECT_NO", "SECT_DB"]
+              }
+            },
+            "ANALYSIS_OPT": {
+              "type": "object",
+              "description": "Analysis Option.",
+              "properties": {
+                "ANAL_TIME": {
+                  "type": "integer",
+                  "description": "Analysis Time. 0 = selection only, max 10.",
+                  "default": 1
+                }
+              }
+            },
+            "COLUMN_DESIGN": {
+              "type": "object",
+              "description": "Column Design.",
+              "properties": {
+                "APPLIED_FORCES": {
+                  "type": "integer",
+                  "description": "Applied Forces and Moments (0=Axial+Moments, 1=Axial Only). Must be 0 or 1.",
+                  "enum": [0, 1],
+                  "default": 0
+                },
+                "JOINT_METHOD": {
+                  "type": "integer",
+                  "description": "Joint Method of Built-Up Column Splices (0=Internal, 1=External). Must be 0 or 1.",
+                  "enum": [0, 1],
+                  "default": 1
+                }
+              }
+            },
+            "OUTPUT": {
+              "type": "object",
+              "description": "Output Options. Output is produced only when this block is present (and EXPORT_PATH is set for file output).",
+              "properties": {
+                "GRAPH_MAX_RATIO": {
+                  "type": "boolean",
+                  "description": "Optimal Design (Max. Ratio).",
+                  "default": false
+                },
+                "GRAPH_AVG_RATIO": {
+                  "type": "boolean",
+                  "description": "Optimal Design (Average Ratio).",
+                  "default": false
+                },
+                "GRAPH_WEIGHT": {
+                  "type": "boolean",
+                  "description": "Optimal Design (Weight).",
+                  "default": false
+                },
+                "GRAPH_WEIGHT_SUM": {
+                  "type": "boolean",
+                  "description": "Optimal Design (Weight Sum).",
+                  "default": false
+                },
+                "GRAPH_WEIGHT_RATIO": {
+                  "type": "boolean",
+                  "description": "Optimal Design (Weight Ratio).",
+                  "default": false
+                },
+                "TEXT_REPORT": {
+                  "type": "boolean",
+                  "description": "Text Report.",
+                  "default": false
+                },
+                "MODEL_UPDATE": {
+                  "type": "boolean",
+                  "description": "Model Update.",
+                  "default": false
+                },
+                "EXPORT_PATH": {
+                  "type": "string",
+                  "description": "Export Path (folder or prefix). If empty, no file output is produced."
+                }
+              }
+            },
+            "PLATE_THICKNESS": {
+              "type": "array",
+              "description": "Plate Thickness Data. Required when any SECT_LIST entry uses SECT_DB = BUILT.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "USER_DEFINED_SECT": {
+              "type": "array",
+              "description": "User-Defined Section DB. Required when any SECT_LIST entry uses SECT_DB = USER.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "NO": {
+                    "type": "integer",
+                    "description": "No (user section number)."
+                  },
+                  "SHAPE": {
+                    "type": "string",
+                    "description": "Shape. Case-insensitive.",
+                    "enum": ["L", "C", "H", "T", "B", "P", "SR", "SB", "2L", "2C"]
+                  },
+                  "D1": {
+                    "type": "number",
+                    "description": "Section dimension D1.",
+                    "default": 0.0
+                  },
+                  "D2": {
+                    "type": "number",
+                    "description": "Section dimension D2.",
+                    "default": 0.0
+                  },
+                  "D3": {
+                    "type": "number",
+                    "description": "Section dimension D3.",
+                    "default": 0.0
+                  },
+                  "D4": {
+                    "type": "number",
+                    "description": "Section dimension D4.",
+                    "default": 0.0
+                  },
+                  "D5": {
+                    "type": "number",
+                    "description": "Section dimension D5.",
+                    "default": 0.0
+                  },
+                  "D6": {
+                    "type": "number",
+                    "description": "Section dimension D6.",
+                    "default": 0.0
+                  }
+                },
+                "required": ["NO", "SHAPE"]
+              }
+            }
+          },
+          "required": ["SECT_LIST"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "SECT_LIST": [
+        {
+          "SECT_NO": 1,
+          "ALLOW": 1.0,
+          "SECT_DB": "KS21",
+          "SHAPE": "H"
+        }
+      ],
+      "ANALYSIS_OPT": {
+        "ANAL_TIME": 1
+      },
+      "COLUMN_DESIGN": {
+        "APPLIED_FORCES": 0,
+        "JOINT_METHOD": 1
+      },
+      "OUTPUT": {
+        "GRAPH_MAX_RATIO": true,
+        "TEXT_REPORT": true,
+        "MODEL_UPDATE": false,
+        "EXPORT_PATH": "C:/temp/ods_result"
+      }
+    }
+  }
+}

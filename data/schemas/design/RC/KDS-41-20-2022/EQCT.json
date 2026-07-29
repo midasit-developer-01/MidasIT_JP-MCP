@@ -1,0 +1,36 @@
+{
+  "_group": "design",
+  "_name": "EQCT",
+  "uri": "design/RC/KDS-41-20-2022/EQCT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EQCT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Seismic Load Combination Member Type (EQCT). The assigned member type drives the single field, selecting the seismic load case applied to the member.",
+      "properties": {
+        "TYPE": {
+          "type": "string",
+          "enum": [
+            "Special Seismic Loads",
+            "Vertical Seismic Forces"
+          ],
+          "description": "Assign Member Type. Seismic load type applied to the member (case-insensitive on input). Serialized wire values: 'Special Seismic Loads', 'Vertical Seismic Forces'."
+        }
+      },
+      "required": [
+        "TYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TYPE": "Special Seismic Loads"
+      },
+      "2": {
+        "TYPE": "Vertical Seismic Forces"
+      }
+    }
+  }
+}

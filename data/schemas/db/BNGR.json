@@ -1,0 +1,43 @@
+{
+  "_group": "db",
+  "_name": "BNGR",
+  "uri": "db/BNGR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "BNGR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Boundary Group (BNGR). Each key is the boundary group id; NAME sets the group name and AUTOTYPE flags an auto-generated creep/shrinkage boundary group.",
+      "type": "object",
+      "properties": {
+        "NAME": {
+          "description": "Boundary group name.",
+          "type": "string"
+        },
+        "AUTOTYPE": {
+          "description": "Auto-generation type for boundary groups auto-created for creep/shrinkage in composite sections. 0 = normal/manual boundary group, non-zero flags an auto-generated group. Leave 0 for user-defined groups.",
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "required": [
+        "NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "fix1",
+        "AUTOTYPE": 0
+      },
+      "2": {
+        "NAME": "fix2",
+        "AUTOTYPE": 0
+      },
+      "3": {
+        "NAME": "fix3",
+        "AUTOTYPE": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,313 @@
+{
+  "_group": "db",
+  "_name": "SDIS",
+  "uri": "db/SDIS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SDIS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Seismic Isolator Property (SDIS). SDIS_DEV_TYPE selects the device model and determines which sub-object (LRB, NRB, or SB) supplies the device-specific fields.",
+      "type": "object",
+      "properties": {
+        "COMMON": {
+          "description": "Common seismic device identification data (SEISMIC_COMMON).",
+          "type": "object",
+          "properties": {
+            "NAME": {
+              "description": "Device property name.",
+              "type": "string"
+            },
+            "DESC": {
+              "description": "Description.",
+              "type": "string",
+              "default": ""
+            },
+            "INPUT_METHOD": {
+              "description": "Input method: 0 = User Input, 1 = Import Reference Database.",
+              "type": "integer"
+            },
+            "COMPANY": {
+              "description": "Manufacturer/company name.",
+              "type": "string",
+              "default": ""
+            },
+            "PRODUCT_NAME": {
+              "description": "Product name.",
+              "type": "string",
+              "default": ""
+            },
+            "TYPE_NUMBER": {
+              "description": "Product type number.",
+              "type": "string",
+              "default": ""
+            }
+          },
+          "required": [
+            "NAME",
+            "INPUT_METHOD"
+          ]
+        },
+        "SDIS_DEV_TYPE": {
+          "description": "Device type (case-insensitive). Selects which sub-object drives the fields: 'LRB' (Lead Rubber Bearing, index 0, uses LRB), 'NRB' (Natural Rubber Bearing, index 1, uses NRB), '' (empty/none, index 2, no device fields set), 'SLD' (Sliding Bearing, index 3, uses SB). An invalid value is rejected at runtime; any value other than NRB/SLD/'' falls back to LRB handling.",
+          "type": "string",
+          "enum": [
+            "LRB",
+            "NRB",
+            "",
+            "SLD"
+          ]
+        },
+        "MSS": {
+          "description": "Number of shear springs (Multi Shear Spring model).",
+          "type": "integer"
+        },
+        "TAU_K": {
+          "description": "Adjustment parameter tau_k.",
+          "type": "number"
+        },
+        "TAU_Q": {
+          "description": "Adjustment parameter tau_q. [SDIS_DEV_TYPE=LRB/SLD] Consumed only for LRB (fallback) and SLD device types.",
+          "type": "number"
+        },
+        "KV": {
+          "description": "Vertical stiffness Kv (kN/m).",
+          "type": "number"
+        },
+        "LRB": {
+          "description": "[SDIS_DEV_TYPE=LRB] Lead Rubber Bearing properties. Required and consumed when device type is LRB (or the fallback case).",
+          "type": "object",
+          "properties": {
+            "SDIS_HYS_MODEL": {
+              "description": "Hysteresis model (case-insensitive): 'MB' (Modified Bilinear), 'Mod. HD' (Hardin-Drnevich Model). Note the space in 'Mod. HD'.",
+              "type": "string",
+              "enum": [
+                "MB",
+                "Mod. HD"
+              ]
+            },
+            "KE": {
+              "description": "Ke - initial stiffness (kN/m).",
+              "type": "number"
+            },
+            "AR": {
+              "description": "Ar - rubber cross section area (m^2).",
+              "type": "number"
+            },
+            "TR": {
+              "description": "Tr - total thickness of rubber laminas (m).",
+              "type": "number"
+            },
+            "K0": {
+              "description": "K0 - initial stiffness (kN/m).",
+              "type": "number"
+            },
+            "K2": {
+              "description": "K2 - 2nd stiffness (kN/m).",
+              "type": "number"
+            },
+            "QD": {
+              "description": "Qd - characteristic strength of LRB (kN).",
+              "type": "number"
+            },
+            "DX": {
+              "description": "Vertical direction (Dx) nonlinearity properties.",
+              "type": "object",
+              "properties": {
+                "OPT_CONS_NONL": {
+                  "description": "Consider vertical direction nonlinearity. When false, BETA/ALPHA/SIGMA_V are reset to defaults.",
+                  "type": "boolean",
+                  "default": false
+                },
+                "BETA": {
+                  "description": "Beta - tensile stiffness reduction factor.",
+                  "type": "number",
+                  "default": 0.1
+                },
+                "ALPHA": {
+                  "description": "Alpha - tensile stiffness reduction ratio.",
+                  "type": "number",
+                  "default": 0.001
+                },
+                "SIGMA_V": {
+                  "description": "SigmaV - tensile limit strength (kN/m^2).",
+                  "type": "number",
+                  "default": 1.0
+                }
+              }
+            }
+          },
+          "required": [
+            "SDIS_HYS_MODEL",
+            "KE",
+            "AR",
+            "TR",
+            "K0",
+            "K2",
+            "QD"
+          ]
+        },
+        "NRB": {
+          "description": "[SDIS_DEV_TYPE=NRB] Natural Rubber Bearing properties. Required and consumed when device type is NRB.",
+          "type": "object",
+          "properties": {
+            "AR": {
+              "description": "Ar - rubber cross section area (m^2).",
+              "type": "number"
+            },
+            "TR": {
+              "description": "Tr - total thickness of rubber laminas (m).",
+              "type": "number"
+            },
+            "KH": {
+              "description": "Kh - horizontal stiffness (kN/m).",
+              "type": "number"
+            },
+            "DX": {
+              "description": "Vertical direction (Dx) nonlinearity properties.",
+              "type": "object",
+              "properties": {
+                "OPT_CONS_NONL": {
+                  "description": "Consider vertical direction nonlinearity. When false, BETA/ALPHA/SIGMA_V are reset to defaults.",
+                  "type": "boolean",
+                  "default": false
+                },
+                "BETA": {
+                  "description": "Beta - tensile stiffness reduction factor.",
+                  "type": "number",
+                  "default": 0.1
+                },
+                "ALPHA": {
+                  "description": "Alpha - tensile stiffness reduction ratio.",
+                  "type": "number",
+                  "default": 0.001
+                },
+                "SIGMA_V": {
+                  "description": "SigmaV - tensile limit strength (kN/m^2).",
+                  "type": "number",
+                  "default": 1.0
+                }
+              }
+            }
+          },
+          "required": [
+            "AR",
+            "TR",
+            "KH"
+          ]
+        },
+        "SB": {
+          "description": "[SDIS_DEV_TYPE=SLD] Sliding Bearing properties. Required and consumed when device type is SLD.",
+          "type": "object",
+          "properties": {
+            "AS": {
+              "description": "As - area of the sliding head (m^2).",
+              "type": "number"
+            },
+            "K0": {
+              "description": "K0 - initial stiffness (kN/m).",
+              "type": "number"
+            },
+            "QD": {
+              "description": "Qd index (integer).",
+              "type": "integer"
+            },
+            "Pi_VALUE": {
+              "description": "Pi (kN).",
+              "type": "number"
+            },
+            "MU0": {
+              "description": "Mu0 - frictional factor.",
+              "type": "number"
+            }
+          },
+          "required": [
+            "AS",
+            "K0",
+            "QD",
+            "Pi_VALUE",
+            "MU0"
+          ]
+        }
+      },
+      "required": [
+        "COMMON",
+        "SDIS_DEV_TYPE",
+        "MSS",
+        "TAU_K",
+        "KV"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "COMMON": {
+          "NAME": "Isolator01",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "SDIS_DEV_TYPE": "LRB",
+        "MSS": 8,
+        "TAU_K": 1.0,
+        "TAU_Q": 1.0,
+        "KV": 1000000.0,
+        "LRB": {
+          "SDIS_HYS_MODEL": "MB",
+          "KE": 1200.0,
+          "AR": 0.5,
+          "TR": 0.1,
+          "K0": 5000.0,
+          "K2": 800.0,
+          "QD": 50.0,
+          "DX": {
+            "OPT_CONS_NONL": false
+          }
+        }
+      },
+      "2": {
+        "COMMON": {
+          "NAME": "Isolator02",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "SDIS_DEV_TYPE": "NRB",
+        "MSS": 8,
+        "TAU_K": 1.0,
+        "KV": 1000000.0,
+        "NRB": {
+          "AR": 0.5,
+          "TR": 0.1,
+          "KH": 3000.0
+        }
+      },
+      "3": {
+        "COMMON": {
+          "NAME": "Isolator03",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "SDIS_DEV_TYPE": "SLD",
+        "MSS": 8,
+        "TAU_K": 1.0,
+        "TAU_Q": 1.0,
+        "KV": 1000000.0,
+        "SB": {
+          "AS": 0.3,
+          "K0": 5000.0,
+          "QD": 2,
+          "Pi_VALUE": 100.0,
+          "MU0": 0.05
+        }
+      }
+    }
+  }
+}

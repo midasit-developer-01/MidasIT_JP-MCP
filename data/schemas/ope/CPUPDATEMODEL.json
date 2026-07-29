@@ -1,0 +1,22 @@
+{
+  "_group": "ope",
+  "_name": "CPUPDATEMODEL",
+  "uri": "ope/CPUPDATEMODEL",
+  "methods": "POST",
+  "schema": {
+    "CPUPDATEMODEL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Update Model (CPUPDATEMODEL). Takes no request fields; the handler clears the modified flag and runs the update-model command on the currently open project.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body; this endpoint takes no input fields."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "_group": "db",
+  "_name": "SLANCH",
+  "uri": "db/SLANCH",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SLANCH": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Traffic Surface Lane - China (SLANCH). Defines a China-code moving-load traffic surface lane along a chain of nodes; the lane geometry/behavior fields drive the lane definition and LANE_ITEMS holds the per-node lane data list.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Lane Name."
+        },
+        "WIDTH": {
+          "type": "number",
+          "description": "Lane Width."
+        },
+        "WHEEL_SPACE": {
+          "type": "number",
+          "default": 0,
+          "description": "Wheel Spacing."
+        },
+        "SKEW_START": {
+          "type": "number",
+          "default": 0,
+          "description": "Skew angle at the lane start."
+        },
+        "SKEW_END": {
+          "type": "number",
+          "default": 0,
+          "description": "Skew angle at the lane end."
+        },
+        "bOPTIMIZE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Transverse Lane Optimization (automatic transverse moving-load search)."
+        },
+        "ALLOW_WIDTH": {
+          "type": "number",
+          "default": 0,
+          "description": "Allowable Width."
+        },
+        "MV_DIR": {
+          "type": "string",
+          "enum": ["FORWARD", "BACKWARD", "BOTH"],
+          "description": "Moving Direction (case-insensitive). 0:Forward, 1:Backward, 2:Both."
+        },
+        "LANE_ITEMS": {
+          "type": "array",
+          "description": "Lane Data List: ordered per-node lane data entries.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "NODE": {
+                "type": "integer",
+                "description": "Node Key."
+              },
+              "OFFSET": {
+                "type": "number",
+                "default": 0,
+                "description": "Offset Distance to Lane Center."
+              },
+              "SPAN_LENGTH": {
+                "type": "number",
+                "default": 0,
+                "description": "Span Length."
+              }
+            },
+            "required": ["NODE"]
+          }
+        },
+        "SEQ": {
+          "type": "integer",
+          "default": 1,
+          "description": "Sequence Number (must be unique)."
+        }
+      },
+      "required": ["NAME", "WIDTH", "MV_DIR", "LANE_ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Lane1",
+        "WIDTH": 3.5,
+        "WHEEL_SPACE": 1.8,
+        "SKEW_START": 0,
+        "SKEW_END": 0,
+        "bOPTIMIZE": false,
+        "ALLOW_WIDTH": 3.0,
+        "MV_DIR": "BOTH",
+        "LANE_ITEMS": [
+          { "NODE": 1, "OFFSET": 0, "SPAN_LENGTH": 10.0 },
+          { "NODE": 2, "OFFSET": 0, "SPAN_LENGTH": 10.0 }
+        ],
+        "SEQ": 1
+      }
+    }
+  }
+}

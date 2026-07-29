@@ -1,0 +1,71 @@
+{
+  "_group": "rating",
+  "_name": "DATR",
+  "uri": "rating/PSC/AASHTO-LRFR19/DATR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DATR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Diagnostic Load Test Rating (DATR). Fields are driven by POSITION (which member end is measured) and LTM_TYPE (whether the load-test measurement is auto-calculated from strains or entered directly as an adjustment factor).",
+      "properties": {
+        "POSITION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2,
+          "description": "Position type: 0=I, 1=J, 2=I & J. Selects which member end(s) the strain measurement applies to."
+        },
+        "LTM_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Load Test Measurement type: 0=Auto Calculation (uses STRAIN_I/STRAIN_J and KB), 1=User Input (uses K)."
+        },
+        "STRAIN_I": {
+          "type": "number",
+          "minimum": 0.0,
+          "default": 0.00001,
+          "description": "[LTM_TYPE=0 and POSITION=0 or 2] Strain at I-End. Validated (must be >= 0) only for Auto Calculation when POSITION is 0 (I) or 2 (I & J)."
+        },
+        "STRAIN_J": {
+          "type": "number",
+          "minimum": 0.0,
+          "default": 0.00001,
+          "description": "[LTM_TYPE=0 and POSITION=1 or 2] Strain at J-End. Validated (must be >= 0) only for Auto Calculation when POSITION is 1 (J) or 2 (I & J)."
+        },
+        "KB": {
+          "type": "number",
+          "exclusiveMinimum": 0.0,
+          "default": 1.0,
+          "description": "[LTM_TYPE=0] Load Test Measurement Benefit Factor. Validated (must be > 0) only for Auto Calculation."
+        },
+        "K": {
+          "type": "number",
+          "exclusiveMinimum": 0.0,
+          "default": 1.0,
+          "description": "[LTM_TYPE=1] Adjustment Factor. Validated (must be > 0) only for User Input."
+        }
+      },
+      "required": [
+        "POSITION",
+        "LTM_TYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "POSITION": 2,
+        "LTM_TYPE": 0,
+        "STRAIN_I": 0.00012,
+        "STRAIN_J": 0.00015,
+        "KB": 1.1
+      },
+      "2": {
+        "POSITION": 0,
+        "LTM_TYPE": 1,
+        "K": 1.25
+      }
+    }
+  }
+}

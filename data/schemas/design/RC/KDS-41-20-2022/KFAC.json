@@ -1,0 +1,41 @@
+{
+  "_group": "design",
+  "_name": "KFAC",
+  "uri": "design/RC/KDS-41-20-2022/KFAC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "KFAC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Effective Length Factor (KFAC). Holds the effective length factors applied about each member axis for design.",
+      "properties": {
+        "Ky": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor about the member's y-axis."
+        },
+        "Kz": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor about the member's z-axis."
+        },
+        "Kt": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor for torsion."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "Ky": 1.0,
+        "Kz": 1.0,
+        "Kt": 1.0
+      }
+    }
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "_group": "design",
+  "_name": "CC-TABLE",
+  "uri": "design/SRC/AIK-SRC2K/CC-TABLE",
+  "methods": "POST",
+  "schema": {
+    "CC-TABLE": {
+      "type": "object",
+      "description": "SRC Column Checking Result Table (CC-TABLE). Fields are driven by the DTO_D_TABLE_REQUEST design-table request, wrapped in Argument, controlling table type, result filtering, units, number formatting, and element/section scope.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "SRC column checking design-table request.",
+          "required": [
+            "TABLE_TYPE"
+          ],
+          "properties": {
+            "TABLE_TYPE": {
+              "type": "string",
+              "description": "Table Type: MEMB or PROP. Case-insensitive; wire values used.",
+              "enum": [
+                "MEMB",
+                "PROP"
+              ]
+            },
+            "RESULT": {
+              "type": "integer",
+              "description": "Result View Option: 0=All 1=OK 2=NG.",
+              "default": 0
+            },
+            "TABLE_NAME": {
+              "type": "string",
+              "description": "Output table title in response.",
+              "default": ""
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Save results to file path.",
+              "default": ""
+            },
+            "UNIT": {
+              "type": "object",
+              "description": "Unit Settings.",
+              "properties": {
+                "FORCE": {
+                  "type": "string",
+                  "description": "Force. Case-insensitive; wire values used.",
+                  "enum": [
+                    "KGF",
+                    "TONF",
+                    "N",
+                    "KN",
+                    "LBF",
+                    "KIPS"
+                  ]
+                },
+                "DIST": {
+                  "type": "string",
+                  "description": "Distance. Case-insensitive; wire values used.",
+                  "enum": [
+                    "MM",
+                    "CM",
+                    "M",
+                    "IN",
+                    "FT"
+                  ]
+                },
+                "HEAT": {
+                  "type": "string",
+                  "description": "Heat. Case-insensitive.",
+                  "enum": [
+                    "CAL",
+                    "KCAL",
+                    "J",
+                    "BTU",
+                    "KJ"
+                  ]
+                },
+                "TEMP": {
+                  "type": "string",
+                  "description": "Temper Unit. Case-insensitive.",
+                  "enum": [
+                    "C",
+                    "F"
+                  ]
+                }
+              }
+            },
+            "STYLES": {
+              "type": "object",
+              "description": "Number Format Settings.",
+              "properties": {
+                "FORMAT": {
+                  "type": "string",
+                  "description": "Style Format. Case-insensitive.",
+                  "enum": [
+                    "DEFAULT",
+                    "SCIENTIFIC",
+                    "FIXED",
+                    "GENERAL"
+                  ]
+                },
+                "PLACE": {
+                  "type": "integer",
+                  "description": "Style Place (number of decimal places)."
+                }
+              }
+            },
+            "COMPONENTS": {
+              "type": "array",
+              "description": "Column filter list. Column names must belong to THIS endpoint's header set (defined in wg_db/DesignTableHeader.h); an unknown name ABORTS the request with \"'<name>' is not a valid COMPONENTS name\" — it is not silently ignored.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "Element Numbers.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "description": "Specify Each ID - Element No.",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "description": "Section No.",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "PRI_SORT": {
+              "type": "integer",
+              "description": "Primary sort: 0=SECT 1=MEMB.",
+              "default": 1
+            },
+            "VIEW_RATPC": {
+              "type": "boolean",
+              "description": "IGNORED on this endpoint. VIEW_RATPC is only consumed by the STEEL CODE-TABLE (ACS_CODE_CHECK); for RC/SRC check/design tables the value is read but never applied.",
+              "default": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "TABLE_TYPE": "MEMB",
+      "RESULT": 0,
+      "TABLE_NAME": "SRC Column Checking",
+      "UNIT": {
+        "FORCE": "KN",
+        "DIST": "MM"
+      },
+      "STYLES": {
+        "FORMAT": "FIXED",
+        "PLACE": 3
+      },
+      "COMPONENTS": [
+        "Elem",
+        "Sect"
+      ],
+      "ELEMS": {
+        "KEYS": [
+          1,
+          2,
+          3
+        ],
+        "TO": "1-10"
+      },
+      "SECTIONS": [
+        1,
+        2
+      ],
+      "PRI_SORT": 1,
+      "VIEW_RATPC": false
+    }
+  }
+}

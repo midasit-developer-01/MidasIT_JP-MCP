@@ -1,0 +1,444 @@
+{
+  "_group": "db",
+  "_name": "EPMT-M1",
+  "uri": "db/EPMT-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EPMT-M1": {
+      "type": "object",
+      "description": "Plastic Material (EPMT-M1). MODEL_TYPE selects one plastic model (Tresca:0, VonMises:1, MohrCoulomb:2, DruckerPrager:3, Masonry:4, ConcreteDamage:5) and the matching model sub-object (TRESCA/VMISES/MOHRCL/DRUCKER/MASONRY/CONCDMG) must be supplied.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Material name. Must be unique among plastic materials."
+        },
+        "MODEL_TYPE": {
+          "type": "integer",
+          "enum": [0, 1, 2, 3, 4, 5],
+          "description": "Plastic model type. 0=Tresca (needs TRESCA), 1=Von Mises (needs VMISES), 2=Mohr-Coulomb (needs MOHRCL), 3=Drucker-Prager (needs DRUCKER), 4=Masonry (needs MASONRY), 5=Concrete-Damage (needs CONCDMG). Any other value is rejected."
+        },
+        "TRESCA": {
+          "type": "object",
+          "description": "[MODEL_TYPE=0] Tresca model parameters. Required only when MODEL_TYPE is 0.",
+          "properties": {
+            "INIT_YIELD_STRESS": {
+              "type": "number",
+              "description": "Initial uniaxial yield stress."
+            },
+            "OPT_HARDENING": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable hardening. When true, HARDENING_TYPE and HARDENING_COEF become required."
+            },
+            "HARDENING_TYPE": {
+              "type": "integer",
+              "description": "[OPT_HARDENING=true] Hardening type: 0=Isotropic, 1=Kinematic, 2=Mixed. Required when OPT_HARDENING is true."
+            },
+            "HARDENING_COEF": {
+              "type": "number",
+              "description": "[OPT_HARDENING=true] Hardening coefficient. Required when OPT_HARDENING is true."
+            },
+            "BACK_STRESS_COEF": {
+              "type": "number",
+              "description": "[OPT_HARDENING=true, HARDENING_TYPE=2] Back stress coefficient. Required only when hardening is on and HARDENING_TYPE is Mixed(2); ignored (auto 1.0 for Isotropic, 0.0 for Kinematic) otherwise."
+            }
+          },
+          "required": ["INIT_YIELD_STRESS"]
+        },
+        "VMISES": {
+          "type": "object",
+          "description": "[MODEL_TYPE=1] Von Mises model parameters. Required only when MODEL_TYPE is 1.",
+          "properties": {
+            "INIT_YIELD_STRESS": {
+              "type": "number",
+              "description": "Initial uniaxial yield stress."
+            },
+            "OPT_HARDENING": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable hardening. When true, HARDENING_TYPE and HARDENING_COEF become required."
+            },
+            "HARDENING_TYPE": {
+              "type": "integer",
+              "description": "[OPT_HARDENING=true] Hardening type: 0=Isotropic, 1=Kinematic, 2=Mixed. Required when OPT_HARDENING is true."
+            },
+            "HARDENING_COEF": {
+              "type": "number",
+              "description": "[OPT_HARDENING=true] Hardening coefficient. Required when OPT_HARDENING is true."
+            },
+            "BACK_STRESS_COEF": {
+              "type": "number",
+              "description": "[OPT_HARDENING=true, HARDENING_TYPE=2] Back stress coefficient. Required only when hardening is on and HARDENING_TYPE is Mixed(2); ignored (auto 1.0 for Isotropic, 0.0 for Kinematic) otherwise."
+            }
+          },
+          "required": ["INIT_YIELD_STRESS"]
+        },
+        "MOHRCL": {
+          "type": "object",
+          "description": "[MODEL_TYPE=2] Mohr-Coulomb model parameters. Required only when MODEL_TYPE is 2.",
+          "properties": {
+            "INIT_COHESION": {
+              "type": "number",
+              "description": "Initial cohesion."
+            },
+            "INIT_FRIC_ANGLE": {
+              "type": "number",
+              "description": "Initial friction angle (deg)."
+            },
+            "OPT_HARDENING": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable hardening. When true, HARDENING_TYPE and HARDENING_COEF become required."
+            },
+            "HARDENING_TYPE": {
+              "type": "integer",
+              "description": "[OPT_HARDENING=true] Hardening type: Isotropic(0) only in MEC. Required when OPT_HARDENING is true."
+            },
+            "HARDENING_COEF": {
+              "type": "number",
+              "description": "[OPT_HARDENING=true] Hardening coefficient. Required when OPT_HARDENING is true."
+            },
+            "BACK_STRESS_COEF": {
+              "type": "number",
+              "description": "Back stress coefficient. Ignored in MEC (Isotropic only, forced to 1.0); not required."
+            }
+          },
+          "required": ["INIT_COHESION", "INIT_FRIC_ANGLE"]
+        },
+        "DRUCKER": {
+          "type": "object",
+          "description": "[MODEL_TYPE=3] Drucker-Prager model parameters. Required only when MODEL_TYPE is 3.",
+          "properties": {
+            "INIT_COHESION": {
+              "type": "number",
+              "description": "Initial cohesion."
+            },
+            "INIT_FRIC_ANGLE": {
+              "type": "number",
+              "description": "Initial friction angle (deg)."
+            },
+            "OPT_HARDENING": {
+              "type": "boolean",
+              "default": false,
+              "description": "Enable hardening. When true, HARDENING_TYPE and HARDENING_COEF become required."
+            },
+            "HARDENING_TYPE": {
+              "type": "integer",
+              "description": "[OPT_HARDENING=true] Hardening type: Isotropic(0) only in MEC. Required when OPT_HARDENING is true."
+            },
+            "HARDENING_COEF": {
+              "type": "number",
+              "description": "[OPT_HARDENING=true] Hardening coefficient. Required when OPT_HARDENING is true."
+            },
+            "BACK_STRESS_COEF": {
+              "type": "number",
+              "description": "Back stress coefficient. Ignored in MEC (Isotropic only, forced to 1.0); not required."
+            }
+          },
+          "required": ["INIT_COHESION", "INIT_FRIC_ANGLE"]
+        },
+        "MASONRY": {
+          "type": "object",
+          "description": "[MODEL_TYPE=4] Masonry model parameters. Required only when MODEL_TYPE is 4.",
+          "properties": {
+            "BM": {
+              "type": "object",
+              "description": "Brick material properties.",
+              "properties": {
+                "YOUNG_S_MODULUS": {
+                  "type": "number",
+                  "description": "Young's modulus."
+                },
+                "POSSIONS_S_RATIO": {
+                  "type": "number",
+                  "description": "Poisson's ratio."
+                },
+                "TENSION_STRENGTH": {
+                  "type": "number",
+                  "description": "Tension strength."
+                },
+                "STIFF_REDUCTION": {
+                  "type": "number",
+                  "description": "Stiffness reduction factor."
+                }
+              },
+              "required": ["YOUNG_S_MODULUS", "POSSIONS_S_RATIO", "TENSION_STRENGTH", "STIFF_REDUCTION"]
+            },
+            "BED_JOINT": {
+              "type": "object",
+              "description": "Bed joint material properties.",
+              "properties": {
+                "YOUNG_S_MODULUS": {
+                  "type": "number",
+                  "description": "Young's modulus."
+                },
+                "POSSIONS_S_RATIO": {
+                  "type": "number",
+                  "description": "Poisson's ratio."
+                },
+                "TENSION_STRENGTH": {
+                  "type": "number",
+                  "description": "Tension strength."
+                },
+                "STIFF_REDUCTION": {
+                  "type": "number",
+                  "description": "Stiffness reduction factor."
+                }
+              },
+              "required": ["YOUNG_S_MODULUS", "POSSIONS_S_RATIO", "TENSION_STRENGTH", "STIFF_REDUCTION"]
+            },
+            "HEAD_JOINT": {
+              "type": "object",
+              "description": "Head joint material properties.",
+              "properties": {
+                "YOUNG_S_MODULUS": {
+                  "type": "number",
+                  "description": "Young's modulus."
+                },
+                "POSSIONS_S_RATIO": {
+                  "type": "number",
+                  "description": "Poisson's ratio."
+                },
+                "TENSION_STRENGTH": {
+                  "type": "number",
+                  "description": "Tension strength."
+                },
+                "STIFF_REDUCTION": {
+                  "type": "number",
+                  "description": "Stiffness reduction factor."
+                }
+              },
+              "required": ["YOUNG_S_MODULUS", "POSSIONS_S_RATIO", "TENSION_STRENGTH", "STIFF_REDUCTION"]
+            },
+            "GEOM": {
+              "type": "object",
+              "description": "Geometry of the masonry panel.",
+              "properties": {
+                "BRICK_LENGTH": {
+                  "type": "number",
+                  "description": "Brick length."
+                },
+                "BRICK_HEIGHT": {
+                  "type": "number",
+                  "description": "Brick height."
+                },
+                "THICKNESS_BED": {
+                  "type": "number",
+                  "description": "Thickness of bed joint."
+                },
+                "THICKNESS_HEAD": {
+                  "type": "number",
+                  "description": "Thickness of head joint."
+                }
+              },
+              "required": ["BRICK_LENGTH", "BRICK_HEIGHT", "THICKNESS_BED", "THICKNESS_HEAD"]
+            },
+            "MAT_COORD": {
+              "type": "object",
+              "description": "Material coordinate system.",
+              "properties": {
+                "COORD_TYPE": {
+                  "type": "integer",
+                  "enum": [0, 1, 2],
+                  "description": "Coordinate type: 0=Global (Global-Y / Global-X), 1=Element Local (Local-y / Local-x), 2=Global-Z : Angle."
+                },
+                "COORD_ANGLE": {
+                  "type": "number",
+                  "description": "[COORD_TYPE=2] Angle from Global X (deg). Required only when COORD_TYPE is 2; forced to 0 otherwise. Value is taken modulo 360."
+                }
+              },
+              "required": ["COORD_TYPE"]
+            }
+          },
+          "required": ["BM", "BED_JOINT", "HEAD_JOINT", "GEOM", "MAT_COORD"]
+        },
+        "CONCDMG": {
+          "type": "object",
+          "description": "[MODEL_TYPE=5] Concrete-Damage model parameters. Required only when MODEL_TYPE is 5.",
+          "properties": {
+            "DILIATION_ANGLE": {
+              "type": "number",
+              "description": "Dilation angle (deg)."
+            },
+            "ECCEN": {
+              "type": "number",
+              "description": "Eccentricity."
+            },
+            "FBO_FCO": {
+              "type": "number",
+              "description": "fbo/fco ratio."
+            },
+            "K": {
+              "type": "number",
+              "description": "K parameter."
+            },
+            "VISCOSITY_PARAM": {
+              "type": "number",
+              "description": "Viscosity parameter."
+            },
+            "COMP_ITEMS": {
+              "type": "array",
+              "description": "Compressive behavior points (inelastic strain / yield stress / damage). Maximum 50 items.",
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "INELASTIC_STRAIN": {
+                    "type": "number",
+                    "description": "Inelastic strain."
+                  },
+                  "YIELD_STRESS": {
+                    "type": "number",
+                    "description": "Yield stress."
+                  },
+                  "DAMAGE": {
+                    "type": "number",
+                    "description": "Damage."
+                  }
+                },
+                "required": ["INELASTIC_STRAIN", "YIELD_STRESS", "DAMAGE"]
+              }
+            },
+            "TENSILE_ITEMS": {
+              "type": "array",
+              "description": "Tensile behavior points (inelastic strain / yield stress / damage). Maximum 50 items.",
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "INELASTIC_STRAIN": {
+                    "type": "number",
+                    "description": "Inelastic strain."
+                  },
+                  "YIELD_STRESS": {
+                    "type": "number",
+                    "description": "Yield stress."
+                  },
+                  "DAMAGE": {
+                    "type": "number",
+                    "description": "Damage."
+                  }
+                },
+                "required": ["INELASTIC_STRAIN", "YIELD_STRESS", "DAMAGE"]
+              }
+            }
+          },
+          "required": ["DILIATION_ANGLE", "ECCEN", "FBO_FCO", "K", "VISCOSITY_PARAM", "COMP_ITEMS", "TENSILE_ITEMS"]
+        }
+      },
+      "required": ["NAME", "MODEL_TYPE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Tresca_1",
+        "MODEL_TYPE": 0,
+        "TRESCA": {
+          "INIT_YIELD_STRESS": 250.0,
+          "OPT_HARDENING": true,
+          "HARDENING_TYPE": 2,
+          "HARDENING_COEF": 1000.0,
+          "BACK_STRESS_COEF": 0.5
+        }
+      },
+      "2": {
+        "NAME": "VonMises_1",
+        "MODEL_TYPE": 1,
+        "VMISES": {
+          "INIT_YIELD_STRESS": 235.0,
+          "OPT_HARDENING": false
+        }
+      },
+      "3": {
+        "NAME": "MohrCoulomb_1",
+        "MODEL_TYPE": 2,
+        "MOHRCL": {
+          "INIT_COHESION": 20.0,
+          "INIT_FRIC_ANGLE": 30.0,
+          "OPT_HARDENING": true,
+          "HARDENING_TYPE": 0,
+          "HARDENING_COEF": 500.0
+        }
+      },
+      "4": {
+        "NAME": "DruckerPrager_1",
+        "MODEL_TYPE": 3,
+        "DRUCKER": {
+          "INIT_COHESION": 25.0,
+          "INIT_FRIC_ANGLE": 35.0,
+          "OPT_HARDENING": false
+        }
+      },
+      "5": {
+        "NAME": "Masonry_1",
+        "MODEL_TYPE": 4,
+        "MASONRY": {
+          "BM": {
+            "YOUNG_S_MODULUS": 15000.0,
+            "POSSIONS_S_RATIO": 0.2,
+            "TENSION_STRENGTH": 2.0,
+            "STIFF_REDUCTION": 0.1
+          },
+          "BED_JOINT": {
+            "YOUNG_S_MODULUS": 5000.0,
+            "POSSIONS_S_RATIO": 0.15,
+            "TENSION_STRENGTH": 0.5,
+            "STIFF_REDUCTION": 0.1
+          },
+          "HEAD_JOINT": {
+            "YOUNG_S_MODULUS": 5000.0,
+            "POSSIONS_S_RATIO": 0.15,
+            "TENSION_STRENGTH": 0.5,
+            "STIFF_REDUCTION": 0.1
+          },
+          "GEOM": {
+            "BRICK_LENGTH": 210.0,
+            "BRICK_HEIGHT": 60.0,
+            "THICKNESS_BED": 10.0,
+            "THICKNESS_HEAD": 10.0
+          },
+          "MAT_COORD": {
+            "COORD_TYPE": 2,
+            "COORD_ANGLE": 45.0
+          }
+        }
+      },
+      "6": {
+        "NAME": "ConcreteDamage_1",
+        "MODEL_TYPE": 5,
+        "CONCDMG": {
+          "DILIATION_ANGLE": 30.0,
+          "ECCEN": 0.1,
+          "FBO_FCO": 1.16,
+          "K": 0.667,
+          "VISCOSITY_PARAM": 0.0,
+          "COMP_ITEMS": [
+            {
+              "INELASTIC_STRAIN": 0.0,
+              "YIELD_STRESS": 20.0,
+              "DAMAGE": 0.0
+            },
+            {
+              "INELASTIC_STRAIN": 0.001,
+              "YIELD_STRESS": 30.0,
+              "DAMAGE": 0.1
+            }
+          ],
+          "TENSILE_ITEMS": [
+            {
+              "INELASTIC_STRAIN": 0.0,
+              "YIELD_STRESS": 3.0,
+              "DAMAGE": 0.0
+            },
+            {
+              "INELASTIC_STRAIN": 0.0005,
+              "YIELD_STRESS": 1.5,
+              "DAMAGE": 0.5
+            }
+          ]
+        }
+      }
+    }
+  }
+}

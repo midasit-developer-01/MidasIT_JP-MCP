@@ -1,0 +1,22 @@
+{
+  "_group": "post",
+  "_name": "STEELCODECHECK",
+  "uri": "post/STEELCODECHECK",
+  "methods": "POST",
+  "schema": {
+    "STEELCODECHECK": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Steel Code Check (STEELCODECHECK). Performs a steel code check on the analyzed model and returns section/element check results; the request takes no fields (DTO_EMPTY). Requires an open project with valid analysis results.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body. No fields are consumed by the handler; the code check runs on the current analysis results."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

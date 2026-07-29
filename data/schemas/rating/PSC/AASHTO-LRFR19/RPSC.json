@@ -1,0 +1,227 @@
+{
+  "_group": "rating",
+  "_name": "RPSC",
+  "uri": "rating/PSC/AASHTO-LRFR19/RPSC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "RPSC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Reinforcement of PSC Section (RPSC). Fields are driven by the longitudinal (MBARS) and shear (SBAR_ITEMS) reinforcement definitions, whose sub-option flags gate their detail values.",
+      "properties": {
+        "OPT_MBAR_J": {
+          "type": "boolean",
+          "description": "MBarJ Boolean: whether the J-end longitudinal reinforcement differs from the I-end (a second MBARS entry is used when true)."
+        },
+        "OPT_SBAR_J": {
+          "type": "boolean",
+          "description": "SBarJ Boolean: whether the J-end shear reinforcement differs from the I-end (a second SBAR_ITEMS entry is used when true)."
+        },
+        "OPT_CRACKED": {
+          "type": "boolean",
+          "description": "Cracked Boolean: whether the cracked section is considered."
+        },
+        "SBAR_ITEMS": {
+          "type": "array",
+          "description": "Shear Reinforcement Properties. First entry is the I-end; a second entry (J-end) is used when OPT_SBAR_J is true.",
+          "items": {
+            "type": "object",
+            "description": "Reinforcement of Section (RPSC_SBAR).",
+            "properties": {
+              "OPT_DR": {
+                "type": "boolean",
+                "default": false,
+                "description": "Diagonal Reinforcement exists."
+              },
+              "DR_PITCH": {
+                "type": "number",
+                "description": "[OPT_DR=true] Diagonal reinforcement pitch."
+              },
+              "DR_THETA": {
+                "type": "number",
+                "description": "[OPT_DR=true] Diagonal reinforcement angle."
+              },
+              "DR_AW": {
+                "type": "number",
+                "description": "[OPT_DR=true] Diagonal reinforcement area Aw."
+              },
+              "OPT_SBW": {
+                "type": "boolean",
+                "default": false,
+                "description": "Steel Bar for Web exists."
+              },
+              "SBW_PITCH": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Web steel bar pitch."
+              },
+              "SBW_ANGLE": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Web steel bar angle."
+              },
+              "SBW_AP": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Web steel bar area Ap."
+              },
+              "SBW_PS": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Web steel bar effective prestress Pe."
+              },
+              "SBW_FACTOR": {
+                "type": "number",
+                "description": "[OPT_SBW=true] Web steel bar shear reduction factor."
+              },
+              "OPT_TR": {
+                "type": "boolean",
+                "default": false,
+                "description": "Torsional Reinforcement exists."
+              },
+              "TR_PITCH": {
+                "type": "number",
+                "description": "[OPT_TR=true] Torsional reinforcement pitch."
+              },
+              "TR_AWT": {
+                "type": "number",
+                "description": "[OPT_TR=true] Torsional reinforcement area Awt."
+              },
+              "TR_ALT": {
+                "type": "number",
+                "description": "[OPT_TR=true] Torsional reinforcement area Alt."
+              },
+              "OPT_SR": {
+                "type": "boolean",
+                "default": false,
+                "description": "Stirrup exists."
+              },
+              "SR_PITCH": {
+                "type": "number",
+                "description": "[OPT_SR=true] Stirrup pitch."
+              },
+              "SR_AW": {
+                "type": "number",
+                "description": "[OPT_SR=true] Stirrup area Aw."
+              },
+              "OPT_LBAR_FLG": {
+                "type": "boolean",
+                "default": false,
+                "description": "Enclosing Stirrup exists."
+              },
+              "LBAR_THICK": {
+                "type": "number",
+                "description": "[OPT_LBAR_FLG=true] Cover thickness for the enclosed section area."
+              },
+              "LBAR_INC_FC": {
+                "type": "boolean",
+                "description": "[OPT_LBAR_FLG=true] Include Flange/Cantilever."
+              }
+            }
+          }
+        },
+        "MBARS": {
+          "type": "array",
+          "description": "Longitudinal Reinforcement Properties. First entry is the I-end; a second entry (J-end) is used when OPT_MBAR_J is true.",
+          "items": {
+            "type": "object",
+            "description": "Longitudinal Reinforcement Property wrapper (RPSC_MBAR_WRAPPER).",
+            "properties": {
+              "MBAR_ITEMS": {
+                "type": "array",
+                "description": "Longitudinal Reinforcement Property Detail list.",
+                "items": {
+                  "type": "object",
+                  "description": "Longitudinal Reinforcement bar (RPSC_MBAR).",
+                  "properties": {
+                    "IJ": {
+                      "type": "string",
+                      "enum": ["I", "J"],
+                      "description": "I / J end designation (case-insensitive)."
+                    },
+                    "NAME": {
+                      "type": "string",
+                      "description": "Bar Name."
+                    },
+                    "REF_Y": {
+                      "type": "integer",
+                      "description": "Reference for Y position."
+                    },
+                    "Y": {
+                      "type": "number",
+                      "default": 0,
+                      "description": "Y position."
+                    },
+                    "REF_Z": {
+                      "type": "integer",
+                      "description": "Reference for Z position."
+                    },
+                    "Z": {
+                      "type": "number",
+                      "default": 0,
+                      "description": "Z position."
+                    },
+                    "NUM": {
+                      "type": "integer",
+                      "description": "Number of bars."
+                    },
+                    "SPACING": {
+                      "type": "number",
+                      "default": 0,
+                      "description": "Spacing between bars."
+                    },
+                    "PART": {
+                      "type": "integer",
+                      "description": "Part index the bar belongs to."
+                    }
+                  },
+                  "required": ["IJ", "NAME", "REF_Y", "REF_Z", "NUM", "PART"]
+                }
+              }
+            },
+            "required": ["MBAR_ITEMS"]
+          }
+        }
+      },
+      "required": ["OPT_MBAR_J", "OPT_SBAR_J", "OPT_CRACKED", "SBAR_ITEMS", "MBARS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "OPT_MBAR_J": false,
+        "OPT_SBAR_J": false,
+        "OPT_CRACKED": false,
+        "SBAR_ITEMS": [
+          {
+            "OPT_DR": true,
+            "DR_PITCH": 150.0,
+            "DR_THETA": 45.0,
+            "DR_AW": 253.4,
+            "OPT_SBW": false,
+            "OPT_TR": false,
+            "OPT_SR": true,
+            "SR_PITCH": 200.0,
+            "SR_AW": 126.7,
+            "OPT_LBAR_FLG": true,
+            "LBAR_THICK": 40.0,
+            "LBAR_INC_FC": false
+          }
+        ],
+        "MBARS": [
+          {
+            "MBAR_ITEMS": [
+              {
+                "IJ": "I",
+                "NAME": "P1",
+                "REF_Y": 0,
+                "Y": 0.0,
+                "REF_Z": 0,
+                "Z": 100.0,
+                "NUM": 4,
+                "SPACING": 150.0,
+                "PART": 0
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

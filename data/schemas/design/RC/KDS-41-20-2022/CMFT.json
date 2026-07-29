@@ -1,0 +1,47 @@
+{
+  "_group": "design",
+  "_name": "CMFT",
+  "uri": "design/RC/KDS-41-20-2022/CMFT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CMFT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Equivalent Moment Correction Factor Cm (CMFT). When OPT_AUTO is false, the manual correction factors CMY and CMZ (each in the range 0.0 to 1.0) are applied.",
+      "properties": {
+        "OPT_AUTO": {
+          "type": "boolean",
+          "default": false,
+          "description": "boolean Auto Calculate. When true, the equivalent moment correction factor is auto-calculated and CMY/CMZ are ignored; when false, CMY and CMZ are used."
+        },
+        "CMY": {
+          "type": "number",
+          "default": 0.0,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "CMy, equivalent moment correction factor about the y-axis. Applied when OPT_AUTO is false. Must satisfy 0.0 <= value <= 1.0."
+        },
+        "CMZ": {
+          "type": "number",
+          "default": 0.0,
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "CMz, equivalent moment correction factor about the z-axis. Applied when OPT_AUTO is false. Must satisfy 0.0 <= value <= 1.0."
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "OPT_AUTO": false,
+        "CMY": 0.85,
+        "CMZ": 0.6
+      },
+      "2": {
+        "OPT_AUTO": true
+      }
+    }
+  }
+}

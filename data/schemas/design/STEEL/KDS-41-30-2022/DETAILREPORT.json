@@ -1,0 +1,64 @@
+{
+  "_group": "design",
+  "_name": "DETAILREPORT",
+  "uri": "design/STEEL/KDS-41-30-2022/DETAILREPORT",
+  "methods": "POST",
+  "schema": {
+    "DETAILREPORT": {
+      "type": "object",
+      "description": "Steel Code Check Detail Report (DETAILREPORT). Generates a KDS 41 30 2022 steel design check report file; REPORT_TYPE selects whether the report is by section property or by member, which in turn drives which item list is used.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body for generating the steel design detail report.",
+          "properties": {
+            "REPORT_TYPE": {
+              "type": "string",
+              "enum": ["PROP", "MEMB"],
+              "description": "Table Type. Case-insensitive. PROP = report by section property (uses SECTION_LIST); MEMB = report by member (uses ELEM_NO_LIST)."
+            },
+            "CURRENT_MODE": {
+              "type": "string",
+              "enum": ["Detail", "Summary", "Graphic"],
+              "description": "Report Mode. Case-insensitive. Selects the level of detail of the generated report."
+            },
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Export Path. Directory the report file is written to; concatenated with OUTPUT_NAME to form the full output path."
+            },
+            "OUTPUT_NAME": {
+              "type": "string",
+              "description": "Output File Name. Appended to EXPORT_PATH to form the full report file path."
+            },
+            "ELEM_NO_LIST": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": [],
+              "description": "[REPORT_TYPE=MEMB] Element Numbers. Required (must be assigned) when REPORT_TYPE is MEMB."
+            },
+            "SECTION_LIST": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "default": [],
+              "description": "[REPORT_TYPE=PROP] Section Numbers. Required (must be assigned) when REPORT_TYPE is PROP."
+            }
+          },
+          "required": ["REPORT_TYPE", "CURRENT_MODE", "EXPORT_PATH", "OUTPUT_NAME"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "REPORT_TYPE": "MEMB",
+      "CURRENT_MODE": "Detail",
+      "EXPORT_PATH": "C:/Reports/",
+      "OUTPUT_NAME": "steel_check.mcb",
+      "ELEM_NO_LIST": [1, 2, 3]
+    }
+  }
+}

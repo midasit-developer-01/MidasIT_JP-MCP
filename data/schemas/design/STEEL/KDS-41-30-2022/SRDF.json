@@ -1,0 +1,52 @@
+{
+  "_group": "design",
+  "_name": "SRDF",
+  "uri": "design/STEEL/KDS-41-30-2022/SRDF",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "SRDF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Steel Resistance/Design Factors (SRDF). Holds the strength reduction (phi) factors for KDS 41 30 2022 steel design; all fields are optional and default to the KDS code values.",
+      "properties": {
+        "PHI_T1": {
+          "type": "number",
+          "default": 0.9,
+          "description": "Resistance factor for yielding in gross section (phi_t1)."
+        },
+        "PHI_T2": {
+          "type": "number",
+          "default": 0.75,
+          "description": "Resistance factor for fracture in net section (phi_t2). Disabled in UI; the handler always stores 0.75 regardless of the submitted value."
+        },
+        "PHI_C": {
+          "type": "number",
+          "default": 0.9,
+          "description": "Resistance factor for compression members (phi_c)."
+        },
+        "PHI_B": {
+          "type": "number",
+          "default": 0.9,
+          "description": "Resistance factor for flexural members (phi_b)."
+        },
+        "PHI_V": {
+          "type": "number",
+          "default": 0.9,
+          "description": "Resistance factor for shear (phi_v)."
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "PHI_T1": 0.9,
+        "PHI_T2": 0.75,
+        "PHI_C": 0.9,
+        "PHI_B": 0.9,
+        "PHI_V": 0.9
+      }
+    }
+  }
+}

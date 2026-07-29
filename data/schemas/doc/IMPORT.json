@@ -1,0 +1,25 @@
+{
+  "_group": "doc",
+  "_name": "IMPORT",
+  "uri": "doc/IMPORT",
+  "methods": "POST",
+  "schema": {
+    "IMPORT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Import JSON File (IMPORT). Imports a JSON model file into the current document; the request body carries the absolute file path of the JSON file to import.",
+      "properties": {
+        "Argument": {
+          "type": "string",
+          "description": "Absolute path to the JSON file to import. The handler verifies the path exists and is readable, then imports its contents via OnImportJson. Must point to an existing, readable file."
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": "C:\\Users\\Public\\Documents\\model.json"
+  }
+}

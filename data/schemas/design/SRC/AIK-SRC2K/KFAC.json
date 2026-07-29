@@ -1,0 +1,41 @@
+{
+  "_group": "design",
+  "_name": "KFAC",
+  "uri": "design/SRC/AIK-SRC2K/KFAC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "KFAC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Effective Length Factor (KFAC). Fields hold the effective length factors applied about the two member axes and for torsion.",
+      "properties": {
+        "Ky": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor about the member y-axis."
+        },
+        "Kz": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor about the member z-axis."
+        },
+        "Kt": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Effective length factor for torsion."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "Ky": 1.0,
+        "Kz": 1.0,
+        "Kt": 1.0
+      }
+    }
+  }
+}

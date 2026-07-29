@@ -1,0 +1,51 @@
+{
+  "_group": "db",
+  "_name": "SGLD",
+  "uri": "db/SGLD",
+  "methods": "GET",
+  "schema": {
+    "SGLD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Construction Stage Load Case (SGLD). Fields describe a single construction-stage static load case; the load-case category is driven by TYPE.",
+      "properties": {
+        "NO": {
+          "type": "integer",
+          "description": "Load case number (read-only; echoes the internal LoadCaseId, ignored on input)."
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Construction stage load case name."
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "Construction stage load case type (case-insensitive enum). Selects the load category, e.g. USER=user defined, D=dead load, DC/DW=component/wearing dead load, L=live load, W=wind, CR=creep, SH=shrinkage, PS=prestress, T=temperature.",
+          "enum": [
+            "USER", "D", "DC", "DW", "DD", "EP", "EANN", "EANC", "EAMN", "EAMC",
+            "EPNN", "EPNC", "EPMN", "EPMC", "EH", "EV", "ES", "EL", "LS", "LSC",
+            "L", "LC", "LP", "IL", "ILP", "CF", "BRK", "BK", "CRL", "PS", "B",
+            "WP", "FP", "SF", "WPR", "W", "WL", "STL", "CR", "SH", "T", "TPG",
+            "CO", "CT", "CV", "E", "FR", "IP", "CS", "ER", "RS", "GE", "LR",
+            "S", "R", "LF", "RF", "GD", "SHV", "DRL", "WA", "WT", "EVT", "EEP",
+            "EX", "I", "EE"
+          ]
+        },
+        "DESC": {
+          "type": "string",
+          "default": "",
+          "description": "Description of the load case."
+        }
+      },
+      "required": ["NAME", "TYPE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Self Weight",
+        "TYPE": "D",
+        "DESC": "Construction stage dead load"
+      }
+    }
+  }
+}

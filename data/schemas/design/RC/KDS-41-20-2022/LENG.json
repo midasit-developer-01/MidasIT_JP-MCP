@@ -1,0 +1,59 @@
+{
+  "_group": "design",
+  "_name": "LENG",
+  "uri": "design/RC/KDS-41-20-2022/LENG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LENG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Member Unbraced Length (LENG). Fields define the effective/unbraced lengths used in member design, keyed per element under Assign.",
+      "properties": {
+        "LY": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced Length Ly (for buckling about the y-axis)."
+        },
+        "LZ": {
+          "type": "number",
+          "default": 0,
+          "description": "Unbraced Length Lz (for buckling about the z-axis)."
+        },
+        "LB": {
+          "type": "number",
+          "default": 0,
+          "description": "Laterally Unbraced Length Lb."
+        },
+        "bNOTUSE": {
+          "type": "boolean",
+          "default": false,
+          "description": "Do not consider the laterally unbraced length."
+        },
+        "bAUTOCALC": {
+          "type": "boolean",
+          "default": false,
+          "description": "Calculate the unbraced length automatically by code."
+        },
+        "LT": {
+          "type": "number",
+          "default": 0,
+          "description": "Torsional Unbraced Length Lt."
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LY": 3.5,
+        "LZ": 3.5,
+        "LB": 3.5,
+        "bNOTUSE": false,
+        "bAUTOCALC": false,
+        "LT": 3.5
+      }
+    }
+  }
+}

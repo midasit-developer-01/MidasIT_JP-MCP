@@ -1,0 +1,29 @@
+{
+  "_group": "db",
+  "_name": "IEHG-GL-M1",
+  "uri": "db/IEHG-GL-M1",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "IEHG-GL-M1": {
+      "type": "object",
+      "description": "Inelastic Hinge Assignment for General Link (IEHG-GL-M1). Assigns a previously defined Inelastic Hinge Property to a general-link object; the assignment is keyed by object id and links to the named property.",
+      "properties": {
+        "INEL_PROP_NAME": {
+          "type": "string",
+          "description": "Name of an existing Inelastic Hinge Property to assign. Must match a defined Inelastic Hinge Property name; assignment fails (LV_WRONG_DATA) if no property with this name exists."
+        }
+      },
+      "required": [
+        "INEL_PROP_NAME"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "INEL_PROP_NAME": "IH_GL_1"
+      }
+    }
+  }
+}

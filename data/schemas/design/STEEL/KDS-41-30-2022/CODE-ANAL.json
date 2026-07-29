@@ -1,0 +1,66 @@
+{
+  "_group": "design",
+  "_name": "CODE-ANAL",
+  "uri": "design/STEEL/KDS-41-30-2022/CODE-ANAL",
+  "methods": "POST",
+  "schema": {
+    "CODE-ANAL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Steel Code Check Analysis (CODE-ANAL). Runs the steel design code check (KDS-41-30-2022) over a set of targets selected by PERFORM_TYPE; the request body is wrapped in Argument.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Steel code check request. Fields drive which elements/sections are checked based on PERFORM_TYPE.",
+          "properties": {
+            "PERFORM_TYPE": {
+              "type": "string",
+              "enum": ["ALL", "ELEMS", "SECTIONS"],
+              "default": "ALL",
+              "description": "Perform Target - All Elements: ALL / By Element No.: ELEMS / By Section No.: SECTIONS. Case-insensitive."
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "[PERFORM_TYPE=ELEMS] Element No. selection object.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "description": "Specify Each ID - Element No.",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "description": "[PERFORM_TYPE=SECTIONS] Section No. list.",
+              "items": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "PERFORM_TYPE": "ELEMS",
+      "ELEMS": {
+        "KEYS": [1, 2, 3],
+        "TO": "1-10",
+        "STRUCTURE_GROUP_NAME": "Beam Group"
+      },
+      "SECTIONS": [1, 2]
+    }
+  }
+}

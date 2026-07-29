@@ -1,0 +1,443 @@
+{
+  "_group": "design",
+  "_name": "DCRE",
+  "uri": "design/RC/KDS-41-20-2022/DCRE",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DCRE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Criteria for RC Rebar (DCRE). Fields are grouped by structural member type (BEAM, COLUMN, BRACE, WALL); each member sub-object carries its own rebar sizing and layout, and all fields are optional with schema defaults applied when omitted.",
+      "additionalProperties": false,
+      "properties": {
+        "BEAM": {
+          "type": "object",
+          "description": "Beam rebar specification and layout.",
+          "additionalProperties": false,
+          "properties": {
+            "MAIN_REBAR": {
+              "type": "array",
+              "description": "Main Rebar (1 to 5 sizes). Case-insensitive.",
+              "items": {
+                "type": "string",
+                "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"]
+              },
+              "minItems": 1,
+              "maxItems": 5,
+              "default": ["D22"]
+            },
+            "STIRRUPS": {
+              "type": "string",
+              "description": "Stirrups rebar size. Case-insensitive.",
+              "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"],
+              "default": "D10"
+            },
+            "STIRRUP_ARRANGEMENT": {
+              "type": "integer",
+              "description": "Stirrup leg count (2 to 20).",
+              "minimum": 2,
+              "maximum": 20,
+              "default": 2
+            },
+            "SIDE_BAR": {
+              "type": "string",
+              "description": "Side Bar rebar size. Case-insensitive.",
+              "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"],
+              "default": "D13"
+            },
+            "DT": {
+              "type": "number",
+              "description": "Top cover distance (m). Must be >= 0.",
+              "minimum": 0.0,
+              "default": 0.0
+            },
+            "DB": {
+              "type": "number",
+              "description": "Bottom cover distance (m). Must be >= 0.",
+              "minimum": 0.0,
+              "default": 0.0
+            },
+            "DOUBLY_REBAR": {
+              "type": "boolean",
+              "description": "Use doubly reinforced design.",
+              "default": true
+            },
+            "SPACING_LIMIT": {
+              "type": "boolean",
+              "description": "Consider Spacing Limit for Main Rebar.",
+              "default": true
+            },
+            "DOUBLY_K": {
+              "type": "number",
+              "description": "[DOUBLY_REBAR=true] Doubly reinforced k factor; validated to 0.5 ~ 1.0 when DOUBLY_REBAR is true. Applied only when DOUBLY_REBAR is true.",
+              "default": 1.0
+            },
+            "SPLICED_BARS": {
+              "type": "string",
+              "description": "[SPACING_LIMIT=true] Splice option; applied only when SPACING_LIMIT is true. Case-insensitive.",
+              "enum": ["None", "50%", "100%"],
+              "default": "50%"
+            }
+          }
+        },
+        "COLUMN": {
+          "type": "object",
+          "description": "Column rebar specification and layout.",
+          "additionalProperties": false,
+          "properties": {
+            "MAIN_REBAR": {
+              "type": "array",
+              "description": "Main Rebar (1 to 5 sizes). Case-insensitive.",
+              "items": {
+                "type": "string",
+                "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"]
+              },
+              "minItems": 1,
+              "maxItems": 5,
+              "default": ["D22"]
+            },
+            "TIES_SPIRALS": {
+              "type": "string",
+              "description": "Ties/Spirals rebar size. Case-insensitive.",
+              "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"],
+              "default": "D10"
+            },
+            "ARRANGEMENT_Y": {
+              "type": "integer",
+              "description": "Tie leg count (Y) (2 to 20).",
+              "minimum": 2,
+              "maximum": 20,
+              "default": 2
+            },
+            "ARRANGEMENT_Z": {
+              "type": "integer",
+              "description": "Tie leg count (Z) (2 to 20).",
+              "minimum": 2,
+              "maximum": 20,
+              "default": 2
+            },
+            "DO": {
+              "type": "number",
+              "description": "Cover distance from main rebar center (m). Must be >= 0.",
+              "minimum": 0.0,
+              "default": 0.0
+            },
+            "SPACING_LIMIT": {
+              "type": "boolean",
+              "description": "Consider Spacing Limit for Main Rebar.",
+              "default": true
+            },
+            "SPLICED_BARS": {
+              "type": "string",
+              "description": "[SPACING_LIMIT=true] Splice option; applied only when SPACING_LIMIT is true. Case-insensitive.",
+              "enum": ["None", "50%", "100%"],
+              "default": "50%"
+            }
+          }
+        },
+        "BRACE": {
+          "type": "object",
+          "description": "Brace rebar specification and layout.",
+          "additionalProperties": false,
+          "properties": {
+            "MAIN_REBAR": {
+              "type": "array",
+              "description": "Main Rebar (1 to 5 sizes). Case-insensitive.",
+              "items": {
+                "type": "string",
+                "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"]
+              },
+              "minItems": 1,
+              "maxItems": 5,
+              "default": ["D22"]
+            },
+            "TIES_SPIRALS": {
+              "type": "string",
+              "description": "Ties/Spirals rebar size. Case-insensitive.",
+              "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"],
+              "default": "D10"
+            },
+            "ARRANGEMENT_Y": {
+              "type": "integer",
+              "description": "Tie leg count (Y) (2 to 20).",
+              "minimum": 2,
+              "maximum": 20,
+              "default": 2
+            },
+            "ARRANGEMENT_Z": {
+              "type": "integer",
+              "description": "Tie leg count (Z) (2 to 20).",
+              "minimum": 2,
+              "maximum": 20,
+              "default": 2
+            },
+            "DO": {
+              "type": "number",
+              "description": "Cover distance from main rebar center (m). Must be >= 0.",
+              "minimum": 0.0,
+              "default": 0.0
+            },
+            "SPACING_LIMIT": {
+              "type": "boolean",
+              "description": "Consider Spacing Limit for Main Rebar.",
+              "default": true
+            },
+            "SPLICED_BARS": {
+              "type": "string",
+              "description": "[SPACING_LIMIT=true] Splice option; applied only when SPACING_LIMIT is true. Case-insensitive.",
+              "enum": ["None", "50%", "100%"],
+              "default": "50%"
+            }
+          }
+        },
+        "WALL": {
+          "type": "object",
+          "description": "Shear wall rebar specification and layout.",
+          "additionalProperties": false,
+          "properties": {
+            "VERTICAL_REBAR": {
+              "type": "array",
+              "description": "Vertical Rebar (1 to 5 sizes). Case-insensitive.",
+              "items": {
+                "type": "string",
+                "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"]
+              },
+              "minItems": 1,
+              "maxItems": 5,
+              "default": ["D13"]
+            },
+            "HORIZONTAL_REBAR": {
+              "type": "string",
+              "description": "Horizontal Rebar size. Case-insensitive.",
+              "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"],
+              "default": "D10"
+            },
+            "END_REBAR": {
+              "type": "string",
+              "description": "End Rebar size. Case-insensitive.",
+              "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"],
+              "default": "D10"
+            },
+            "BE_HORZ_REBAR": {
+              "type": "string",
+              "description": "Boundary Element Horizontal Rebar size. Case-insensitive.",
+              "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"],
+              "default": "D10"
+            },
+            "BE_HORZ_SPACE": {
+              "type": "number",
+              "description": "Boundary Element Horizontal Rebar Space (m). Must be > 0.",
+              "exclusiveMinimum": 0.0,
+              "default": 0.2
+            },
+            "BE_VERT_SPACE": {
+              "type": "number",
+              "description": "Boundary Element Vertical Rebar Space (m). Must be > 0.",
+              "exclusiveMinimum": 0.0,
+              "default": 0.1
+            },
+            "DE": {
+              "type": "number",
+              "description": "Edge to first vertical bar (m). Must be >= 0.",
+              "minimum": 0.0,
+              "default": 0.0
+            },
+            "DW": {
+              "type": "number",
+              "description": "Cover distance to wall face (m). Must be >= 0.",
+              "minimum": 0.0,
+              "default": 0.0
+            },
+            "MATERIAL_BY_DIAMETER": {
+              "type": "boolean",
+              "description": "Material by Rebar Diameter.",
+              "default": false
+            },
+            "ADDITIONAL_WALL_DATA": {
+              "type": "object",
+              "description": "Additional Wall Data.",
+              "additionalProperties": false,
+              "properties": {
+                "OUT_OF_PLANE_BENDING": {
+                  "type": "boolean",
+                  "description": "Design of Out-of-plane Bending.",
+                  "default": false
+                },
+                "VERTICAL_REBAR_SPACING": {
+                  "type": "object",
+                  "description": "Spacing of Vertical Rebars.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "UNIT": {
+                      "type": "string",
+                      "description": "Unit for spacing values. Case-insensitive.",
+                      "enum": ["mm", "in"],
+                      "default": "mm"
+                    },
+                    "LIST_FOR_DESIGN": {
+                      "type": "array",
+                      "description": "Selected spacing values used for design (e.g. [100, 150]); 1 to 50 entries, each value must be > 0.",
+                      "items": {
+                        "type": "number",
+                        "exclusiveMinimum": 0.0
+                      },
+                      "minItems": 1,
+                      "maxItems": 50,
+                      "default": [100.0, 150.0]
+                    }
+                  }
+                },
+                "HORIZONTAL_REBAR_SPACING_FROM": {
+                  "type": "number",
+                  "description": "Spacing of Horizontal Rebars From (m). Must be >= 0.",
+                  "minimum": 0.0,
+                  "default": 0.05
+                },
+                "END_REBAR_METHOD": {
+                  "type": "integer",
+                  "description": "End Rebar Design Method (1 to 4).",
+                  "minimum": 1,
+                  "maximum": 4,
+                  "default": 1
+                },
+                "DIST1": {
+                  "type": "number",
+                  "description": "[END_REBAR_METHOD>=2] Dist1 (m); applied only when END_REBAR_METHOD is 2, 3, or 4. Must be >= 0.",
+                  "minimum": 0.0,
+                  "default": 0.3
+                },
+                "DIST2": {
+                  "type": "number",
+                  "description": "[END_REBAR_METHOD>=2] Dist2 (m); applied only when END_REBAR_METHOD is 2, 3, or 4. Must be >= 0.",
+                  "minimum": 0.0,
+                  "default": 0.15
+                },
+                "DIST3": {
+                  "type": "number",
+                  "description": "[END_REBAR_METHOD>=2] Dist3 (m); applied only when END_REBAR_METHOD is 2, 3, or 4. Must be >= 0.",
+                  "minimum": 0.0,
+                  "default": 0.1
+                }
+              }
+            },
+            "MATERIAL_BY_DIAMETER_INPUT": {
+              "type": "object",
+              "description": "[MATERIAL_BY_DIAMETER=true] Material by Diameter Input; applied only when MATERIAL_BY_DIAMETER is true.",
+              "additionalProperties": false,
+              "properties": {
+                "VERTICAL_END_REBAR": {
+                  "type": "array",
+                  "description": "Vertical/end rebar material mapping.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "REBAR_DIAMETER": {
+                        "type": "string",
+                        "description": "Rebar diameter (e.g. D22). Case-insensitive.",
+                        "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"]
+                      },
+                      "MATERIAL": {
+                        "type": "string",
+                        "description": "Material grade. Case-insensitive.",
+                        "enum": ["None", "SD300", "SD400", "SD500", "SD600", "SD700", "SD400S", "SD500S", "SD600S"],
+                        "default": "None"
+                      }
+                    }
+                  }
+                },
+                "HORIZONTAL_REBAR": {
+                  "type": "array",
+                  "description": "Horizontal rebar material mapping.",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "REBAR_DIAMETER": {
+                        "type": "string",
+                        "description": "Rebar diameter (e.g. D22). Case-insensitive.",
+                        "enum": ["D4", "D5", "D6", "D7", "D8", "D10", "D13", "D16", "D19", "D22", "D25", "D29", "D32", "D35", "D38", "D41", "D43", "D51", "D57"]
+                      },
+                      "MATERIAL": {
+                        "type": "string",
+                        "description": "Material grade. Case-insensitive.",
+                        "enum": ["None", "SD300", "SD400", "SD500", "SD600", "SD700", "SD400S", "SD500S", "SD600S"],
+                        "default": "None"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "BEAM": {
+          "MAIN_REBAR": ["D22", "D25"],
+          "STIRRUPS": "D10",
+          "STIRRUP_ARRANGEMENT": 2,
+          "SIDE_BAR": "D13",
+          "DT": 0.04,
+          "DB": 0.04,
+          "DOUBLY_REBAR": true,
+          "SPACING_LIMIT": true,
+          "DOUBLY_K": 1.0,
+          "SPLICED_BARS": "50%"
+        },
+        "COLUMN": {
+          "MAIN_REBAR": ["D22"],
+          "TIES_SPIRALS": "D10",
+          "ARRANGEMENT_Y": 3,
+          "ARRANGEMENT_Z": 3,
+          "DO": 0.05,
+          "SPACING_LIMIT": true,
+          "SPLICED_BARS": "50%"
+        },
+        "BRACE": {
+          "MAIN_REBAR": ["D22"],
+          "TIES_SPIRALS": "D10",
+          "ARRANGEMENT_Y": 2,
+          "ARRANGEMENT_Z": 2,
+          "DO": 0.05,
+          "SPACING_LIMIT": false
+        },
+        "WALL": {
+          "VERTICAL_REBAR": ["D13"],
+          "HORIZONTAL_REBAR": "D10",
+          "END_REBAR": "D10",
+          "BE_HORZ_REBAR": "D10",
+          "BE_HORZ_SPACE": 0.2,
+          "BE_VERT_SPACE": 0.1,
+          "DE": 0.0,
+          "DW": 0.0,
+          "MATERIAL_BY_DIAMETER": true,
+          "ADDITIONAL_WALL_DATA": {
+            "OUT_OF_PLANE_BENDING": false,
+            "VERTICAL_REBAR_SPACING": {
+              "UNIT": "mm",
+              "LIST_FOR_DESIGN": [100.0, 150.0]
+            },
+            "HORIZONTAL_REBAR_SPACING_FROM": 0.05,
+            "END_REBAR_METHOD": 2,
+            "DIST1": 0.3,
+            "DIST2": 0.15,
+            "DIST3": 0.1
+          },
+          "MATERIAL_BY_DIAMETER_INPUT": {
+            "VERTICAL_END_REBAR": [
+              { "REBAR_DIAMETER": "D13", "MATERIAL": "SD400" }
+            ],
+            "HORIZONTAL_REBAR": [
+              { "REBAR_DIAMETER": "D10", "MATERIAL": "SD400" }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

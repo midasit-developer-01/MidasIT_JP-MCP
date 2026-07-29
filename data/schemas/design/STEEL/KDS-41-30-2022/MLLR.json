@@ -1,0 +1,55 @@
+{
+  "_group": "design",
+  "_name": "MLLR",
+  "uri": "design/STEEL/KDS-41-30-2022/MLLR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MLLR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Moving Load Reduction (MLLR). Defines a moving-load reduction factor and which internal force components it is applied to.",
+      "properties": {
+        "FACTOR": {
+          "type": "number",
+          "default": 1.0,
+          "minimum": 0.3,
+          "maximum": 1.0,
+          "description": "Reduction Factor applied to moving-load results. Must be between 0.3 and 1.0."
+        },
+        "COMPONENTS": {
+          "type": "object",
+          "description": "Applied Components. Selects which internal force components the reduction factor is applied to. If omitted, all components default to false.",
+          "properties": {
+            "AXIAL": {
+              "type": "boolean",
+              "default": false,
+              "description": "Apply reduction to Axial Force."
+            },
+            "MOMENT": {
+              "type": "boolean",
+              "default": false,
+              "description": "Apply reduction to Moments."
+            },
+            "SHEAR": {
+              "type": "boolean",
+              "default": false,
+              "description": "Apply reduction to Shear Forces."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FACTOR": 0.75,
+        "COMPONENTS": {
+          "AXIAL": true,
+          "MOMENT": true,
+          "SHEAR": false
+        }
+      }
+    }
+  }
+}

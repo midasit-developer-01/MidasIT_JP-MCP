@@ -1,0 +1,48 @@
+{
+  "_group": "db",
+  "_name": "DCTL",
+  "uri": "db/DCTL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DCTL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Control Data (DCTL). A single record (key 1) holding global steel/concrete design control settings; FRAMEX/FRAMEY set the per-direction frame sway assumption, bAUTOKF toggles automatic effective length factor calculation, and DT selects the design dimension/plane.",
+      "properties": {
+        "FRAMEX": {
+          "type": "string",
+          "enum": ["Braced Non-sway", "Unbraced Sway"],
+          "default": "Braced Non-sway",
+          "description": "X-direction frame type. Case-insensitive. 'Braced Non-sway' = braced/non-sway frame; 'Unbraced Sway' = unbraced/sway frame."
+        },
+        "FRAMEY": {
+          "type": "string",
+          "enum": ["Braced Non-sway", "Unbraced Sway"],
+          "default": "Braced Non-sway",
+          "description": "Y-direction frame type. Case-insensitive. 'Braced Non-sway' = braced/non-sway frame; 'Unbraced Sway' = unbraced/sway frame."
+        },
+        "bAUTOKF": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically calculate the effective length factor (K)."
+        },
+        "DT": {
+          "type": "string",
+          "enum": ["3D", "XZ", "YZ", "XY"],
+          "default": "3D",
+          "description": "Design type / dimension. Case-insensitive. '3D' = full 3-D design; 'XZ' = X-Z plane; 'YZ' = Y-Z plane; 'XY' = X-Y plane."
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "FRAMEX": "Braced Non-sway",
+        "FRAMEY": "Unbraced Sway",
+        "bAUTOKF": false,
+        "DT": "3D"
+      }
+    }
+  }
+}

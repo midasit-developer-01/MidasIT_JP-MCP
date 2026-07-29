@@ -1,0 +1,902 @@
+{
+  "_group": "db",
+  "_name": "PHGT",
+  "uri": "db/PHGT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PHGT": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Pushover Hinge Type/Properties (PHGT). Defines an inelastic (pushover) hinge; the ELEM_TYPE, MATERIAL_TYPE and DEFINITION drive which sub-blocks apply, the per-DOF SKCV/SKCV_SUB list holds the skeleton curves (MULTI for standard curves vs FEMA for FEMA/EC8 types), YLDS holds the yield-surface interaction data, and MSNR holds masonry data.",
+      "properties": {
+        "NAME": {
+          "description": "Hinge property name.",
+          "type": "string",
+          "default": ""
+        },
+        "DESC": {
+          "description": "Hinge property description.",
+          "type": "string",
+          "default": ""
+        },
+        "ELEM_TYPE": {
+          "description": "Element type the hinge applies to. Index-mapped tokens: BEAM(0), WALL(1), TRUSS(2), G-LINK(3), P-SPRING(4).",
+          "type": "string",
+          "enum": ["BEAM", "WALL", "TRUSS", "G-LINK", "P-SPRING"],
+          "default": ""
+        },
+        "bCONSIDER_HINGE_LENGTH": {
+          "description": "Whether hinge length is considered (enables the Distributed sub-mode for beam/wall).",
+          "type": "boolean",
+          "default": false
+        },
+        "DEFINITION": {
+          "description": "Hinge definition. For MATERIAL_TYPE!=MASONRY: MTHETA(0), MPHI_L(1), MPHI_D(2). For MATERIAL_TYPE=MASONRY: PIER(0), SPAN(1).",
+          "type": "string",
+          "enum": ["MTHETA", "MPHI_L", "MPHI_D", "PIER", "SPAN"],
+          "default": ""
+        },
+        "INTERACTION_TYPE": {
+          "description": "P-M interaction type: NONE(0), PMM(1), PM(2). When PMM or PM, the YLDS (yield surface) block applies.",
+          "type": "string",
+          "enum": ["NONE", "PMM", "PM"],
+          "default": ""
+        },
+        "INTEGRATION_POINT": {
+          "description": "Number/parameter of integration points.",
+          "type": "number",
+          "default": 0.5
+        },
+        "HINGE_LENGTH_I_ITEMS": {
+          "description": "[ELEM_TYPE=BEAM/WALL] Hinge length values at end I (2 values used).",
+          "type": "array",
+          "items": { "type": "number" }
+        },
+        "HINGE_LENGTH_J_ITEMS": {
+          "description": "[ELEM_TYPE=BEAM/WALL] Hinge length values at end J (2 values used).",
+          "type": "array",
+          "items": { "type": "number" }
+        },
+        "RELATIVE_LENGTH": {
+          "description": "Relative hinge length.",
+          "type": "number",
+          "default": 0.1
+        },
+        "WALL_TYPE": {
+          "description": "[ELEM_TYPE=WALL] Wall type: MEMBR(0), PLATE(1).",
+          "type": "string",
+          "enum": ["MEMBR", "PLATE"],
+          "default": ""
+        },
+        "MATERIAL_TYPE": {
+          "description": "Material type: RC(0), STEEL(1), MASONRY(2). MASONRY enables the MSNR block and PIER/SPAN definitions.",
+          "type": "string",
+          "enum": ["RC", "STEEL", "MASONRY"],
+          "default": ""
+        },
+        "HINGE_TYPE": {
+          "description": "Hinge type code.",
+          "type": "integer",
+          "default": 1
+        },
+        "PROP_KEY": {
+          "description": "Property key reference.",
+          "type": "integer",
+          "default": 0
+        },
+        "FIBER_KEY": {
+          "description": "Fiber key reference.",
+          "type": "integer",
+          "default": 0
+        },
+        "FIBER_AUTO_USER": {
+          "description": "Fiber auto-generation vs user-defined code.",
+          "type": "integer",
+          "default": 0
+        },
+        "USE_POGD_SHEAR_R": {
+          "description": "Use option of POGD vs user-defined for shear spring location.",
+          "type": "integer",
+          "default": 0
+        },
+        "SHEAR_R": {
+          "description": "Shear spring location ratio r.",
+          "type": "number",
+          "default": 0.5
+        },
+        "USE_POGD_CONS_OUTPL": {
+          "description": "Use option of POGD vs user-defined for out-of-plane consideration.",
+          "type": "integer",
+          "default": 0
+        },
+        "CONS_OUTPL": {
+          "description": "Whether out-of-plane nonlinearity of a fiber wall is considered.",
+          "type": "boolean",
+          "default": false
+        },
+        "AS_INTERACTION_TYPE": {
+          "description": "Axial-shear interaction type of RC: NONE(0), PQ(1).",
+          "type": "string",
+          "enum": ["NONE", "PQ"],
+          "default": ""
+        },
+        "SKCV": {
+          "description": "Skeleton curves, one entry per DOF (up to 6: Fx, Fy, Fz, Mx, My, Mz).",
+          "type": "array",
+          "items": { "$ref": "#/definitions/SKCV" }
+        },
+        "SKCV_SUB": {
+          "description": "Sub (end J) skeleton curves; present per DOF only when independent I/J data is required (lumped hinge with LOC=IJ).",
+          "type": "array",
+          "items": { "$ref": "#/definitions/SKCV" }
+        },
+        "YLDS": {
+          "description": "[INTERACTION_TYPE=PMM/PM] Yield surface interaction data.",
+          "$ref": "#/definitions/YLDS"
+        },
+        "MSNR": {
+          "description": "[MATERIAL_TYPE=MASONRY] Masonry hinge data.",
+          "$ref": "#/definitions/MSNR"
+        }
+      },
+      "definitions": {
+        "SKCV": {
+          "type": "object",
+          "description": "Skeleton curve for one DOF.",
+          "properties": {
+            "bDOF": {
+              "description": "Whether this DOF is active.",
+              "type": "boolean",
+              "default": false
+            },
+            "LOC": {
+              "description": "Hinge location: C(0), I(1), J(2), IJ(3).",
+              "type": "string",
+              "enum": ["C", "I", "J", "IJ"],
+              "default": ""
+            },
+            "DISTRIBUTION": {
+              "description": "[Distributed: MATERIAL_TYPE!=MASONRY & DEFINITION=MPHI_L & bCONSIDER_HINGE_LENGTH] Distribution: ENTIRETY(0), I(1), J(2), IJ(3).",
+              "type": "string",
+              "enum": ["ENTIRETY", "I", "J", "IJ"],
+              "default": ""
+            },
+            "LENGTH_RATIO_I": {
+              "description": "[Distributed] Hinge length ratio at end I.",
+              "type": "number",
+              "default": 0.0
+            },
+            "LENGTH_RATIO_J": {
+              "description": "[Distributed] Hinge length ratio at end J.",
+              "type": "number",
+              "default": 0.0
+            },
+            "SKCV_TYPE": {
+              "description": "Skeleton curve type: BI(0), TRI(1), SLBI(2), SLTR(3), FEMA(4), EC8(5), COMP(6), FINF(7). FEMA/EC8 use the FEMA block; others use the MULTI block. SLBI/SLTR are slip types.",
+              "type": "string",
+              "enum": ["BI", "TRI", "SLBI", "SLTR", "FEMA", "EC8", "COMP", "FINF"],
+              "default": ""
+            },
+            "CALC_METHOD": {
+              "description": "Calculation method: AUTO(0), USER(1).",
+              "type": "string",
+              "enum": ["AUTO", "USER"],
+              "default": ""
+            },
+            "INPUT_TYPE": {
+              "description": "[SKCV_TYPE not FEMA/EC8] Input type: RATIO(0), DEFORM(1).",
+              "type": "string",
+              "enum": ["RATIO", "DEFORM"],
+              "default": ""
+            },
+            "bSYMMETRIC_IJ": {
+              "description": "Whether I/J ends are symmetric (relevant when a sub curve is needed).",
+              "type": "boolean",
+              "default": false
+            },
+            "INIT_STIFF_METHOD": {
+              "description": "Initial stiffness method: 6EI(0), 3EI(1), 2EI(2), USER(3), ELASTIC(4).",
+              "type": "string",
+              "enum": ["6EI", "3EI", "2EI", "USER", "ELASTIC"],
+              "default": ""
+            },
+            "INIT_STIFF_USER_THETA": {
+              "description": "User initial stiffness (theta) per component [Fx, Fy/Fz, Mx~Mz].",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "INIT_STIFF_USER_PHI": {
+              "description": "User initial stiffness (phi) per component [Fx, Fy/Fz, Mx~Mz].",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "INIT_STIFF_USER_SPRG": {
+              "description": "User initial stiffness (spring) per component [Fx, Fy/Fz, Mx~Mz].",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "INIT_STIFF_USER_THETA_M": {
+              "description": "User initial stiffness (theta, minus side) per component.",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "INIT_STIFF_USER_SPRG_M": {
+              "description": "User initial stiffness (spring, minus side) per component.",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "bINIT_STIFF_AS_SYMMETRIC": {
+              "description": "Whether initial stiffness is treated as symmetric.",
+              "type": "boolean",
+              "default": false
+            },
+            "FEMA": {
+              "description": "[SKCV_TYPE=FEMA/EC8] FEMA/EC8 skeleton curve data.",
+              "$ref": "#/definitions/SKCV_FEMA"
+            },
+            "MULTI": {
+              "description": "[SKCV_TYPE not FEMA/EC8] Standard multi-linear skeleton curve data.",
+              "$ref": "#/definitions/SKCV_MULTI"
+            }
+          }
+        },
+        "SKCV_MULTI": {
+          "type": "object",
+          "description": "Standard multi-linear skeleton curve data.",
+          "properties": {
+            "bSYM": {
+              "description": "Symmetric plus/minus.",
+              "type": "boolean",
+              "default": false
+            },
+            "RATIO_OPTION": {
+              "description": "Stiffness reduction ratio option: GLOBAL(0), USER(1).",
+              "type": "string",
+              "enum": ["GLOBAL", "USER"],
+              "default": ""
+            },
+            "SLIP_TYPE": {
+              "description": "[SKCV_TYPE=SLBI/SLTR] Slip type: BOTH(0), TENS(1), COMP(2).",
+              "type": "string",
+              "enum": ["BOTH", "TENS", "COMP"],
+              "default": ""
+            },
+            "DEFORMS_P": {
+              "description": "Deformations (or ratios when INPUT_TYPE=RATIO) on the plus side (3 values).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "DEFORMS_M": {
+              "description": "Deformations (or ratios when INPUT_TYPE=RATIO) on the minus side (3 values).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "FORCES_P": {
+              "description": "Forces/moments on the plus side (3 values).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "FORCES_M": {
+              "description": "Forces/moments on the minus side (3 values).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "bAUTO_IJ_CHECK": {
+              "description": "[SKCV_TYPE=TRI, RATIO input, BEAM+RC, DOF My/Mz] Auto I/J check.",
+              "type": "boolean",
+              "default": false
+            },
+            "bAUTO_SPAN": {
+              "description": "[SKCV_TYPE=TRI, RATIO input, BEAM+RC, DOF My/Mz] Auto span.",
+              "type": "boolean",
+              "default": false
+            },
+            "SPAN_RATIO": {
+              "description": "[SKCV_TYPE=TRI, RATIO input, BEAM+RC, DOF My/Mz] Span ratio.",
+              "type": "number",
+              "default": 0.0
+            },
+            "INIT_STIFF": {
+              "description": "Computed initial stiffness for this curve.",
+              "type": "number",
+              "default": 0.0
+            },
+            "INIT_GAP": {
+              "description": "[Slip: SKCV_TYPE=SLBI/SLTR] Initial gap (2 values: plus, minus).",
+              "type": "array",
+              "items": { "type": "number" }
+            }
+          }
+        },
+        "SKCV_FEMA_SUB": {
+          "type": "object",
+          "description": "One FEMA multi-curve sub-item (per axial force level).",
+          "properties": {
+            "AXIAL_FORCE": {
+              "description": "Axial force level for this sub-curve.",
+              "type": "number",
+              "default": 0.0
+            },
+            "IO": {
+              "description": "Immediate Occupancy (IO) acceptance values (2 items).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "LS": {
+              "description": "Life Safety (LS) acceptance values (2 items).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "CP": {
+              "description": "Collapse Prevention (CP) acceptance values (2 items).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "FORCE_MOMENT_RATIO_DISPLS": {
+              "description": "Force/moment ratio - displacement array (9 items).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "FORCE_MOMENT_RATIO_FORCES": {
+              "description": "Force/moment ratio - force array (9 items).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "YIELD_MOMENT_ITEMS": {
+              "description": "Yield moment items (2 values).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "YIELD_ROTATION_ITEMS": {
+              "description": "Yield rotation items (2 values).",
+              "type": "array",
+              "items": { "type": "number" }
+            }
+          }
+        },
+        "SKCV_FEMA": {
+          "type": "object",
+          "description": "FEMA/EC8 skeleton curve data.",
+          "properties": {
+            "INIT_STIFF_1": {
+              "description": "Computed initial stiffness (component 1).",
+              "type": "number",
+              "default": 0.0
+            },
+            "INIT_STIFF_2": {
+              "description": "Computed initial stiffness (component 2).",
+              "type": "number",
+              "default": 0.0
+            },
+            "IO": {
+              "description": "Immediate Occupancy (IO) acceptance values (2 items).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "LS": {
+              "description": "Life Safety (LS) acceptance values (2 items).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "CP": {
+              "description": "Collapse Prevention (CP) acceptance values (2 items).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "bUSER_DEFINE_RATIO": {
+              "description": "Whether acceptance ratios are user-defined.",
+              "type": "boolean",
+              "default": false
+            },
+            "DEFORM_TYPE": {
+              "description": "Deformation type: D/DY(0), 'PLASITC ROT.'(1). (Wire strings are literal, note the space and spelling.)",
+              "type": "string",
+              "enum": ["D/DY", "PLASITC ROT."],
+              "default": ""
+            },
+            "bSYMMETRIC": {
+              "description": "Symmetric curve.",
+              "type": "boolean",
+              "default": false
+            },
+            "bMULTI_CURVE": {
+              "description": "Whether multiple sub-curves are defined (enables FEMA_SUB).",
+              "type": "boolean",
+              "default": false
+            },
+            "USE_SUB_COUNT": {
+              "description": "Number of FEMA sub-curves used.",
+              "type": "integer",
+              "default": 0
+            },
+            "YIELD_FORCES": {
+              "description": "Yield forces/moments (2 values: plus, minus).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "bUSER_DEFINE_YIELD_DEFORM": {
+              "description": "Whether yield deformation is user-defined.",
+              "type": "boolean",
+              "default": false
+            },
+            "YIELD_DEFORMS": {
+              "description": "Yield deformations (2 values: plus, minus).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "YIELD_ANALYSIS_OPTION": {
+              "description": "[DOF My/Mz & SKCV_TYPE=EC8] Yield analysis option: OLD(0), NEW(1).",
+              "type": "string",
+              "enum": ["OLD", "NEW"],
+              "default": ""
+            },
+            "CLASS": {
+              "description": "[CALC_METHOD=AUTO & DOF Fx/My/Mz] Section class code.",
+              "type": "integer",
+              "default": 0
+            },
+            "bUSE_SHAPE_CURVE": {
+              "description": "Whether the FEMA shape-of-curve option is used.",
+              "type": "boolean",
+              "default": false
+            },
+            "SHAPE_CURVE": {
+              "description": "Shape of FEMA curve: GENERAL(0), PLASTIC(1).",
+              "type": "string",
+              "enum": ["GENERAL", "PLASTIC"],
+              "default": ""
+            },
+            "bUSE_STRENGTH_LOSS": {
+              "description": "Whether strength loss is used.",
+              "type": "boolean",
+              "default": false
+            },
+            "bSTRENGTH_LOSS": {
+              "description": "Strength loss flag.",
+              "type": "boolean",
+              "default": false
+            },
+            "INFILL_STRUT_TYPE": {
+              "description": "Infill strut type: PARTIAL(0), FULL(1).",
+              "type": "string",
+              "enum": ["PARTIAL", "FULL"],
+              "default": ""
+            },
+            "bUSE_TOTAL_STR_LOSS_AT_E": {
+              "description": "Whether total strength loss at point E is used.",
+              "type": "boolean",
+              "default": false
+            },
+            "bTOTAL_STR_LOSS_AT_E": {
+              "description": "Total strength loss at point E flag.",
+              "type": "boolean",
+              "default": false
+            },
+            "bUSE_UNLOAD_STIFFNESS_TYPE": {
+              "description": "Whether unload stiffness type is used.",
+              "type": "boolean",
+              "default": false
+            },
+            "UNLOAD_STIFFNESS_TYPE": {
+              "description": "Unload stiffness type: DUMMY(0), NORMAL_BILINEAR(1), ORIGIN_ORIENTED(2), STIFF_DEGRADE(3), NONLIN_ELASTIC(4), COMPONLY(5), STIFF_DEGRADE_TAKEDA(6), STIFF_DEGRADE_SLIP(7).",
+              "type": "string",
+              "enum": ["DUMMY", "NORMAL_BILINEAR", "ORIGIN_ORIENTED", "STIFF_DEGRADE", "NONLIN_ELASTIC", "COMPONLY", "STIFF_DEGRADE_TAKEDA", "STIFF_DEGRADE_SLIP"],
+              "default": ""
+            },
+            "EXP_UNLOAD_STIFF": {
+              "description": "Exponent in unloading stiffness calculation.",
+              "type": "number",
+              "default": 0.0
+            },
+            "PINCHING_RULE_FACTOR": {
+              "description": "Pinching-rule factor (unloading stiffness parameter).",
+              "type": "number",
+              "default": 0.0
+            },
+            "INFILL_STIFFNESS_TYPE": {
+              "description": "Infill stiffness type: USER(0), ELASTIC(1).",
+              "type": "string",
+              "enum": ["USER", "ELASTIC"],
+              "default": ""
+            },
+            "KMI_ROP_IS": {
+              "description": "kmi*rop infill stiffness value.",
+              "type": "number",
+              "default": 0.0
+            },
+            "KMS_ROP_IS": {
+              "description": "kms*rop infill stiffness value.",
+              "type": "number",
+              "default": 0.0
+            },
+            "HM_IS": {
+              "description": "Hm infill stiffness value.",
+              "type": "number",
+              "default": 0.0
+            },
+            "THETA_M_IS": {
+              "description": "Theta M infill stiffness value.",
+              "type": "number",
+              "default": 0.0
+            },
+            "FORCE_MOMENT_RATIO_DISPLS": {
+              "description": "Force/moment ratio - displacement array (9 items).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "FORCE_MOMENT_RATIO_FORCES": {
+              "description": "Force/moment ratio - force array (9 items).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "FEMA_SUB": {
+              "description": "[bMULTI_CURVE=true] FEMA multi-curve sub-items (USE_SUB_COUNT entries).",
+              "type": "array",
+              "items": { "$ref": "#/definitions/SKCV_FEMA_SUB" }
+            },
+            "bINIT_STIFF_AS_SYM": {
+              "description": "Whether initial stiffness is treated as symmetric.",
+              "type": "boolean",
+              "default": false
+            },
+            "UNLOAD_STIFF_OPTION": {
+              "description": "Unload stiffness option: SELECT_HYST(0), ENERGY_DSPT(1).",
+              "type": "string",
+              "enum": ["SELECT_HYST", "ENERGY_DSPT"],
+              "default": ""
+            },
+            "bCYCLIC_DEGRATION": {
+              "description": "Cyclic degradation flag (energy dissipation).",
+              "type": "boolean",
+              "default": false
+            },
+            "AB_P": {
+              "description": "Energy dissipation AB (plus).",
+              "type": "number",
+              "default": 0.0
+            },
+            "AB_M": {
+              "description": "Energy dissipation AB (minus).",
+              "type": "number",
+              "default": 0.0
+            },
+            "C_P": {
+              "description": "Energy dissipation C (plus).",
+              "type": "number",
+              "default": 0.0
+            },
+            "C_M": {
+              "description": "Energy dissipation C (minus).",
+              "type": "number",
+              "default": 0.0
+            },
+            "D_P": {
+              "description": "Energy dissipation D (plus).",
+              "type": "number",
+              "default": 0.0
+            },
+            "D_M": {
+              "description": "Energy dissipation D (minus).",
+              "type": "number",
+              "default": 0.0
+            },
+            "E_P": {
+              "description": "Energy dissipation E (plus).",
+              "type": "number",
+              "default": 0.0
+            },
+            "E_M": {
+              "description": "Energy dissipation E (minus).",
+              "type": "number",
+              "default": 0.0
+            },
+            "bUSE_UNLOADING_STIFF_FACTOR": {
+              "description": "Whether the unloading stiffness factor is used (stored as a numeric flag).",
+              "type": "number",
+              "default": 0.0
+            },
+            "UNLOADING_STIFF_FACTOR": {
+              "description": "Unloading stiffness factor.",
+              "type": "number",
+              "default": 0.0
+            }
+          }
+        },
+        "YLDS": {
+          "type": "object",
+          "description": "Yield surface interaction data.",
+          "properties": {
+            "CALC_METHOD": {
+              "description": "Calculation method: AUTO(0), USER(1).",
+              "type": "string",
+              "enum": ["AUTO", "USER"],
+              "default": ""
+            },
+            "bSYMMETRIC_IJ": {
+              "description": "Whether I/J ends are symmetric.",
+              "type": "boolean",
+              "default": false
+            },
+            "PROPERTY": {
+              "description": "Yield surface property (end I).",
+              "$ref": "#/definitions/YLDP"
+            },
+            "PROPERTY_SUB": {
+              "description": "Yield surface property (end J); present when independent I/J data is required.",
+              "$ref": "#/definitions/YLDP"
+            }
+          }
+        },
+        "YLDP": {
+          "type": "object",
+          "description": "Yield surface property.",
+          "properties": {
+            "bSYMMETRIC_YZ": {
+              "description": "Symmetric Y/Z.",
+              "type": "boolean",
+              "default": false
+            },
+            "bSYMMETRIC_PM": {
+              "description": "Symmetric plus/minus.",
+              "type": "boolean",
+              "default": false
+            },
+            "AXIAL_FORCES": {
+              "description": "Axial forces (2 values).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "INTERPOLATION_METHOD": {
+              "description": "Interpolation method: ELLIPSE(0), LINEAR(1), USER(2), HSECT(3).",
+              "type": "string",
+              "enum": ["ELLIPSE", "LINEAR", "USER", "HSECT"],
+              "default": ""
+            },
+            "ALPHA": {
+              "description": "Alpha parameter.",
+              "type": "number",
+              "default": 0.0
+            },
+            "bSYMMETRIC_Y": {
+              "description": "Use symmetric Y.",
+              "type": "boolean",
+              "default": false
+            },
+            "bSYMMETRIC_Z": {
+              "description": "Use symmetric Z.",
+              "type": "boolean",
+              "default": false
+            },
+            "PLUS_ITEM": {
+              "description": "Yield surface data on the plus side.",
+              "$ref": "#/definitions/YLDP_ITEM"
+            },
+            "MINUS_ITEM": {
+              "description": "Yield surface data on the minus side.",
+              "$ref": "#/definitions/YLDP_ITEM"
+            }
+          }
+        },
+        "YLDP_ITEM": {
+          "type": "object",
+          "description": "Yield surface item (one side). Ratio arrays are ordered [E(c), D(c), ..., O, D(t), E(t)] (11 values each). Z-direction data applies only when bUSE_Z_DATA is true.",
+          "properties": {
+            "MOMENT_Y": {
+              "description": "Moment about Y (2 values).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "bUSE_Z_DATA": {
+              "description": "Whether Z-direction (Moment Z / PZ / MZ) data applies.",
+              "type": "boolean",
+              "default": false
+            },
+            "MOMENT_Z": {
+              "description": "[bUSE_Z_DATA=true] Moment about Z (2 values).",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "_1ST_SURFACE_RATIO_PY": {
+              "description": "Ratio PY (1st surface), 11 values [E(c), D(c), ..., O, D(t), E(t)].",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "_1ST_SURFACE_RATIO_MY": {
+              "description": "Ratio MY (1st surface), 11 values.",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "_1ST_SURFACE_RATIO_PZ": {
+              "description": "[bUSE_Z_DATA=true] Ratio PZ (1st surface), 11 values.",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "_1ST_SURFACE_RATIO_MZ": {
+              "description": "[bUSE_Z_DATA=true] Ratio MZ (1st surface), 11 values.",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "_2ND_SURFACE_RATIO_PY": {
+              "description": "Ratio PY (2nd surface), 11 values.",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "_2ND_SURFACE_RATIO_MY": {
+              "description": "Ratio MY (2nd surface), 11 values.",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "_2ND_SURFACE_RATIO_PZ": {
+              "description": "[bUSE_Z_DATA=true] Ratio PZ (2nd surface), 11 values.",
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "_2ND_SURFACE_RATIO_MZ": {
+              "description": "[bUSE_Z_DATA=true] Ratio MZ (2nd surface), 11 values.",
+              "type": "array",
+              "items": { "type": "number" }
+            }
+          }
+        },
+        "MSNR": {
+          "type": "object",
+          "description": "Masonry hinge data. When DEFINITION=PIER, BUILDING_TYPE/DIST_COEF_K apply; when DEFINITION=SPAN, FORCE_HP/SPANDREL_TYPE apply.",
+          "properties": {
+            "COMP_STRENGTH": {
+              "description": "Compressive strength.",
+              "type": "number",
+              "default": 0.0
+            },
+            "SHEAR_STRENGTH": {
+              "description": "Shear strength.",
+              "type": "number",
+              "default": 0.0
+            },
+            "BUILDING_TYPE": {
+              "description": "[DEFINITION=PIER] Building type: NEW(0), EXIST(1).",
+              "type": "string",
+              "enum": ["NEW", "EXIST"],
+              "default": ""
+            },
+            "DIST_COEF_K": {
+              "description": "[DEFINITION=PIER] Vertical stress distribution coefficient (k).",
+              "type": "number",
+              "default": 0.0
+            },
+            "FORCE_HP": {
+              "description": "[DEFINITION=SPAN] Hp force value.",
+              "type": "number",
+              "default": 0.0
+            },
+            "SPANDREL_TYPE": {
+              "description": "[DEFINITION=SPAN] Spandrel type: REGULAR(0), IRREGULAR(1).",
+              "type": "string",
+              "enum": ["REGULAR", "IRREGULAR"],
+              "default": ""
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Beam RC M-Theta",
+        "DESC": "RC beam moment-rotation hinge",
+        "ELEM_TYPE": "BEAM",
+        "MATERIAL_TYPE": "RC",
+        "DEFINITION": "MTHETA",
+        "INTERACTION_TYPE": "NONE",
+        "bCONSIDER_HINGE_LENGTH": false,
+        "INTEGRATION_POINT": 0.5,
+        "HINGE_TYPE": 1,
+        "AS_INTERACTION_TYPE": "NONE",
+        "SKCV": [
+          {
+            "bDOF": true,
+            "LOC": "IJ",
+            "SKCV_TYPE": "BI",
+            "CALC_METHOD": "AUTO",
+            "INPUT_TYPE": "RATIO",
+            "INIT_STIFF_METHOD": "6EI",
+            "MULTI": {
+              "bSYM": true,
+              "RATIO_OPTION": "GLOBAL",
+              "FORCES_P": [1000.0, 2000.0, 2000.0],
+              "FORCES_M": [1000.0, 2000.0, 2000.0],
+              "DEFORMS_P": [0.0, 0.1, 0.2],
+              "DEFORMS_M": [0.0, 0.1, 0.2],
+              "INIT_STIFF": 500000.0
+            }
+          }
+        ]
+      },
+      "2": {
+        "NAME": "Wall Masonry Pier",
+        "ELEM_TYPE": "WALL",
+        "WALL_TYPE": "MEMBR",
+        "MATERIAL_TYPE": "MASONRY",
+        "DEFINITION": "PIER",
+        "INTERACTION_TYPE": "NONE",
+        "HINGE_TYPE": 1,
+        "SKCV": [
+          {
+            "bDOF": true,
+            "LOC": "C",
+            "SKCV_TYPE": "BI",
+            "CALC_METHOD": "AUTO",
+            "INPUT_TYPE": "DEFORM",
+            "INIT_STIFF_METHOD": "ELASTIC",
+            "MULTI": {
+              "bSYM": true,
+              "RATIO_OPTION": "GLOBAL",
+              "FORCES_P": [500.0, 800.0, 800.0],
+              "DEFORMS_P": [0.0, 0.05, 0.1]
+            }
+          }
+        ],
+        "MSNR": {
+          "COMP_STRENGTH": 5.0,
+          "SHEAR_STRENGTH": 0.5,
+          "BUILDING_TYPE": "EXIST",
+          "DIST_COEF_K": 0.5
+        }
+      },
+      "3": {
+        "NAME": "Beam RC FEMA PMM",
+        "ELEM_TYPE": "BEAM",
+        "MATERIAL_TYPE": "RC",
+        "DEFINITION": "MTHETA",
+        "INTERACTION_TYPE": "PMM",
+        "HINGE_TYPE": 1,
+        "SKCV": [
+          {
+            "bDOF": true,
+            "LOC": "IJ",
+            "SKCV_TYPE": "FEMA",
+            "CALC_METHOD": "AUTO",
+            "INIT_STIFF_METHOD": "6EI",
+            "FEMA": {
+              "DEFORM_TYPE": "PLASITC ROT.",
+              "bSYMMETRIC": true,
+              "bMULTI_CURVE": false,
+              "USE_SUB_COUNT": 0,
+              "SHAPE_CURVE": "GENERAL",
+              "INFILL_STRUT_TYPE": "PARTIAL",
+              "UNLOAD_STIFFNESS_TYPE": "NORMAL_BILINEAR",
+              "INFILL_STIFFNESS_TYPE": "ELASTIC",
+              "UNLOAD_STIFF_OPTION": "SELECT_HYST",
+              "YIELD_FORCES": [1500.0, 1500.0],
+              "YIELD_DEFORMS": [0.01, 0.01],
+              "IO": [0.005, 0.005],
+              "LS": [0.015, 0.015],
+              "CP": [0.02, 0.02],
+              "INIT_STIFF_1": 600000.0,
+              "INIT_STIFF_2": 600000.0
+            }
+          }
+        ],
+        "YLDS": {
+          "CALC_METHOD": "USER",
+          "bSYMMETRIC_IJ": true,
+          "PROPERTY": {
+            "bSYMMETRIC_YZ": true,
+            "bSYMMETRIC_PM": true,
+            "AXIAL_FORCES": [-1000.0, 1000.0],
+            "INTERPOLATION_METHOD": "ELLIPSE",
+            "ALPHA": 1.0,
+            "PLUS_ITEM": {
+              "bUSE_Z_DATA": false,
+              "MOMENT_Y": [2000.0, 2000.0],
+              "_1ST_SURFACE_RATIO_PY": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+              "_1ST_SURFACE_RATIO_MY": [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0],
+              "_2ND_SURFACE_RATIO_PY": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+              "_2ND_SURFACE_RATIO_MY": [1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0]
+            }
+          }
+        }
+      }
+    }
+  }
+}

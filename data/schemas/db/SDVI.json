@@ -1,0 +1,274 @@
+{
+  "_group": "db",
+  "_name": "SDVI",
+  "uri": "db/SDVI",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SDVI": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Viscous Damper / Oil Damper (SDVI). DAMPER_TYPE, DASHPOT_TYPE, INPUT_TYPE and INPUT_TYPE_EXFN select the damper model and which per-DOF ITEM fields carry meaning; ITEM is a fixed 6-element array for the 6 local DOFs (Dx, Dy, Dz, Rx, Ry, Rz).",
+      "type": "object",
+      "properties": {
+        "COMMON": {
+          "description": "Common seismic device identification data.",
+          "type": "object",
+          "properties": {
+            "NAME": {
+              "description": "Damper property name.",
+              "type": "string"
+            },
+            "DESC": {
+              "description": "Description.",
+              "type": "string",
+              "default": ""
+            },
+            "INPUT_METHOD": {
+              "description": "Input method. 0: User Input, 1: Import Reference Database.",
+              "type": "integer"
+            },
+            "COMPANY": {
+              "description": "Manufacturer company name.",
+              "type": "string",
+              "default": ""
+            },
+            "PRODUCT_NAME": {
+              "description": "Product name.",
+              "type": "string",
+              "default": ""
+            },
+            "TYPE_NUMBER": {
+              "description": "Product type number.",
+              "type": "string",
+              "default": ""
+            }
+          },
+          "required": [
+            "NAME",
+            "INPUT_METHOD"
+          ]
+        },
+        "DEVICE_TYPE": {
+          "description": "Device type label (free text).",
+          "type": "string",
+          "default": ""
+        },
+        "DAMPER_TYPE": {
+          "description": "Damper model. 0: Single Dashpot Model, 1: Kelvin (Voigt) Model, 2: Maxwell Model.",
+          "type": "integer"
+        },
+        "DASHPOT_TYPE": {
+          "description": "Dashpot behavior type. 0: Linear Elastic Type, 1: Elastic Bilinear Type, 2: Exponential Function Type.",
+          "type": "integer"
+        },
+        "INPUT_TYPE": {
+          "description": "Bilinear input type (used when DASHPOT_TYPE=1). 0: Damping Reduction Ratio (ALPHA1), 1: Damping (C1).",
+          "type": "integer"
+        },
+        "INPUT_TYPE_EXFN": {
+          "description": "Exponential-function input type (used when DASHPOT_TYPE=2). Selects which exponential-function parameters are entered.",
+          "type": "integer"
+        },
+        "ITEM": {
+          "description": "Per-DOF dashpot properties, one entry per local DOF in order: index 0 Dx, 1 Dy, 2 Dz, 3 Rx, 4 Ry, 5 Rz. Exactly 6 entries.",
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "properties": {
+              "OPT_DOF": {
+                "description": "Whether this degree of freedom is active for the damper.",
+                "type": "boolean"
+              },
+              "CE": {
+                "description": "Initial damping coefficient.",
+                "type": "number"
+              },
+              "P1": {
+                "description": "Relief damping force (bilinear, DASHPOT_TYPE=1).",
+                "type": "number"
+              },
+              "C1": {
+                "description": "Second damping coefficient (bilinear, DASHPOT_TYPE=1, INPUT_TYPE=1).",
+                "type": "number"
+              },
+              "ALPHA1": {
+                "description": "Damping reduction factor / ratio (bilinear, DASHPOT_TYPE=1, INPUT_TYPE=0).",
+                "type": "number"
+              },
+              "K0": {
+                "description": "Elastic stiffness K0 (used by Kelvin/Maxwell models, DAMPER_TYPE=1 or 2).",
+                "type": "number"
+              },
+              "EXFN_PY": {
+                "description": "Damping force for exponential function type (DASHPOT_TYPE=2).",
+                "type": "number"
+              },
+              "EXFN_VY": {
+                "description": "Reference velocity for exponential function type (DASHPOT_TYPE=2).",
+                "type": "number"
+              },
+              "EXFN_DE": {
+                "description": "Damping exponent for exponential function type (DASHPOT_TYPE=2).",
+                "type": "number"
+              },
+              "EXFN_DC": {
+                "description": "Damping coefficient for exponential function type (DASHPOT_TYPE=2).",
+                "type": "number"
+              },
+              "OPT_EXFN_CE": {
+                "description": "Whether an initial damping coefficient (EXFN_CE) is applied for the exponential function type.",
+                "type": "boolean"
+              },
+              "EXFN_CE": {
+                "description": "Initial damping coefficient for exponential function type (DASHPOT_TYPE=2).",
+                "type": "number"
+              }
+            },
+            "required": [
+              "OPT_DOF",
+              "CE",
+              "P1",
+              "C1",
+              "ALPHA1",
+              "K0",
+              "EXFN_PY",
+              "EXFN_VY",
+              "EXFN_DE",
+              "EXFN_DC",
+              "OPT_EXFN_CE",
+              "EXFN_CE"
+            ]
+          }
+        }
+      },
+      "required": [
+        "COMMON",
+        "DAMPER_TYPE",
+        "DASHPOT_TYPE",
+        "INPUT_TYPE",
+        "INPUT_TYPE_EXFN",
+        "ITEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "COMMON": {
+          "NAME": "VisDamper01",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "DEVICE_TYPE": "",
+        "DAMPER_TYPE": 0,
+        "DASHPOT_TYPE": 0,
+        "INPUT_TYPE": 0,
+        "INPUT_TYPE_EXFN": 0,
+        "ITEM": [
+          { "OPT_DOF": true, "CE": 13000, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 }
+        ]
+      },
+      "2": {
+        "COMMON": {
+          "NAME": "VisDamper02",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "DEVICE_TYPE": "",
+        "DAMPER_TYPE": 0,
+        "DASHPOT_TYPE": 1,
+        "INPUT_TYPE": 0,
+        "INPUT_TYPE_EXFN": 0,
+        "ITEM": [
+          { "OPT_DOF": true, "CE": 1200, "P1": 100, "C1": 600, "ALPHA1": 0.5, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 }
+        ]
+      },
+      "3": {
+        "COMMON": {
+          "NAME": "VisDamper03",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "DEVICE_TYPE": "",
+        "DAMPER_TYPE": 0,
+        "DASHPOT_TYPE": 2,
+        "INPUT_TYPE": 1,
+        "INPUT_TYPE_EXFN": 0,
+        "ITEM": [
+          { "OPT_DOF": true, "CE": 1200, "P1": 100, "C1": 2.1, "ALPHA1": 0.00175, "K0": 0, "EXFN_PY": 1200, "EXFN_VY": 1.2, "EXFN_DE": 0.3, "EXFN_DC": 1136.13, "OPT_EXFN_CE": false, "EXFN_CE": 1136.13 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 }
+        ]
+      },
+      "4": {
+        "COMMON": {
+          "NAME": "VisDamper04",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "DEVICE_TYPE": "",
+        "DAMPER_TYPE": 1,
+        "DASHPOT_TYPE": 1,
+        "INPUT_TYPE": 0,
+        "INPUT_TYPE_EXFN": 0,
+        "ITEM": [
+          { "OPT_DOF": true, "CE": 1200, "P1": 100, "C1": 960, "ALPHA1": 0.8, "K0": 2000, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 }
+        ]
+      },
+      "5": {
+        "COMMON": {
+          "NAME": "VisDamper05",
+          "DESC": "",
+          "INPUT_METHOD": 0,
+          "COMPANY": "",
+          "PRODUCT_NAME": "",
+          "TYPE_NUMBER": ""
+        },
+        "DEVICE_TYPE": "",
+        "DAMPER_TYPE": 2,
+        "DASHPOT_TYPE": 2,
+        "INPUT_TYPE": 1,
+        "INPUT_TYPE_EXFN": 1,
+        "ITEM": [
+          { "OPT_DOF": true, "CE": 1200, "P1": 100, "C1": 2.1, "ALPHA1": 0.00175, "K0": 2000, "EXFN_PY": 1136.13, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1136.13, "OPT_EXFN_CE": false, "EXFN_CE": 1136.13 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 },
+          { "OPT_DOF": false, "CE": 0, "P1": 0, "C1": 0, "ALPHA1": 0, "K0": 0, "EXFN_PY": 1, "EXFN_VY": 1, "EXFN_DE": 0.3, "EXFN_DC": 1, "OPT_EXFN_CE": false, "EXFN_CE": 1 }
+        ]
+      }
+    }
+  }
+}

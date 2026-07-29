@@ -1,0 +1,113 @@
+{
+  "_group": "db",
+  "_name": "LCOM-SRC",
+  "uri": "db/LCOM-SRC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LCOM-SRC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Load Combination for SRC Design (LCOM-SRC). One entry per load combination id; each combination carries a list of (analysis type, load case, factor) terms in vCOMB that define how load cases are summed for SRC (steel-reinforced-concrete composite) design checks.",
+      "type": "object",
+      "properties": {
+        "NO": {
+          "description": "Read-only combination number assigned by the program on GET; ignored on write.",
+          "type": "integer"
+        },
+        "NAME": {
+          "description": "Combination name. Must be unique when adding a new combination.",
+          "type": "string"
+        },
+        "ACTIVE": {
+          "description": "Active type of the combination. Typical values: \"ACTIVE\", \"INACTIVE\", \"STRENGTH\", \"SERVICE\".",
+          "type": "string",
+          "default": "ACTIVE"
+        },
+        "bES": {
+          "description": "Elastic-stage flag. Applies only to the concrete design combination type; has no effect for the SRC combination type, so it is ignored on write here.",
+          "type": "boolean",
+          "default": false
+        },
+        "bCB": {
+          "description": "Read-only min/max combination-type flag (true when the combination is a min/max/all envelope). Ignored on write.",
+          "type": "boolean"
+        },
+        "iTYPE": {
+          "description": "Summation method. Add: 0, Envelope: 1, ABS: 2, SRSS: 3.",
+          "type": "integer",
+          "default": 0
+        },
+        "DESC": {
+          "description": "Description text for the combination.",
+          "type": "string",
+          "default": ""
+        },
+        "iSERV_TYPE": {
+          "description": "EC service type code (currently not applied on write).",
+          "type": "integer"
+        },
+        "nLCOMTYPE": {
+          "description": "EC load-combination type code (currently not applied on write).",
+          "type": "integer"
+        },
+        "nSEISTYPE": {
+          "description": "EC seismic type code (currently not applied on write).",
+          "type": "integer"
+        },
+        "vCOMB": {
+          "description": "List of combination terms. Each term references a load case (by analysis type and name) and its participation factor.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ANAL": {
+                "description": "Analysis type of the referenced load case (case-insensitive). ST=static, RS=response spectrum, TH=time history, MV=moving load, SM=settlement, CS=construction stage, CB=general combination, etc. Validity is hard-enforced at runtime.",
+                "type": "string",
+                "enum": ["ST", "RS", "TH", "MV", "SM", "ENVL", "CB", "CBS", "CBC", "CBF", "CBR", "PO", "CS", "ES", "GI", "CN", "CBA", "CBSC", "CBCF", "CBSM", "CBLN", "NRS", "NES"]
+              },
+              "LCNAME": {
+                "description": "Name of the referenced load case; must exist for the given analysis type.",
+                "type": "string"
+              },
+              "FACTOR": {
+                "description": "Participation factor applied to the referenced load case.",
+                "type": "number"
+              }
+            },
+            "required": ["ANAL", "LCNAME", "FACTOR"]
+          }
+        }
+      },
+      "required": ["NAME", "vCOMB"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "rLCB1",
+        "ACTIVE": "STRENGTH",
+        "iTYPE": 0,
+        "DESC": "1.4(cD)",
+        "vCOMB": [
+          {
+            "ANAL": "CS",
+            "LCNAME": "DeadLoad",
+            "FACTOR": 1.4
+          }
+        ]
+      },
+      "2": {
+        "NAME": "rLCB2",
+        "ACTIVE": "SERVICE",
+        "iTYPE": 0,
+        "DESC": "SERV:(cD)",
+        "vCOMB": [
+          {
+            "ANAL": "CS",
+            "LCNAME": "DeadLoad",
+            "FACTOR": 1.0
+          }
+        ]
+      }
+    }
+  }
+}

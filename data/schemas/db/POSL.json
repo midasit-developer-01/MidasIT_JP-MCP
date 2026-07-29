@@ -1,0 +1,121 @@
+{
+  "_group": "db",
+  "_name": "POSL",
+  "uri": "db/POSL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "POSL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Seismic Load Parameters (POSL). METHOD (RES_DISP vs EQV_STATIC) plus SZ/SC/EPA drive the seismic-coefficient computation, and FA/FV/SDS/SD1/EPGAeff/Kae are derived by the solver rather than supplied by the caller.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Seismic load case name."
+        },
+        "CODE": {
+          "type": "string",
+          "enum": ["KDS(41-17-00:2019)"],
+          "default": "KDS(41-17-00:2019)",
+          "description": "Seismic load design code. Case-insensitive; only KDS(41-17-00:2019) is supported in this build."
+        },
+        "METHOD": {
+          "type": "string",
+          "enum": ["EQV_STATIC", "RES_DISP"],
+          "default": "RES_DISP",
+          "description": "Seismic analysis method (case-insensitive). RES_DISP = Response Displacement method (requires SC=S1; FA/FV/SDS/SD1 are computed). EQV_STATIC = Equivalent Static method (EPGAeff/Kae are computed)."
+        },
+        "SZ": {
+          "type": "string",
+          "enum": ["1", "2"],
+          "default": "1",
+          "description": "Seismic zone (case-insensitive). Wire values: \"1\" (Zone 1), \"2\" (Zone 2)."
+        },
+        "EPA": {
+          "type": "number",
+          "default": 0.22,
+          "description": "Effective Peak Ground Acceleration (S). Used as the zone factor input for both methods."
+        },
+        "SC": {
+          "type": "string",
+          "enum": ["S1", "S2", "S3", "S4", "S5", "S6"],
+          "default": "S1",
+          "description": "Site class (case-insensitive). [METHOD=RES_DISP] must be S1; any other value is rejected with a wrong-field error."
+        },
+        "FA": {
+          "type": "number",
+          "default": 1.2,
+          "description": "Short-period site coefficient Fa. Computed by the solver from EPA and SC; not taken from the request payload."
+        },
+        "FV": {
+          "type": "number",
+          "default": 0.84,
+          "description": "Long-period site coefficient Fv. Computed by the solver; returned on GET (RES_DISP method)."
+        },
+        "SDS": {
+          "type": "number",
+          "default": 0.41067,
+          "description": "Design spectral response acceleration at short period. Computed by the solver (RES_DISP); returned on GET."
+        },
+        "SD1": {
+          "type": "number",
+          "default": 0.1232,
+          "description": "Design spectral response acceleration at 1-second period. Computed by the solver (RES_DISP); returned on GET."
+        },
+        "EPGAeff": {
+          "type": "number",
+          "default": 0.0,
+          "description": "[METHOD=EQV_STATIC] Effective EPGA, = (2/3)*EPA*Fa. Computed by the solver; returned on GET only for the Equivalent Static method."
+        },
+        "Kae": {
+          "type": "number",
+          "default": 0.0,
+          "description": "[METHOD=EQV_STATIC] Seismic coefficient Kae, = 0.75*EPGAeff. Computed by the solver; returned on GET only for the Equivalent Static method."
+        },
+        "USER_GROUP": {
+          "type": "string",
+          "enum": ["SPECIAL", "1", "2"],
+          "default": "1",
+          "description": "Seismic use group (case-insensitive). Wire values: \"SPECIAL\", \"1\" (Group 1), \"2\" (Group 2)."
+        },
+        "IF": {
+          "type": "number",
+          "default": 1.2,
+          "description": "Importance factor."
+        },
+        "RMF": {
+          "type": "number",
+          "default": 3.0,
+          "description": "Response modification factor."
+        }
+      },
+      "required": ["NAME"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Seismic RD",
+        "CODE": "KDS(41-17-00:2019)",
+        "METHOD": "RES_DISP",
+        "SZ": "1",
+        "EPA": 0.22,
+        "SC": "S1",
+        "USER_GROUP": "1",
+        "IF": 1.2,
+        "RMF": 3.0
+      },
+      "2": {
+        "NAME": "Seismic EQV",
+        "CODE": "KDS(41-17-00:2019)",
+        "METHOD": "EQV_STATIC",
+        "SZ": "2",
+        "EPA": 0.22,
+        "SC": "S3",
+        "USER_GROUP": "SPECIAL",
+        "IF": 1.5,
+        "RMF": 3.0
+      }
+    }
+  }
+}

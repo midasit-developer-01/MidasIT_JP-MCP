@@ -1,0 +1,37 @@
+{
+  "_group": "db",
+  "_name": "CJFG",
+  "uri": "db/CJFG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CJFG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Concurrent Joint Force Group (CJFG). A singleton record (key is always 1) holding the set of structure group names whose joint forces are combined concurrently for moving-load analysis; the sole GROUPS field lists those groups.",
+      "type": "object",
+      "properties": {
+        "GROUPS": {
+          "description": "Set of structure group names forming the Concurrent Joint Force Group. Each entry must be the name of an existing structure group; the handler resolves each name to a group key and rejects the request (CONTINUE error) if any name does not exist.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "GROUPS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "GROUPS": [
+          "Main1",
+          "Main2",
+          "Main3",
+          "Main4"
+        ]
+      }
+    }
+  }
+}

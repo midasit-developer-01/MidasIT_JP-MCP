@@ -1,0 +1,44 @@
+{
+  "_group": "ope",
+  "_name": "STORY_PARAM",
+  "uri": "ope/STORY_PARAM",
+  "methods": "POST, GET",
+  "schema": {
+    "STORY_PARAM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Story Parameter (STORY_PARAM). The request selects the design/check country code that drives the story parameters used by the check.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request body for setting the story parameter country code.",
+          "properties": {
+            "COUNTRY_CODE": {
+              "type": "string",
+              "description": "Country Code selecting the applicable design code. Case-insensitive on input. On POST the country code is applied (US builds only); on GET only codes up to IS16700(2023) are supported.",
+              "enum": [
+                "NTC2008",
+                "KBC2009",
+                "NTC2012",
+                "NSR-10",
+                "NTC2018",
+                "NTCS2020",
+                "IS1893(2016)",
+                "IS16700(2023)",
+                "SI413(2025)"
+              ]
+            }
+          },
+          "required": [
+            "COUNTRY_CODE"
+          ]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "COUNTRY_CODE": "NTC2008"
+    }
+  }
+}

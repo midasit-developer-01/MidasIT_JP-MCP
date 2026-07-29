@@ -1,0 +1,51 @@
+{
+  "_group": "db",
+  "_name": "IELC",
+  "uri": "db/IELC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "IELC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Ignore Element for Load Cases (IELC). Each entry pairs an existing element with a static load case name and flags whether that element is ignored for that load case; the union of element and load case identifies the record.",
+      "properties": {
+        "ELEMENT": {
+          "description": "Element key (number) of an existing element to ignore for the given load case. Must reference an element that exists in the model.",
+          "type": "integer"
+        },
+        "LCNAME": {
+          "description": "Name of an existing static load case (D_LCOM_STATIC) for which the element is ignored. Must match a defined static load case name.",
+          "type": "string"
+        },
+        "OPT_IGNORE": {
+          "description": "Ignore option (true/false): true ignores the element for the load case, false includes it.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "ELEMENT",
+        "LCNAME",
+        "OPT_IGNORE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ELEMENT": 5,
+        "LCNAME": "DL",
+        "OPT_IGNORE": true
+      },
+      "2": {
+        "ELEMENT": 5,
+        "LCNAME": "LL",
+        "OPT_IGNORE": true
+      },
+      "3": {
+        "ELEMENT": 18,
+        "LCNAME": "DL",
+        "OPT_IGNORE": false
+      }
+    }
+  }
+}

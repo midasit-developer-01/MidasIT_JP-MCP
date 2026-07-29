@@ -1,0 +1,158 @@
+{
+  "_group": "db",
+  "_name": "STOR",
+  "uri": "db/STOR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "STOR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Story (STOR). One entry per story keyed by story id; defines the story name/elevation, floor-diaphragm flag, and the wind and seismic eccentricity parameters used in lateral load distribution, plus an optional list of story-area factor points.",
+      "properties": {
+        "STORY_NAME": {
+          "type": "string",
+          "description": "Story name."
+        },
+        "STORY_LEVEL": {
+          "type": "number",
+          "description": "Story level (elevation) of the story."
+        },
+        "bFLOOR_DIAPHRAGM": {
+          "type": "boolean",
+          "description": "Whether the floor at this story level acts as a rigid floor diaphragm in lateral load distribution."
+        },
+        "WIND_FLOOR_WIDTH_X": {
+          "type": "number",
+          "description": "Effective floor width in the X-direction subjected to wind load."
+        },
+        "WIND_FLOOR_WIDTH_Y": {
+          "type": "number",
+          "description": "Effective floor width in the Y-direction subjected to wind load."
+        },
+        "WIND_CENTER_X": {
+          "type": "number",
+          "description": "GCS X-coordinate of the wind floor center to which the wind load is applied."
+        },
+        "WIND_CENTER_Y": {
+          "type": "number",
+          "description": "GCS Y-coordinate of the wind floor center to which the wind load is applied."
+        },
+        "WIND_ECCENT_X": {
+          "type": "number",
+          "description": "Wind eccentricity distance in the X-direction at this story."
+        },
+        "WIND_ECCENT_Y": {
+          "type": "number",
+          "description": "Wind eccentricity distance in the Y-direction at this story."
+        },
+        "SEIS_ACC_ECCENT_X": {
+          "type": "number",
+          "description": "Seismic accidental eccentricity distance in the X-direction at this story."
+        },
+        "SEIS_ACC_ECCENT_Y": {
+          "type": "number",
+          "description": "Seismic accidental eccentricity distance in the Y-direction at this story."
+        },
+        "SEIS_INHERENT_ECCENT_X": {
+          "type": "number",
+          "description": "Seismic inherent eccentricity distance in the X-direction at this story."
+        },
+        "SEIS_INHERENT_ECCENT_Y": {
+          "type": "number",
+          "description": "Seismic inherent eccentricity distance in the Y-direction at this story."
+        },
+        "SEIS_TORSIONAL_AMP_FACTOR_X": {
+          "type": "number",
+          "description": "Seismic torsional amplification factor in the X-direction."
+        },
+        "SEIS_TORSIONAL_AMP_FACTOR_Y": {
+          "type": "number",
+          "description": "Seismic torsional amplification factor in the Y-direction."
+        },
+        "STORY_AREA_ITEMS": {
+          "type": "array",
+          "description": "Optional list of story-area factor points. Applied only when the list is non-empty; each item carries X/Y/Z factors for the story area.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "X": {
+                "type": "number",
+                "description": "X factor of the story-area point."
+              },
+              "Y": {
+                "type": "number",
+                "description": "Y factor of the story-area point."
+              },
+              "Z": {
+                "type": "number",
+                "description": "Z factor of the story-area point."
+              }
+            },
+            "required": ["X", "Y", "Z"]
+          }
+        }
+      },
+      "required": [
+        "STORY_NAME",
+        "STORY_LEVEL",
+        "bFLOOR_DIAPHRAGM",
+        "WIND_FLOOR_WIDTH_X",
+        "WIND_FLOOR_WIDTH_Y",
+        "WIND_CENTER_X",
+        "WIND_CENTER_Y",
+        "WIND_ECCENT_X",
+        "WIND_ECCENT_Y",
+        "SEIS_ACC_ECCENT_X",
+        "SEIS_ACC_ECCENT_Y",
+        "SEIS_INHERENT_ECCENT_X",
+        "SEIS_INHERENT_ECCENT_Y",
+        "SEIS_TORSIONAL_AMP_FACTOR_X",
+        "SEIS_TORSIONAL_AMP_FACTOR_Y"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "STORY_NAME": "1F",
+        "STORY_LEVEL": 0,
+        "bFLOOR_DIAPHRAGM": false,
+        "WIND_FLOOR_WIDTH_X": 36,
+        "WIND_FLOOR_WIDTH_Y": 27.6,
+        "WIND_CENTER_X": 18,
+        "WIND_CENTER_Y": 13.8,
+        "WIND_ECCENT_X": 5.4,
+        "WIND_ECCENT_Y": 4.14,
+        "SEIS_ACC_ECCENT_X": 1.8,
+        "SEIS_ACC_ECCENT_Y": 1.38,
+        "SEIS_INHERENT_ECCENT_X": 0,
+        "SEIS_INHERENT_ECCENT_Y": 0,
+        "SEIS_TORSIONAL_AMP_FACTOR_X": 1,
+        "SEIS_TORSIONAL_AMP_FACTOR_Y": 1
+      },
+      "2": {
+        "STORY_NAME": "2F",
+        "STORY_LEVEL": 5,
+        "bFLOOR_DIAPHRAGM": true,
+        "WIND_FLOOR_WIDTH_X": 36,
+        "WIND_FLOOR_WIDTH_Y": 29.1,
+        "WIND_CENTER_X": 18,
+        "WIND_CENTER_Y": 14.55,
+        "WIND_ECCENT_X": 5.4,
+        "WIND_ECCENT_Y": 4.365,
+        "SEIS_ACC_ECCENT_X": 1.8,
+        "SEIS_ACC_ECCENT_Y": 1.455,
+        "SEIS_INHERENT_ECCENT_X": 0,
+        "SEIS_INHERENT_ECCENT_Y": 0,
+        "SEIS_TORSIONAL_AMP_FACTOR_X": 1,
+        "SEIS_TORSIONAL_AMP_FACTOR_Y": 1,
+        "STORY_AREA_ITEMS": [
+          { "X": 0, "Y": 0, "Z": 5 },
+          { "X": 36, "Y": 0, "Z": 5 },
+          { "X": 36, "Y": 29.1, "Z": 5 },
+          { "X": 0, "Y": 29.1, "Z": 5 }
+        ]
+      }
+    }
+  }
+}

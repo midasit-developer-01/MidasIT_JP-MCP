@@ -1,0 +1,204 @@
+{
+  "_group": "post",
+  "_name": "TEXT",
+  "uri": "post/TEXT",
+  "methods": "POST",
+  "schema": {
+    "TEXT": {
+      "type": "object",
+      "description": "Time History / Pushover Text Result (TEXT). The requested result table is driven by TEXT_TYPE (which analysis result to extract as text); the remaining fields scope the extraction (units, styles, node/element selection, time-history step range, load cases, reference point and components).",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "TEXT_REQUEST body. TEXT_TYPE must be assigned (the handler throws 'Text Type is necessary.' otherwise). If EXPORT_PATH is assigned, the resulting table is also written to that path as JSON.",
+          "properties": {
+            "EXPORT_PATH": {
+              "type": "string",
+              "description": "Output file path. When assigned, the generated result table is exported to this path as JSON in addition to being returned."
+            },
+            "TEXT_TYPE": {
+              "type": "string",
+              "description": "Result type to extract (required). Case-insensitive. TH_* = Time History results, PO_* = Pushover results (e.g. TH_DISP time-history displacement, TH_BEAMFORCE time-history beam force, PO_DISP pushover displacement, PO_BEAMFORCE pushover beam force).",
+              "enum": [
+                "TH_DISP",
+                "TH_VELOCITY",
+                "TH_ACCEL",
+                "TH_BEAMFORCE",
+                "TH_TRUSSFORCE",
+                "TH_PLATEFORCE",
+                "TH_PLATE_UNIT_FORCE",
+                "TH_WALLFORCE",
+                "TH_PLANE_STRESS_FORCE",
+                "TH_PLANE_STRAIN_FORCE",
+                "TH_SOLIDFORCE",
+                "TH_BEAMSTRESS",
+                "TH_TRUSSSTRESS",
+                "TH_PLATESTRESS",
+                "TH_PLANESTRESS",
+                "TH_PLANE_STRAIN_STRESS",
+                "TH_SOLIDSTRESS",
+                "TH_GLINKFORCE",
+                "TH_GLINKDEFORM",
+                "PO_DISP",
+                "PO_BEAMFORCE",
+                "PO_TRUSSFORCE",
+                "PO_WALLFORCE",
+                "PO_BEAMSTRESS",
+                "PO_TRUSSSTRESS",
+                "PO_GLINKFORCE",
+                "PO_GLINKDEFORM",
+                "PO_ELINKFORCE",
+                "PO_ELINKDEFORM"
+              ]
+            },
+            "UNIT": {
+              "type": "object",
+              "description": "Unit definition for the output (DTO_BL_UNIT). All enum values are case-insensitive.",
+              "properties": {
+                "FORCE": {
+                  "type": "string",
+                  "description": "Force unit.",
+                  "enum": ["KGF", "TONF", "N", "KN", "LBF", "KIPS"]
+                },
+                "DIST": {
+                  "type": "string",
+                  "description": "Distance unit.",
+                  "enum": ["MM", "CM", "M", "IN", "FT"]
+                },
+                "HEAT": {
+                  "type": "string",
+                  "description": "Heat unit.",
+                  "enum": ["CAL", "KCAL", "J", "BTU", "KJ"]
+                },
+                "TEMP": {
+                  "type": "string",
+                  "description": "Temperature unit.",
+                  "enum": ["C", "F"]
+                }
+              }
+            },
+            "STYLES": {
+              "type": "object",
+              "description": "Number styling for the output (DTO_TABLE_STYLES).",
+              "properties": {
+                "FORMAT": {
+                  "type": "string",
+                  "description": "Numeric style format (case-insensitive).",
+                  "enum": ["DEFAULT", "SCIENTIFIC", "FIXED", "GENERAL"]
+                },
+                "PLACE": {
+                  "type": "integer",
+                  "description": "Number of decimal places."
+                }
+              }
+            },
+            "NODE_ELEMS": {
+              "type": "object",
+              "description": "Node or element selection (DTO_TABLE_NODE_ELEMS). Provide explicit KEYS, a TO range, or a structure group name.",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "description": "Explicit node or element IDs.",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Range expression, e.g. '1to5'."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure group name to select from."
+                }
+              }
+            },
+            "STEP": {
+              "type": "object",
+              "description": "Time history / pushover step range to extract (DTO_TEXT_STEP). OPTIONAL despite the DTO marking: when omitted, the adaptor auto-derives the range from the selected load case (TH from the case time steps; PO via GetCaseStep_PO, defaulting to step 1). If provided, FROM/TO/STEPS are all required.",
+              "properties": {
+                "FROM": {
+                  "type": "number",
+                  "description": "Start time/step."
+                },
+                "TO": {
+                  "type": "number",
+                  "description": "End time/step."
+                },
+                "STEPS": {
+                  "type": "integer",
+                  "description": "Number of steps."
+                }
+              },
+              "required": ["FROM", "TO", "STEPS"]
+            },
+            "PARTS": {
+              "type": "array",
+              "description": "Selected parts (compared uppercased + spaces stripped). Valid tokens are TEXT_TYPE-family specific: for PO_* use 'PARTI'/'PARTJ'/'TOP'/'BOT'; for TH_* use 'I'/'J'/'C'/'K'/'L'/... (a literal 'PART' prefix is stripped). Only meaningful for force/stress types that have multiple output positions.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "TH_CASE_NAME": {
+              "type": "array",
+              "description": "Selected Time History load case names (used for TH_* result types).",
+              "items": {
+                "type": "string"
+              }
+            },
+            "PO_CASE_NAME": {
+              "type": "array",
+              "description": "Selected Pushover load case names (used for PO_* result types).",
+              "items": {
+                "type": "string"
+              }
+            },
+            "REF_PT": {
+              "type": "string",
+              "description": "Reference point (case-insensitive). Default 'Ground'.",
+              "enum": ["Ground", "Add Ground Motion"],
+              "default": "Ground"
+            },
+            "ANR_NODE": {
+              "type": "integer",
+              "description": "Another node reference (relative-response node)."
+            },
+            "COMPONENTS": {
+              "type": "array",
+              "description": "IGNORED server-side. The value is parsed and stored but never read by the TH/PO result generators — output columns are fixed per TEXT_TYPE, so this does not filter or reorder columns. Kept for request compatibility only.",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": ["TEXT_TYPE"]
+        }
+      },
+      "required": ["Argument"]
+    }
+  },
+  "example": {
+    "Argument": {
+      "TEXT_TYPE": "TH_DISP",
+      "UNIT": {
+        "FORCE": "KN",
+        "DIST": "M"
+      },
+      "STYLES": {
+        "FORMAT": "FIXED",
+        "PLACE": 4
+      },
+      "NODE_ELEMS": {
+        "KEYS": [1, 2, 3]
+      },
+      "STEP": {
+        "FROM": 0.0,
+        "TO": 10.0,
+        "STEPS": 100
+      },
+      "TH_CASE_NAME": ["EQ_X"],
+      "REF_PT": "Ground",
+      "COMPONENTS": ["DX", "DY", "DZ"]
+    }
+  }
+}

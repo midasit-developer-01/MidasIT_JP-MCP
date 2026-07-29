@@ -1,0 +1,80 @@
+{
+  "_group": "db",
+  "_name": "THNL",
+  "uri": "db/THNL",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "THNL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Dynamic Nodal Load (THNL). Each key is a node number; ITEMS holds one or more time-history nodal load assignments referencing an existing time-history load case (THLCNAME) and function (FUNC_NAME).",
+      "properties": {
+        "ITEMS": {
+          "description": "Array of dynamic nodal load definitions applied to this node.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number identifying the item within the node's load list.",
+                "type": "integer",
+                "default": 0
+              },
+              "THLCNAME": {
+                "description": "Name of an existing Time History Load case (THIS). Must resolve to a defined load case name; an unknown name is rejected at runtime.",
+                "type": "string"
+              },
+              "FUNC_NAME": {
+                "description": "Name of an existing Time History Function (THFC). The referenced function must be a Force or Moment data type; other function types are rejected at runtime.",
+                "type": "string"
+              },
+              "DIR": {
+                "description": "Load direction. Case-insensitive; one of X, Y, Z.",
+                "type": "string",
+                "enum": ["X", "Y", "Z"]
+              },
+              "ARRIVAL_TIME": {
+                "description": "Arrival time of the load.",
+                "type": "number"
+              },
+              "SCALE_FACTOR": {
+                "description": "Scale factor applied to the time-history function.",
+                "type": "number"
+              }
+            },
+            "required": ["THLCNAME", "FUNC_NAME", "DIR", "ARRIVAL_TIME", "SCALE_FACTOR"]
+          }
+        }
+      },
+      "required": ["ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "THLCNAME": "TH1",
+            "FUNC_NAME": "TH1",
+            "DIR": "Y",
+            "ARRIVAL_TIME": 10,
+            "SCALE_FACTOR": 1.1
+          }
+        ]
+      },
+      "2": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "THLCNAME": "TH1",
+            "FUNC_NAME": "TH1",
+            "DIR": "Z",
+            "ARRIVAL_TIME": 5,
+            "SCALE_FACTOR": 1.2
+          }
+        ]
+      }
+    }
+  }
+}

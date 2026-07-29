@@ -1,0 +1,150 @@
+{
+  "_group": "db",
+  "_name": "ELNK",
+  "uri": "db/ELNK",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "ELNK": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Elastic Link (ELNK). The LINK type selects which fields apply: GEN uses R_S/SDR (6-component), TENS/COMP use SDR[0], MULTI LINEAR uses DIR/MLFC/DRENDI, RAIL INTERACT uses DIR/RLFC, while RIGID and SADDLE need no extra stiffness fields.",
+      "properties": {
+        "NODE": {
+          "description": "Connected node numbers [i-Node, j-Node].",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "BNGR_NAME": {
+          "description": "Boundary group name to assign this elastic link to. Empty string means no group.",
+          "type": "string",
+          "default": ""
+        },
+        "ANGLE": {
+          "description": "Beta angle (orientation angle) in degrees.",
+          "type": "number",
+          "default": 0
+        },
+        "LINK": {
+          "description": "Elastic link sub-option/type. Case-insensitive. GEN=General, RIGID=Rigid, TENS=Tension-only, COMP=Compression-only, 'MULTI LINEAR'=Multi-Linear, SADDLE=Saddle, 'RAIL INTERACT'=Rail Track Interaction.",
+          "type": "string",
+          "enum": [
+            "GEN",
+            "RIGID",
+            "TENS",
+            "COMP",
+            "MULTI LINEAR",
+            "SADDLE",
+            "RAIL INTERACT"
+          ]
+        },
+        "R_S": {
+          "description": "[LINK=GEN] Rigid/fixed flags per DOF [SDx, SDy, SDz, SRx, SRy, SRz]; true = rigid for that DOF.",
+          "type": "array",
+          "items": {
+            "type": "boolean"
+          },
+          "minItems": 6,
+          "maxItems": 6,
+          "default": [false, false, false, false, false, false]
+        },
+        "SDR": {
+          "description": "Spring stiffness values [SDx, SDy, SDz, SRx, SRy, SRz]. [LINK=GEN] all 6 components are used (must be supplied). [LINK=TENS|COMP] only SDR[0] (axial stiffness) is used (must be supplied).",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 6,
+          "maxItems": 6
+        },
+        "bSHEAR": {
+          "description": "Shear spring location flag. Applies to translational shear directions (Dy, Dz) and rotational (Ry, Rz).",
+          "type": "boolean",
+          "default": false
+        },
+        "DR": {
+          "description": "Distance ratios from End I for shear spring location [DRy, DRz], each 0.0-1.0.",
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "default": [0.0, 0.0]
+        },
+        "DIR": {
+          "description": "[LINK=MULTI LINEAR|RAIL INTERACT] Direction index for the function-based behavior.",
+          "type": "integer",
+          "default": 0
+        },
+        "MLFC": {
+          "description": "[LINK=MULTI LINEAR] Force-deformation function ID number.",
+          "type": "integer"
+        },
+        "RLFC": {
+          "description": "[LINK=RAIL INTERACT] Rail-track interaction function ID number.",
+          "type": "integer"
+        },
+        "DRENDI": {
+          "description": "[LINK=MULTI LINEAR] Distance ratio from End I (0.0-1.0).",
+          "type": "number",
+          "default": 0
+        }
+      },
+      "required": [
+        "NODE",
+        "LINK"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NODE": [1, 2],
+        "LINK": "GEN",
+        "ANGLE": 0,
+        "R_S": [false, false, false, false, false, false],
+        "SDR": [1100, 1200, 1300, 1100000, 1200000, 1300000],
+        "bSHEAR": true,
+        "DR": [0.5, 0.5],
+        "BNGR_NAME": "Service"
+      },
+      "2": {
+        "NODE": [2, 3],
+        "LINK": "RIGID",
+        "ANGLE": 0
+      },
+      "3": {
+        "NODE": [3, 4],
+        "LINK": "TENS",
+        "SDR": [1500, 0, 0, 0, 0, 0]
+      },
+      "4": {
+        "NODE": [4, 5],
+        "LINK": "COMP",
+        "SDR": [2000, 0, 0, 0, 0, 0]
+      },
+      "5": {
+        "NODE": [5, 6],
+        "LINK": "MULTI LINEAR",
+        "DIR": 1,
+        "MLFC": 1,
+        "DRENDI": 0.5
+      },
+      "6": {
+        "NODE": [6, 7],
+        "LINK": "SADDLE",
+        "ANGLE": 0
+      },
+      "7": {
+        "NODE": [7, 8],
+        "LINK": "RAIL INTERACT",
+        "DIR": 1,
+        "RLFC": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "_group": "db",
+  "_name": "SPLC",
+  "uri": "db/SPLC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SPLC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Response Spectrum Load Case (SPLC). A spectrum load case referencing one or more spectrum functions (aFUNCNAME); optional blocks are gated by check-box flags: bMODE enables per-mode participation (aUSEMODE), bDAMP enables the damping method selected by iMDTYPE, and bACCECC enables accidental eccentricity.",
+      "properties": {
+        "NAME": {
+          "description": "Spectrum load case name.",
+          "type": "string"
+        },
+        "DIR": {
+          "description": "Excitation direction. Case-insensitive. XY = horizontal (X-Y plane), Z = vertical.",
+          "type": "string",
+          "enum": ["XY", "Z"],
+          "default": "XY"
+        },
+        "ANGLE": {
+          "description": "Excitation angle in degrees.",
+          "type": "number",
+          "default": 0
+        },
+        "SCALE": {
+          "description": "Scale factor applied to the spectrum.",
+          "type": "number"
+        },
+        "PMFT": {
+          "description": "Period modification factor.",
+          "type": "number"
+        },
+        "bDAMP": {
+          "description": "Apply damping method check-box. When true, the damping fields (bCDAMP, iMDTYPE and the iMDTYPE-dependent fields) are used.",
+          "type": "boolean",
+          "default": false
+        },
+        "INTERP": {
+          "description": "Interpolation of spectral data. Case-insensitive. LINEAR = linear, LOG = logarithmic.",
+          "type": "string",
+          "enum": ["LINEAR", "LOG"],
+          "default": "LINEAR"
+        },
+        "DESC": {
+          "description": "Description text.",
+          "type": "string",
+          "default": ""
+        },
+        "COMTYPE": {
+          "description": "Modal combination type. Case-insensitive. SRSS, CQC, ABS, or Linear.",
+          "type": "string",
+          "enum": ["SRSS", "CQC", "ABS", "Linear"],
+          "default": "CQC"
+        },
+        "bADDSIGN": {
+          "description": "Add signs to the results check-box.",
+          "type": "boolean",
+          "default": false
+        },
+        "iSIGNTYPE": {
+          "description": "Add-signs-to-results type. 0 = along the major mode direction, 1 = along the absolute maximum value.",
+          "type": "integer",
+          "default": 1
+        },
+        "bMODE": {
+          "description": "Select mode shapes check-box. When true, aUSEMODE must be supplied and non-empty.",
+          "type": "boolean"
+        },
+        "bAUTO": {
+          "description": "Auto search excitation angle check-box. When true, iAUTOTYPE is used.",
+          "type": "boolean",
+          "default": false
+        },
+        "iAUTOTYPE": {
+          "description": "[bAUTO=true] Auto search angle type.",
+          "type": "integer"
+        },
+        "bNDP": {
+          "description": "[when a referenced spectrum function supports non-dissipative design] Non-dissipative element design flag.",
+          "type": "boolean"
+        },
+        "NDP": {
+          "description": "[when a referenced spectrum function supports non-dissipative design] Non-dissipative value.",
+          "type": "number"
+        },
+        "aFUNCNAME": {
+          "description": "List of spectrum function names to apply. Each name must already exist as a spectrum function.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "aUSEMODE": {
+          "description": "[bMODE=true] Per-mode participation list; one object per eigen mode.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bUSE": {
+                "description": "Whether this mode is used.",
+                "type": "boolean"
+              },
+              "MSFACTOR": {
+                "description": "Mode shape (participation) factor for this mode.",
+                "type": "number"
+              }
+            }
+          }
+        },
+        "bCDAMP": {
+          "description": "[bDAMP=true] Correct damping check-box.",
+          "type": "boolean",
+          "default": false
+        },
+        "iMDTYPE": {
+          "description": "[bDAMP=true] Damping ratio method type. 1 = direct specification of damping ratio (uses DALL, aDAMPING), 2 = mass & stiffness proportional (uses iCOEF, bMASSP, bSTIFFP and either MASSC/STIFFC or iCALC/FP1/FP2/DR1/DR2), 3 = group (element/material group damping).",
+          "type": "integer"
+        },
+        "DALL": {
+          "description": "[bDAMP=true, iMDTYPE=1] Damping ratio applied to all modes.",
+          "type": "number"
+        },
+        "aDAMPING": {
+          "description": "[bDAMP=true, iMDTYPE=1] Modal damping overrides, one object per overridden mode.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "iMODE": {
+                "description": "Mode number.",
+                "type": "integer"
+              },
+              "DAMPING": {
+                "description": "Damping ratio for this mode.",
+                "type": "number"
+              }
+            }
+          }
+        },
+        "iCOEF": {
+          "description": "[bDAMP=true, iMDTYPE=2] Coefficient definition method. 1 = direct coefficient specification (uses MASSC/STIFFC), other = calculated from frequency/period (uses iCALC, FP1/FP2, DR1/DR2).",
+          "type": "integer"
+        },
+        "bMASSP": {
+          "description": "[bDAMP=true, iMDTYPE=2] Mass proportional check-box.",
+          "type": "boolean",
+          "default": true
+        },
+        "bSTIFFP": {
+          "description": "[bDAMP=true, iMDTYPE=2] Stiffness proportional check-box.",
+          "type": "boolean",
+          "default": true
+        },
+        "MASSC": {
+          "description": "[bDAMP=true, iMDTYPE=2, iCOEF=1, bMASSP=true] Mass proportional coefficient.",
+          "type": "number",
+          "default": 0
+        },
+        "STIFFC": {
+          "description": "[bDAMP=true, iMDTYPE=2, iCOEF=1, bSTIFFP=true] Stiffness proportional coefficient.",
+          "type": "number",
+          "default": 0
+        },
+        "iCALC": {
+          "description": "[bDAMP=true, iMDTYPE=2, iCOEF!=1] Coefficient calculation basis. 1 = frequency, 2 = period.",
+          "type": "integer"
+        },
+        "FP1": {
+          "description": "[bDAMP=true, iMDTYPE=2, iCOEF!=1] Frequency or period value for mode 1.",
+          "type": "number"
+        },
+        "FP2": {
+          "description": "[bDAMP=true, iMDTYPE=2, iCOEF!=1] Frequency or period value for mode 2.",
+          "type": "number"
+        },
+        "DR1": {
+          "description": "[bDAMP=true, iMDTYPE=2, iCOEF!=1] Damping ratio for mode 1.",
+          "type": "number"
+        },
+        "DR2": {
+          "description": "[bDAMP=true, iMDTYPE=2, iCOEF!=1] Damping ratio for mode 2.",
+          "type": "number"
+        },
+        "bACCECC": {
+          "description": "Accidental eccentricity check-box. When true, the eccentricity fields are used.",
+          "type": "boolean",
+          "default": false
+        },
+        "bACCECC_AUTO": {
+          "description": "[bACCECC=true] Eccentricity data mode. true = automatic (uses ACCECC_PERCENT), false = user-defined list (uses aACCECC_ECCEN_LIST).",
+          "type": "boolean",
+          "default": false
+        },
+        "ACCECC_PERCENT": {
+          "description": "[bACCECC=true, bACCECC_AUTO=true] Accidental eccentricity as a percentage.",
+          "type": "number"
+        },
+        "bACCECC_CONSIDER_GL": {
+          "description": "[bACCECC=true] Consider eccentricity below ground level.",
+          "type": "boolean"
+        },
+        "bACCECC_MINIMUM_TORSION": {
+          "description": "[bACCECC=true] Limit minimum accidental torsional moment.",
+          "type": "boolean"
+        },
+        "aACCECC_ECCEN_LIST": {
+          "description": "[bACCECC=true, bACCECC_AUTO=false] User-defined per-story accidental eccentricity list.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "STORY": {
+                "description": "Story name.",
+                "type": "string"
+              },
+              "CROSS": {
+                "description": "Eccentricity in the cross direction.",
+                "type": "number"
+              },
+              "ALONG": {
+                "description": "Eccentricity in the along direction.",
+                "type": "number"
+              }
+            },
+            "required": ["STORY", "CROSS", "ALONG"]
+          }
+        }
+      },
+      "required": ["NAME", "SCALE", "PMFT", "aFUNCNAME"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "RS-X",
+        "DIR": "XY",
+        "ANGLE": 0,
+        "SCALE": 1.0,
+        "PMFT": 1.0,
+        "INTERP": "LINEAR",
+        "COMTYPE": "CQC",
+        "bADDSIGN": false,
+        "iSIGNTYPE": 1,
+        "bMODE": false,
+        "bDAMP": false,
+        "bACCECC": false,
+        "aFUNCNAME": ["RS_func"]
+      },
+      "2": {
+        "NAME": "RS-X-Modal",
+        "DIR": "XY",
+        "SCALE": 1.0,
+        "PMFT": 1.0,
+        "COMTYPE": "SRSS",
+        "bMODE": true,
+        "aUSEMODE": [
+          { "bUSE": true, "MSFACTOR": 1.0 },
+          { "bUSE": true, "MSFACTOR": 1.0 },
+          { "bUSE": false, "MSFACTOR": 1.0 }
+        ],
+        "bDAMP": true,
+        "bCDAMP": false,
+        "iMDTYPE": 1,
+        "DALL": 0.05,
+        "aDAMPING": [
+          { "iMODE": 1, "DAMPING": 0.03 },
+          { "iMODE": 2, "DAMPING": 0.04 }
+        ],
+        "aFUNCNAME": ["RS_func"]
+      },
+      "3": {
+        "NAME": "RS-X-Rayleigh",
+        "DIR": "XY",
+        "SCALE": 1.0,
+        "PMFT": 1.0,
+        "COMTYPE": "CQC",
+        "bDAMP": true,
+        "bCDAMP": true,
+        "iMDTYPE": 2,
+        "iCOEF": 1,
+        "bMASSP": true,
+        "bSTIFFP": true,
+        "MASSC": 0.5,
+        "STIFFC": 0.001,
+        "aFUNCNAME": ["RS_func"]
+      },
+      "4": {
+        "NAME": "RS-X-Eccen",
+        "DIR": "XY",
+        "SCALE": 1.0,
+        "PMFT": 1.0,
+        "bACCECC": true,
+        "bACCECC_AUTO": false,
+        "bACCECC_CONSIDER_GL": false,
+        "bACCECC_MINIMUM_TORSION": false,
+        "aACCECC_ECCEN_LIST": [
+          { "STORY": "1F", "CROSS": 0.05, "ALONG": 0.05 },
+          { "STORY": "2F", "CROSS": 0.05, "ALONG": 0.05 }
+        ],
+        "aFUNCNAME": ["RS_func"]
+      }
+    }
+  }
+}

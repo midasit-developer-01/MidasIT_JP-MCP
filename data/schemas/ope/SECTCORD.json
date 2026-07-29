@@ -1,0 +1,36 @@
+{
+  "_group": "ope",
+  "_name": "SECTCORD",
+  "uri": "ope/SECTCORD",
+  "methods": "POST",
+  "schema": {
+    "SECTCORD": {
+      "type": "object",
+      "description": "Section Coordinates (SECTCORD). Returns the outer/inner polygon vertex coordinates of a section; driven by the target section number and a position along the member.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request selecting which section to compute coordinates for.",
+          "properties": {
+            "SECT": {
+              "type": "integer",
+              "description": "Section number (Sect No). The section whose polygon coordinates are computed; must reference an existing section in the opened project."
+            },
+            "POS": {
+              "type": "number",
+              "description": "Position (dPos) along the member/section at which the section polygon is evaluated."
+            }
+          },
+          "required": ["SECT", "POS"]
+        }
+      },
+      "required": ["Argument"]
+    }
+  },
+  "example": {
+    "Argument": {
+      "SECT": 1,
+      "POS": 0.0
+    }
+  }
+}

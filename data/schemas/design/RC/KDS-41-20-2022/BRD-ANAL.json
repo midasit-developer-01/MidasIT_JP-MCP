@@ -1,0 +1,66 @@
+{
+  "_group": "design",
+  "_name": "BRD-ANAL",
+  "uri": "design/RC/KDS-41-20-2022/BRD-ANAL",
+  "methods": "POST",
+  "schema": {
+    "BRD-ANAL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Brace Design Analysis (BRD-ANAL). Fields are driven by the DESIGN_ANAL request DTO, where PERFORM_TYPE selects whether all elements, specific elements (ELEMS), or specific sections (SECTIONS) are targeted for the brace design run.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Brace design analysis request (DESIGN_ANAL).",
+          "properties": {
+            "PERFORM_TYPE": {
+              "type": "string",
+              "enum": ["ALL", "ELEMS", "SECTIONS"],
+              "default": "ALL",
+              "description": "Perform Target - All Elements: ALL / By Element No.: ELEMS / By Section No.: SECTIONS. Enum matching is case-insensitive."
+            },
+            "ELEMS": {
+              "type": "object",
+              "description": "[PERFORM_TYPE=ELEMS] Element No. Object (DESIGN_ANAL_ELEM_SELECTION).",
+              "properties": {
+                "KEYS": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "description": "Specify Each ID - Element No."
+                },
+                "TO": {
+                  "type": "string",
+                  "description": "Specify ID Range - Element Range (e.g. 1-10)."
+                },
+                "STRUCTURE_GROUP_NAME": {
+                  "type": "string",
+                  "description": "Structure Group Name."
+                }
+              }
+            },
+            "SECTIONS": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "description": "[PERFORM_TYPE=SECTIONS] Section No."
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "PERFORM_TYPE": "ELEMS",
+      "ELEMS": {
+        "KEYS": [1, 2, 3],
+        "TO": "1-10",
+        "STRUCTURE_GROUP_NAME": "Braces"
+      },
+      "SECTIONS": [1, 2]
+    }
+  }
+}

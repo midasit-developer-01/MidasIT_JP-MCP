@@ -1,0 +1,62 @@
+{
+  "_group": "db",
+  "_name": "EBMW",
+  "uri": "db/EBMW",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EBMW": {
+      "type": "object",
+      "description": "Concrete Wall End Rebar Design Method (EBMW). One EBMW entry per wall is keyed by WALL ID and holds an ITEMS list, each entry a per-story rebar design-method setting selected by ID (story id) and WALLID.",
+      "properties": {
+        "ITEMS": {
+          "type": "array",
+          "description": "Concrete Wall end rebar design method items. Each element defines the end rebar and boundary-element end rebar design methods for one story/wall combination.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "type": "integer",
+                "description": "Story id (storid) that this item applies to."
+              },
+              "WALLID": {
+                "type": "integer",
+                "description": "Wall id (wallid) that this item applies to."
+              },
+              "EBARDESIGNMETHOD": {
+                "type": "integer",
+                "description": "End rebar design method (integer code stored as iEBarDesignMethod)."
+              },
+              "BEEBARDESIGNMETHOD": {
+                "type": "integer",
+                "description": "Boundary element end rebar design method (integer code stored as iBEEbarDesignMethod)."
+              }
+            },
+            "required": [
+              "ID",
+              "WALLID",
+              "EBARDESIGNMETHOD",
+              "BEEBARDESIGNMETHOD"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "WALLID": 1,
+            "EBARDESIGNMETHOD": 0,
+            "BEEBARDESIGNMETHOD": 0
+          }
+        ]
+      }
+    }
+  }
+}

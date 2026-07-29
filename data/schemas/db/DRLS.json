@@ -1,0 +1,27 @@
+{
+  "_group": "db",
+  "_name": "DRLS",
+  "uri": "db/DRLS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DRLS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Diaphragm Disconnect (DRLS). Assigns a rigid-diaphragm disconnect to a node; the assignment is keyed by node number and carries no meaningful payload (the handler applies a default disconnect regardless of the body).",
+      "properties": {
+        "DUMMY": {
+          "type": "integer",
+          "description": "Placeholder value. Ignored by the write handler (OnSet always applies a default diaphragm-disconnect for the node key); present only because the DTO defines a single dummy field."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {},
+      "2": {},
+      "5": {}
+    }
+  }
+}

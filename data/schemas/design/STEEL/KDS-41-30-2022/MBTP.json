@@ -1,0 +1,29 @@
+{
+  "_group": "design",
+  "_name": "MBTP",
+  "uri": "design/STEEL/KDS-41-30-2022/MBTP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MBTP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Member Type (MBTP). The member's design classification, driven solely by the TYPE enum.",
+      "properties": {
+        "TYPE": {
+          "type": "string",
+          "enum": ["COLUMN", "BEAM", "BRACE"],
+          "description": "Member type classification (case-insensitive). One of COLUMN, BEAM, BRACE."
+        }
+      },
+      "required": ["TYPE"],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TYPE": "COLUMN"
+      }
+    }
+  }
+}

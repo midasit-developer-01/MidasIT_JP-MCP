@@ -1,0 +1,42 @@
+{
+  "_group": "design",
+  "_name": "MEMB",
+  "uri": "design/RC/KDS-41-20-2022/MEMB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MEMB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Member Assignment (MEMB). Groups connected elements into a single design member; fields are the element list and the local-direction reversal flag.",
+      "properties": {
+        "AELEM": {
+          "type": "array",
+          "description": "Element Lists. Element keys forming this design member; the elements must be connected in a single continuous chain.",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "bREVERSE": {
+          "type": "boolean",
+          "description": "Reverse Local Direction. When true, reverses the member local direction.",
+          "default": false
+        }
+      },
+      "required": [
+        "AELEM"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "AELEM": [
+          1,
+          2,
+          3
+        ],
+        "bREVERSE": false
+      }
+    }
+  }
+}

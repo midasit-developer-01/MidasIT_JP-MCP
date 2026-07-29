@@ -1,0 +1,188 @@
+{
+  "_group": "db",
+  "_name": "PNLD",
+  "uri": "db/PNLD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "PNLD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Plane Load (PNLD). LTYPE selects which load-data block applies: POINT uses POINTLOAD, LINE uses LINELOAD, AREA uses AREALOAD.",
+      "properties": {
+        "NAME": {
+          "description": "Load type name (identifier for this plane load definition).",
+          "type": "string"
+        },
+        "DESC": {
+          "description": "Free-text description.",
+          "type": "string",
+          "default": ""
+        },
+        "LTYPE": {
+          "description": "Load geometry type. Determines which load-data block is read: POINT->POINTLOAD, LINE->LINELOAD, AREA->AREALOAD. Case-insensitive.",
+          "type": "string",
+          "enum": ["POINT", "LINE", "AREA"]
+        },
+        "POINTLOAD": {
+          "description": "[LTYPE=POINT] Point load data. Array of point-force objects; at least one entry is required when LTYPE is POINT.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "X": {
+                "description": "Point X coordinate.",
+                "type": "number",
+                "default": 0
+              },
+              "Y": {
+                "description": "Point Y coordinate.",
+                "type": "number",
+                "default": 0
+              },
+              "F": {
+                "description": "Force magnitude at the point.",
+                "type": "number",
+                "default": 0
+              }
+            }
+          }
+        },
+        "LINELOAD": {
+          "description": "[LTYPE=LINE] Line load data. Required when LTYPE is LINE.",
+          "type": "object",
+          "properties": {
+            "bUNIFORM": {
+              "description": "If true, load is uniform (F[1] treated same as F[0]); if false, trapezoidal.",
+              "type": "boolean",
+              "default": true
+            },
+            "X": {
+              "description": "Line endpoint X coordinates [X1, X2].",
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 2,
+              "maxItems": 2,
+              "default": [0, 0]
+            },
+            "Y": {
+              "description": "Line endpoint Y coordinates [Y1, Y2].",
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 2,
+              "maxItems": 2,
+              "default": [0, 0]
+            },
+            "F": {
+              "description": "Force values [F1, F2] at the two endpoints (moment type is not supported).",
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 2,
+              "maxItems": 2,
+              "default": [0, 0]
+            }
+          }
+        },
+        "AREALOAD": {
+          "description": "[LTYPE=AREA] Surface load data. Required when LTYPE is AREA.",
+          "type": "object",
+          "properties": {
+            "bUNIFORM": {
+              "description": "If true, load is uniform (LOAD[1~3] treated same as LOAD[0]); if false, per-corner.",
+              "type": "boolean",
+              "default": false
+            },
+            "b3PNT": {
+              "description": "If true, the area is defined by 3 points instead of 4.",
+              "type": "boolean",
+              "default": false
+            },
+            "X": {
+              "description": "Corner X coordinates [X1, X2, X3, X4].",
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 4,
+              "maxItems": 4,
+              "default": [0, 0, 0, 0]
+            },
+            "Y": {
+              "description": "Corner Y coordinates [Y1, Y2, Y3, Y4].",
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 4,
+              "maxItems": 4,
+              "default": [0, 0, 0, 0]
+            },
+            "LOAD": {
+              "description": "Load values [L1, L2, L3, L4] at the corners.",
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 4,
+              "maxItems": 4,
+              "default": [0, 0, 0, 0]
+            }
+          }
+        },
+        "COPY_X": {
+          "description": "Copy distances in the x-direction (one entry per copy).",
+          "type": "array",
+          "items": { "type": "number" }
+        },
+        "COPY_Y": {
+          "description": "Copy distances in the y-direction (one entry per copy).",
+          "type": "array",
+          "items": { "type": "number" }
+        },
+        "SEQ": {
+          "description": "Sequence number (must be unique). Auto-assigned if omitted.",
+          "type": "integer"
+        }
+      },
+      "required": ["NAME", "LTYPE", "COPY_X", "COPY_Y"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Point_example",
+        "DESC": "API point plane load",
+        "LTYPE": "POINT",
+        "POINTLOAD": [
+          { "X": 0, "Y": 0, "F": -10 },
+          { "X": 1, "Y": -1, "F": 10.5 }
+        ],
+        "COPY_X": [5, 5, 5],
+        "COPY_Y": [4.5],
+        "SEQ": 1
+      },
+      "2": {
+        "NAME": "Line_example",
+        "DESC": "API line plane load",
+        "LTYPE": "LINE",
+        "LINELOAD": {
+          "bUNIFORM": false,
+          "X": [0, 2],
+          "Y": [0, 0],
+          "F": [-5, -10]
+        },
+        "COPY_X": [3],
+        "COPY_Y": [0],
+        "SEQ": 2
+      },
+      "3": {
+        "NAME": "Area_example",
+        "DESC": "API area plane load",
+        "LTYPE": "AREA",
+        "AREALOAD": {
+          "bUNIFORM": false,
+          "b3PNT": false,
+          "X": [0, 2, 2, 0],
+          "Y": [0, 0, 2, 2],
+          "LOAD": [-1, -2, -3, -4]
+        },
+        "COPY_X": [4],
+        "COPY_Y": [4],
+        "SEQ": 3
+      }
+    }
+  }
+}

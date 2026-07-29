@@ -1,0 +1,83 @@
+{
+  "_group": "db",
+  "_name": "MLFC",
+  "uri": "db/MLFC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MLFC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Force/Moment Deformation Function (MLFC). Each key is a function id; TYPE selects whether the ITEMS X/Y pairs describe a force-vs-displacement or moment-vs-rotation curve.",
+      "properties": {
+        "NAME": {
+          "description": "Function name.",
+          "type": "string"
+        },
+        "TYPE": {
+          "description": "Function type (case-insensitive). FORCE = force-vs-displacement curve (ITEMS.X is displacement); MOMENT = moment-vs-rotation curve (ITEMS.X is rotation in radians).",
+          "type": "string",
+          "enum": ["FORCE", "MOMENT"],
+          "default": "MOMENT"
+        },
+        "SYMM": {
+          "description": "Whether the function is symmetric. true = symmetric, false = unsymmetric.",
+          "type": "boolean",
+          "default": false
+        },
+        "FUNC_ID": {
+          "description": "Function ID.",
+          "type": "integer",
+          "default": 0
+        },
+        "ITEMS": {
+          "description": "Function data points; each entry is one (X, Y) pair of the curve.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "One curve data point.",
+            "properties": {
+              "X": {
+                "description": "Abscissa: displacement when TYPE=FORCE, rotation (radian) when TYPE=MOMENT.",
+                "type": "number"
+              },
+              "Y": {
+                "description": "Ordinate: force when TYPE=FORCE, moment when TYPE=MOMENT.",
+                "type": "number"
+              }
+            },
+            "required": ["X", "Y"]
+          }
+        }
+      },
+      "required": ["NAME", "ITEMS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "Force_Deform",
+        "TYPE": "FORCE",
+        "SYMM": false,
+        "FUNC_ID": 0,
+        "ITEMS": [
+          { "X": -0.2, "Y": -1200 },
+          { "X": -0.1, "Y": -1000 },
+          { "X": 0, "Y": 0 },
+          { "X": 0.1, "Y": 1000 },
+          { "X": 0.2, "Y": 1200 }
+        ]
+      },
+      "2": {
+        "NAME": "Moment_Rotation",
+        "TYPE": "MOMENT",
+        "SYMM": true,
+        "FUNC_ID": 0,
+        "ITEMS": [
+          { "X": 0, "Y": 0 },
+          { "X": 0.01, "Y": 500 },
+          { "X": 0.02, "Y": 800 }
+        ]
+      }
+    }
+  }
+}

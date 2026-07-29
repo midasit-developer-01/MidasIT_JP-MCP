@@ -1,0 +1,31 @@
+{
+  "_group": "rating",
+  "_name": "RPSC-ANAL",
+  "uri": "rating/PSC/AASHTO-LRFR19/RPSC-ANAL",
+  "methods": "POST",
+  "schema": {
+    "RPSC-ANAL": {
+      "type": "object",
+      "description": "PSC Rating Analysis (RPSC-ANAL). Runs the AASHTO-LRFR19 PSC rating execution; the single Argument.TYPE field selects the analysis mode, which the handler forces to the rating branch.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Request DTO (ANL_PSC) that drives the PSC rating analysis.",
+          "properties": {
+            "TYPE": {
+              "type": "string",
+              "enum": ["PERFORM_RATING"],
+              "description": "Analysis mode selector (case-insensitive on the wire). The handler hard-rejects any value other than PERFORM_RATING for this rating endpoint (throws LV_WRONG_FIELD). Wire values of the underlying enum are PSC_PERFORM_DESIGN and PERFORM_RATING."
+            }
+          },
+          "required": ["TYPE"]
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "TYPE": "PERFORM_RATING"
+    }
+  }
+}

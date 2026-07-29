@@ -1,0 +1,39 @@
+{
+  "_group": "design",
+  "_name": "DIDP-VBEAM",
+  "uri": "design/PSC/AASHTO-LRFD24/DIDP-VBEAM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "DIDP-VBEAM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Design Input Data Position - Virtual Beam (DIDP-VBEAM). Selects which member ends (I/J) are checked for moment and shear on a PSC-design Virtual Beam; both fields are integer codes 0=None, 1=I, 2=J, 3=I & J.",
+      "properties": {
+        "MOMENT_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3,
+          "description": "Moment check position. 0=None, 1=I, 2=J, 3=I & J. Values outside 0-3 are rejected."
+        },
+        "SHEAR_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3,
+          "description": "Shear check position. 0=None, 1=I, 2=J, 3=I & J. Values outside 0-3 are rejected."
+        }
+      },
+      "required": [
+        "MOMENT_TYPE",
+        "SHEAR_TYPE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "MOMENT_TYPE": 3,
+        "SHEAR_TYPE": 3
+      }
+    }
+  }
+}

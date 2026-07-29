@@ -1,0 +1,50 @@
+{
+  "_group": "ope",
+  "_name": "STORYPROP",
+  "uri": "ope/STORYPROP",
+  "methods": "POST",
+  "schema": {
+    "STORYPROP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Story Property (STORYPROP). Computes per-story properties (weight, elevation, loaded dimensions) for wind/seismic lateral load setup; the optional Argument fields only control the output units, numeric format, and decimal places used to render the result strings.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Optional display controls for the story property result. All fields are optional; if omitted the current model units are used and defaults are applied.",
+          "properties": {
+            "FORCE_UNIT": {
+              "type": "string",
+              "description": "Force unit used to express weights in the result. Case-insensitive. If omitted, the model's current base force unit is used.",
+              "enum": ["KGF", "TONF", "N", "KN", "LBF", "KIPS"]
+            },
+            "LENGTH_UNIT": {
+              "type": "string",
+              "description": "Length unit used to express elevations and loaded dimensions in the result. Case-insensitive. If omitted, the model's current base length unit is used.",
+              "enum": ["MM", "CM", "M", "IN", "FT"]
+            },
+            "FORMAT": {
+              "type": "string",
+              "description": "Numeric formatting of the result string values: 'Fixed' uses fixed-point notation, 'Scientific' uses exponential notation. Case-insensitive.",
+              "enum": ["Fixed", "Scientific"],
+              "default": "Fixed"
+            },
+            "PLACE": {
+              "type": "integer",
+              "description": "Number of decimal places used when formatting result values. Note: the handler currently forces this to 4 regardless of the value supplied.",
+              "default": 4
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {
+      "FORCE_UNIT": "KN",
+      "LENGTH_UNIT": "M",
+      "FORMAT": "Fixed",
+      "PLACE": 4
+    }
+  }
+}

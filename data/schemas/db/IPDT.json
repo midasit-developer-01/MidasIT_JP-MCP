@@ -1,0 +1,73 @@
+{
+  "_group": "db",
+  "_name": "IPDT",
+  "uri": "db/IPDT",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "IPDT": {
+      "type": "object",
+      "description": "Imperfection Data (IPDT). One entry per story key; the story key ties the imperfection settings (initial column-inclination and user coefficients) to a defined story.",
+      "properties": {
+        "STORYNAME": {
+          "type": "string",
+          "description": "Story Name. Name of the story this imperfection data belongs to. On read it is taken from the matching story (STOR) record for the same key."
+        },
+        "HEIGHT": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Height of the story used for the imperfection calculation."
+        },
+        "COLX": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Number of columns in the X direction used to compute the imperfection reduction."
+        },
+        "COLY": {
+          "type": "number",
+          "default": 0.0,
+          "description": "Number of columns in the Y direction used to compute the imperfection reduction."
+        },
+        "USERCOEFF": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, the user-defined inclination coefficients (USERCOEFFX / USERCOEFFY) are used instead of the automatically computed values."
+        },
+        "USERCOEFFX": {
+          "type": "number",
+          "default": 0.0,
+          "description": "User-defined imperfection (inclination) coefficient in the X direction. Applied when USERCOEFF is true."
+        },
+        "USERCOEFFY": {
+          "type": "number",
+          "default": 0.0,
+          "description": "User-defined imperfection (inclination) coefficient in the Y direction. Applied when USERCOEFF is true."
+        }
+      },
+      "required": [
+        "STORYNAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "STORYNAME": "1F",
+        "HEIGHT": 3.5,
+        "COLX": 4.0,
+        "COLY": 3.0,
+        "USERCOEFF": false,
+        "USERCOEFFX": 0.0,
+        "USERCOEFFY": 0.0
+      },
+      "2": {
+        "STORYNAME": "2F",
+        "HEIGHT": 3.5,
+        "COLX": 4.0,
+        "COLY": 3.0,
+        "USERCOEFF": true,
+        "USERCOEFFX": 0.005,
+        "USERCOEFFY": 0.005
+      }
+    }
+  }
+}

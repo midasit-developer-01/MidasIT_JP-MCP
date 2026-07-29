@@ -1,0 +1,38 @@
+{
+  "_group": "db",
+  "_name": "SINF",
+  "uri": "db/SINF",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "SINF": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Plate Elements for Influence Surface (SINF). A single global record whose ELEM_LISTS field enumerates the plate element numbers designated for influence surface analysis; the write path clears all existing SINF elements then re-adds each element number in the list.",
+      "properties": {
+        "ELEM_LISTS": {
+          "description": "List of plate element numbers assigned to the influence surface. On write, all existing SINF entries are deleted and every element number in this list is added; an empty list clears the assignment.",
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "required": [
+        "ELEM_LISTS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ELEM_LISTS": [
+          438,
+          439,
+          444,
+          462,
+          463
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "_group": "temp",
+  "_name": "SRTN",
+  "uri": "temp/SRTN",
+  "methods": "GET, DELETE",
+  "schema": {
+    "SRTN": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Smart Report Tree Node (SRTN). One node of the Smart Report menu tree: each row is either a Folder (container) or a Data (leaf) item, linked into a tree via PARENT and categorized by DATA_TYPE.",
+      "properties": {
+        "PARENT": {
+          "type": "integer",
+          "description": "Parent node key (0 = root).",
+          "default": 0
+        },
+        "REF_DATA": {
+          "type": "integer",
+          "description": "Reference data key for leaf items (the actual body key that a Data node points to)."
+        },
+        "ORDER": {
+          "type": "integer",
+          "description": "Display order within the same parent (0-based).",
+          "default": 0
+        },
+        "DATA_TYPE": {
+          "type": "string",
+          "description": "Smart Report category / data type (case-insensitive). UFIG_LST=User Defined Images, UIMG_LST=Image Files (PNG/JPG attachments), UTBL_LST=User Defined Tables, USSS_LST=Section Summary, USRS_LST=Reinforcement of Sections, USCS_LST=Composite Section for Construction Stage, UTPL_LST=Table Templates, UCHT_LST=Charts, USUM_LST=User Defined Texts.",
+          "enum": [
+            "UFIG_LST",
+            "UIMG_LST",
+            "UTBL_LST",
+            "USSS_LST",
+            "USRS_LST",
+            "USCS_LST",
+            "UTPL_LST",
+            "UCHT_LST",
+            "USUM_LST"
+          ]
+        },
+        "ITEM_TYPE": {
+          "type": "string",
+          "description": "Item type (case-insensitive): Folder is a container, Data is a leaf that references REF_DATA.",
+          "enum": [
+            "Data",
+            "Folder"
+          ]
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Display name of the tree node."
+        }
+      },
+      "required": [
+        "REF_DATA",
+        "DATA_TYPE",
+        "ITEM_TYPE",
+        "NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "PARENT": 0,
+        "REF_DATA": 0,
+        "ORDER": 0,
+        "DATA_TYPE": "UTBL_LST",
+        "ITEM_TYPE": "Folder",
+        "NAME": "My Tables"
+      },
+      "2": {
+        "PARENT": 1,
+        "REF_DATA": 3,
+        "ORDER": 0,
+        "DATA_TYPE": "UTBL_LST",
+        "ITEM_TYPE": "Data",
+        "NAME": "Reaction Table"
+      }
+    }
+  }
+}

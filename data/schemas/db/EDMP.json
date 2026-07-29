@@ -1,0 +1,37 @@
+{
+  "_group": "db",
+  "_name": "EDMP",
+  "uri": "db/EDMP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "EDMP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Change Element Dependent Material Property (EDMP). Keyed by element number; TYPE selects the size-measure interpretation of the H_VS value used for time-dependent material property changes.",
+      "properties": {
+        "TYPE": {
+          "description": "Change property method (case-insensitive). \"NSM\" = Notional Size of Member; \"VSR\" = Volume-Surface Ratio.",
+          "type": "string",
+          "enum": ["NSM", "VSR"]
+        },
+        "H_VS": {
+          "description": "Change property value. For TYPE=NSM this is the notional size h; for TYPE=VSR this is the volume/surface ratio (v/s).",
+          "type": "number"
+        }
+      },
+      "required": ["TYPE", "H_VS"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "TYPE": "NSM",
+        "H_VS": 10.0
+      },
+      "2": {
+        "TYPE": "VSR",
+        "H_VS": 0.25
+      }
+    }
+  }
+}

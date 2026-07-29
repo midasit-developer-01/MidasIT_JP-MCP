@@ -1,0 +1,39 @@
+{
+  "_group": "design",
+  "_name": "DCO",
+  "uri": "design/SRC/AIK-SRC2K/DCO",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "DCO": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "SRC Design Code Options (SRCDCO). Fields set the SRC design code and whether special seismic provisions apply.",
+      "properties": {
+        "DGNCODE": {
+          "type": "string",
+          "enum": [
+            "AIK-SRC2K"
+          ],
+          "description": "SRC design code. Wire string value (case-insensitive matching)."
+        },
+        "SEISMIC": {
+          "type": "boolean",
+          "description": "Special Seismic. Whether special seismic provisions are applied."
+        }
+      },
+      "required": [
+        "DGNCODE",
+        "SEISMIC"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DGNCODE": "AIK-SRC2K",
+        "SEISMIC": true
+      }
+    }
+  }
+}

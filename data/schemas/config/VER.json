@@ -1,0 +1,21 @@
+{
+  "_group": "config",
+  "_name": "VER",
+  "uri": "config/VER",
+  "methods": "GET",
+  "schema": {
+    "VER": {
+      "type": "object",
+      "description": "Program Version Information (VER). Retrieves product/version metadata; the request takes no body (DTO_EMPTY), so Argument is an empty object.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "No request body is required for this endpoint (DTO_EMPTY)."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}

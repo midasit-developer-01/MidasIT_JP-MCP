@@ -1,0 +1,226 @@
+{
+  "_group": "db",
+  "_name": "LLANOP",
+  "uri": "db/LLANOP",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LLANOP": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Traffic Line Lane - Moving Load Optimization (LLANOP). Defines a moving-load optimization line lane; lane data can be supplied per-lane via LANE_ITEMS or in bulk via SPECIAL_LANE_ITEMS, and several fields (SPAN/SCALE_FACTOR vs FACT/CENT_F) apply depending on the moving-load design code (China vs. others).",
+      "properties": {
+        "LL_NAME": {
+          "type": "string",
+          "description": "Name of the line lane."
+        },
+        "LOAD_DIST": {
+          "type": "string",
+          "enum": ["LANE", "CROSS"],
+          "description": "Load distribution type (case-insensitive). When not LANE (i.e. CROSS), GROUP_NAME is required to identify the element group."
+        },
+        "GROUP_NAME": {
+          "type": "string",
+          "default": "",
+          "description": "[LOAD_DIST!=LANE] Name of the structure/element load group. Required when LOAD_DIST is not LANE; ignored when LOAD_DIST is LANE."
+        },
+        "SKEW_START": {
+          "type": "number",
+          "default": 0,
+          "description": "Skew angle at the start."
+        },
+        "SKEW_END": {
+          "type": "number",
+          "default": 0,
+          "description": "Skew angle at the end."
+        },
+        "MOVING": {
+          "type": "string",
+          "enum": ["FORWARD", "BACKWARD", "BOTH"],
+          "description": "Moving direction of the load (case-insensitive)."
+        },
+        "OPTIM_WIDTH": {
+          "type": "number",
+          "description": "Optimization lane width."
+        },
+        "LANE_WIDTH": {
+          "type": "number",
+          "description": "Lane width."
+        },
+        "OFFSET_TYPE": {
+          "type": "integer",
+          "description": "Offset type used when generating analysis lanes."
+        },
+        "DIVIDE_NUM": {
+          "type": "integer",
+          "default": 1,
+          "description": "Divide number (number of analysis lanes)."
+        },
+        "ANAL_LANE_OFFSET": {
+          "type": "number",
+          "default": 1,
+          "description": "Analysis lane offset."
+        },
+        "WHEEL_SPACE": {
+          "type": "number",
+          "default": 0,
+          "description": "Wheel spacing."
+        },
+        "MARGIN": {
+          "type": "number",
+          "default": 0,
+          "description": "Margin."
+        },
+        "OPT_STRADD": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use straddling lane type."
+        },
+        "LANE_ITEMS": {
+          "type": "array",
+          "description": "Per-lane data. Cannot be used together with SPECIAL_LANE_ITEMS (only one of the two may be assigned).",
+          "items": {
+            "type": "object",
+            "description": "One lane entry.",
+            "properties": {
+              "ELEM": {
+                "type": "integer",
+                "description": "Key element number for this lane."
+              },
+              "ECC": {
+                "type": "number",
+                "description": "Eccentricity."
+              },
+              "FACT": {
+                "type": "number",
+                "default": 0.0,
+                "description": "[non-China code] Load factor. Applied when the moving-load design code is not China."
+              },
+              "SPAN_START": {
+                "type": "boolean",
+                "default": false,
+                "description": "Span start flag."
+              },
+              "CENT_F": {
+                "type": "number",
+                "default": 0,
+                "description": "[non-China code] Centrifugal force. Applied when the moving-load design code is not China."
+              },
+              "SPAN": {
+                "type": "number",
+                "default": 0.0,
+                "description": "[China code] Span. Applied when the moving-load design code is China."
+              },
+              "SCALE_FACTOR": {
+                "type": "number",
+                "default": 0.0,
+                "description": "[China code] Scale factor. Applied when the moving-load design code is China."
+              }
+            },
+            "required": ["ELEM", "ECC"]
+          }
+        },
+        "SPECIAL_LANE_ITEMS": {
+          "type": "array",
+          "description": "Bulk lane data used only when importing. Cannot be used together with LANE_ITEMS (only one of the two may be assigned). Each item is expanded into one lane per element in ELEMS.",
+          "items": {
+            "type": "object",
+            "description": "One bulk lane definition applied to multiple elements.",
+            "properties": {
+              "ELEMS": {
+                "type": "array",
+                "description": "Key element numbers this lane definition applies to.",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "ECC": {
+                "type": "number",
+                "description": "Eccentricity."
+              },
+              "FACT": {
+                "type": "number",
+                "description": "Load factor."
+              },
+              "CENT_F": {
+                "type": "number",
+                "default": 0,
+                "description": "Centrifugal force."
+              },
+              "SPAN": {
+                "type": "number",
+                "description": "Span."
+              },
+              "SCALE_FACTOR": {
+                "type": "number",
+                "description": "Scale factor."
+              },
+              "SPAN_START": {
+                "type": "boolean",
+                "default": false,
+                "description": "Span start flag applied to the elements listed in SPAN_START_NO_LIST."
+              },
+              "SPAN_START_NO_LIST": {
+                "type": "array",
+                "description": "Element numbers to which the SPAN_START flag is assigned.",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            },
+            "required": ["ELEMS", "ECC", "FACT", "SPAN", "SCALE_FACTOR", "SPAN_START_NO_LIST"]
+          }
+        }
+      },
+      "required": ["LL_NAME", "LOAD_DIST", "MOVING", "OPTIM_WIDTH", "LANE_WIDTH", "OFFSET_TYPE"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LL_NAME": "Lane1",
+        "LOAD_DIST": "LANE",
+        "MOVING": "BOTH",
+        "SKEW_START": 0,
+        "SKEW_END": 0,
+        "OPTIM_WIDTH": 3.0,
+        "LANE_WIDTH": 3.5,
+        "OFFSET_TYPE": 0,
+        "DIVIDE_NUM": 1,
+        "ANAL_LANE_OFFSET": 1,
+        "WHEEL_SPACE": 1.8,
+        "MARGIN": 0.5,
+        "OPT_STRADD": false,
+        "LANE_ITEMS": [
+          {
+            "ELEM": 101,
+            "ECC": 0.0,
+            "FACT": 1.0,
+            "SPAN_START": true,
+            "CENT_F": 0.0
+          }
+        ]
+      },
+      "2": {
+        "LL_NAME": "Lane2",
+        "LOAD_DIST": "CROSS",
+        "GROUP_NAME": "Group1",
+        "MOVING": "FORWARD",
+        "OPTIM_WIDTH": 3.0,
+        "LANE_WIDTH": 3.5,
+        "OFFSET_TYPE": 1,
+        "SPECIAL_LANE_ITEMS": [
+          {
+            "ELEMS": [201, 202, 203],
+            "ECC": 0.0,
+            "FACT": 1.0,
+            "CENT_F": 0.0,
+            "SPAN": 30.0,
+            "SCALE_FACTOR": 1.0,
+            "SPAN_START": true,
+            "SPAN_START_NO_LIST": [201]
+          }
+        ]
+      }
+    }
+  }
+}

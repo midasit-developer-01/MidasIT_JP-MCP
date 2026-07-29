@@ -1,0 +1,57 @@
+{
+  "_group": "db",
+  "_name": "CONS",
+  "uri": "db/CONS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "CONS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Constraint Supports (CONS). Keyed by node number; ITEMS carries one constraint entry per boundary group applied to that node, each defining the 7-DOF fixity string.",
+      "properties": {
+        "ITEMS": {
+          "description": "Array of constraint entries for the node. Each entry pairs an optional boundary group with a 7-character DOF constraint string.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of this constraint entry within the node. 0 lets the program resolve/assign the serial from the boundary group; used to target an existing entry for replace.",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Boundary group name this constraint belongs to. Empty means no group (group key 0). If a non-empty name is given it must reference an existing boundary group, otherwise the request is rejected.",
+                "type": "string",
+                "default": ""
+              },
+              "CONSTRAINT": {
+                "description": "7-character DOF constraint string in order (DX,DY,DZ,RX,RY,RZ,RW). Each character: 1 = constrained, 0 = free. RW is warping torsion. E.g. '1111000' constrains all translations and RX.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "CONSTRAINT"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "",
+            "CONSTRAINT": "1111000"
+          }
+        ]
+      }
+    }
+  }
+}

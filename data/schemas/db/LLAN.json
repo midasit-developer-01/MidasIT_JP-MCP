@@ -1,0 +1,197 @@
+{
+  "_group": "db",
+  "_name": "LLAN",
+  "uri": "db/LLAN",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LLAN": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "description": "Traffic Line Lane (LLAN). COMMON holds the lane definition; provide EITHER LANE_ITEMS (per-element rows) OR SPECIAL_LANE_ITEMS (bulk import rows), never both.",
+      "type": "object",
+      "properties": {
+        "COMMON": {
+          "description": "Common lane definition (name, load distribution, geometry, moving direction).",
+          "type": "object",
+          "properties": {
+            "LL_NAME": {
+              "description": "Name of the line lane.",
+              "type": "string"
+            },
+            "LOAD_DIST": {
+              "description": "Load distribution method. Case-insensitive. LANE = lane element distribution; CROSS = cross beam distribution.",
+              "type": "string",
+              "enum": ["LANE", "CROSS"]
+            },
+            "GROUP_NAME": {
+              "description": "[LOAD_DIST=CROSS] Name of the structure/load group used to resolve the element group; only applied when LOAD_DIST is CROSS.",
+              "type": "string",
+              "default": ""
+            },
+            "SKEW_START": {
+              "description": "Skew angle at the start.",
+              "type": "number",
+              "default": 0
+            },
+            "SKEW_END": {
+              "description": "Skew angle at the end.",
+              "type": "number",
+              "default": 0
+            },
+            "MOVING": {
+              "description": "Moving direction of the traffic load. Case-insensitive. FORWARD, BACKWARD, or BOTH.",
+              "type": "string",
+              "enum": ["FORWARD", "BACKWARD", "BOTH"]
+            },
+            "WHEEL_SPACE": {
+              "description": "Wheel spacing.",
+              "type": "number",
+              "default": 0
+            },
+            "WIDTH": {
+              "description": "Lane width.",
+              "type": "number"
+            },
+            "OPT_AUTO_LANE": {
+              "description": "Enable transverse (automatic) lane optimization.",
+              "type": "boolean",
+              "default": false
+            },
+            "ALLOW_WIDTH": {
+              "description": "Allowable width used for lane optimization.",
+              "type": "number"
+            }
+          },
+          "required": ["LL_NAME", "LOAD_DIST", "MOVING", "WIDTH"]
+        },
+        "LANE_ITEMS": {
+          "description": "Per-element lane rows. Mutually exclusive with SPECIAL_LANE_ITEMS (supplying both is rejected).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ELEM": {
+                "description": "Key element number.",
+                "type": "integer"
+              },
+              "ECC": {
+                "description": "Eccentricity.",
+                "type": "number",
+                "default": 0
+              },
+              "FACT": {
+                "description": "Factor.",
+                "type": "number",
+                "default": 0
+              },
+              "SPAN_START": {
+                "description": "Whether this element marks a span start.",
+                "type": "boolean",
+                "default": false
+              },
+              "ECCEN_VERT_LOAD": {
+                "description": "Eccentricity of vertical loads (to consider cant).",
+                "type": "number",
+                "default": 0
+              },
+              "CENT_F": {
+                "description": "Centrifugal force factor.",
+                "type": "number",
+                "default": 0
+              }
+            },
+            "required": ["ELEM"]
+          }
+        },
+        "SPECIAL_LANE_ITEMS": {
+          "description": "Bulk-import lane rows: one entry expands to many per-element rows sharing the same ECC/FACT/CENT_F. Mutually exclusive with LANE_ITEMS (supplying both is rejected).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ELEMS": {
+                "description": "List of key element numbers this entry applies to.",
+                "type": "array",
+                "items": { "type": "integer" }
+              },
+              "ECC": {
+                "description": "Eccentricity applied to every element in ELEMS.",
+                "type": "number"
+              },
+              "FACT": {
+                "description": "Factor applied to every element in ELEMS.",
+                "type": "number"
+              },
+              "ECCEN_VERT_LOAD": {
+                "description": "Eccentricity of vertical loads (to consider cant).",
+                "type": "number",
+                "default": 0
+              },
+              "CENT_F": {
+                "description": "Centrifugal force factor applied to every element in ELEMS.",
+                "type": "number"
+              },
+              "SPAN_START": {
+                "description": "Span-start flag applied to the elements listed in SPAN_START_NO_LIST.",
+                "type": "boolean",
+                "default": false
+              },
+              "SPAN_START_NO_LIST": {
+                "description": "Element numbers that receive the SPAN_START flag.",
+                "type": "array",
+                "items": { "type": "integer" }
+              }
+            },
+            "required": ["ELEMS", "ECC", "FACT", "CENT_F", "SPAN_START_NO_LIST"]
+          }
+        }
+      },
+      "required": ["COMMON"]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "COMMON": {
+          "LL_NAME": "LL_01",
+          "LOAD_DIST": "LANE",
+          "SKEW_START": 0,
+          "SKEW_END": 0,
+          "MOVING": "FORWARD",
+          "WHEEL_SPACE": 1.8,
+          "WIDTH": 3,
+          "OPT_AUTO_LANE": true,
+          "ALLOW_WIDTH": 3
+        },
+        "LANE_ITEMS": [
+          { "ELEM": 1, "ECC": -1.5 },
+          { "ELEM": 2, "ECC": -1.5 },
+          { "ELEM": 3, "ECC": -1.5 }
+        ]
+      },
+      "2": {
+        "COMMON": {
+          "LL_NAME": "LL_02",
+          "LOAD_DIST": "CROSS",
+          "GROUP_NAME": "CrossBeam",
+          "SKEW_START": 10,
+          "SKEW_END": 10,
+          "MOVING": "BOTH",
+          "WHEEL_SPACE": 1.8,
+          "WIDTH": 3,
+          "OPT_AUTO_LANE": false
+        },
+        "SPECIAL_LANE_ITEMS": [
+          {
+            "ELEMS": [163, 164, 165],
+            "ECC": -1.5,
+            "FACT": 1,
+            "ECCEN_VERT_LOAD": 0,
+            "CENT_F": 0,
+            "SPAN_START": true,
+            "SPAN_START_NO_LIST": [163]
+          }
+        ]
+      }
+    }
+  }
+}

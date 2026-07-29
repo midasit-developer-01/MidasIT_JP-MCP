@@ -1,0 +1,66 @@
+{
+  "_group": "db",
+  "_name": "TMLD",
+  "uri": "db/TMLD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "TMLD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Construction Stage Loads (TMLD). Defines time (day) loads applied during construction stages; the top-level key is the construction-stage/target entity key and ITEMS holds one entry per associated load group.",
+      "properties": {
+        "ITEMS": {
+          "description": "List of time-load entries for this entity. Each entry ties a load group to the day at which the load is activated during the construction stage.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "description": "Serial number of the item within the entity key (union-key serial). Used to match/replace an existing entry; when omitted or 0 a new serial is assigned.",
+                "type": "integer",
+                "default": 0
+              },
+              "GROUP_NAME": {
+                "description": "Name of an existing load group. Empty string means no load group. If non-empty, the name must resolve to an existing load group or the request is rejected.",
+                "type": "string",
+                "default": ""
+              },
+              "DAY": {
+                "description": "Day (time) at which the load is applied during the construction stage.",
+                "type": "number"
+              }
+            },
+            "required": [
+              "DAY"
+            ]
+          }
+        }
+      },
+      "required": [
+        "ITEMS"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "10": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "DL(BC)2",
+            "DAY": 35
+          }
+        ]
+      },
+      "11": {
+        "ITEMS": [
+          {
+            "ID": 1,
+            "GROUP_NAME": "DL(BC)2",
+            "DAY": 25
+          }
+        ]
+      }
+    }
+  }
+}

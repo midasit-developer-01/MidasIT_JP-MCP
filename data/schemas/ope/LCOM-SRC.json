@@ -1,0 +1,372 @@
+{
+  "_group": "ope",
+  "_name": "LCOM-SRC",
+  "uri": "ope/LCOM-SRC",
+  "methods": "POST",
+  "schema": {
+    "LCOM-SRC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Load Combination Auto Generation - SRC (LCOM-SRC). DGNCODE selects the active generation payload: 'KDS 41 SRC : 2022' consumes all generation knobs (scale factors, wind, orthogonal, additional and underground loads), while 'AIK-SRC2K' consumes only RS_SCALE_FACTOR. Every generation knob is optional for both codes; an absent knob behaves as unchecked / disabled. The request body is wrapped in 'Argument'.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "SRC auto load-combination request. DGNCODE and OPTION are always required; the remaining fields are the flattened generation knobs (the internal INPUTS group is flattened into the top level by DGNCODE).",
+          "properties": {
+            "DGNCODE": {
+              "type": "string",
+              "description": "Design code selecting the active generation payload (case-insensitive). 'KDS 41 SRC : 2022' enables the full knob set; 'AIK-SRC2K' uses only RS_SCALE_FACTOR.",
+              "enum": [
+                "KDS 41 SRC : 2022",
+                "AIK-SRC2K"
+              ]
+            },
+            "OPTION": {
+              "type": "string",
+              "description": "Add or Replace existing combinations (case-insensitive). Code-agnostic (applies to both DGNCODE variants). ADD (0) appends to existing combinations; REPLACE (1) wipes this design type's combinations then regenerates.",
+              "enum": [
+                "ADD",
+                "REPLACE"
+              ]
+            },
+            "RS_SCALE_FACTOR": {
+              "type": "array",
+              "description": "Response Spectrum Scale Factor rows (applies to both DGNCODE variants). Optional; absent means no scale-up rows. Each row's LOAD_CASE must resolve to a spectrum (SPLC) load case and FACTOR must be in [0, 10].",
+              "items": {
+                "type": "object",
+                "description": "One response-spectrum scale-up row.",
+                "properties": {
+                  "LOAD_CASE": {
+                    "type": "string",
+                    "description": "Response Spectrum Load Case name (must resolve to an existing spectrum load case)."
+                  },
+                  "FACTOR": {
+                    "type": "number",
+                    "description": "Scale Factor; must be in [0, 10]."
+                  }
+                },
+                "required": [
+                  "LOAD_CASE",
+                  "FACTOR"
+                ]
+              }
+            },
+            "WIND_LOAD_COMB": {
+              "type": "object",
+              "description": "[DGNCODE='KDS 41 SRC : 2022'] Wind Load Combination Set. Optional; an absent or empty (PARAMETERS empty) value leaves the wind record untouched.",
+              "properties": {
+                "PARAMETERS": {
+                  "type": "array",
+                  "description": "List of wind load combination sets.",
+                  "items": {
+                    "type": "object",
+                    "description": "One wind load combination set. BUILDING_TYPE decides which wind load cases and factors are needed: MIDDLE requires ALONG (TORSION not used); HIGH requires ALONG plus GUST_FACTOR and KAPPA_FACTOR.",
+                    "properties": {
+                      "BUILDING_TYPE": {
+                        "type": "string",
+                        "description": "Wind Loads Group (case-insensitive). MIDDLE = mid-rise; HIGH = high-rise dynamic wind (uses GUST_FACTOR / KAPPA_FACTOR).",
+                        "enum": [
+                          "MIDDLE",
+                          "HIGH"
+                        ]
+                      },
+                      "WIND_LOAD_CASE": {
+                        "type": "object",
+                        "description": "Wind Load Cases. ALONG is required by the handler based on BUILDING_TYPE; ACROSS / TORSION reference the WA / WT load cases generated when Across / Torsional wind is enabled.",
+                        "properties": {
+                          "ALONG": {
+                            "type": "string",
+                            "description": "Along Wind Load Case name."
+                          },
+                          "ACROSS": {
+                            "type": "string",
+                            "description": "Across Wind Load Case name (WA load case)."
+                          },
+                          "TORSION": {
+                            "type": "string",
+                            "description": "Torsional Wind Load Case name (WT load case)."
+                          }
+                        }
+                      },
+                      "GUST_FACTOR": {
+                        "type": "number",
+                        "description": "[BUILDING_TYPE='HIGH'] Gust factor GD (required only for high-rise dynamic wind)."
+                      },
+                      "KAPPA_FACTOR": {
+                        "type": "number",
+                        "description": "[BUILDING_TYPE='HIGH'] Kappa factor (required only for high-rise dynamic wind)."
+                      }
+                    },
+                    "required": [
+                      "BUILDING_TYPE",
+                      "WIND_LOAD_CASE"
+                    ]
+                  }
+                },
+                "TORSION_DIR": {
+                  "type": "string",
+                  "description": "Torsion Wind Direction (case-insensitive).",
+                  "enum": [
+                    "BOTH",
+                    "POSITIVE",
+                    "NEGATIVE"
+                  ],
+                  "default": "BOTH"
+                }
+              },
+              "required": [
+                "PARAMETERS"
+              ]
+            },
+            "ORTHO_EFFECT": {
+              "type": "object",
+              "description": "[DGNCODE='KDS 41 SRC : 2022'] Orthogonal Effect. Optional; absent or OPT_USE=false disables the effect (an empty record is written). When OPT_USE=true, TYPE and LOAD_GROUP become required and LOAD_GROUP must contain exactly 2 distinct load cases of the same load-case type.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Consider Orthogonal Effect."
+                },
+                "TYPE": {
+                  "type": "string",
+                  "description": "[OPT_USE=true] Orthogonal Effect Type (case-insensitive). '100_30' = 100:30 combination; 'SRSS' = square root of sum of squares.",
+                  "enum": [
+                    "100_30",
+                    "SRSS"
+                  ]
+                },
+                "LOAD_GROUP": {
+                  "type": "array",
+                  "description": "[OPT_USE=true] Load Case1, Load Case2. Exactly 2 entries, distinct, of the same load-case type (no ST/RS mixing).",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "required": [
+                "OPT_USE"
+              ]
+            },
+            "ADDITIONAL_LOAD": {
+              "type": "object",
+              "description": "[DGNCODE='KDS 41 SRC : 2022'] Additional Load. Optional; each half (SPECIAL_LOAD / VERTICAL_LOAD) can be omitted, which is treated as OPT_USE=false. If neither half is enabled, any prior record is cleared.",
+              "properties": {
+                "SPECIAL_LOAD": {
+                  "type": "object",
+                  "description": "Special Seismic Load. When OPT_USE=true, VERTICAL_LOAD_FACTOR (>0), SDS and OVER_STRENGTH_FACTOR are required.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Whether to apply the special seismic load."
+                    },
+                    "VERTICAL_LOAD_FACTOR": {
+                      "type": "number",
+                      "description": "[OPT_USE=true] Vertical Load Factor; must be > 0."
+                    },
+                    "SDS": {
+                      "type": "number",
+                      "description": "[OPT_USE=true] Sds design spectral response acceleration."
+                    },
+                    "OVER_STRENGTH_FACTOR": {
+                      "type": "array",
+                      "description": "[OPT_USE=true] Over-strength factors. Each row's LOAD_CASE must resolve to a static or spectrum load case; FACTOR must be > 0.",
+                      "items": {
+                        "type": "object",
+                        "description": "One over-strength factor row.",
+                        "properties": {
+                          "LOAD_CASE": {
+                            "type": "string",
+                            "description": "Load Case name."
+                          },
+                          "FACTOR": {
+                            "type": "number",
+                            "description": "Scale Factor; must be > 0."
+                          }
+                        },
+                        "required": [
+                          "LOAD_CASE",
+                          "FACTOR"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "OPT_USE"
+                  ]
+                },
+                "VERTICAL_LOAD": {
+                  "type": "object",
+                  "description": "Vertical Seismic Load. When OPT_USE=true, FORCE_FACTOR (>0) is required.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Whether to apply the vertical seismic force."
+                    },
+                    "FORCE_FACTOR": {
+                      "type": "number",
+                      "description": "[OPT_USE=true] Vertical Force Factor; must be > 0."
+                    }
+                  },
+                  "required": [
+                    "OPT_USE"
+                  ]
+                }
+              }
+            },
+            "UNDERGROUND_LOAD": {
+              "type": "object",
+              "description": "[DGNCODE='KDS 41 SRC : 2022'] Underground Load. Optional; absent or OPT_USE=false clears both underground stores. When OPT_USE=true, SCALE_FACTOR and LOAD_CASE_LIST are required.",
+              "properties": {
+                "OPT_USE": {
+                  "type": "boolean",
+                  "description": "Whether to apply underground load."
+                },
+                "SCALE_FACTOR": {
+                  "type": "array",
+                  "description": "[OPT_USE=true] Underground scale factors. Each row's LOAD_CASE must resolve to a valid underground load case; FACTOR must be in [0, 10].",
+                  "items": {
+                    "type": "object",
+                    "description": "One underground scale factor row.",
+                    "properties": {
+                      "LOAD_CASE": {
+                        "type": "string",
+                        "description": "Load Case name."
+                      },
+                      "FACTOR": {
+                        "type": "number",
+                        "description": "Scale Factor; must be in [0, 10]."
+                      }
+                    },
+                    "required": [
+                      "LOAD_CASE",
+                      "FACTOR"
+                    ]
+                  }
+                },
+                "LOAD_CASE_LIST": {
+                  "type": "array",
+                  "description": "[OPT_USE=true] Underground load case list; must contain at least one entry. Each (LoadCase, Direction) pair must be unique.",
+                  "items": {
+                    "type": "object",
+                    "description": "One underground load case row.",
+                    "properties": {
+                      "LOAD_CASE": {
+                        "type": "string",
+                        "description": "Seismic Load Case List - LoadCase name."
+                      },
+                      "DIRECTION": {
+                        "type": "string",
+                        "description": "Seismic Load Case List - Direction (case-insensitive).",
+                        "enum": [
+                          "POSITIVE",
+                          "NEGATIVE"
+                        ]
+                      },
+                      "LOAD_CASE_SEISMIC": {
+                        "type": "array",
+                        "description": "Earth Pressure Load Case - Seismic. Each name must resolve to a static load case of type EEP.",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "LOAD_CASE_STATIC": {
+                        "type": "array",
+                        "description": "Earth Pressure Load Case - Static. Each name must resolve to a static load case of type EH.",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "LOAD_CASE",
+                      "DIRECTION",
+                      "LOAD_CASE_SEISMIC",
+                      "LOAD_CASE_STATIC"
+                    ]
+                  }
+                },
+                "SPECIAL_LOAD": {
+                  "type": "object",
+                  "description": "Underground special load. Optional even when OPT_USE=true. When its own OPT_USE=true, VERTICAL_LOAD_FACTOR (>0), SDS and OVER_STRENGTH_FACTOR are required.",
+                  "properties": {
+                    "OPT_USE": {
+                      "type": "boolean",
+                      "description": "Whether to use special load for underground load."
+                    },
+                    "VERTICAL_LOAD_FACTOR": {
+                      "type": "number",
+                      "description": "[OPT_USE=true] Vertical Load Factor; must be > 0."
+                    },
+                    "SDS": {
+                      "type": "number",
+                      "description": "[OPT_USE=true] Sds design spectral response acceleration."
+                    },
+                    "OVER_STRENGTH_FACTOR": {
+                      "type": "array",
+                      "description": "[OPT_USE=true] Over-strength factors for underground special load. Each row's LOAD_CASE resolves STLD-first with {E,EVT,EE} fallback to SPLC; FACTOR must be > 0; (LoadCase, Type) pairs must be unique.",
+                      "items": {
+                        "type": "object",
+                        "description": "One underground special over-strength factor row.",
+                        "properties": {
+                          "LOAD_CASE": {
+                            "type": "string",
+                            "description": "Load Case name."
+                          },
+                          "FACTOR": {
+                            "type": "number",
+                            "description": "Scale Factor; must be > 0."
+                          }
+                        },
+                        "required": [
+                          "LOAD_CASE",
+                          "FACTOR"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "OPT_USE"
+                  ]
+                }
+              },
+              "required": [
+                "OPT_USE"
+              ]
+            }
+          },
+          "required": [
+            "DGNCODE",
+            "OPTION"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "DGNCODE": "KDS 41 SRC : 2022",
+      "OPTION": "ADD",
+      "RS_SCALE_FACTOR": [
+        {
+          "LOAD_CASE": "RS-X",
+          "FACTOR": 1.0
+        }
+      ],
+      "ORTHO_EFFECT": {
+        "OPT_USE": true,
+        "TYPE": "100_30",
+        "LOAD_GROUP": [
+          "RS-X",
+          "RS-Y"
+        ]
+      },
+      "UNDERGROUND_LOAD": {
+        "OPT_USE": false
+      }
+    }
+  }
+}

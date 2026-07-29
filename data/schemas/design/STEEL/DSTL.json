@@ -1,0 +1,29 @@
+{
+  "_group": "design",
+  "_name": "DSTL",
+  "uri": "design/STEEL/DSTL",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "DSTL": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Steel Design Code (DSTL). The single field selects the steel design code applied to the model; the input string is matched (case- and space-insensitively) against the program's registered steel code name list.",
+      "properties": {
+        "DGNCODE": {
+          "type": "string",
+          "description": "Design Code. Steel design code name; matched against the registered steel code name list (upper-cased, spaces removed) and normalized to the canonical code name."
+        }
+      },
+      "required": [
+        "DGNCODE"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "DGNCODE": "KDS-41-30-2022"
+      }
+    }
+  }
+}
