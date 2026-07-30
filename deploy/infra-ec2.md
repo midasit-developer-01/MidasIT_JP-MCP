@@ -48,7 +48,7 @@ CloudFormation 템플릿 하나로 **이미지 빌드 → 저장 → EC2 배포 
 | `InstanceType` | `t4g.small` | 메모리 부족 시 `t4g.medium`. **ARM(`t4g.*`) 유지 필수** — CodeBuild가 arm64로 빌드한다 |
 | `VolumeSizeGb` | `20` | 이미지·로그가 쌓여 디스크가 모자랄 때 |
 | `AllowedCidr` | `0.0.0.0/0` | Let's Encrypt HTTP-01이 외부 접근을 요구하므로 **초기엔 그대로.** 발급 후 좁히려면 DNS 챌린지로 전환 |
-| `StartCron` / `StopCron` | 평일 08:00 / 20:00 | 운영 시간이 다를 때. 24시간 가동하려면 배포 후 두 스케줄 비활성화 |
+| `StartCron` / `StopCron` | 매일 08:00 / 24:00(자정) | 운영 시간이 다를 때. 24시간 가동하려면 배포 후 두 스케줄 비활성화 |
 | `ScheduleTimezone` | `Asia/Tokyo` | 한국 기준이면 `Asia/Seoul` |
 | `LatestAmiId` | AL2023 ARM64 | 건드리지 않는다 |
 

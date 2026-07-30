@@ -36,6 +36,32 @@ mcp.example.com   A   <ElasticIP 출력값>
 ```
 전파되면 Caddy가 Let's Encrypt 인증서를 자동 발급한다(계속 재시도).
 
+### 반영이 바로 안 될 때 — DNS 캐싱(TTL)
+
+**신규** 레코드는 대개 금방 뜨지만, **기존 레코드의 IP를 수정**하면 바로 반영 안 될 수 있다.
+원인은 **TTL 캐싱**: 권위 서버는 새 값을 바로 내보내도, 이미 옛 값을 캐시한 리졸버
+(ISP·사내 리졸버·OS·브라우저)가 **TTL이 만료될 때까지 옛 값을 계속 응답**한다. 수정 행위가
+남의 캐시를 지워주지 않는다. (그래서 스택 재생성으로 **EIP가 바뀌면** A 레코드를 갱신해도
+사내에서만 옛 IP로 한동안 물린다.)
+
+대처:
+```bash
+ipconfig /flushdns                       # (Windows) 로컬 캐시 비우기
+nslookup mcp.example.com 8.8.8.8         # 공용 리졸버로 권위 반영 확인(캐시 우회)
+```
+- **변경 예정이면 미리 TTL을 60~300초로 낮춰**두면 그만큼 빨리 퍼진다(변경 후 되돌려도 됨).
+- 공용 리졸버(8.8.8.8/1.1.1.1)에 새 IP가 뜨면 권위 반영은 끝난 것. **사내 리졸버는 자체
+  TTL로 더 오래 옛 값을 붙잡아** 사무실에서만 늦게 반영되는 경우가 흔하다.
+- 삭제 후 재생성하면 "바로 되는" 것처럼 보이는 건 그 사이 **TTL이 경과**했거나 캐시에 항목이
+  없어서지, 재생성이 강제 전파를 하는 건 아니다(신뢰할 방법 아님 — TTL 관리가 정답).
+- 특정 IP가 실제로 서빙 중인지 DNS 무시하고 콕 찍어 확인:
+  ```bash
+  curl -sI --resolve mcp.example.com:443:<IP> https://mcp.example.com/healthz
+  ```
+
+> **EIP 고정 팁:** 스택을 재생성할 때마다 EIP가 새로 할당돼 DNS·방화벽을 다시 손봐야 한다.
+> 자주 재배포한다면 EIP를 미리 할당해 고정(`EipAllocationId` 파라미터)해두면 재작업이 없다.
+
 ## 3. 이미지 갱신
 
 **A. GitHub push 자동 (권장, 토큰 필요)** — `GitHubToken`에 PAT(`repo`+`admin:repo_hook`) 지정:
@@ -132,7 +158,7 @@ sudo cat /var/log/cloud-init-output.log     # 최초 부팅 셋업
 
 ## 6. 정지 / 삭제
 
-시작/정지는 평일 08:00 / 20:00 (Asia/Tokyo). 정지 중에도 EBS·Elastic IP는 과금.
+시작/정지는 매일 08:00 기동 / 24:00(자정) 정지 (Asia/Tokyo). 정지 중에도 EBS·Elastic IP는 과금.
 ```bash
 aws cloudformation delete-stack --region ap-northeast-1 --stack-name midas-mcp
 ```

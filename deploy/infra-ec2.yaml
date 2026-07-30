@@ -4,8 +4,8 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: >
   MIDAS NX MCP server - persistent EC2 stack. CodeBuild builds the arm64 image
   from GitHub and pushes it to ECR; the push triggers a pull-and-restart on the
-  instance via SSM. HTTPS through Caddy on a stable Elastic IP, weekday auto
-  stop/start. Point your own DNS at the ElasticIP output. See deploy/RUNBOOK.md.
+  instance via SSM. HTTPS through Caddy on a stable Elastic IP, daily auto
+  stop/start (08:00-24:00). Point your own DNS at the ElasticIP output. See deploy/RUNBOOK.md.
 
 Parameters:
   # ---- Source ----
@@ -74,12 +74,12 @@ Parameters:
     Description: IANA timezone for the start/stop schedule (e.g. Asia/Tokyo, Asia/Seoul).
   StartCron:
     Type: String
-    Default: cron(0 8 ? * MON-FRI *)
-    Description: When to START the instance (default weekdays 08:00).
+    Default: cron(0 8 * * ? *)
+    Description: When to START the instance (default every day 08:00).
   StopCron:
     Type: String
-    Default: cron(0 20 ? * MON-FRI *)
-    Description: When to STOP the instance (default weekdays 20:00).
+    Default: cron(0 0 * * ? *)
+    Description: When to STOP the instance (default every day 00:00, i.e. 24:00).
 
 Conditions:
   HasGitHubToken: !Not [ !Equals [ !Ref GitHubToken, "" ] ]

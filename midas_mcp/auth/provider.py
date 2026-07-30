@@ -29,9 +29,19 @@ from .pages import LOGIN_PATH, REKEY_PATH
 from .store import Store
 
 AUTH_CODE_TTL = 300  # the client redeems it immediately
-ACCESS_TOKEN_TTL = 60 * 60 * 24 * 30
+# Access tokens are deliberately short: a session's real length is the refresh
+# (idle) window below. An active client rotates its refresh token about once a
+# day when the access token lapses.
+ACCESS_TOKEN_TTL = 60 * 60 * 24 * 1
+# Refresh tokens carry an idle window that each rotation slides forward - this IS
+# the session / re-login period. Kept larger than ACCESS_TOKEN_TTL so an active
+# client (which only presents its refresh token when the access token lapses)
+# never has it expire underneath them. After this much inactivity the user must
+# re-authenticate and the stored MAPI key is reclaimed by _sweep().
+REFRESH_TOKEN_TTL = 60 * 60 * 24 * 7
 PENDING_TTL = 600  # how long the user has to finish the consent form
 REKEY_TTL = 600  # how long a handed-out re-key link stays valid
+SWEEP_INTERVAL = 60 * 60  # reclaim expired rows at most this often (amortized on writes)
 
 
 def _now() -> int:
@@ -60,6 +70,43 @@ class MidasKeyProvider(OAuthAuthorizationServerProvider[AuthorizationCode, Refre
         # Remember our own external origin and open the token store.
         self.public_url = public_url.rstrip("/")
         self.store = Store(db_path)
+        # Housekeeping: migrate any legacy immortal refresh tokens (minted with a
+        # NULL expiry before idle-expiry existed) onto an idle window starting now,
+        # then run one sweep at boot. With the weekday stop/start schedule this
+        # boot sweep alone runs ~daily, but _maybe_sweep() also fires it on writes
+        # so GC does not depend on the instance ever restarting.
+        self._last_sweep = 0
+        self.store.run(
+            "UPDATE tokens SET expires_at=? WHERE kind='refresh' AND expires_at IS NULL",
+            (_now() + REFRESH_TOKEN_TTL,),
+        )
+        self._sweep()
+
+    # -- housekeeping (GC) ---------------------------------------------------
+
+    def _sweep(self) -> None:
+        """Reclaim rows whose lifetime is over.
+
+        Purely housekeeping: an expired token is still *rejected* lazily on the hot
+        path (load_access_token / load_refresh_token / mapi_key_for_token), so this
+        only deletes rows that are never presented again - abandoned sessions and
+        the plaintext MAPI keys they hold. Access tokens carry an absolute expiry;
+        refresh tokens an idle window slid forward by rotation. So a stale refresh
+        token (and its key) is not retained past REFRESH_TOKEN_TTL of inactivity.
+        """
+        now = _now()
+        self._last_sweep = now
+        self.store.run("DELETE FROM tokens  WHERE expires_at IS NOT NULL AND expires_at < ?", (now,))
+        self.store.run("DELETE FROM codes   WHERE expires_at < ?", (now,))
+        self.store.run("DELETE FROM pending WHERE created_at < ?", (now - PENDING_TTL,))
+        self.store.run("DELETE FROM rekey   WHERE created_at < ?", (now - REKEY_TTL,))
+
+    def _maybe_sweep(self) -> None:
+        # Amortized trigger: piggyback the sweep on token issuance, but at most once
+        # per SWEEP_INTERVAL so a burst of logins does not re-scan repeatedly. A
+        # double-run under concurrency is harmless - the DELETEs are idempotent.
+        if _now() - self._last_sweep >= SWEEP_INTERVAL:
+            self._sweep()
 
     # -- clients (dynamic registration) --------------------------------------
 
@@ -142,16 +189,20 @@ class MidasKeyProvider(OAuthAuthorizationServerProvider[AuthorizationCode, Refre
                resource: str | None, mapi_key: str) -> OAuthToken:
         # Mint an access+refresh token pair bound to the given MAPI key and store both.
         access, refresh = _secret(), _secret()
-        expires_at = _now() + ACCESS_TOKEN_TTL
+        now = _now()
         insert = (
             "INSERT INTO tokens (token, kind, client_id, scopes, subject, resource, mapi_key, expires_at)"
             " VALUES (?,?,?,?,?,?,?,?)"
         )
         self.store.run(insert, (access, "access", client_id, json.dumps(scopes), subject,
-                                resource, mapi_key, expires_at))
-        # Refresh tokens do not expire on their own; revoking is the way out.
+                                resource, mapi_key, now + ACCESS_TOKEN_TTL))
+        # Refresh tokens carry an idle window rather than living forever. Each use
+        # rotates (re-issues) a fresh one, so an active client slides its expiry
+        # forward while an abandoned one - and the MAPI key it holds - lapses and
+        # is reclaimed by _sweep(). Revoking still takes out the pair immediately.
         self.store.run(insert, (refresh, "refresh", client_id, json.dumps(scopes), subject,
-                                resource, mapi_key, None))
+                                resource, mapi_key, now + REFRESH_TOKEN_TTL))
+        self._maybe_sweep()
         return OAuthToken(
             access_token=access,
             token_type="Bearer",
@@ -181,6 +232,11 @@ class MidasKeyProvider(OAuthAuthorizationServerProvider[AuthorizationCode, Refre
         # Look up a refresh token and confirm it belongs to this client (else None).
         row = self.store.one("SELECT * FROM tokens WHERE token=? AND kind='refresh'", (refresh_token,))
         if row is None or row["client_id"] != client.client_id:
+            return None
+        # Idle expiry: reject and drop a refresh token past its window (mirrors
+        # load_access_token). An active client keeps it alive by rotating it.
+        if row["expires_at"] is not None and row["expires_at"] < _now():
+            self.store.run("DELETE FROM tokens WHERE token=?", (refresh_token,))
             return None
         return RefreshToken(
             token=refresh_token,
