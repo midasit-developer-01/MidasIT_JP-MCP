@@ -1,0 +1,76 @@
+{
+  "_group": "temp",
+  "_name": "MPGB",
+  "uri": "temp/db/MPGB",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MPGB": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "M-Phi Global Data (MPGB). Global (singleton) settings for moment-curvature analysis.",
+      "properties": {
+        "nInitialForce": {
+          "type": "integer",
+          "description": "Initial force (0: Equilibrium Element Force Table, 1: Load Case).",
+          "default": 1
+        },
+        "nLoadCaseType": {
+          "type": "integer",
+          "description": "Load case type (0: Static, 1: Construction Stage).",
+          "default": 0
+        },
+        "LoadCaseKey": {
+          "type": "integer",
+          "description": "Load case key.",
+          "default": 0
+        },
+        "nSectionDivision": {
+          "type": "integer",
+          "description": "Number of section divisions.",
+          "default": 300
+        },
+        "nMaxIteration": {
+          "type": "integer",
+          "description": "Max iteration count.",
+          "default": 20
+        },
+        "dTolerance": {
+          "type": "number",
+          "description": "Convergence tolerance.",
+          "default": 0.001
+        },
+        "nYieldPoint": {
+          "type": "integer",
+          "description": "Yield point (0: Initial Yielding Point, 1: Yielding Point).",
+          "default": 0
+        },
+        "bIncludePhip": {
+          "type": "boolean",
+          "description": "Include curvature Phi_p (primary tendon force).",
+          "default": false
+        },
+        "bShiftcurve": {
+          "type": "boolean",
+          "description": "Shift curve.",
+          "default": false
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "nInitialForce": 1,
+        "nLoadCaseType": 0,
+        "LoadCaseKey": 0,
+        "nSectionDivision": 300,
+        "nMaxIteration": 20,
+        "dTolerance": 0.001,
+        "nYieldPoint": 0,
+        "bIncludePhip": false,
+        "bShiftcurve": false
+      }
+    }
+  }
+}

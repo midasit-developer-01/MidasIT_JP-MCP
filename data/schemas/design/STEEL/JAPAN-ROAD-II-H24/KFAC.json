@@ -1,0 +1,40 @@
+{
+  "_group": "design",
+  "_name": "KFAC",
+  "uri": "design/STEEL/JAPAN-ROAD-II-H24/KFAC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "KFAC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Effective Buckling Length Factor - Japan Road (Steel, Part II) (KFAC). Effective length factors about the major (Ky), minor (Kz), and torsional (Kt) axes.",
+      "properties": {
+        "Ky": {
+          "type": "number",
+          "description": "Effective length factor about the major (y) axis.",
+          "default": 1.0
+        },
+        "Kz": {
+          "type": "number",
+          "description": "Effective length factor about the minor (z) axis.",
+          "default": 1.0
+        },
+        "Kt": {
+          "type": "number",
+          "description": "Effective length factor for torsional buckling.",
+          "default": 1.0
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "Ky": 1.0,
+        "Kz": 1.0,
+        "Kt": 1.0
+      }
+    }
+  }
+}

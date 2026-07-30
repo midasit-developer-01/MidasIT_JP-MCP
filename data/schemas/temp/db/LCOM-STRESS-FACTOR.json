@@ -1,0 +1,41 @@
+{
+  "_group": "temp",
+  "_name": "LCOM-STRESS-FACTOR",
+  "uri": "temp/db/LCOM-STRESS-FACTOR",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "LCOM-STRESS-FACTOR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Allowable Stress Increase Factor for Steel Load Combinations (LCOM-STRESS-FACTOR). Edits the allowable-stress increase factor (JP) of an existing steel load combination (keyed by combination name). No POST — the combination must already exist.",
+      "properties": {
+        "LC_NAME": {
+          "type": "string",
+          "description": "Load combination name (must match the key; guard)."
+        },
+        "nServLcomType": {
+          "type": "integer",
+          "description": "Assign factor (0: unassigned, 1: assigned).",
+          "default": 0
+        },
+        "dLcomFactor": {
+          "type": "number",
+          "description": "Allowable-stress increase factor.",
+          "default": 1.0
+        }
+      },
+      "required": [
+        "LC_NAME"
+      ]
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "LC_NAME": "cLCB1",
+        "nServLcomType": 1,
+        "dLcomFactor": 1.5
+      }
+    }
+  }
+}

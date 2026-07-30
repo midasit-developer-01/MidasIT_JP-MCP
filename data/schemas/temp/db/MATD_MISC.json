@@ -1,0 +1,61 @@
+{
+  "_group": "temp",
+  "_name": "MATD_MISC",
+  "uri": "temp/db/MATD_MISC",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MATD_MISC": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Material Design Miscellaneous (MATD_MISC). Design material info not covered by MATD; keyed by material key (path key).",
+      "properties": {
+        "SBarRC": {
+          "type": "object",
+          "description": "Shear (steel) bar for a PC section (SHEAR_BAR_RC).",
+          "properties": {
+            "strCodeName": {
+              "type": "string",
+              "description": "Code (standard) name."
+            },
+            "strMatlName": {
+              "type": "string",
+              "description": "Material name."
+            },
+            "tMatl": {
+              "type": "object",
+              "description": "PC shear-bar material (MATL_SHEARBAR).",
+              "properties": {
+                "B_fy": {
+                  "type": "number",
+                  "description": "Shear bar yield strength (fy)."
+                }
+              },
+              "required": [
+                "B_fy"
+              ]
+            }
+          },
+          "required": [
+            "strCodeName",
+            "strMatlName",
+            "tMatl"
+          ]
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "SBarRC": {
+          "strCodeName": "KS",
+          "strMatlName": "SD345",
+          "tMatl": {
+            "B_fy": 345.0
+          }
+        }
+      }
+    }
+  }
+}

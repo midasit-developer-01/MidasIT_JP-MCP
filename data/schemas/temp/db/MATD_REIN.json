@@ -1,0 +1,190 @@
+{
+  "_group": "temp",
+  "_name": "MATD_REIN",
+  "uri": "temp/db/MATD_REIN",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MATD_REIN": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Material Design Reinforcement (MATD_REIN). Per-cover-type material info for reinforced sections (RC / steel plate / carbon fiber / fill); keyed by material key (path key).",
+      "properties": {
+        "CoverRC": {
+          "type": "object",
+          "description": "Rebar-concrete cover (MATD_REIN_RC).",
+          "properties": {
+            "strC_CodeName": {
+              "type": "string",
+              "description": "Concrete code (standard) name."
+            },
+            "strC_CodeMatlName": {
+              "type": "string",
+              "description": "Concrete material name."
+            },
+            "dC_Fc": {
+              "type": "number",
+              "description": "Concrete compressive strength (Fc)."
+            },
+            "dC_Elast": {
+              "type": "number",
+              "description": "Concrete elastic modulus (Ec)."
+            },
+            "strR_CodeName": {
+              "type": "string",
+              "description": "Rebar code (standard) name."
+            },
+            "strMR_RebarName": {
+              "type": "string",
+              "description": "Main rebar material name."
+            },
+            "strSR_RebarName": {
+              "type": "string",
+              "description": "Tie (stirrup) rebar material name."
+            },
+            "dMR_Fy": {
+              "type": "number",
+              "description": "Main rebar yield strength (Fy)."
+            },
+            "dSR_Fy": {
+              "type": "number",
+              "description": "Tie rebar yield strength (Fy)."
+            }
+          },
+          "required": [
+            "strC_CodeName",
+            "strC_CodeMatlName",
+            "dC_Fc",
+            "dC_Elast",
+            "strR_CodeName",
+            "strMR_RebarName",
+            "strSR_RebarName",
+            "dMR_Fy",
+            "dSR_Fy"
+          ]
+        },
+        "CoverSP": {
+          "type": "object",
+          "description": "Steel-plate cover (MATD_REIN_SP).",
+          "properties": {
+            "strCodeName": {
+              "type": "string",
+              "description": "Steel plate code (standard) name."
+            },
+            "strCodeMatlName": {
+              "type": "string",
+              "description": "Steel plate material name."
+            },
+            "dFy": {
+              "type": "number",
+              "description": "Steel plate yield strength (Fy)."
+            },
+            "strR_CodeName": {
+              "type": "string",
+              "description": "Anchor rebar code (standard) name."
+            },
+            "strAnchor_RebarName": {
+              "type": "string",
+              "description": "Anchor rebar material name."
+            },
+            "dAnchor_Fy": {
+              "type": "number",
+              "description": "Anchor rebar yield strength (Fy)."
+            }
+          },
+          "required": [
+            "strCodeName",
+            "strCodeMatlName",
+            "dFy",
+            "strR_CodeName",
+            "strAnchor_RebarName",
+            "dAnchor_Fy"
+          ]
+        },
+        "CoverCF": {
+          "type": "object",
+          "description": "Carbon-fiber cover (MATD_REIN_CF).",
+          "properties": {
+            "nMainType": {
+              "type": "integer",
+              "description": "Sheet main type."
+            },
+            "nSubType": {
+              "type": "integer",
+              "description": "Sheet sub type."
+            },
+            "nVolume": {
+              "type": "integer",
+              "description": "Volume (weight per unit)."
+            },
+            "dThickness": {
+              "type": "number",
+              "description": "Thickness."
+            },
+            "dElast": {
+              "type": "number",
+              "description": "Elastic modulus."
+            },
+            "dFu": {
+              "type": "number",
+              "description": "Tensile strength (Fu)."
+            }
+          },
+          "required": [
+            "nMainType",
+            "nSubType",
+            "nVolume",
+            "dThickness",
+            "dElast",
+            "dFu"
+          ]
+        },
+        "CoverFM": {
+          "type": "object",
+          "description": "Fill material for steel-plate cover (FILL_MATL_SP).",
+          "properties": {
+            "dEc": {
+              "type": "number",
+              "description": "Elastic modulus (Ec)."
+            },
+            "dSigmaCk": {
+              "type": "number",
+              "description": "Characteristic strength (sigma_ck)."
+            },
+            "dThickness": {
+              "type": "number",
+              "description": "Thickness."
+            },
+            "dWeight": {
+              "type": "number",
+              "description": "Weight."
+            }
+          },
+          "required": [
+            "dEc",
+            "dSigmaCk",
+            "dThickness",
+            "dWeight"
+          ]
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "CoverRC": {
+          "strC_CodeName": "KS",
+          "strC_CodeMatlName": "C24",
+          "dC_Fc": 24.0,
+          "dC_Elast": 25000.0,
+          "strR_CodeName": "KS",
+          "strMR_RebarName": "SD345",
+          "strSR_RebarName": "SD345",
+          "dMR_Fy": 345.0,
+          "dSR_Fy": 345.0
+        }
+      }
+    }
+  }
+}

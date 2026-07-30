@@ -1,0 +1,1321 @@
+{
+  "_group": "temp",
+  "_name": "MPST_SSM",
+  "uri": "temp/db/MPST_SSM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MPST_SSM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "M-Phi Section - SSM (MPST_SSM). M-Phi plastic-hinge section calc parameters. Rebar/PSC params given at I / M / J positions.",
+      "properties": {
+        "Rebar_I": {
+          "type": "object",
+          "description": "M-Phi rebar calc params (MPST_SSM_REBAR).",
+          "properties": {
+            "bEpsilon_st": {
+              "type": "boolean",
+              "description": "Directly specify epsilon_st."
+            },
+            "bLongDia_Est": {
+              "type": "boolean",
+              "description": "Directly specify phi (for epsilon_st)."
+            },
+            "bLongDia_Lp": {
+              "type": "boolean",
+              "description": "Directly specify phi' (for Lp)."
+            },
+            "bLongDia_c0": {
+              "type": "boolean",
+              "description": "Directly specify c0."
+            },
+            "bHingeLim": {
+              "type": "boolean",
+              "description": "Directly specify hinge length limit."
+            },
+            "LocalY_Plus": {
+              "type": "object",
+              "description": "M-Phi rebar calc params for one direction (MPST_SSM_REBAR_ITEM).",
+              "properties": {
+                "dEpsilon_st": {
+                  "type": "number",
+                  "description": "Allowable tensile strain (epsilon_st)."
+                },
+                "dLongDia_Est": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for epsilon_st (phi)."
+                },
+                "dLongDia_Lp": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for Lp (phi')."
+                },
+                "nNs": {
+                  "type": "integer",
+                  "description": "Number of compression-side longitudinal rebars (ns)."
+                },
+                "dD2": {
+                  "type": "number",
+                  "description": "Confinement rebar effective length (d')."
+                },
+                "dLongDia_c0": {
+                  "type": "number",
+                  "description": "Net cover thickness of longitudinal rebar (c0)."
+                },
+                "dHingeLim": {
+                  "type": "number",
+                  "description": "Plastic hinge length limit (Lp)."
+                },
+                "bLimitCompPos": {
+                  "type": "boolean",
+                  "description": "Apply limit compressive strain evaluation position."
+                },
+                "nLimitCompPos": {
+                  "type": "integer",
+                  "description": "Limit compressive strain position type (0: Unknown, 1: OutmostSect, 2: OutmostRebar, 3: User)."
+                },
+                "dLimitCompPos": {
+                  "type": "number",
+                  "description": "Limit compressive strain position distance."
+                }
+              },
+              "required": [
+                "dEpsilon_st",
+                "dLongDia_Est",
+                "dLongDia_Lp",
+                "nNs",
+                "dD2",
+                "dLongDia_c0",
+                "dHingeLim",
+                "bLimitCompPos",
+                "nLimitCompPos",
+                "dLimitCompPos"
+              ]
+            },
+            "LocalY_Minus": {
+              "type": "object",
+              "description": "M-Phi rebar calc params for one direction (MPST_SSM_REBAR_ITEM).",
+              "properties": {
+                "dEpsilon_st": {
+                  "type": "number",
+                  "description": "Allowable tensile strain (epsilon_st)."
+                },
+                "dLongDia_Est": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for epsilon_st (phi)."
+                },
+                "dLongDia_Lp": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for Lp (phi')."
+                },
+                "nNs": {
+                  "type": "integer",
+                  "description": "Number of compression-side longitudinal rebars (ns)."
+                },
+                "dD2": {
+                  "type": "number",
+                  "description": "Confinement rebar effective length (d')."
+                },
+                "dLongDia_c0": {
+                  "type": "number",
+                  "description": "Net cover thickness of longitudinal rebar (c0)."
+                },
+                "dHingeLim": {
+                  "type": "number",
+                  "description": "Plastic hinge length limit (Lp)."
+                },
+                "bLimitCompPos": {
+                  "type": "boolean",
+                  "description": "Apply limit compressive strain evaluation position."
+                },
+                "nLimitCompPos": {
+                  "type": "integer",
+                  "description": "Limit compressive strain position type (0: Unknown, 1: OutmostSect, 2: OutmostRebar, 3: User)."
+                },
+                "dLimitCompPos": {
+                  "type": "number",
+                  "description": "Limit compressive strain position distance."
+                }
+              },
+              "required": [
+                "dEpsilon_st",
+                "dLongDia_Est",
+                "dLongDia_Lp",
+                "nNs",
+                "dD2",
+                "dLongDia_c0",
+                "dHingeLim",
+                "bLimitCompPos",
+                "nLimitCompPos",
+                "dLimitCompPos"
+              ]
+            },
+            "LocalZ_Plus": {
+              "type": "object",
+              "description": "M-Phi rebar calc params for one direction (MPST_SSM_REBAR_ITEM).",
+              "properties": {
+                "dEpsilon_st": {
+                  "type": "number",
+                  "description": "Allowable tensile strain (epsilon_st)."
+                },
+                "dLongDia_Est": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for epsilon_st (phi)."
+                },
+                "dLongDia_Lp": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for Lp (phi')."
+                },
+                "nNs": {
+                  "type": "integer",
+                  "description": "Number of compression-side longitudinal rebars (ns)."
+                },
+                "dD2": {
+                  "type": "number",
+                  "description": "Confinement rebar effective length (d')."
+                },
+                "dLongDia_c0": {
+                  "type": "number",
+                  "description": "Net cover thickness of longitudinal rebar (c0)."
+                },
+                "dHingeLim": {
+                  "type": "number",
+                  "description": "Plastic hinge length limit (Lp)."
+                },
+                "bLimitCompPos": {
+                  "type": "boolean",
+                  "description": "Apply limit compressive strain evaluation position."
+                },
+                "nLimitCompPos": {
+                  "type": "integer",
+                  "description": "Limit compressive strain position type (0: Unknown, 1: OutmostSect, 2: OutmostRebar, 3: User)."
+                },
+                "dLimitCompPos": {
+                  "type": "number",
+                  "description": "Limit compressive strain position distance."
+                }
+              },
+              "required": [
+                "dEpsilon_st",
+                "dLongDia_Est",
+                "dLongDia_Lp",
+                "nNs",
+                "dD2",
+                "dLongDia_c0",
+                "dHingeLim",
+                "bLimitCompPos",
+                "nLimitCompPos",
+                "dLimitCompPos"
+              ]
+            },
+            "LocalZ_Minus": {
+              "type": "object",
+              "description": "M-Phi rebar calc params for one direction (MPST_SSM_REBAR_ITEM).",
+              "properties": {
+                "dEpsilon_st": {
+                  "type": "number",
+                  "description": "Allowable tensile strain (epsilon_st)."
+                },
+                "dLongDia_Est": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for epsilon_st (phi)."
+                },
+                "dLongDia_Lp": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for Lp (phi')."
+                },
+                "nNs": {
+                  "type": "integer",
+                  "description": "Number of compression-side longitudinal rebars (ns)."
+                },
+                "dD2": {
+                  "type": "number",
+                  "description": "Confinement rebar effective length (d')."
+                },
+                "dLongDia_c0": {
+                  "type": "number",
+                  "description": "Net cover thickness of longitudinal rebar (c0)."
+                },
+                "dHingeLim": {
+                  "type": "number",
+                  "description": "Plastic hinge length limit (Lp)."
+                },
+                "bLimitCompPos": {
+                  "type": "boolean",
+                  "description": "Apply limit compressive strain evaluation position."
+                },
+                "nLimitCompPos": {
+                  "type": "integer",
+                  "description": "Limit compressive strain position type (0: Unknown, 1: OutmostSect, 2: OutmostRebar, 3: User)."
+                },
+                "dLimitCompPos": {
+                  "type": "number",
+                  "description": "Limit compressive strain position distance."
+                }
+              },
+              "required": [
+                "dEpsilon_st",
+                "dLongDia_Est",
+                "dLongDia_Lp",
+                "nNs",
+                "dD2",
+                "dLongDia_c0",
+                "dHingeLim",
+                "bLimitCompPos",
+                "nLimitCompPos",
+                "dLimitCompPos"
+              ]
+            }
+          },
+          "required": [
+            "bEpsilon_st",
+            "bLongDia_Est",
+            "bLongDia_Lp",
+            "bLongDia_c0",
+            "bHingeLim",
+            "LocalY_Plus",
+            "LocalY_Minus",
+            "LocalZ_Plus",
+            "LocalZ_Minus"
+          ]
+        },
+        "Rebar_M": {
+          "type": "object",
+          "description": "M-Phi rebar calc params (MPST_SSM_REBAR).",
+          "properties": {
+            "bEpsilon_st": {
+              "type": "boolean",
+              "description": "Directly specify epsilon_st."
+            },
+            "bLongDia_Est": {
+              "type": "boolean",
+              "description": "Directly specify phi (for epsilon_st)."
+            },
+            "bLongDia_Lp": {
+              "type": "boolean",
+              "description": "Directly specify phi' (for Lp)."
+            },
+            "bLongDia_c0": {
+              "type": "boolean",
+              "description": "Directly specify c0."
+            },
+            "bHingeLim": {
+              "type": "boolean",
+              "description": "Directly specify hinge length limit."
+            },
+            "LocalY_Plus": {
+              "type": "object",
+              "description": "M-Phi rebar calc params for one direction (MPST_SSM_REBAR_ITEM).",
+              "properties": {
+                "dEpsilon_st": {
+                  "type": "number",
+                  "description": "Allowable tensile strain (epsilon_st)."
+                },
+                "dLongDia_Est": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for epsilon_st (phi)."
+                },
+                "dLongDia_Lp": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for Lp (phi')."
+                },
+                "nNs": {
+                  "type": "integer",
+                  "description": "Number of compression-side longitudinal rebars (ns)."
+                },
+                "dD2": {
+                  "type": "number",
+                  "description": "Confinement rebar effective length (d')."
+                },
+                "dLongDia_c0": {
+                  "type": "number",
+                  "description": "Net cover thickness of longitudinal rebar (c0)."
+                },
+                "dHingeLim": {
+                  "type": "number",
+                  "description": "Plastic hinge length limit (Lp)."
+                },
+                "bLimitCompPos": {
+                  "type": "boolean",
+                  "description": "Apply limit compressive strain evaluation position."
+                },
+                "nLimitCompPos": {
+                  "type": "integer",
+                  "description": "Limit compressive strain position type (0: Unknown, 1: OutmostSect, 2: OutmostRebar, 3: User)."
+                },
+                "dLimitCompPos": {
+                  "type": "number",
+                  "description": "Limit compressive strain position distance."
+                }
+              },
+              "required": [
+                "dEpsilon_st",
+                "dLongDia_Est",
+                "dLongDia_Lp",
+                "nNs",
+                "dD2",
+                "dLongDia_c0",
+                "dHingeLim",
+                "bLimitCompPos",
+                "nLimitCompPos",
+                "dLimitCompPos"
+              ]
+            },
+            "LocalY_Minus": {
+              "type": "object",
+              "description": "M-Phi rebar calc params for one direction (MPST_SSM_REBAR_ITEM).",
+              "properties": {
+                "dEpsilon_st": {
+                  "type": "number",
+                  "description": "Allowable tensile strain (epsilon_st)."
+                },
+                "dLongDia_Est": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for epsilon_st (phi)."
+                },
+                "dLongDia_Lp": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for Lp (phi')."
+                },
+                "nNs": {
+                  "type": "integer",
+                  "description": "Number of compression-side longitudinal rebars (ns)."
+                },
+                "dD2": {
+                  "type": "number",
+                  "description": "Confinement rebar effective length (d')."
+                },
+                "dLongDia_c0": {
+                  "type": "number",
+                  "description": "Net cover thickness of longitudinal rebar (c0)."
+                },
+                "dHingeLim": {
+                  "type": "number",
+                  "description": "Plastic hinge length limit (Lp)."
+                },
+                "bLimitCompPos": {
+                  "type": "boolean",
+                  "description": "Apply limit compressive strain evaluation position."
+                },
+                "nLimitCompPos": {
+                  "type": "integer",
+                  "description": "Limit compressive strain position type (0: Unknown, 1: OutmostSect, 2: OutmostRebar, 3: User)."
+                },
+                "dLimitCompPos": {
+                  "type": "number",
+                  "description": "Limit compressive strain position distance."
+                }
+              },
+              "required": [
+                "dEpsilon_st",
+                "dLongDia_Est",
+                "dLongDia_Lp",
+                "nNs",
+                "dD2",
+                "dLongDia_c0",
+                "dHingeLim",
+                "bLimitCompPos",
+                "nLimitCompPos",
+                "dLimitCompPos"
+              ]
+            },
+            "LocalZ_Plus": {
+              "type": "object",
+              "description": "M-Phi rebar calc params for one direction (MPST_SSM_REBAR_ITEM).",
+              "properties": {
+                "dEpsilon_st": {
+                  "type": "number",
+                  "description": "Allowable tensile strain (epsilon_st)."
+                },
+                "dLongDia_Est": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for epsilon_st (phi)."
+                },
+                "dLongDia_Lp": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for Lp (phi')."
+                },
+                "nNs": {
+                  "type": "integer",
+                  "description": "Number of compression-side longitudinal rebars (ns)."
+                },
+                "dD2": {
+                  "type": "number",
+                  "description": "Confinement rebar effective length (d')."
+                },
+                "dLongDia_c0": {
+                  "type": "number",
+                  "description": "Net cover thickness of longitudinal rebar (c0)."
+                },
+                "dHingeLim": {
+                  "type": "number",
+                  "description": "Plastic hinge length limit (Lp)."
+                },
+                "bLimitCompPos": {
+                  "type": "boolean",
+                  "description": "Apply limit compressive strain evaluation position."
+                },
+                "nLimitCompPos": {
+                  "type": "integer",
+                  "description": "Limit compressive strain position type (0: Unknown, 1: OutmostSect, 2: OutmostRebar, 3: User)."
+                },
+                "dLimitCompPos": {
+                  "type": "number",
+                  "description": "Limit compressive strain position distance."
+                }
+              },
+              "required": [
+                "dEpsilon_st",
+                "dLongDia_Est",
+                "dLongDia_Lp",
+                "nNs",
+                "dD2",
+                "dLongDia_c0",
+                "dHingeLim",
+                "bLimitCompPos",
+                "nLimitCompPos",
+                "dLimitCompPos"
+              ]
+            },
+            "LocalZ_Minus": {
+              "type": "object",
+              "description": "M-Phi rebar calc params for one direction (MPST_SSM_REBAR_ITEM).",
+              "properties": {
+                "dEpsilon_st": {
+                  "type": "number",
+                  "description": "Allowable tensile strain (epsilon_st)."
+                },
+                "dLongDia_Est": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for epsilon_st (phi)."
+                },
+                "dLongDia_Lp": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for Lp (phi')."
+                },
+                "nNs": {
+                  "type": "integer",
+                  "description": "Number of compression-side longitudinal rebars (ns)."
+                },
+                "dD2": {
+                  "type": "number",
+                  "description": "Confinement rebar effective length (d')."
+                },
+                "dLongDia_c0": {
+                  "type": "number",
+                  "description": "Net cover thickness of longitudinal rebar (c0)."
+                },
+                "dHingeLim": {
+                  "type": "number",
+                  "description": "Plastic hinge length limit (Lp)."
+                },
+                "bLimitCompPos": {
+                  "type": "boolean",
+                  "description": "Apply limit compressive strain evaluation position."
+                },
+                "nLimitCompPos": {
+                  "type": "integer",
+                  "description": "Limit compressive strain position type (0: Unknown, 1: OutmostSect, 2: OutmostRebar, 3: User)."
+                },
+                "dLimitCompPos": {
+                  "type": "number",
+                  "description": "Limit compressive strain position distance."
+                }
+              },
+              "required": [
+                "dEpsilon_st",
+                "dLongDia_Est",
+                "dLongDia_Lp",
+                "nNs",
+                "dD2",
+                "dLongDia_c0",
+                "dHingeLim",
+                "bLimitCompPos",
+                "nLimitCompPos",
+                "dLimitCompPos"
+              ]
+            }
+          },
+          "required": [
+            "bEpsilon_st",
+            "bLongDia_Est",
+            "bLongDia_Lp",
+            "bLongDia_c0",
+            "bHingeLim",
+            "LocalY_Plus",
+            "LocalY_Minus",
+            "LocalZ_Plus",
+            "LocalZ_Minus"
+          ]
+        },
+        "Rebar_J": {
+          "type": "object",
+          "description": "M-Phi rebar calc params (MPST_SSM_REBAR).",
+          "properties": {
+            "bEpsilon_st": {
+              "type": "boolean",
+              "description": "Directly specify epsilon_st."
+            },
+            "bLongDia_Est": {
+              "type": "boolean",
+              "description": "Directly specify phi (for epsilon_st)."
+            },
+            "bLongDia_Lp": {
+              "type": "boolean",
+              "description": "Directly specify phi' (for Lp)."
+            },
+            "bLongDia_c0": {
+              "type": "boolean",
+              "description": "Directly specify c0."
+            },
+            "bHingeLim": {
+              "type": "boolean",
+              "description": "Directly specify hinge length limit."
+            },
+            "LocalY_Plus": {
+              "type": "object",
+              "description": "M-Phi rebar calc params for one direction (MPST_SSM_REBAR_ITEM).",
+              "properties": {
+                "dEpsilon_st": {
+                  "type": "number",
+                  "description": "Allowable tensile strain (epsilon_st)."
+                },
+                "dLongDia_Est": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for epsilon_st (phi)."
+                },
+                "dLongDia_Lp": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for Lp (phi')."
+                },
+                "nNs": {
+                  "type": "integer",
+                  "description": "Number of compression-side longitudinal rebars (ns)."
+                },
+                "dD2": {
+                  "type": "number",
+                  "description": "Confinement rebar effective length (d')."
+                },
+                "dLongDia_c0": {
+                  "type": "number",
+                  "description": "Net cover thickness of longitudinal rebar (c0)."
+                },
+                "dHingeLim": {
+                  "type": "number",
+                  "description": "Plastic hinge length limit (Lp)."
+                },
+                "bLimitCompPos": {
+                  "type": "boolean",
+                  "description": "Apply limit compressive strain evaluation position."
+                },
+                "nLimitCompPos": {
+                  "type": "integer",
+                  "description": "Limit compressive strain position type (0: Unknown, 1: OutmostSect, 2: OutmostRebar, 3: User)."
+                },
+                "dLimitCompPos": {
+                  "type": "number",
+                  "description": "Limit compressive strain position distance."
+                }
+              },
+              "required": [
+                "dEpsilon_st",
+                "dLongDia_Est",
+                "dLongDia_Lp",
+                "nNs",
+                "dD2",
+                "dLongDia_c0",
+                "dHingeLim",
+                "bLimitCompPos",
+                "nLimitCompPos",
+                "dLimitCompPos"
+              ]
+            },
+            "LocalY_Minus": {
+              "type": "object",
+              "description": "M-Phi rebar calc params for one direction (MPST_SSM_REBAR_ITEM).",
+              "properties": {
+                "dEpsilon_st": {
+                  "type": "number",
+                  "description": "Allowable tensile strain (epsilon_st)."
+                },
+                "dLongDia_Est": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for epsilon_st (phi)."
+                },
+                "dLongDia_Lp": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for Lp (phi')."
+                },
+                "nNs": {
+                  "type": "integer",
+                  "description": "Number of compression-side longitudinal rebars (ns)."
+                },
+                "dD2": {
+                  "type": "number",
+                  "description": "Confinement rebar effective length (d')."
+                },
+                "dLongDia_c0": {
+                  "type": "number",
+                  "description": "Net cover thickness of longitudinal rebar (c0)."
+                },
+                "dHingeLim": {
+                  "type": "number",
+                  "description": "Plastic hinge length limit (Lp)."
+                },
+                "bLimitCompPos": {
+                  "type": "boolean",
+                  "description": "Apply limit compressive strain evaluation position."
+                },
+                "nLimitCompPos": {
+                  "type": "integer",
+                  "description": "Limit compressive strain position type (0: Unknown, 1: OutmostSect, 2: OutmostRebar, 3: User)."
+                },
+                "dLimitCompPos": {
+                  "type": "number",
+                  "description": "Limit compressive strain position distance."
+                }
+              },
+              "required": [
+                "dEpsilon_st",
+                "dLongDia_Est",
+                "dLongDia_Lp",
+                "nNs",
+                "dD2",
+                "dLongDia_c0",
+                "dHingeLim",
+                "bLimitCompPos",
+                "nLimitCompPos",
+                "dLimitCompPos"
+              ]
+            },
+            "LocalZ_Plus": {
+              "type": "object",
+              "description": "M-Phi rebar calc params for one direction (MPST_SSM_REBAR_ITEM).",
+              "properties": {
+                "dEpsilon_st": {
+                  "type": "number",
+                  "description": "Allowable tensile strain (epsilon_st)."
+                },
+                "dLongDia_Est": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for epsilon_st (phi)."
+                },
+                "dLongDia_Lp": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for Lp (phi')."
+                },
+                "nNs": {
+                  "type": "integer",
+                  "description": "Number of compression-side longitudinal rebars (ns)."
+                },
+                "dD2": {
+                  "type": "number",
+                  "description": "Confinement rebar effective length (d')."
+                },
+                "dLongDia_c0": {
+                  "type": "number",
+                  "description": "Net cover thickness of longitudinal rebar (c0)."
+                },
+                "dHingeLim": {
+                  "type": "number",
+                  "description": "Plastic hinge length limit (Lp)."
+                },
+                "bLimitCompPos": {
+                  "type": "boolean",
+                  "description": "Apply limit compressive strain evaluation position."
+                },
+                "nLimitCompPos": {
+                  "type": "integer",
+                  "description": "Limit compressive strain position type (0: Unknown, 1: OutmostSect, 2: OutmostRebar, 3: User)."
+                },
+                "dLimitCompPos": {
+                  "type": "number",
+                  "description": "Limit compressive strain position distance."
+                }
+              },
+              "required": [
+                "dEpsilon_st",
+                "dLongDia_Est",
+                "dLongDia_Lp",
+                "nNs",
+                "dD2",
+                "dLongDia_c0",
+                "dHingeLim",
+                "bLimitCompPos",
+                "nLimitCompPos",
+                "dLimitCompPos"
+              ]
+            },
+            "LocalZ_Minus": {
+              "type": "object",
+              "description": "M-Phi rebar calc params for one direction (MPST_SSM_REBAR_ITEM).",
+              "properties": {
+                "dEpsilon_st": {
+                  "type": "number",
+                  "description": "Allowable tensile strain (epsilon_st)."
+                },
+                "dLongDia_Est": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for epsilon_st (phi)."
+                },
+                "dLongDia_Lp": {
+                  "type": "number",
+                  "description": "Longitudinal rebar diameter for Lp (phi')."
+                },
+                "nNs": {
+                  "type": "integer",
+                  "description": "Number of compression-side longitudinal rebars (ns)."
+                },
+                "dD2": {
+                  "type": "number",
+                  "description": "Confinement rebar effective length (d')."
+                },
+                "dLongDia_c0": {
+                  "type": "number",
+                  "description": "Net cover thickness of longitudinal rebar (c0)."
+                },
+                "dHingeLim": {
+                  "type": "number",
+                  "description": "Plastic hinge length limit (Lp)."
+                },
+                "bLimitCompPos": {
+                  "type": "boolean",
+                  "description": "Apply limit compressive strain evaluation position."
+                },
+                "nLimitCompPos": {
+                  "type": "integer",
+                  "description": "Limit compressive strain position type (0: Unknown, 1: OutmostSect, 2: OutmostRebar, 3: User)."
+                },
+                "dLimitCompPos": {
+                  "type": "number",
+                  "description": "Limit compressive strain position distance."
+                }
+              },
+              "required": [
+                "dEpsilon_st",
+                "dLongDia_Est",
+                "dLongDia_Lp",
+                "nNs",
+                "dD2",
+                "dLongDia_c0",
+                "dHingeLim",
+                "bLimitCompPos",
+                "nLimitCompPos",
+                "dLimitCompPos"
+              ]
+            }
+          },
+          "required": [
+            "bEpsilon_st",
+            "bLongDia_Est",
+            "bLongDia_Lp",
+            "bLongDia_c0",
+            "bHingeLim",
+            "LocalY_Plus",
+            "LocalY_Minus",
+            "LocalZ_Plus",
+            "LocalZ_Minus"
+          ]
+        },
+        "PSC_I": {
+          "type": "object",
+          "description": "M-Phi PC calc params (MPST_SSM_PSC).",
+          "properties": {
+            "LocalY_Plus": {
+              "type": "object",
+              "description": "M-Phi PC calc params for one direction (MPST_SSM_PSC_ITEM).",
+              "properties": {
+                "nInputType": {
+                  "type": "integer",
+                  "description": "Input type (0: Unknown, 1: ExtTensMatl, 2: ExtRebar, 3: ExtPcSteel, 4: User)."
+                },
+                "dYieldDist": {
+                  "type": "number",
+                  "description": "Yield position distance (from comp./tens. side)."
+                },
+                "dStrain": {
+                  "type": "number",
+                  "description": "Yield strain."
+                }
+              },
+              "required": [
+                "nInputType",
+                "dYieldDist",
+                "dStrain"
+              ]
+            },
+            "LocalY_Minus": {
+              "type": "object",
+              "description": "M-Phi PC calc params for one direction (MPST_SSM_PSC_ITEM).",
+              "properties": {
+                "nInputType": {
+                  "type": "integer",
+                  "description": "Input type (0: Unknown, 1: ExtTensMatl, 2: ExtRebar, 3: ExtPcSteel, 4: User)."
+                },
+                "dYieldDist": {
+                  "type": "number",
+                  "description": "Yield position distance (from comp./tens. side)."
+                },
+                "dStrain": {
+                  "type": "number",
+                  "description": "Yield strain."
+                }
+              },
+              "required": [
+                "nInputType",
+                "dYieldDist",
+                "dStrain"
+              ]
+            },
+            "LocalZ_Plus": {
+              "type": "object",
+              "description": "M-Phi PC calc params for one direction (MPST_SSM_PSC_ITEM).",
+              "properties": {
+                "nInputType": {
+                  "type": "integer",
+                  "description": "Input type (0: Unknown, 1: ExtTensMatl, 2: ExtRebar, 3: ExtPcSteel, 4: User)."
+                },
+                "dYieldDist": {
+                  "type": "number",
+                  "description": "Yield position distance (from comp./tens. side)."
+                },
+                "dStrain": {
+                  "type": "number",
+                  "description": "Yield strain."
+                }
+              },
+              "required": [
+                "nInputType",
+                "dYieldDist",
+                "dStrain"
+              ]
+            },
+            "LocalZ_Minus": {
+              "type": "object",
+              "description": "M-Phi PC calc params for one direction (MPST_SSM_PSC_ITEM).",
+              "properties": {
+                "nInputType": {
+                  "type": "integer",
+                  "description": "Input type (0: Unknown, 1: ExtTensMatl, 2: ExtRebar, 3: ExtPcSteel, 4: User)."
+                },
+                "dYieldDist": {
+                  "type": "number",
+                  "description": "Yield position distance (from comp./tens. side)."
+                },
+                "dStrain": {
+                  "type": "number",
+                  "description": "Yield strain."
+                }
+              },
+              "required": [
+                "nInputType",
+                "dYieldDist",
+                "dStrain"
+              ]
+            },
+            "bOnlyExtTensMatl": {
+              "type": "boolean",
+              "description": "Show only outmost tensile material (Y/Z common)."
+            }
+          },
+          "required": [
+            "LocalY_Plus",
+            "LocalY_Minus",
+            "LocalZ_Plus",
+            "LocalZ_Minus",
+            "bOnlyExtTensMatl"
+          ]
+        },
+        "PSC_M": {
+          "type": "object",
+          "description": "M-Phi PC calc params (MPST_SSM_PSC).",
+          "properties": {
+            "LocalY_Plus": {
+              "type": "object",
+              "description": "M-Phi PC calc params for one direction (MPST_SSM_PSC_ITEM).",
+              "properties": {
+                "nInputType": {
+                  "type": "integer",
+                  "description": "Input type (0: Unknown, 1: ExtTensMatl, 2: ExtRebar, 3: ExtPcSteel, 4: User)."
+                },
+                "dYieldDist": {
+                  "type": "number",
+                  "description": "Yield position distance (from comp./tens. side)."
+                },
+                "dStrain": {
+                  "type": "number",
+                  "description": "Yield strain."
+                }
+              },
+              "required": [
+                "nInputType",
+                "dYieldDist",
+                "dStrain"
+              ]
+            },
+            "LocalY_Minus": {
+              "type": "object",
+              "description": "M-Phi PC calc params for one direction (MPST_SSM_PSC_ITEM).",
+              "properties": {
+                "nInputType": {
+                  "type": "integer",
+                  "description": "Input type (0: Unknown, 1: ExtTensMatl, 2: ExtRebar, 3: ExtPcSteel, 4: User)."
+                },
+                "dYieldDist": {
+                  "type": "number",
+                  "description": "Yield position distance (from comp./tens. side)."
+                },
+                "dStrain": {
+                  "type": "number",
+                  "description": "Yield strain."
+                }
+              },
+              "required": [
+                "nInputType",
+                "dYieldDist",
+                "dStrain"
+              ]
+            },
+            "LocalZ_Plus": {
+              "type": "object",
+              "description": "M-Phi PC calc params for one direction (MPST_SSM_PSC_ITEM).",
+              "properties": {
+                "nInputType": {
+                  "type": "integer",
+                  "description": "Input type (0: Unknown, 1: ExtTensMatl, 2: ExtRebar, 3: ExtPcSteel, 4: User)."
+                },
+                "dYieldDist": {
+                  "type": "number",
+                  "description": "Yield position distance (from comp./tens. side)."
+                },
+                "dStrain": {
+                  "type": "number",
+                  "description": "Yield strain."
+                }
+              },
+              "required": [
+                "nInputType",
+                "dYieldDist",
+                "dStrain"
+              ]
+            },
+            "LocalZ_Minus": {
+              "type": "object",
+              "description": "M-Phi PC calc params for one direction (MPST_SSM_PSC_ITEM).",
+              "properties": {
+                "nInputType": {
+                  "type": "integer",
+                  "description": "Input type (0: Unknown, 1: ExtTensMatl, 2: ExtRebar, 3: ExtPcSteel, 4: User)."
+                },
+                "dYieldDist": {
+                  "type": "number",
+                  "description": "Yield position distance (from comp./tens. side)."
+                },
+                "dStrain": {
+                  "type": "number",
+                  "description": "Yield strain."
+                }
+              },
+              "required": [
+                "nInputType",
+                "dYieldDist",
+                "dStrain"
+              ]
+            },
+            "bOnlyExtTensMatl": {
+              "type": "boolean",
+              "description": "Show only outmost tensile material (Y/Z common)."
+            }
+          },
+          "required": [
+            "LocalY_Plus",
+            "LocalY_Minus",
+            "LocalZ_Plus",
+            "LocalZ_Minus",
+            "bOnlyExtTensMatl"
+          ]
+        },
+        "PSC_J": {
+          "type": "object",
+          "description": "M-Phi PC calc params (MPST_SSM_PSC).",
+          "properties": {
+            "LocalY_Plus": {
+              "type": "object",
+              "description": "M-Phi PC calc params for one direction (MPST_SSM_PSC_ITEM).",
+              "properties": {
+                "nInputType": {
+                  "type": "integer",
+                  "description": "Input type (0: Unknown, 1: ExtTensMatl, 2: ExtRebar, 3: ExtPcSteel, 4: User)."
+                },
+                "dYieldDist": {
+                  "type": "number",
+                  "description": "Yield position distance (from comp./tens. side)."
+                },
+                "dStrain": {
+                  "type": "number",
+                  "description": "Yield strain."
+                }
+              },
+              "required": [
+                "nInputType",
+                "dYieldDist",
+                "dStrain"
+              ]
+            },
+            "LocalY_Minus": {
+              "type": "object",
+              "description": "M-Phi PC calc params for one direction (MPST_SSM_PSC_ITEM).",
+              "properties": {
+                "nInputType": {
+                  "type": "integer",
+                  "description": "Input type (0: Unknown, 1: ExtTensMatl, 2: ExtRebar, 3: ExtPcSteel, 4: User)."
+                },
+                "dYieldDist": {
+                  "type": "number",
+                  "description": "Yield position distance (from comp./tens. side)."
+                },
+                "dStrain": {
+                  "type": "number",
+                  "description": "Yield strain."
+                }
+              },
+              "required": [
+                "nInputType",
+                "dYieldDist",
+                "dStrain"
+              ]
+            },
+            "LocalZ_Plus": {
+              "type": "object",
+              "description": "M-Phi PC calc params for one direction (MPST_SSM_PSC_ITEM).",
+              "properties": {
+                "nInputType": {
+                  "type": "integer",
+                  "description": "Input type (0: Unknown, 1: ExtTensMatl, 2: ExtRebar, 3: ExtPcSteel, 4: User)."
+                },
+                "dYieldDist": {
+                  "type": "number",
+                  "description": "Yield position distance (from comp./tens. side)."
+                },
+                "dStrain": {
+                  "type": "number",
+                  "description": "Yield strain."
+                }
+              },
+              "required": [
+                "nInputType",
+                "dYieldDist",
+                "dStrain"
+              ]
+            },
+            "LocalZ_Minus": {
+              "type": "object",
+              "description": "M-Phi PC calc params for one direction (MPST_SSM_PSC_ITEM).",
+              "properties": {
+                "nInputType": {
+                  "type": "integer",
+                  "description": "Input type (0: Unknown, 1: ExtTensMatl, 2: ExtRebar, 3: ExtPcSteel, 4: User)."
+                },
+                "dYieldDist": {
+                  "type": "number",
+                  "description": "Yield position distance (from comp./tens. side)."
+                },
+                "dStrain": {
+                  "type": "number",
+                  "description": "Yield strain."
+                }
+              },
+              "required": [
+                "nInputType",
+                "dYieldDist",
+                "dStrain"
+              ]
+            },
+            "bOnlyExtTensMatl": {
+              "type": "boolean",
+              "description": "Show only outmost tensile material (Y/Z common)."
+            }
+          },
+          "required": [
+            "LocalY_Plus",
+            "LocalY_Minus",
+            "LocalZ_Plus",
+            "LocalZ_Minus",
+            "bOnlyExtTensMatl"
+          ]
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "Rebar_I": {
+          "bEpsilon_st": false,
+          "bLongDia_Est": false,
+          "bLongDia_Lp": false,
+          "bLongDia_c0": false,
+          "bHingeLim": false,
+          "LocalY_Plus": {
+            "dEpsilon_st": 0.0,
+            "dLongDia_Est": 0.0,
+            "dLongDia_Lp": 0.0,
+            "nNs": 0,
+            "dD2": 0.0,
+            "dLongDia_c0": 0.0,
+            "dHingeLim": 0.0,
+            "bLimitCompPos": false,
+            "nLimitCompPos": 1,
+            "dLimitCompPos": 0.0
+          },
+          "LocalY_Minus": {
+            "dEpsilon_st": 0.0,
+            "dLongDia_Est": 0.0,
+            "dLongDia_Lp": 0.0,
+            "nNs": 0,
+            "dD2": 0.0,
+            "dLongDia_c0": 0.0,
+            "dHingeLim": 0.0,
+            "bLimitCompPos": false,
+            "nLimitCompPos": 1,
+            "dLimitCompPos": 0.0
+          },
+          "LocalZ_Plus": {
+            "dEpsilon_st": 0.0,
+            "dLongDia_Est": 0.0,
+            "dLongDia_Lp": 0.0,
+            "nNs": 0,
+            "dD2": 0.0,
+            "dLongDia_c0": 0.0,
+            "dHingeLim": 0.0,
+            "bLimitCompPos": false,
+            "nLimitCompPos": 1,
+            "dLimitCompPos": 0.0
+          },
+          "LocalZ_Minus": {
+            "dEpsilon_st": 0.0,
+            "dLongDia_Est": 0.0,
+            "dLongDia_Lp": 0.0,
+            "nNs": 0,
+            "dD2": 0.0,
+            "dLongDia_c0": 0.0,
+            "dHingeLim": 0.0,
+            "bLimitCompPos": false,
+            "nLimitCompPos": 1,
+            "dLimitCompPos": 0.0
+          }
+        },
+        "Rebar_M": {
+          "bEpsilon_st": false,
+          "bLongDia_Est": false,
+          "bLongDia_Lp": false,
+          "bLongDia_c0": false,
+          "bHingeLim": false,
+          "LocalY_Plus": {
+            "dEpsilon_st": 0.0,
+            "dLongDia_Est": 0.0,
+            "dLongDia_Lp": 0.0,
+            "nNs": 0,
+            "dD2": 0.0,
+            "dLongDia_c0": 0.0,
+            "dHingeLim": 0.0,
+            "bLimitCompPos": false,
+            "nLimitCompPos": 1,
+            "dLimitCompPos": 0.0
+          },
+          "LocalY_Minus": {
+            "dEpsilon_st": 0.0,
+            "dLongDia_Est": 0.0,
+            "dLongDia_Lp": 0.0,
+            "nNs": 0,
+            "dD2": 0.0,
+            "dLongDia_c0": 0.0,
+            "dHingeLim": 0.0,
+            "bLimitCompPos": false,
+            "nLimitCompPos": 1,
+            "dLimitCompPos": 0.0
+          },
+          "LocalZ_Plus": {
+            "dEpsilon_st": 0.0,
+            "dLongDia_Est": 0.0,
+            "dLongDia_Lp": 0.0,
+            "nNs": 0,
+            "dD2": 0.0,
+            "dLongDia_c0": 0.0,
+            "dHingeLim": 0.0,
+            "bLimitCompPos": false,
+            "nLimitCompPos": 1,
+            "dLimitCompPos": 0.0
+          },
+          "LocalZ_Minus": {
+            "dEpsilon_st": 0.0,
+            "dLongDia_Est": 0.0,
+            "dLongDia_Lp": 0.0,
+            "nNs": 0,
+            "dD2": 0.0,
+            "dLongDia_c0": 0.0,
+            "dHingeLim": 0.0,
+            "bLimitCompPos": false,
+            "nLimitCompPos": 1,
+            "dLimitCompPos": 0.0
+          }
+        },
+        "Rebar_J": {
+          "bEpsilon_st": false,
+          "bLongDia_Est": false,
+          "bLongDia_Lp": false,
+          "bLongDia_c0": false,
+          "bHingeLim": false,
+          "LocalY_Plus": {
+            "dEpsilon_st": 0.0,
+            "dLongDia_Est": 0.0,
+            "dLongDia_Lp": 0.0,
+            "nNs": 0,
+            "dD2": 0.0,
+            "dLongDia_c0": 0.0,
+            "dHingeLim": 0.0,
+            "bLimitCompPos": false,
+            "nLimitCompPos": 1,
+            "dLimitCompPos": 0.0
+          },
+          "LocalY_Minus": {
+            "dEpsilon_st": 0.0,
+            "dLongDia_Est": 0.0,
+            "dLongDia_Lp": 0.0,
+            "nNs": 0,
+            "dD2": 0.0,
+            "dLongDia_c0": 0.0,
+            "dHingeLim": 0.0,
+            "bLimitCompPos": false,
+            "nLimitCompPos": 1,
+            "dLimitCompPos": 0.0
+          },
+          "LocalZ_Plus": {
+            "dEpsilon_st": 0.0,
+            "dLongDia_Est": 0.0,
+            "dLongDia_Lp": 0.0,
+            "nNs": 0,
+            "dD2": 0.0,
+            "dLongDia_c0": 0.0,
+            "dHingeLim": 0.0,
+            "bLimitCompPos": false,
+            "nLimitCompPos": 1,
+            "dLimitCompPos": 0.0
+          },
+          "LocalZ_Minus": {
+            "dEpsilon_st": 0.0,
+            "dLongDia_Est": 0.0,
+            "dLongDia_Lp": 0.0,
+            "nNs": 0,
+            "dD2": 0.0,
+            "dLongDia_c0": 0.0,
+            "dHingeLim": 0.0,
+            "bLimitCompPos": false,
+            "nLimitCompPos": 1,
+            "dLimitCompPos": 0.0
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "_group": "temp",
+  "_name": "MPST",
+  "uri": "temp/db/MPST",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MPST": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "M-Phi Section Data (MPST). Per-section M-Phi plastic-hinge section settings (JP).",
+      "properties": {
+        "dAlpha": {
+          "type": "number",
+          "description": "Section reduction factor Alpha (Local Y).",
+          "default": 0.0
+        },
+        "dBeta": {
+          "type": "number",
+          "description": "Section reduction factor Beta (Local Y).",
+          "default": 0.0
+        },
+        "bUse": {
+          "type": "boolean",
+          "description": "Use (calculate this section).",
+          "default": false
+        },
+        "dAlphaZ": {
+          "type": "number",
+          "description": "Section reduction factor Alpha (Local Z).",
+          "default": 0.0
+        },
+        "dBetaZ": {
+          "type": "number",
+          "description": "Section reduction factor Beta (Local Z).",
+          "default": 0.0
+        },
+        "dc": {
+          "type": "number",
+          "description": "Pipe pile recognition length (0 <= c <= 10 mm).",
+          "default": 0.0
+        },
+        "Steel": {
+          "type": "object",
+          "description": "M-Phi steel settings (MPST_STEEL).",
+          "properties": {
+            "bEpsilon_a": {
+              "type": "boolean",
+              "description": "Use allowable compressive strain epsilon_a."
+            },
+            "LocalY": {
+              "type": "object",
+              "description": "M-Phi steel item for one local direction (MPST_STEEL_ITEM).",
+              "properties": {
+                "dEpsilon_a": {
+                  "type": "number",
+                  "description": "Allowable compressive strain epsilon_a."
+                },
+                "dL": {
+                  "type": "number",
+                  "description": "Effective buckling length L."
+                },
+                "da": {
+                  "type": "number",
+                  "description": "Longitudinal stiffener spacing a."
+                },
+                "dRF": {
+                  "type": "number",
+                  "description": "Plate thickness parameter RF (Rt)."
+                },
+                "dRR": {
+                  "type": "number",
+                  "description": "Plate thickness parameter RR."
+                }
+              },
+              "required": [
+                "dEpsilon_a",
+                "dL",
+                "da",
+                "dRF",
+                "dRR"
+              ]
+            },
+            "LocalZ": {
+              "type": "object",
+              "description": "M-Phi steel item for one local direction (MPST_STEEL_ITEM).",
+              "properties": {
+                "dEpsilon_a": {
+                  "type": "number",
+                  "description": "Allowable compressive strain epsilon_a."
+                },
+                "dL": {
+                  "type": "number",
+                  "description": "Effective buckling length L."
+                },
+                "da": {
+                  "type": "number",
+                  "description": "Longitudinal stiffener spacing a."
+                },
+                "dRF": {
+                  "type": "number",
+                  "description": "Plate thickness parameter RF (Rt)."
+                },
+                "dRR": {
+                  "type": "number",
+                  "description": "Plate thickness parameter RR."
+                }
+              },
+              "required": [
+                "dEpsilon_a",
+                "dL",
+                "da",
+                "dRF",
+                "dRR"
+              ]
+            }
+          },
+          "required": [
+            "bEpsilon_a",
+            "LocalY",
+            "LocalZ"
+          ]
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "dAlpha": 0.0,
+        "dBeta": 0.0,
+        "bUse": true,
+        "dAlphaZ": 0.0,
+        "dBetaZ": 0.0,
+        "dc": 0.0,
+        "Steel": {
+          "bEpsilon_a": false,
+          "LocalY": {
+            "dEpsilon_a": 0.0,
+            "dL": 0.0,
+            "da": 0.0,
+            "dRF": 0.0,
+            "dRR": 0.0
+          },
+          "LocalZ": {
+            "dEpsilon_a": 0.0,
+            "dL": 0.0,
+            "da": 0.0,
+            "dRF": 0.0,
+            "dRR": 0.0
+          }
+        }
+      }
+    }
+  }
+}

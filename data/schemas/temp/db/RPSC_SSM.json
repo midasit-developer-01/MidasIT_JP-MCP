@@ -1,0 +1,842 @@
+{
+  "_group": "temp",
+  "_name": "RPSC_SSM",
+  "uri": "temp/db/RPSC_SSM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "RPSC_SSM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Rebar of PSC Section - SSM (RPSC_SSM). Rebar placement for a PSC section: main bars (I / J lists) + shear bars (I / J) + crack/concrete settings. Keyed by section key.",
+      "properties": {
+        "bMbarSameJ": {
+          "type": "boolean",
+          "description": "Main bar I==J (same at both ends).",
+          "default": true
+        },
+        "bSbarSameJ": {
+          "type": "boolean",
+          "description": "Shear bar I==J (same at both ends).",
+          "default": true
+        },
+        "Mbar_I": {
+          "type": "array",
+          "description": "Main bars at I-end.",
+          "items": {
+            "type": "object",
+            "description": "PSC main (longitudinal) bar (RPSC_MBAR_SSM).",
+            "properties": {
+              "nType": {
+                "type": "integer",
+                "description": "Type (0: Point, 1: Line, 2: Arc, 3: Circle, 4: Poly Line)."
+              },
+              "nRefY": {
+                "type": "integer",
+                "description": "Ref Y (0: Left, 1: Center, 2: Right)."
+              },
+              "nRefZ": {
+                "type": "integer",
+                "description": "Ref Z (0: Top, 1: Center, 2: Bottom)."
+              },
+              "Start": {
+                "type": "object",
+                "description": "Rebar placement coordinate point (POINT_SSM).",
+                "properties": {
+                  "dPointY": {
+                    "type": "number",
+                    "description": "Point Y coordinate."
+                  },
+                  "dPointZ": {
+                    "type": "number",
+                    "description": "Point Z coordinate."
+                  }
+                },
+                "required": [
+                  "dPointY",
+                  "dPointZ"
+                ]
+              },
+              "Center": {
+                "type": "object",
+                "description": "Rebar placement coordinate point (POINT_SSM).",
+                "properties": {
+                  "dPointY": {
+                    "type": "number",
+                    "description": "Point Y coordinate."
+                  },
+                  "dPointZ": {
+                    "type": "number",
+                    "description": "Point Z coordinate."
+                  }
+                },
+                "required": [
+                  "dPointY",
+                  "dPointZ"
+                ]
+              },
+              "aPassage": {
+                "type": "array",
+                "description": "Passage points.",
+                "items": {
+                  "type": "object",
+                  "description": "Rebar placement coordinate point (POINT_SSM).",
+                  "properties": {
+                    "dPointY": {
+                      "type": "number",
+                      "description": "Point Y coordinate."
+                    },
+                    "dPointZ": {
+                      "type": "number",
+                      "description": "Point Z coordinate."
+                    }
+                  },
+                  "required": [
+                    "dPointY",
+                    "dPointZ"
+                  ]
+                }
+              },
+              "End": {
+                "type": "object",
+                "description": "Rebar placement coordinate point (POINT_SSM).",
+                "properties": {
+                  "dPointY": {
+                    "type": "number",
+                    "description": "Point Y coordinate."
+                  },
+                  "dPointZ": {
+                    "type": "number",
+                    "description": "Point Z coordinate."
+                  }
+                },
+                "required": [
+                  "dPointY",
+                  "dPointZ"
+                ]
+              },
+              "dRadius": {
+                "type": "number",
+                "description": "Radius."
+              },
+              "nNumorCTC": {
+                "type": "integer",
+                "description": "Num or CTC (0: Num, 1: CTC)."
+              },
+              "nNum": {
+                "type": "integer",
+                "description": "Number of bars."
+              },
+              "dCTC": {
+                "type": "number",
+                "description": "CTC (center-to-center spacing)."
+              },
+              "bEdgeBar": {
+                "type": "boolean",
+                "description": "Edge bar."
+              },
+              "strBar": {
+                "type": "string",
+                "description": "Bar (rebar name)."
+              },
+              "nStandRef": {
+                "type": "integer",
+                "description": "Standard reference (0: Start, 1: Center, 2: End)."
+              },
+              "nPart": {
+                "type": "integer",
+                "description": "Part (0: none, 1: Composite Part1, 2: Composite Part2)."
+              },
+              "nInputMethod": {
+                "type": "integer",
+                "description": "Input method (0: A legacy, 1: B new)."
+              },
+              "nRefY_A": {
+                "type": "integer",
+                "description": "Ref Y - method A (0: Centroid, 1: Left)."
+              },
+              "nRefZ_A": {
+                "type": "integer",
+                "description": "Ref Z - method A (0: Top, 1: Bottom)."
+              },
+              "dRefY_A": {
+                "type": "number",
+                "description": "Ref Y offset - method A."
+              },
+              "dRefZ_A": {
+                "type": "number",
+                "description": "Ref Z offset - method A."
+              },
+              "dSpacing": {
+                "type": "number",
+                "description": "Spacing."
+              },
+              "nNumTopBot": {
+                "type": "integer",
+                "description": "Num. Top & Bot."
+              },
+              "nNumLeftRight": {
+                "type": "integer",
+                "description": "Num. Left & Right."
+              },
+              "dRotateAngle": {
+                "type": "number",
+                "description": "Rotate angle."
+              }
+            },
+            "required": [
+              "nType",
+              "nRefY",
+              "nRefZ",
+              "Start",
+              "Center",
+              "aPassage",
+              "End",
+              "dRadius",
+              "nNumorCTC",
+              "nNum",
+              "dCTC",
+              "bEdgeBar",
+              "strBar",
+              "nStandRef",
+              "nPart",
+              "nInputMethod",
+              "nRefY_A",
+              "nRefZ_A",
+              "dRefY_A",
+              "dRefZ_A",
+              "dSpacing",
+              "nNumTopBot",
+              "nNumLeftRight",
+              "dRotateAngle"
+            ]
+          }
+        },
+        "Mbar_J": {
+          "type": "array",
+          "description": "Main bars at J-end.",
+          "items": {
+            "type": "object",
+            "description": "PSC main (longitudinal) bar (RPSC_MBAR_SSM).",
+            "properties": {
+              "nType": {
+                "type": "integer",
+                "description": "Type (0: Point, 1: Line, 2: Arc, 3: Circle, 4: Poly Line)."
+              },
+              "nRefY": {
+                "type": "integer",
+                "description": "Ref Y (0: Left, 1: Center, 2: Right)."
+              },
+              "nRefZ": {
+                "type": "integer",
+                "description": "Ref Z (0: Top, 1: Center, 2: Bottom)."
+              },
+              "Start": {
+                "type": "object",
+                "description": "Rebar placement coordinate point (POINT_SSM).",
+                "properties": {
+                  "dPointY": {
+                    "type": "number",
+                    "description": "Point Y coordinate."
+                  },
+                  "dPointZ": {
+                    "type": "number",
+                    "description": "Point Z coordinate."
+                  }
+                },
+                "required": [
+                  "dPointY",
+                  "dPointZ"
+                ]
+              },
+              "Center": {
+                "type": "object",
+                "description": "Rebar placement coordinate point (POINT_SSM).",
+                "properties": {
+                  "dPointY": {
+                    "type": "number",
+                    "description": "Point Y coordinate."
+                  },
+                  "dPointZ": {
+                    "type": "number",
+                    "description": "Point Z coordinate."
+                  }
+                },
+                "required": [
+                  "dPointY",
+                  "dPointZ"
+                ]
+              },
+              "aPassage": {
+                "type": "array",
+                "description": "Passage points.",
+                "items": {
+                  "type": "object",
+                  "description": "Rebar placement coordinate point (POINT_SSM).",
+                  "properties": {
+                    "dPointY": {
+                      "type": "number",
+                      "description": "Point Y coordinate."
+                    },
+                    "dPointZ": {
+                      "type": "number",
+                      "description": "Point Z coordinate."
+                    }
+                  },
+                  "required": [
+                    "dPointY",
+                    "dPointZ"
+                  ]
+                }
+              },
+              "End": {
+                "type": "object",
+                "description": "Rebar placement coordinate point (POINT_SSM).",
+                "properties": {
+                  "dPointY": {
+                    "type": "number",
+                    "description": "Point Y coordinate."
+                  },
+                  "dPointZ": {
+                    "type": "number",
+                    "description": "Point Z coordinate."
+                  }
+                },
+                "required": [
+                  "dPointY",
+                  "dPointZ"
+                ]
+              },
+              "dRadius": {
+                "type": "number",
+                "description": "Radius."
+              },
+              "nNumorCTC": {
+                "type": "integer",
+                "description": "Num or CTC (0: Num, 1: CTC)."
+              },
+              "nNum": {
+                "type": "integer",
+                "description": "Number of bars."
+              },
+              "dCTC": {
+                "type": "number",
+                "description": "CTC (center-to-center spacing)."
+              },
+              "bEdgeBar": {
+                "type": "boolean",
+                "description": "Edge bar."
+              },
+              "strBar": {
+                "type": "string",
+                "description": "Bar (rebar name)."
+              },
+              "nStandRef": {
+                "type": "integer",
+                "description": "Standard reference (0: Start, 1: Center, 2: End)."
+              },
+              "nPart": {
+                "type": "integer",
+                "description": "Part (0: none, 1: Composite Part1, 2: Composite Part2)."
+              },
+              "nInputMethod": {
+                "type": "integer",
+                "description": "Input method (0: A legacy, 1: B new)."
+              },
+              "nRefY_A": {
+                "type": "integer",
+                "description": "Ref Y - method A (0: Centroid, 1: Left)."
+              },
+              "nRefZ_A": {
+                "type": "integer",
+                "description": "Ref Z - method A (0: Top, 1: Bottom)."
+              },
+              "dRefY_A": {
+                "type": "number",
+                "description": "Ref Y offset - method A."
+              },
+              "dRefZ_A": {
+                "type": "number",
+                "description": "Ref Z offset - method A."
+              },
+              "dSpacing": {
+                "type": "number",
+                "description": "Spacing."
+              },
+              "nNumTopBot": {
+                "type": "integer",
+                "description": "Num. Top & Bot."
+              },
+              "nNumLeftRight": {
+                "type": "integer",
+                "description": "Num. Left & Right."
+              },
+              "dRotateAngle": {
+                "type": "number",
+                "description": "Rotate angle."
+              }
+            },
+            "required": [
+              "nType",
+              "nRefY",
+              "nRefZ",
+              "Start",
+              "Center",
+              "aPassage",
+              "End",
+              "dRadius",
+              "nNumorCTC",
+              "nNum",
+              "dCTC",
+              "bEdgeBar",
+              "strBar",
+              "nStandRef",
+              "nPart",
+              "nInputMethod",
+              "nRefY_A",
+              "nRefZ_A",
+              "dRefY_A",
+              "dRefZ_A",
+              "dSpacing",
+              "nNumTopBot",
+              "nNumLeftRight",
+              "dRotateAngle"
+            ]
+          }
+        },
+        "Sbar_I": {
+          "type": "object",
+          "description": "PSC shear reinforcement (RPSC_SBAR_SSM).",
+          "properties": {
+            "bDiagonal": {
+              "type": "boolean",
+              "description": "Diagonal tension reinforcement."
+            },
+            "dDiagonalPitch": {
+              "type": "number",
+              "description": "Diagonal reinforcement pitch."
+            },
+            "dDiagonalAngle": {
+              "type": "number",
+              "description": "Diagonal reinforcement angle."
+            },
+            "dDiagonalAw": {
+              "type": "number",
+              "description": "Diagonal reinforcement amount (Aw)."
+            },
+            "bSteelBar": {
+              "type": "boolean",
+              "description": "Steel bar for web."
+            },
+            "dSteelBarPitch": {
+              "type": "number",
+              "description": "Steel bar pitch."
+            },
+            "dSteelBarAngle": {
+              "type": "number",
+              "description": "Steel bar angle."
+            },
+            "dSteelBarAp": {
+              "type": "number",
+              "description": "Steel bar amount (Ap)."
+            },
+            "dSteelBarPe": {
+              "type": "number",
+              "description": "Steel bar effective tensile force (Pe)."
+            },
+            "dSteelBarFactor": {
+              "type": "number",
+              "description": "Steel bar normal stress reduction factor."
+            },
+            "bTorsional": {
+              "type": "boolean",
+              "description": "Torsional reinforcement."
+            },
+            "dTorsionalPitch": {
+              "type": "number",
+              "description": "Torsional reinforcement pitch."
+            },
+            "dTorsionalAwt": {
+              "type": "number",
+              "description": "Torsional bar area per pitch (Awt)."
+            },
+            "dTorsionalAlt": {
+              "type": "number",
+              "description": "Torsional total bar area (Alt)."
+            },
+            "bStirExist": {
+              "type": "boolean",
+              "description": "Stirrup exists."
+            },
+            "dStirPitch": {
+              "type": "number",
+              "description": "Stirrup pitch."
+            },
+            "dStirAw": {
+              "type": "number",
+              "description": "Stirrup amount (Aw)."
+            },
+            "bLbarFlg": {
+              "type": "boolean",
+              "description": "Consider flange wrapping (Lbar)."
+            },
+            "dLbarThick": {
+              "type": "number",
+              "description": "Torsion stirrup cover thickness."
+            },
+            "bIncFC": {
+              "type": "boolean",
+              "description": "Include Flange/Cantilever."
+            },
+            "nAutoUser": {
+              "type": "integer",
+              "description": "Auto/User (0: Auto, 1: User)."
+            },
+            "dAk": {
+              "type": "number",
+              "description": "Closed section area (Ak) - User."
+            },
+            "dUk": {
+              "type": "number",
+              "description": "Closed section perimeter (Uk) - User."
+            },
+            "dAkCover": {
+              "type": "number",
+              "description": "Closed section area incl. cover (AkCover) - User."
+            },
+            "dUkCover": {
+              "type": "number",
+              "description": "Closed section perimeter incl. cover (UkCover) - User."
+            }
+          },
+          "required": [
+            "bDiagonal",
+            "dDiagonalPitch",
+            "dDiagonalAngle",
+            "dDiagonalAw",
+            "bSteelBar",
+            "dSteelBarPitch",
+            "dSteelBarAngle",
+            "dSteelBarAp",
+            "dSteelBarPe",
+            "dSteelBarFactor",
+            "bTorsional",
+            "dTorsionalPitch",
+            "dTorsionalAwt",
+            "dTorsionalAlt",
+            "bStirExist",
+            "dStirPitch",
+            "dStirAw",
+            "bLbarFlg",
+            "dLbarThick",
+            "bIncFC",
+            "nAutoUser",
+            "dAk",
+            "dUk",
+            "dAkCover",
+            "dUkCover"
+          ]
+        },
+        "Sbar_J": {
+          "type": "object",
+          "description": "PSC shear reinforcement (RPSC_SBAR_SSM).",
+          "properties": {
+            "bDiagonal": {
+              "type": "boolean",
+              "description": "Diagonal tension reinforcement."
+            },
+            "dDiagonalPitch": {
+              "type": "number",
+              "description": "Diagonal reinforcement pitch."
+            },
+            "dDiagonalAngle": {
+              "type": "number",
+              "description": "Diagonal reinforcement angle."
+            },
+            "dDiagonalAw": {
+              "type": "number",
+              "description": "Diagonal reinforcement amount (Aw)."
+            },
+            "bSteelBar": {
+              "type": "boolean",
+              "description": "Steel bar for web."
+            },
+            "dSteelBarPitch": {
+              "type": "number",
+              "description": "Steel bar pitch."
+            },
+            "dSteelBarAngle": {
+              "type": "number",
+              "description": "Steel bar angle."
+            },
+            "dSteelBarAp": {
+              "type": "number",
+              "description": "Steel bar amount (Ap)."
+            },
+            "dSteelBarPe": {
+              "type": "number",
+              "description": "Steel bar effective tensile force (Pe)."
+            },
+            "dSteelBarFactor": {
+              "type": "number",
+              "description": "Steel bar normal stress reduction factor."
+            },
+            "bTorsional": {
+              "type": "boolean",
+              "description": "Torsional reinforcement."
+            },
+            "dTorsionalPitch": {
+              "type": "number",
+              "description": "Torsional reinforcement pitch."
+            },
+            "dTorsionalAwt": {
+              "type": "number",
+              "description": "Torsional bar area per pitch (Awt)."
+            },
+            "dTorsionalAlt": {
+              "type": "number",
+              "description": "Torsional total bar area (Alt)."
+            },
+            "bStirExist": {
+              "type": "boolean",
+              "description": "Stirrup exists."
+            },
+            "dStirPitch": {
+              "type": "number",
+              "description": "Stirrup pitch."
+            },
+            "dStirAw": {
+              "type": "number",
+              "description": "Stirrup amount (Aw)."
+            },
+            "bLbarFlg": {
+              "type": "boolean",
+              "description": "Consider flange wrapping (Lbar)."
+            },
+            "dLbarThick": {
+              "type": "number",
+              "description": "Torsion stirrup cover thickness."
+            },
+            "bIncFC": {
+              "type": "boolean",
+              "description": "Include Flange/Cantilever."
+            },
+            "nAutoUser": {
+              "type": "integer",
+              "description": "Auto/User (0: Auto, 1: User)."
+            },
+            "dAk": {
+              "type": "number",
+              "description": "Closed section area (Ak) - User."
+            },
+            "dUk": {
+              "type": "number",
+              "description": "Closed section perimeter (Uk) - User."
+            },
+            "dAkCover": {
+              "type": "number",
+              "description": "Closed section area incl. cover (AkCover) - User."
+            },
+            "dUkCover": {
+              "type": "number",
+              "description": "Closed section perimeter incl. cover (UkCover) - User."
+            }
+          },
+          "required": [
+            "bDiagonal",
+            "dDiagonalPitch",
+            "dDiagonalAngle",
+            "dDiagonalAw",
+            "bSteelBar",
+            "dSteelBarPitch",
+            "dSteelBarAngle",
+            "dSteelBarAp",
+            "dSteelBarPe",
+            "dSteelBarFactor",
+            "bTorsional",
+            "dTorsionalPitch",
+            "dTorsionalAwt",
+            "dTorsionalAlt",
+            "bStirExist",
+            "dStirPitch",
+            "dStirAw",
+            "bLbarFlg",
+            "dLbarThick",
+            "bIncFC",
+            "nAutoUser",
+            "dAk",
+            "dUk",
+            "dAkCover",
+            "dUkCover"
+          ]
+        },
+        "bCracked": {
+          "type": "boolean",
+          "description": "Cracked section (composite).",
+          "default": false
+        },
+        "dConcFact": {
+          "type": "number",
+          "description": "Concrete contribution factor.",
+          "default": 1.0
+        },
+        "bCrackH": {
+          "type": "boolean",
+          "description": "Crack height option.",
+          "default": false
+        },
+        "dCrackHTop": {
+          "type": "number",
+          "description": "Crack height top.",
+          "default": 0.0
+        },
+        "dCrackHBot": {
+          "type": "number",
+          "description": "Crack height bottom.",
+          "default": 0.0
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bMbarSameJ": true,
+        "bSbarSameJ": true,
+        "Mbar_I": [
+          {
+            "nType": 0,
+            "nRefY": 0,
+            "nRefZ": 0,
+            "Start": {
+              "dPointY": 0.0,
+              "dPointZ": 0.0
+            },
+            "Center": {
+              "dPointY": 0.0,
+              "dPointZ": 0.0
+            },
+            "aPassage": [],
+            "End": {
+              "dPointY": 0.0,
+              "dPointZ": 0.0
+            },
+            "dRadius": 0.0,
+            "nNumorCTC": 0,
+            "nNum": 5,
+            "dCTC": 0.0,
+            "bEdgeBar": false,
+            "strBar": "D25",
+            "nStandRef": 0,
+            "nPart": 0,
+            "nInputMethod": 0,
+            "nRefY_A": 0,
+            "nRefZ_A": 0,
+            "dRefY_A": 0.0,
+            "dRefZ_A": 0.0,
+            "dSpacing": 0.0,
+            "nNumTopBot": 0,
+            "nNumLeftRight": 0,
+            "dRotateAngle": 0.0
+          }
+        ],
+        "Mbar_J": [
+          {
+            "nType": 0,
+            "nRefY": 0,
+            "nRefZ": 0,
+            "Start": {
+              "dPointY": 0.0,
+              "dPointZ": 0.0
+            },
+            "Center": {
+              "dPointY": 0.0,
+              "dPointZ": 0.0
+            },
+            "aPassage": [],
+            "End": {
+              "dPointY": 0.0,
+              "dPointZ": 0.0
+            },
+            "dRadius": 0.0,
+            "nNumorCTC": 0,
+            "nNum": 5,
+            "dCTC": 0.0,
+            "bEdgeBar": false,
+            "strBar": "D25",
+            "nStandRef": 0,
+            "nPart": 0,
+            "nInputMethod": 0,
+            "nRefY_A": 0,
+            "nRefZ_A": 0,
+            "dRefY_A": 0.0,
+            "dRefZ_A": 0.0,
+            "dSpacing": 0.0,
+            "nNumTopBot": 0,
+            "nNumLeftRight": 0,
+            "dRotateAngle": 0.0
+          }
+        ],
+        "Sbar_I": {
+          "bDiagonal": false,
+          "dDiagonalPitch": 0.0,
+          "dDiagonalAngle": 0.0,
+          "dDiagonalAw": 0.0,
+          "bSteelBar": false,
+          "dSteelBarPitch": 0.0,
+          "dSteelBarAngle": 0.0,
+          "dSteelBarAp": 0.0,
+          "dSteelBarPe": 0.0,
+          "dSteelBarFactor": 0.0,
+          "bTorsional": false,
+          "dTorsionalPitch": 0.0,
+          "dTorsionalAwt": 0.0,
+          "dTorsionalAlt": 0.0,
+          "bStirExist": true,
+          "dStirPitch": 150.0,
+          "dStirAw": 253.4,
+          "bLbarFlg": false,
+          "dLbarThick": 0.0,
+          "bIncFC": false,
+          "nAutoUser": 0,
+          "dAk": 0.0,
+          "dUk": 0.0,
+          "dAkCover": 0.0,
+          "dUkCover": 0.0
+        },
+        "Sbar_J": {
+          "bDiagonal": false,
+          "dDiagonalPitch": 0.0,
+          "dDiagonalAngle": 0.0,
+          "dDiagonalAw": 0.0,
+          "bSteelBar": false,
+          "dSteelBarPitch": 0.0,
+          "dSteelBarAngle": 0.0,
+          "dSteelBarAp": 0.0,
+          "dSteelBarPe": 0.0,
+          "dSteelBarFactor": 0.0,
+          "bTorsional": false,
+          "dTorsionalPitch": 0.0,
+          "dTorsionalAwt": 0.0,
+          "dTorsionalAlt": 0.0,
+          "bStirExist": true,
+          "dStirPitch": 150.0,
+          "dStirAw": 253.4,
+          "bLbarFlg": false,
+          "dLbarThick": 0.0,
+          "bIncFC": false,
+          "nAutoUser": 0,
+          "dAk": 0.0,
+          "dUk": 0.0,
+          "dAkCover": 0.0,
+          "dUkCover": 0.0
+        },
+        "bCracked": false,
+        "dConcFact": 1.0,
+        "bCrackH": false,
+        "dCrackHTop": 0.0,
+        "dCrackHBot": 0.0
+      }
+    }
+  }
+}

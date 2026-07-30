@@ -1,0 +1,40 @@
+{
+  "_group": "design",
+  "_name": "LTSR",
+  "uri": "design/STEEL/JAPAN-ROAD-II-H14/LTSR",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "LTSR": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Limiting Slenderness Ratio - Japan Road (Steel, Part II) (LTSR). Per-element allowable slenderness ratio limits for compression and tension members.",
+      "properties": {
+        "bNOTCHECK": {
+          "type": "boolean",
+          "description": "Do not check the slenderness ratio for this element.",
+          "default": false
+        },
+        "COMP": {
+          "type": "number",
+          "description": "Allowable (limiting) slenderness ratio for compression members.",
+          "default": 0
+        },
+        "TENS": {
+          "type": "number",
+          "description": "Allowable (limiting) slenderness ratio for tension members.",
+          "default": 0
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bNOTCHECK": false,
+        "COMP": 120,
+        "TENS": 200
+      }
+    }
+  }
+}

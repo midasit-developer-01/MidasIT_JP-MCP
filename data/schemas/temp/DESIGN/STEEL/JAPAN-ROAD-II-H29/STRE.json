@@ -1,0 +1,28 @@
+{
+  "_group": "temp",
+  "_name": "STRE",
+  "uri": "temp/DESIGN/STEEL/JAPAN-ROAD-II-H29/STRE",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "STRE": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Allowable Stress Reduction - Japan Road (Steel, Part II) (STRE). Gusset-plane flag controlling the allowable-stress reduction direction.",
+      "properties": {
+        "nGussetPlane": {
+          "type": "integer",
+          "description": "Gusset plane (0: Local-y, 1: Local-z).",
+          "default": 0
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "nGussetPlane": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "_group": "temp",
+  "_name": "STBD",
+  "uri": "temp/DESIGN/STEEL/JAPAN-ROAD-II-R07/STBD",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "STBD": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Bolt Hole Section Deduction - Japan Road (Steel, Part II) (STBD). Bolt-hole deduction factors; StbdType index 0 = I-end, index 1 = J-end.",
+      "properties": {
+        "bBothIJ": {
+          "type": "boolean",
+          "description": "Apply the same deduction to both I/J ends.",
+          "default": true
+        },
+        "StbdType": {
+          "type": "array",
+          "description": "Deduction per end (index 0 = I-end, 1 = J-end).",
+          "items": {
+            "type": "object",
+            "description": "Bolt-hole section deduction factors at one section position (STBD_TYPE).",
+            "properties": {
+              "bTotal": {
+                "type": "boolean",
+                "description": "Use total section deduction (else per-plate ratios)."
+              },
+              "dTotal": {
+                "type": "number",
+                "description": "Total deduction ratio."
+              },
+              "dTopFlange": {
+                "type": "number",
+                "description": "Top flange deduction ratio."
+              },
+              "dBotFlange": {
+                "type": "number",
+                "description": "Bottom flange deduction ratio."
+              },
+              "dLeftWeb": {
+                "type": "number",
+                "description": "Left web deduction ratio."
+              },
+              "dRightWeb": {
+                "type": "number",
+                "description": "Right web deduction ratio."
+              }
+            },
+            "required": [
+              "bTotal",
+              "dTotal",
+              "dTopFlange",
+              "dBotFlange",
+              "dLeftWeb",
+              "dRightWeb"
+            ]
+          },
+          "maxItems": 2
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bBothIJ": true,
+        "StbdType": [
+          {
+            "bTotal": true,
+            "dTotal": 0.1,
+            "dTopFlange": 0.0,
+            "dBotFlange": 0.0,
+            "dLeftWeb": 0.0,
+            "dRightWeb": 0.0
+          },
+          {
+            "bTotal": true,
+            "dTotal": 0.1,
+            "dTopFlange": 0.0,
+            "dBotFlange": 0.0,
+            "dLeftWeb": 0.0,
+            "dRightWeb": 0.0
+          }
+        ]
+      }
+    }
+  }
+}

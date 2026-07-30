@@ -1,0 +1,70 @@
+{
+  "_group": "temp",
+  "_name": "RBAR_SSM",
+  "uri": "temp/db/RBAR_SSM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "RBAR_SSM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Rebar SSM (RBAR_SSM). Index record linking an element/section to each rebar sub-manager (RPSC/RRSC/RGSC/MPST SSM). Managed by its own key.",
+      "properties": {
+        "kElem": {
+          "type": "integer",
+          "description": "Element key (standard/user section).",
+          "default": 0
+        },
+        "kRpscSsm": {
+          "type": "integer",
+          "description": "RPSC SSM key.",
+          "default": 0
+        },
+        "kRrscSsm": {
+          "type": "integer",
+          "description": "RRSC SSM key.",
+          "default": 0
+        },
+        "kRgscSsm": {
+          "type": "integer",
+          "description": "RGSC SSM key.",
+          "default": 0
+        },
+        "kMpstSsm": {
+          "type": "integer",
+          "description": "MPST SSM key.",
+          "default": 0
+        },
+        "nShapeType": {
+          "type": "integer",
+          "description": "Section shape type (0: Unknown, 1: Regular, 2: General, 3: PC).",
+          "default": 0
+        },
+        "nRebarPlacTarget": {
+          "type": "integer",
+          "description": "Rebar placement target (0: Unknown, 1: Existing, 2: Reinforced).",
+          "default": 0
+        },
+        "kSect": {
+          "type": "integer",
+          "description": "Section key (PC section, v980).",
+          "default": 0
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "kElem": 1,
+        "kRpscSsm": 0,
+        "kRrscSsm": 1,
+        "kRgscSsm": 0,
+        "kMpstSsm": 0,
+        "nShapeType": 1,
+        "nRebarPlacTarget": 1,
+        "kSect": 0
+      }
+    }
+  }
+}

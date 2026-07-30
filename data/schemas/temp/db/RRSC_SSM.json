@@ -1,0 +1,1010 @@
+{
+  "_group": "temp",
+  "_name": "RRSC_SSM",
+  "uri": "temp/db/RRSC_SSM",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "RRSC_SSM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Rebar of Regular Section - SSM (RRSC_SSM). Rebar placement for a regular (parametric) section: axial main bars (Anchor / I / M / J) plus stirrups (I / M / J).",
+      "properties": {
+        "nSameRebarPos": {
+          "type": "integer",
+          "description": "Same rebar position (0: Unknown, 1: SameNot, 2: SameAll, 3: SameIJ).",
+          "default": 0
+        },
+        "Anchor": {
+          "type": "array",
+          "description": "Anchor main bars.",
+          "items": {
+            "type": "object",
+            "description": "Axial main bar of a regular section (RRSC_MAINBAR).",
+            "properties": {
+              "nPos": {
+                "type": "integer",
+                "description": "Position on section edge (0-based)."
+              },
+              "nRebarPlacingType": {
+                "type": "integer",
+                "description": "Rebar placing type (1: SpacingDist, 2: OffsetDist, 3: SpacingAngle, 4: OffsetAngle)."
+              },
+              "dOffsetAngle": {
+                "type": "number",
+                "description": "Offset/spacing angle."
+              },
+              "dCoverThickness": {
+                "type": "number",
+                "description": "Cover thickness."
+              },
+              "nRebarNum": {
+                "type": "integer",
+                "description": "Number of rebars."
+              },
+              "strRebarDia": {
+                "type": "string",
+                "description": "Rebar diameter (name)."
+              },
+              "dUserRebarDia": {
+                "type": "number",
+                "description": "User-defined rebar diameter."
+              },
+              "bEmbedmentRebar": {
+                "type": "boolean",
+                "description": "Embedment (anchorage) rebar."
+              },
+              "dOffsetDistStt": {
+                "type": "number",
+                "description": "Offset distance - start."
+              },
+              "dOffsetDistEnd": {
+                "type": "number",
+                "description": "Offset distance - end."
+              },
+              "strBarSpacing": {
+                "type": "string",
+                "description": "Bar spacing expression (e.g. 100+10@150+100)."
+              }
+            },
+            "required": [
+              "nPos",
+              "nRebarPlacingType",
+              "dOffsetAngle",
+              "dCoverThickness",
+              "nRebarNum",
+              "strRebarDia",
+              "dUserRebarDia",
+              "bEmbedmentRebar",
+              "dOffsetDistStt",
+              "dOffsetDistEnd",
+              "strBarSpacing"
+            ]
+          }
+        },
+        "MbarI": {
+          "type": "array",
+          "description": "Main bars at I.",
+          "items": {
+            "type": "object",
+            "description": "Axial main bar of a regular section (RRSC_MAINBAR).",
+            "properties": {
+              "nPos": {
+                "type": "integer",
+                "description": "Position on section edge (0-based)."
+              },
+              "nRebarPlacingType": {
+                "type": "integer",
+                "description": "Rebar placing type (1: SpacingDist, 2: OffsetDist, 3: SpacingAngle, 4: OffsetAngle)."
+              },
+              "dOffsetAngle": {
+                "type": "number",
+                "description": "Offset/spacing angle."
+              },
+              "dCoverThickness": {
+                "type": "number",
+                "description": "Cover thickness."
+              },
+              "nRebarNum": {
+                "type": "integer",
+                "description": "Number of rebars."
+              },
+              "strRebarDia": {
+                "type": "string",
+                "description": "Rebar diameter (name)."
+              },
+              "dUserRebarDia": {
+                "type": "number",
+                "description": "User-defined rebar diameter."
+              },
+              "bEmbedmentRebar": {
+                "type": "boolean",
+                "description": "Embedment (anchorage) rebar."
+              },
+              "dOffsetDistStt": {
+                "type": "number",
+                "description": "Offset distance - start."
+              },
+              "dOffsetDistEnd": {
+                "type": "number",
+                "description": "Offset distance - end."
+              },
+              "strBarSpacing": {
+                "type": "string",
+                "description": "Bar spacing expression (e.g. 100+10@150+100)."
+              }
+            },
+            "required": [
+              "nPos",
+              "nRebarPlacingType",
+              "dOffsetAngle",
+              "dCoverThickness",
+              "nRebarNum",
+              "strRebarDia",
+              "dUserRebarDia",
+              "bEmbedmentRebar",
+              "dOffsetDistStt",
+              "dOffsetDistEnd",
+              "strBarSpacing"
+            ]
+          }
+        },
+        "MbarM": {
+          "type": "array",
+          "description": "Main bars at M.",
+          "items": {
+            "type": "object",
+            "description": "Axial main bar of a regular section (RRSC_MAINBAR).",
+            "properties": {
+              "nPos": {
+                "type": "integer",
+                "description": "Position on section edge (0-based)."
+              },
+              "nRebarPlacingType": {
+                "type": "integer",
+                "description": "Rebar placing type (1: SpacingDist, 2: OffsetDist, 3: SpacingAngle, 4: OffsetAngle)."
+              },
+              "dOffsetAngle": {
+                "type": "number",
+                "description": "Offset/spacing angle."
+              },
+              "dCoverThickness": {
+                "type": "number",
+                "description": "Cover thickness."
+              },
+              "nRebarNum": {
+                "type": "integer",
+                "description": "Number of rebars."
+              },
+              "strRebarDia": {
+                "type": "string",
+                "description": "Rebar diameter (name)."
+              },
+              "dUserRebarDia": {
+                "type": "number",
+                "description": "User-defined rebar diameter."
+              },
+              "bEmbedmentRebar": {
+                "type": "boolean",
+                "description": "Embedment (anchorage) rebar."
+              },
+              "dOffsetDistStt": {
+                "type": "number",
+                "description": "Offset distance - start."
+              },
+              "dOffsetDistEnd": {
+                "type": "number",
+                "description": "Offset distance - end."
+              },
+              "strBarSpacing": {
+                "type": "string",
+                "description": "Bar spacing expression (e.g. 100+10@150+100)."
+              }
+            },
+            "required": [
+              "nPos",
+              "nRebarPlacingType",
+              "dOffsetAngle",
+              "dCoverThickness",
+              "nRebarNum",
+              "strRebarDia",
+              "dUserRebarDia",
+              "bEmbedmentRebar",
+              "dOffsetDistStt",
+              "dOffsetDistEnd",
+              "strBarSpacing"
+            ]
+          }
+        },
+        "MbarJ": {
+          "type": "array",
+          "description": "Main bars at J.",
+          "items": {
+            "type": "object",
+            "description": "Axial main bar of a regular section (RRSC_MAINBAR).",
+            "properties": {
+              "nPos": {
+                "type": "integer",
+                "description": "Position on section edge (0-based)."
+              },
+              "nRebarPlacingType": {
+                "type": "integer",
+                "description": "Rebar placing type (1: SpacingDist, 2: OffsetDist, 3: SpacingAngle, 4: OffsetAngle)."
+              },
+              "dOffsetAngle": {
+                "type": "number",
+                "description": "Offset/spacing angle."
+              },
+              "dCoverThickness": {
+                "type": "number",
+                "description": "Cover thickness."
+              },
+              "nRebarNum": {
+                "type": "integer",
+                "description": "Number of rebars."
+              },
+              "strRebarDia": {
+                "type": "string",
+                "description": "Rebar diameter (name)."
+              },
+              "dUserRebarDia": {
+                "type": "number",
+                "description": "User-defined rebar diameter."
+              },
+              "bEmbedmentRebar": {
+                "type": "boolean",
+                "description": "Embedment (anchorage) rebar."
+              },
+              "dOffsetDistStt": {
+                "type": "number",
+                "description": "Offset distance - start."
+              },
+              "dOffsetDistEnd": {
+                "type": "number",
+                "description": "Offset distance - end."
+              },
+              "strBarSpacing": {
+                "type": "string",
+                "description": "Bar spacing expression (e.g. 100+10@150+100)."
+              }
+            },
+            "required": [
+              "nPos",
+              "nRebarPlacingType",
+              "dOffsetAngle",
+              "dCoverThickness",
+              "nRebarNum",
+              "strRebarDia",
+              "dUserRebarDia",
+              "bEmbedmentRebar",
+              "dOffsetDistStt",
+              "dOffsetDistEnd",
+              "strBarSpacing"
+            ]
+          }
+        },
+        "SbarI": {
+          "type": "array",
+          "description": "Stirrups at I.",
+          "items": {
+            "type": "object",
+            "description": "Stirrup set (RBAR_STIRRUP): Local Y/Z stirrups plus placement method.",
+            "properties": {
+              "StirrupY": {
+                "type": "object",
+                "description": "Stirrup data for one local direction (STIRRUP_ITEM).",
+                "properties": {
+                  "dLenghD": {
+                    "type": "number",
+                    "description": "Effective length D."
+                  },
+                  "dSpacing": {
+                    "type": "number",
+                    "description": "Stirrup spacing."
+                  },
+                  "nNum": {
+                    "type": "integer",
+                    "description": "Number of stirrup legs."
+                  },
+                  "dAngle": {
+                    "type": "number",
+                    "description": "Stirrup angle (degree)."
+                  },
+                  "strRebarDia": {
+                    "type": "string",
+                    "description": "Confinement rebar diameter (name)."
+                  },
+                  "dAs": {
+                    "type": "number",
+                    "description": "Area of one confinement rebar (As)."
+                  },
+                  "dLs": {
+                    "type": "number",
+                    "description": "Moment of inertia of one rebar (Ls)."
+                  },
+                  "dBwRailway": {
+                    "type": "number",
+                    "description": "bw for railway bridge."
+                  },
+                  "bPcSteel": {
+                    "type": "boolean",
+                    "description": "Whether a PC steel bar exists."
+                  },
+                  "dPcSteelLenghD": {
+                    "type": "number",
+                    "description": "PC steel bar effective length D."
+                  },
+                  "dPcSteelSpacing": {
+                    "type": "number",
+                    "description": "PC steel bar spacing."
+                  },
+                  "dPcSteelDAs": {
+                    "type": "number",
+                    "description": "PC steel bar area (As)."
+                  },
+                  "dPcSteelYield": {
+                    "type": "number",
+                    "description": "PC steel bar reduced yield strength."
+                  },
+                  "bAw": {
+                    "type": "boolean",
+                    "description": "Shear rebar area entered separately."
+                  },
+                  "dAw": {
+                    "type": "number",
+                    "description": "Total shear rebar area (Aw)."
+                  },
+                  "bUnanchoredMainBar": {
+                    "type": "boolean",
+                    "description": "Consider unanchored main bar."
+                  }
+                },
+                "required": [
+                  "dLenghD",
+                  "dSpacing",
+                  "nNum",
+                  "dAngle",
+                  "strRebarDia",
+                  "dAs",
+                  "dLs",
+                  "dBwRailway",
+                  "bPcSteel",
+                  "dPcSteelLenghD",
+                  "dPcSteelSpacing",
+                  "dPcSteelDAs",
+                  "dPcSteelYield",
+                  "bAw",
+                  "dAw",
+                  "bUnanchoredMainBar"
+                ]
+              },
+              "StirrupZ": {
+                "type": "object",
+                "description": "Stirrup data for one local direction (STIRRUP_ITEM).",
+                "properties": {
+                  "dLenghD": {
+                    "type": "number",
+                    "description": "Effective length D."
+                  },
+                  "dSpacing": {
+                    "type": "number",
+                    "description": "Stirrup spacing."
+                  },
+                  "nNum": {
+                    "type": "integer",
+                    "description": "Number of stirrup legs."
+                  },
+                  "dAngle": {
+                    "type": "number",
+                    "description": "Stirrup angle (degree)."
+                  },
+                  "strRebarDia": {
+                    "type": "string",
+                    "description": "Confinement rebar diameter (name)."
+                  },
+                  "dAs": {
+                    "type": "number",
+                    "description": "Area of one confinement rebar (As)."
+                  },
+                  "dLs": {
+                    "type": "number",
+                    "description": "Moment of inertia of one rebar (Ls)."
+                  },
+                  "dBwRailway": {
+                    "type": "number",
+                    "description": "bw for railway bridge."
+                  },
+                  "bPcSteel": {
+                    "type": "boolean",
+                    "description": "Whether a PC steel bar exists."
+                  },
+                  "dPcSteelLenghD": {
+                    "type": "number",
+                    "description": "PC steel bar effective length D."
+                  },
+                  "dPcSteelSpacing": {
+                    "type": "number",
+                    "description": "PC steel bar spacing."
+                  },
+                  "dPcSteelDAs": {
+                    "type": "number",
+                    "description": "PC steel bar area (As)."
+                  },
+                  "dPcSteelYield": {
+                    "type": "number",
+                    "description": "PC steel bar reduced yield strength."
+                  },
+                  "bAw": {
+                    "type": "boolean",
+                    "description": "Shear rebar area entered separately."
+                  },
+                  "dAw": {
+                    "type": "number",
+                    "description": "Total shear rebar area (Aw)."
+                  },
+                  "bUnanchoredMainBar": {
+                    "type": "boolean",
+                    "description": "Consider unanchored main bar."
+                  }
+                },
+                "required": [
+                  "dLenghD",
+                  "dSpacing",
+                  "nNum",
+                  "dAngle",
+                  "strRebarDia",
+                  "dAs",
+                  "dLs",
+                  "dBwRailway",
+                  "bPcSteel",
+                  "dPcSteelLenghD",
+                  "dPcSteelSpacing",
+                  "dPcSteelDAs",
+                  "dPcSteelYield",
+                  "bAw",
+                  "dAw",
+                  "bUnanchoredMainBar"
+                ]
+              },
+              "nRebarMethod": {
+                "type": "integer",
+                "description": "Rebar method (0: converted, 1: separate, 2: reinforce batch)."
+              }
+            },
+            "required": [
+              "StirrupY",
+              "StirrupZ",
+              "nRebarMethod"
+            ]
+          }
+        },
+        "SbarM": {
+          "type": "array",
+          "description": "Stirrups at M.",
+          "items": {
+            "type": "object",
+            "description": "Stirrup set (RBAR_STIRRUP): Local Y/Z stirrups plus placement method.",
+            "properties": {
+              "StirrupY": {
+                "type": "object",
+                "description": "Stirrup data for one local direction (STIRRUP_ITEM).",
+                "properties": {
+                  "dLenghD": {
+                    "type": "number",
+                    "description": "Effective length D."
+                  },
+                  "dSpacing": {
+                    "type": "number",
+                    "description": "Stirrup spacing."
+                  },
+                  "nNum": {
+                    "type": "integer",
+                    "description": "Number of stirrup legs."
+                  },
+                  "dAngle": {
+                    "type": "number",
+                    "description": "Stirrup angle (degree)."
+                  },
+                  "strRebarDia": {
+                    "type": "string",
+                    "description": "Confinement rebar diameter (name)."
+                  },
+                  "dAs": {
+                    "type": "number",
+                    "description": "Area of one confinement rebar (As)."
+                  },
+                  "dLs": {
+                    "type": "number",
+                    "description": "Moment of inertia of one rebar (Ls)."
+                  },
+                  "dBwRailway": {
+                    "type": "number",
+                    "description": "bw for railway bridge."
+                  },
+                  "bPcSteel": {
+                    "type": "boolean",
+                    "description": "Whether a PC steel bar exists."
+                  },
+                  "dPcSteelLenghD": {
+                    "type": "number",
+                    "description": "PC steel bar effective length D."
+                  },
+                  "dPcSteelSpacing": {
+                    "type": "number",
+                    "description": "PC steel bar spacing."
+                  },
+                  "dPcSteelDAs": {
+                    "type": "number",
+                    "description": "PC steel bar area (As)."
+                  },
+                  "dPcSteelYield": {
+                    "type": "number",
+                    "description": "PC steel bar reduced yield strength."
+                  },
+                  "bAw": {
+                    "type": "boolean",
+                    "description": "Shear rebar area entered separately."
+                  },
+                  "dAw": {
+                    "type": "number",
+                    "description": "Total shear rebar area (Aw)."
+                  },
+                  "bUnanchoredMainBar": {
+                    "type": "boolean",
+                    "description": "Consider unanchored main bar."
+                  }
+                },
+                "required": [
+                  "dLenghD",
+                  "dSpacing",
+                  "nNum",
+                  "dAngle",
+                  "strRebarDia",
+                  "dAs",
+                  "dLs",
+                  "dBwRailway",
+                  "bPcSteel",
+                  "dPcSteelLenghD",
+                  "dPcSteelSpacing",
+                  "dPcSteelDAs",
+                  "dPcSteelYield",
+                  "bAw",
+                  "dAw",
+                  "bUnanchoredMainBar"
+                ]
+              },
+              "StirrupZ": {
+                "type": "object",
+                "description": "Stirrup data for one local direction (STIRRUP_ITEM).",
+                "properties": {
+                  "dLenghD": {
+                    "type": "number",
+                    "description": "Effective length D."
+                  },
+                  "dSpacing": {
+                    "type": "number",
+                    "description": "Stirrup spacing."
+                  },
+                  "nNum": {
+                    "type": "integer",
+                    "description": "Number of stirrup legs."
+                  },
+                  "dAngle": {
+                    "type": "number",
+                    "description": "Stirrup angle (degree)."
+                  },
+                  "strRebarDia": {
+                    "type": "string",
+                    "description": "Confinement rebar diameter (name)."
+                  },
+                  "dAs": {
+                    "type": "number",
+                    "description": "Area of one confinement rebar (As)."
+                  },
+                  "dLs": {
+                    "type": "number",
+                    "description": "Moment of inertia of one rebar (Ls)."
+                  },
+                  "dBwRailway": {
+                    "type": "number",
+                    "description": "bw for railway bridge."
+                  },
+                  "bPcSteel": {
+                    "type": "boolean",
+                    "description": "Whether a PC steel bar exists."
+                  },
+                  "dPcSteelLenghD": {
+                    "type": "number",
+                    "description": "PC steel bar effective length D."
+                  },
+                  "dPcSteelSpacing": {
+                    "type": "number",
+                    "description": "PC steel bar spacing."
+                  },
+                  "dPcSteelDAs": {
+                    "type": "number",
+                    "description": "PC steel bar area (As)."
+                  },
+                  "dPcSteelYield": {
+                    "type": "number",
+                    "description": "PC steel bar reduced yield strength."
+                  },
+                  "bAw": {
+                    "type": "boolean",
+                    "description": "Shear rebar area entered separately."
+                  },
+                  "dAw": {
+                    "type": "number",
+                    "description": "Total shear rebar area (Aw)."
+                  },
+                  "bUnanchoredMainBar": {
+                    "type": "boolean",
+                    "description": "Consider unanchored main bar."
+                  }
+                },
+                "required": [
+                  "dLenghD",
+                  "dSpacing",
+                  "nNum",
+                  "dAngle",
+                  "strRebarDia",
+                  "dAs",
+                  "dLs",
+                  "dBwRailway",
+                  "bPcSteel",
+                  "dPcSteelLenghD",
+                  "dPcSteelSpacing",
+                  "dPcSteelDAs",
+                  "dPcSteelYield",
+                  "bAw",
+                  "dAw",
+                  "bUnanchoredMainBar"
+                ]
+              },
+              "nRebarMethod": {
+                "type": "integer",
+                "description": "Rebar method (0: converted, 1: separate, 2: reinforce batch)."
+              }
+            },
+            "required": [
+              "StirrupY",
+              "StirrupZ",
+              "nRebarMethod"
+            ]
+          }
+        },
+        "SbarJ": {
+          "type": "array",
+          "description": "Stirrups at J.",
+          "items": {
+            "type": "object",
+            "description": "Stirrup set (RBAR_STIRRUP): Local Y/Z stirrups plus placement method.",
+            "properties": {
+              "StirrupY": {
+                "type": "object",
+                "description": "Stirrup data for one local direction (STIRRUP_ITEM).",
+                "properties": {
+                  "dLenghD": {
+                    "type": "number",
+                    "description": "Effective length D."
+                  },
+                  "dSpacing": {
+                    "type": "number",
+                    "description": "Stirrup spacing."
+                  },
+                  "nNum": {
+                    "type": "integer",
+                    "description": "Number of stirrup legs."
+                  },
+                  "dAngle": {
+                    "type": "number",
+                    "description": "Stirrup angle (degree)."
+                  },
+                  "strRebarDia": {
+                    "type": "string",
+                    "description": "Confinement rebar diameter (name)."
+                  },
+                  "dAs": {
+                    "type": "number",
+                    "description": "Area of one confinement rebar (As)."
+                  },
+                  "dLs": {
+                    "type": "number",
+                    "description": "Moment of inertia of one rebar (Ls)."
+                  },
+                  "dBwRailway": {
+                    "type": "number",
+                    "description": "bw for railway bridge."
+                  },
+                  "bPcSteel": {
+                    "type": "boolean",
+                    "description": "Whether a PC steel bar exists."
+                  },
+                  "dPcSteelLenghD": {
+                    "type": "number",
+                    "description": "PC steel bar effective length D."
+                  },
+                  "dPcSteelSpacing": {
+                    "type": "number",
+                    "description": "PC steel bar spacing."
+                  },
+                  "dPcSteelDAs": {
+                    "type": "number",
+                    "description": "PC steel bar area (As)."
+                  },
+                  "dPcSteelYield": {
+                    "type": "number",
+                    "description": "PC steel bar reduced yield strength."
+                  },
+                  "bAw": {
+                    "type": "boolean",
+                    "description": "Shear rebar area entered separately."
+                  },
+                  "dAw": {
+                    "type": "number",
+                    "description": "Total shear rebar area (Aw)."
+                  },
+                  "bUnanchoredMainBar": {
+                    "type": "boolean",
+                    "description": "Consider unanchored main bar."
+                  }
+                },
+                "required": [
+                  "dLenghD",
+                  "dSpacing",
+                  "nNum",
+                  "dAngle",
+                  "strRebarDia",
+                  "dAs",
+                  "dLs",
+                  "dBwRailway",
+                  "bPcSteel",
+                  "dPcSteelLenghD",
+                  "dPcSteelSpacing",
+                  "dPcSteelDAs",
+                  "dPcSteelYield",
+                  "bAw",
+                  "dAw",
+                  "bUnanchoredMainBar"
+                ]
+              },
+              "StirrupZ": {
+                "type": "object",
+                "description": "Stirrup data for one local direction (STIRRUP_ITEM).",
+                "properties": {
+                  "dLenghD": {
+                    "type": "number",
+                    "description": "Effective length D."
+                  },
+                  "dSpacing": {
+                    "type": "number",
+                    "description": "Stirrup spacing."
+                  },
+                  "nNum": {
+                    "type": "integer",
+                    "description": "Number of stirrup legs."
+                  },
+                  "dAngle": {
+                    "type": "number",
+                    "description": "Stirrup angle (degree)."
+                  },
+                  "strRebarDia": {
+                    "type": "string",
+                    "description": "Confinement rebar diameter (name)."
+                  },
+                  "dAs": {
+                    "type": "number",
+                    "description": "Area of one confinement rebar (As)."
+                  },
+                  "dLs": {
+                    "type": "number",
+                    "description": "Moment of inertia of one rebar (Ls)."
+                  },
+                  "dBwRailway": {
+                    "type": "number",
+                    "description": "bw for railway bridge."
+                  },
+                  "bPcSteel": {
+                    "type": "boolean",
+                    "description": "Whether a PC steel bar exists."
+                  },
+                  "dPcSteelLenghD": {
+                    "type": "number",
+                    "description": "PC steel bar effective length D."
+                  },
+                  "dPcSteelSpacing": {
+                    "type": "number",
+                    "description": "PC steel bar spacing."
+                  },
+                  "dPcSteelDAs": {
+                    "type": "number",
+                    "description": "PC steel bar area (As)."
+                  },
+                  "dPcSteelYield": {
+                    "type": "number",
+                    "description": "PC steel bar reduced yield strength."
+                  },
+                  "bAw": {
+                    "type": "boolean",
+                    "description": "Shear rebar area entered separately."
+                  },
+                  "dAw": {
+                    "type": "number",
+                    "description": "Total shear rebar area (Aw)."
+                  },
+                  "bUnanchoredMainBar": {
+                    "type": "boolean",
+                    "description": "Consider unanchored main bar."
+                  }
+                },
+                "required": [
+                  "dLenghD",
+                  "dSpacing",
+                  "nNum",
+                  "dAngle",
+                  "strRebarDia",
+                  "dAs",
+                  "dLs",
+                  "dBwRailway",
+                  "bPcSteel",
+                  "dPcSteelLenghD",
+                  "dPcSteelSpacing",
+                  "dPcSteelDAs",
+                  "dPcSteelYield",
+                  "bAw",
+                  "dAw",
+                  "bUnanchoredMainBar"
+                ]
+              },
+              "nRebarMethod": {
+                "type": "integer",
+                "description": "Rebar method (0: converted, 1: separate, 2: reinforce batch)."
+              }
+            },
+            "required": [
+              "StirrupY",
+              "StirrupZ",
+              "nRebarMethod"
+            ]
+          }
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "nSameRebarPos": 3,
+        "Anchor": [
+          {
+            "nPos": 0,
+            "nRebarPlacingType": 1,
+            "dOffsetAngle": 0.0,
+            "dCoverThickness": 50.0,
+            "nRebarNum": 5,
+            "strRebarDia": "D25",
+            "dUserRebarDia": 0.0,
+            "bEmbedmentRebar": true,
+            "dOffsetDistStt": 0.0,
+            "dOffsetDistEnd": 0.0,
+            "strBarSpacing": "100+10@150+100"
+          }
+        ],
+        "MbarI": [
+          {
+            "nPos": 0,
+            "nRebarPlacingType": 1,
+            "dOffsetAngle": 0.0,
+            "dCoverThickness": 50.0,
+            "nRebarNum": 5,
+            "strRebarDia": "D25",
+            "dUserRebarDia": 0.0,
+            "bEmbedmentRebar": true,
+            "dOffsetDistStt": 0.0,
+            "dOffsetDistEnd": 0.0,
+            "strBarSpacing": "100+10@150+100"
+          }
+        ],
+        "MbarM": [],
+        "MbarJ": [
+          {
+            "nPos": 0,
+            "nRebarPlacingType": 1,
+            "dOffsetAngle": 0.0,
+            "dCoverThickness": 50.0,
+            "nRebarNum": 5,
+            "strRebarDia": "D25",
+            "dUserRebarDia": 0.0,
+            "bEmbedmentRebar": true,
+            "dOffsetDistStt": 0.0,
+            "dOffsetDistEnd": 0.0,
+            "strBarSpacing": "100+10@150+100"
+          }
+        ],
+        "SbarI": [
+          {
+            "StirrupY": {
+              "dLenghD": 0.0,
+              "dSpacing": 150.0,
+              "nNum": 2,
+              "dAngle": 90.0,
+              "strRebarDia": "D13",
+              "dAs": 126.7,
+              "dLs": 0.0,
+              "dBwRailway": 0.0,
+              "bPcSteel": false,
+              "dPcSteelLenghD": 0.0,
+              "dPcSteelSpacing": 0.0,
+              "dPcSteelDAs": 0.0,
+              "dPcSteelYield": 0.0,
+              "bAw": false,
+              "dAw": 0.0,
+              "bUnanchoredMainBar": false
+            },
+            "StirrupZ": {
+              "dLenghD": 0.0,
+              "dSpacing": 150.0,
+              "nNum": 2,
+              "dAngle": 90.0,
+              "strRebarDia": "D13",
+              "dAs": 126.7,
+              "dLs": 0.0,
+              "dBwRailway": 0.0,
+              "bPcSteel": false,
+              "dPcSteelLenghD": 0.0,
+              "dPcSteelSpacing": 0.0,
+              "dPcSteelDAs": 0.0,
+              "dPcSteelYield": 0.0,
+              "bAw": false,
+              "dAw": 0.0,
+              "bUnanchoredMainBar": false
+            },
+            "nRebarMethod": 0
+          }
+        ],
+        "SbarM": [],
+        "SbarJ": [
+          {
+            "StirrupY": {
+              "dLenghD": 0.0,
+              "dSpacing": 150.0,
+              "nNum": 2,
+              "dAngle": 90.0,
+              "strRebarDia": "D13",
+              "dAs": 126.7,
+              "dLs": 0.0,
+              "dBwRailway": 0.0,
+              "bPcSteel": false,
+              "dPcSteelLenghD": 0.0,
+              "dPcSteelSpacing": 0.0,
+              "dPcSteelDAs": 0.0,
+              "dPcSteelYield": 0.0,
+              "bAw": false,
+              "dAw": 0.0,
+              "bUnanchoredMainBar": false
+            },
+            "StirrupZ": {
+              "dLenghD": 0.0,
+              "dSpacing": 150.0,
+              "nNum": 2,
+              "dAngle": 90.0,
+              "strRebarDia": "D13",
+              "dAs": 126.7,
+              "dLs": 0.0,
+              "dBwRailway": 0.0,
+              "bPcSteel": false,
+              "dPcSteelLenghD": 0.0,
+              "dPcSteelSpacing": 0.0,
+              "dPcSteelDAs": 0.0,
+              "dPcSteelYield": 0.0,
+              "bAw": false,
+              "dAw": 0.0,
+              "bUnanchoredMainBar": false
+            },
+            "nRebarMethod": 0
+          }
+        ]
+      }
+    }
+  }
+}

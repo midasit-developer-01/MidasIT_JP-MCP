@@ -1,0 +1,124 @@
+{
+  "_group": "temp",
+  "_name": "MPHG",
+  "uri": "temp/db/MPHG",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "MPHG": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "M-Phi Hinge Data (MPHG). Per-material moment-curvature plastic-hinge settings. Array members map to 3 components in order [PMM, My, Mz].",
+      "properties": {
+        "cDir": {
+          "type": "array",
+          "description": "Direction on/off flags [PMM, My, Mz].",
+          "items": {
+            "type": "boolean"
+          }
+        },
+        "nSectionNum": {
+          "type": "array",
+          "description": "Number of sections [PMM, My, Mz]. Range 1-20.",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "nHysModel": {
+          "type": "array",
+          "description": "Hysteresis model [PMM, My, Mz].",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "nStrsStrnCurve": {
+          "type": "integer",
+          "description": "Stress-strain curve (0: Concrete Std, 1: Municipal V, 2: Municipal III(sig_ck), 3: Municipal III(0.85 sig_ck)).",
+          "default": 1
+        },
+        "nConsiderSigbt": {
+          "type": "integer",
+          "description": "Consider sigma_bt (0: Consider, 1: Do not Consider).",
+          "default": 0
+        },
+        "nBrokenLine1": {
+          "type": "integer",
+          "description": "1st broken line point.",
+          "default": 0
+        },
+        "nBrokenLine2": {
+          "type": "integer",
+          "description": "2nd broken line point.",
+          "default": 0
+        },
+        "nLimitState": {
+          "type": "integer",
+          "description": "Limit state (0: Type A, 1: Type B).",
+          "default": 1
+        },
+        "nStrenthLimit": {
+          "type": "integer",
+          "description": "Strength limit (0: keep descending stiffness, 1: set stiffness to 0).",
+          "default": 0
+        },
+        "nCode": {
+          "type": "integer",
+          "description": "M-Phi code index.",
+          "default": 4
+        },
+        "nEarthquakeType": {
+          "type": "integer",
+          "description": "Earthquake type (0: Type1, 1: Type2).",
+          "default": 1
+        },
+        "nExamTarget": {
+          "type": "integer",
+          "description": "Exam target (0: Existing section, 1: Reinforced section).",
+          "default": 0
+        },
+        "bPassYbPoint": {
+          "type": "boolean",
+          "description": "Skeleton curve passes Yb point.",
+          "default": false
+        },
+        "nSectionConsider": {
+          "type": "integer",
+          "description": "Section consideration (0: A=Ac+n*As, 1: A=Ac+(n-1)*As).",
+          "default": 0
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "cDir": [
+          true,
+          true,
+          true
+        ],
+        "nSectionNum": [
+          3,
+          3,
+          3
+        ],
+        "nHysModel": [
+          0,
+          0,
+          0
+        ],
+        "nStrsStrnCurve": 1,
+        "nConsiderSigbt": 0,
+        "nBrokenLine1": 0,
+        "nBrokenLine2": 0,
+        "nLimitState": 1,
+        "nStrenthLimit": 0,
+        "nCode": 4,
+        "nEarthquakeType": 1,
+        "nExamTarget": 0,
+        "bPassYbPoint": false,
+        "nSectionConsider": 0
+      }
+    }
+  }
+}

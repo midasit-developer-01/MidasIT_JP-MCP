@@ -1,0 +1,34 @@
+{
+  "_group": "temp",
+  "_name": "STUS",
+  "uri": "temp/DESIGN/STEEL/JAPAN-ROAD-II-R07/STUS",
+  "methods": "POST, GET, PUT, DELETE",
+  "schema": {
+    "STUS": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Allowable Stress Upper Limit - Japan Road (Steel, Part II) (STUS). Flags for applying the upper limit of allowable stress.",
+      "properties": {
+        "bUpperLimitLB": {
+          "type": "boolean",
+          "description": "Upper limit of allowable stress for local buckling.",
+          "default": false
+        },
+        "bUpperLimitBC": {
+          "type": "boolean",
+          "description": "Upper limit of allowable bending compressive stress.",
+          "default": true
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "bUpperLimitLB": false,
+        "bUpperLimitBC": true
+      }
+    }
+  }
+}
