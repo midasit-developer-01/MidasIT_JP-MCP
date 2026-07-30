@@ -106,8 +106,3 @@ def validate_argument(group: str, item: str, body: Any) -> dict | None:
         full = body if isinstance(body, dict) else {"Argument": body}
         return [("", full)], None
     return _validate(group, item, cases_from)
-
-
-def validate_db_assign(item: str, assign: Any) -> dict | None:
-    """Back-compat wrapper: validate a db-group ``Assign`` body (see validate_assign)."""
-    return validate_assign("db", item, assign)

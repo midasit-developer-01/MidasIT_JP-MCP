@@ -78,7 +78,10 @@ design/RC, design/PSC, ...). When a name is not unique, pass the full `uri` from
 midas_lookup, or `group=`, so you hit the intended endpoint.
 
 Which tool:
-  • db group — model data CRUD: midas_db_read / _create / _update / _delete.
+  • db-shaped CRUD (Assign convention): midas_db_read / _create / _update /
+    _delete. Pass a bare name under /db ("NODE"), or a full lookup uri to reach
+    the same-shaped tables in any group, routed by uri: "temp/db/MPHG",
+    "design/PSC/AASHTO-LRFD24/MEMB", "temp/DESIGN/STEEL/.../STBD".
   • command groups (one tool each): midas_doc, midas_ope, midas_view, midas_post.
   • extended groups take a `path` (the lookup uri after "<group>/"): midas_design,
     midas_rating, midas_temp, midas_requestinfo, midas_config. design & rating nest
@@ -290,9 +293,10 @@ def midas_describe(name: str, group: str | None = None) -> dict[str, Any]:
     )
 )
 def midas_db_read(item: str, ctx: Context, item_id: int | None = None) -> Any:
-    """Read model DB data. GET /db/{item} (all) or /db/{item}/{item_id} (one).
+    """Read model DB data. GET /{group}/{item} (all) or /.../{item_id} (one).
 
-    `item` is the endpoint name, e.g. "NODE", "ELEM", "SECT", "MATL", "IEHP".
+    `item` is a bare name under /db ("NODE", "SECT", "IEHP") or a full lookup uri
+    to any db-shaped (Assign) endpoint ("temp/db/MPHG", "design/PSC/AASHTO-LRFD24/MATD").
     Response is unwrapped to {id: value, ...} (or the single record).
     """
     c = _client(ctx)
@@ -309,10 +313,12 @@ def midas_db_read(item: str, ctx: Context, item_id: int | None = None) -> Any:
     )
 )
 def midas_db_create(item: str, assign: dict, ctx: Context) -> Any:
-    """Create DB records. POST /db/{item} with body {"Assign": assign}.
+    """Create DB records. POST /{group}/{item} with body {"Assign": assign}.
 
-    `assign` maps a numeric-string key to a record, e.g.
-    {"1": {"X": 0, "Y": 0, "Z": 0}}. Check `midas_describe(item)` for the shape.
+    `item` is a bare name under /db or a full uri to any db-shaped endpoint
+    ("temp/db/MPHG", "design/PSC/AASHTO-LRFD24/MEMB"). `assign` maps a
+    numeric-string key to a record, e.g. {"1": {"X": 0, "Y": 0, "Z": 0}};
+    see `midas_describe(item)` for the shape.
     """
     return _client(ctx).db_create(item, assign)
 
@@ -327,7 +333,8 @@ def midas_db_create(item: str, assign: dict, ctx: Context) -> Any:
     )
 )
 def midas_db_update(item: str, assign: dict, ctx: Context) -> Any:
-    """Update DB records. PUT /db/{item} with body {"Assign": assign}."""
+    """Update DB records. PUT /{group}/{item} ({"Assign": assign}). `item` is a
+    bare name under /db or a full uri ("temp/db/MPHG", "design/PSC/AASHTO-LRFD24/MEMB")."""
     return _client(ctx).db_update(item, assign)
 
 
@@ -341,7 +348,8 @@ def midas_db_update(item: str, assign: dict, ctx: Context) -> Any:
     )
 )
 def midas_db_delete(item: str, item_id: int, ctx: Context) -> Any:
-    """Delete a single DB record. DELETE /db/{item}/{item_id}."""
+    """Delete a single DB record. DELETE /{group}/{item}/{item_id}. `item` is a
+    bare name under /db or a full uri ("temp/db/MPHG", "design/PSC/AASHTO-LRFD24/DIDP")."""
     return _client(ctx).db_delete(item, item_id)
 
 

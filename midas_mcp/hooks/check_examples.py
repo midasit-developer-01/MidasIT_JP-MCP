@@ -4,7 +4,7 @@ Rationale: ``describe()`` hands each endpoint's ``example`` to the LLM, which im
 it directly. A guide-derived example that contradicts the (C++-truth) schema would
 teach the LLM a wrong payload AND be rejected by the runtime hook that ships with it.
 
-This guard reuses :func:`validate_db_assign` (the exact runtime path), so "example
+This guard reuses :func:`validate_assign` (the exact runtime path), so "example
 passes this guard" is equivalent to "the client hook will not reject that example".
 
 Run:  ``python -m midas_mcp.hooks.check_examples``  (exit 0 = all pass, 1 = failures).

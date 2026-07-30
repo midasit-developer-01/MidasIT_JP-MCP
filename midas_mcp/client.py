@@ -17,7 +17,7 @@ from typing import Any
 
 import requests
 
-from .hooks import VALIDATED_GROUPS, validate_argument, validate_assign, validate_db_assign
+from .hooks import VALIDATED_GROUPS, validate_argument, validate_assign
 
 DEFAULT_SERVER = "https://moa-engineers.midasit.com:443"
 
@@ -93,43 +93,62 @@ class MidasClient:
 
     # -- DB CRUD (Assign convention) ---------------------------------------
 
-    def _validate_assign(self, item: str, assign: Any) -> dict | None:
-        """Run the pre-request validation hook, unless validation is disabled.
+    @staticmethod
+    def _resolve_db(item: str) -> tuple[str, str, str]:
+        """(group, group-relative path, leaf) for a db-style address.
 
-        Returns an error dict (same shape as request() failures) when the body
-        is invalid, or None to proceed.
+        Bare name stays under /db ("NODE"); a full uri routes to its own group
+        ("temp/db/MPHG" -> temp). Leaf is the key the GET response unwraps by.
+        """
+        if "/" in item:
+            group, _, sub = item.partition("/")
+            return group, sub, sub.split("/")[-1]
+        return "db", item, item
+
+    def _validate_assign(self, item: str, assign: Any) -> dict | None:
+        """Validate the body against the resolved endpoint's schema, or None.
+
+        Routes by group so a uri like temp/db/MPHG hits its own schema. Skipped
+        when validation is off; an invalid body comes back as a request()-shaped error.
         """
         if not self.validate:
             return None
-        return validate_db_assign(item, assign)
+        group, sub, _ = self._resolve_db(item)
+        return validate_assign(group, sub, assign)
 
     def db_read(self, item: str) -> Any:
-        """GET /db/{item} -> unwrapped {id: value, ...}."""
-        js = self.request("GET", f"/db/{item}")
+        """GET /{group}/{item} -> unwrapped {id: value, ...}. `item` is a bare
+        name under /db ("NODE") or a full uri ("temp/db/MPHG")."""
+        group, sub, leaf = self._resolve_db(item)
+        js = self.request("GET", f"/{group}/{sub}")
         if isinstance(js, dict) and "error" in js:
             return js
-        return (js or {}).get(item, {})
+        return (js or {}).get(leaf, {})
 
     def db_read_item(self, item: str, key: str | int) -> Any:
-        js = self.request("GET", f"/db/{item}/{key}")
+        group, sub, leaf = self._resolve_db(item)
+        js = self.request("GET", f"/{group}/{sub}/{key}")
         if isinstance(js, dict) and "error" in js:
             return js
-        return (js or {}).get(item, {}).get(str(key), {})
+        return (js or {}).get(leaf, {}).get(str(key), {})
 
     def db_create(self, item: str, assign: dict) -> Any:
         err = self._validate_assign(item, assign)
         if err is not None:
             return err
-        return self.request("POST", f"/db/{item}", {"Assign": assign})
+        group, sub, _ = self._resolve_db(item)
+        return self.request("POST", f"/{group}/{sub}", {"Assign": assign})
 
     def db_update(self, item: str, assign: dict) -> Any:
         err = self._validate_assign(item, assign)
         if err is not None:
             return err
-        return self.request("PUT", f"/db/{item}", {"Assign": assign})
+        group, sub, _ = self._resolve_db(item)
+        return self.request("PUT", f"/{group}/{sub}", {"Assign": assign})
 
     def db_delete(self, item: str, key: str | int) -> Any:
-        return self.request("DELETE", f"/db/{item}/{key}")
+        group, sub, _ = self._resolve_db(item)
+        return self.request("DELETE", f"/{group}/{sub}/{key}")
 
     # -- Command groups (Argument convention: doc/ope/view/post) -----------
 

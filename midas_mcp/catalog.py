@@ -104,6 +104,18 @@ def search(query: str, limit: int = 8, group: str | None = None) -> list[dict[st
     return [h for _, h in hits[:limit]]
 
 
+def _result(g: str, key: str, entry: dict[str, Any]) -> dict[str, Any]:
+    """describe() hit + its body convention, read from the example's top-level key
+    ("Assign" vs "Argument" — a per-endpoint property, since temp mixes both)."""
+    ex = entry.get("example")
+    convention = (
+        "assign" if isinstance(ex, dict) and "Assign" in ex
+        else "argument" if isinstance(ex, dict) and "Argument" in ex
+        else "unknown"
+    )
+    return {"group": g, "name": key, "convention": convention, **entry}
+
+
 def describe(name: str, group: str | None = None) -> dict[str, Any]:
     """Return the full catalog entry (schema + example + note) for an endpoint.
 
@@ -120,9 +132,9 @@ def describe(name: str, group: str | None = None) -> dict[str, Any]:
     if "/" in want:
         for g, key, entry in _iter_entries():
             if str(entry.get("uri", "")).lower() == want:
-                return {"group": g, "name": key, **entry}
+                return _result(g, key, entry)
     grp = group.strip().lower() if group else None
     for g, key, entry in _iter_entries():
         if key.lower() == want and (grp is None or g.lower() == grp):
-            return {"group": g, "name": key, **entry}
+            return _result(g, key, entry)
     return {"error": f"endpoint '{name}' not found in catalog"}
