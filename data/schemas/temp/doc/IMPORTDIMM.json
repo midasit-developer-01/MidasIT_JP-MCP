@@ -1,0 +1,86 @@
+{
+  "_group": "temp",
+  "_name": "IMPORTDIMM",
+  "uri": "temp/doc/IMPORTDIMM",
+  "methods": "POST",
+  "schema": {
+    "IMPORTDIMM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Import Dimension Line from DXF (IMPORTDIMM). GEN-only. Reads the lines/text on the selected layers of a DXF file and registers them as a dimension line (DIMM header + DMLT items). The request body is carried under 'Argument'. The response is a flattened object { \"DIMM_KEY\": <uint> }; DIMM_KEY is the key of the registered dimension line, or 0 on failure (file open error, no data, or registration failed). Requires an opened project.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Dimension-import request body.",
+          "properties": {
+            "NAME": {
+              "type": "string",
+              "description": "Dimension name (must be unique)."
+            },
+            "DXF_PATH": {
+              "type": "string",
+              "description": "Full path to the DXF file (must be accessible by the product)."
+            },
+            "LAYERS": {
+              "type": "array",
+              "description": "Layer names to import (at least one).",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "SCALE_FACTOR": {
+              "type": "number",
+              "description": "Scale factor (> 0). Optional; defaults to 0.001 when omitted.",
+              "exclusiveMinimum": 0,
+              "default": 0.001
+            },
+            "ORIGIN": {
+              "type": "array",
+              "description": "Insertion origin [X, Y, Z]. Optional; missing components default to 0.",
+              "items": {
+                "type": "number"
+              }
+            },
+            "ROTATION": {
+              "type": "array",
+              "description": "Rotation [Rx, Ry, Rz] in degrees. Optional; missing components default to 0.",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "required": [
+            "NAME",
+            "DXF_PATH",
+            "LAYERS"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "NAME": "DIM_PLAN_1",
+      "DXF_PATH": "C:/Temp/plan.dxf",
+      "LAYERS": [
+        "DIM",
+        "TEXT"
+      ],
+      "SCALE_FACTOR": 0.001,
+      "ORIGIN": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ROTATION": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "_group": "temp",
+  "_name": "FILEPATH",
+  "uri": "temp/doc/FILEPATH",
+  "methods": "GET",
+  "schema": {
+    "FILEPATH": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Current Project File Path (FILEPATH). Returns the full file path of the currently opened document/project. The request carries no meaningful body (DTO_EMPTY). The response is a flattened object { \"FILE_PATH\": <string> }; FILE_PATH is an empty string (\"\") when the project is a new, unsaved document.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Empty request body (DTO_EMPTY); no input fields are consumed by the handler."
+        }
+      }
+    }
+  },
+  "example": {
+    "Argument": {}
+  }
+}
