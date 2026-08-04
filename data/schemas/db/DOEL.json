@@ -42,5 +42,8 @@
         "MAIN_DOMAIN_NAME": "DM1"
       }
     }
-  }
+  },
+  "manual_title": "Domain-Element",
+  "feature_name": "Define Domain",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35807341514393-Domain-Element"
 }

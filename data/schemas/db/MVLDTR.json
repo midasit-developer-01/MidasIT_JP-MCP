@@ -64,5 +64,8 @@
         "ITEMS": [1.0, 0.9]
       }
     }
-  }
+  },
+  "manual_title": "Moving Load Cases - Transverse",
+  "feature_name": "Moving Load Cases",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35961950207129-Moving-Load-Cases-Transverse"
 }

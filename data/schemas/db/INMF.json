@@ -56,5 +56,8 @@
         "ELEMENT_FORCES": [12.0, 2.0, 2.0, 1.0, 4.0, 4.0, -12.0, -2.0, -2.0, -1.0, -4.0, -4.0]
       }
     }
-  }
+  },
+  "manual_title": "Small Displacement - Initial Element Force",
+  "feature_name": "Initial Element Forces",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35988975670937-Small-Displacement-Initial-Element-Force"
 }

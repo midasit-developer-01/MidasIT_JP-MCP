@@ -21,5 +21,8 @@
   },
   "example": {
     "Argument": "C:\\Models\\bridge_model.mxt"
-  }
+  },
+  "manual_title": "Import to mct/mgt",
+  "feature_name": "Merge Data File",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35994365225113-Import-to-mct-mgt"
 }

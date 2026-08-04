@@ -38,5 +38,8 @@
       "EXPORT_PATH": "C:/Exports/model_stage1.mcb",
       "STAGE_STEP": "CS1"
     }
-  }
+  },
+  "manual_title": "Save Current Stage As",
+  "feature_name": "Save Current Stage As",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/50707525717401-Save-Current-Stage-As"
 }

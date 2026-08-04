@@ -28,5 +28,7 @@
     "Argument": {
       "TYPE": "Pushover"
     }
-  }
+  },
+  "manual_title": "Perform Analysis",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35685160815897-Perform-Analysis"
 }

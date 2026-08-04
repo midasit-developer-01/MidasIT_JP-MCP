@@ -186,5 +186,8 @@
         "BEAM_LOAD": false
       }
     }
-  }
+  },
+  "manual_title": "Using Load Combinations",
+  "feature_name": "Create Load Cases Using Load Combinations",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35994827741465-Using-Load-Combinations"
 }

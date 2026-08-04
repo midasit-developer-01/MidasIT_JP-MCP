@@ -96,5 +96,8 @@
         "AXIS_VECTOR": [1.0, 0.0, 0.0, 0.0, 1.0, 0.0]
       }
     }
-  }
+  },
+  "manual_title": "Define Sub-Domain",
+  "feature_name": "Define Sub-Domain",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35807304820761-Define-Sub-Domain"
 }

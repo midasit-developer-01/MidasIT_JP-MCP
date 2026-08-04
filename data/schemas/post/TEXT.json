@@ -200,5 +200,6 @@
       "REF_PT": "Ground",
       "COMPONENTS": ["DX", "DY", "DZ"]
     }
-  }
+  },
+  "feature_name": "Text Output"
 }

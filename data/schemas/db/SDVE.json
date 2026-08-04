@@ -359,5 +359,8 @@
         "KINETIC_FRIC": 0
       }
     }
-  }
+  },
+  "manual_title": "Seismic Device - Viscoelastic Damper",
+  "feature_name": "Viscoelastic Damper",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35948062417049-Seismic-Device-Viscoelastic-Damper"
 }

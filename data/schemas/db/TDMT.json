@@ -671,5 +671,8 @@
         "AGE": 3
       }
     }
-  }
+  },
+  "manual_title": "Time Dependent Material Properties - Creep/Shrinkage",
+  "feature_name": "Time Dependent Material (Creep/Shrinkage)",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35808006330009-Time-Dependent-Material-Properties-Creep-Shrinkage"
 }

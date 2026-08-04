@@ -21,5 +21,8 @@
   },
   "example": {
     "Argument": "C:\\Users\\Public\\Documents\\model.json"
-  }
+  },
+  "manual_title": "Import to Json",
+  "feature_name": "Import",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35994338816793-Import-to-Json"
 }

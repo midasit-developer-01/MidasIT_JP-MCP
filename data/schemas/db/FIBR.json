@@ -196,5 +196,8 @@
         "MONITORED_FIBER": [0, 0, 0, 0, 0, 0, 0, 0]
       }
     }
-  }
+  },
+  "manual_title": "Fiber Division of Section",
+  "feature_name": "Fiber Division of Section",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35944476555801-Fiber-Division-of-Section"
 }

@@ -63,15 +63,20 @@ MIDAS NX Open API — read and edit a live MIDAS CIVIL/GEN NX structural model
 (nodes, elements, sections, materials, loads, analysis, design/rating, results)
 over its REST API.
 
-CORE RULE — never call an action tool from memory. The API has 539 endpoints and
+CORE RULE — never call an action tool from memory. The API has 572 endpoints and
 you select one by NAME at call time; each has its own payload shape. Call
 midas_describe first and shape your `assign`/`argument`/`body` on the returned
 `example`. That example is the authoritative contract — do not infer the body.
 
 Procedure for any task:
-  1. midas_lookup("<keywords>")          find candidate endpoints (returns group + uri).
-  2. midas_describe("<name or full uri>") get schema + a working example + notes.
-  3. call the matching action tool, copying the example's shape.
+  1. midas_lookup("<keywords>")          find candidate endpoints (group + uri + desc).
+  2. read each hit's `desc` and pick     the top hit is NOT always the right one.
+                                         If no desc matches what you were asked for,
+                                         call midas_lookup again with limit=30 —
+                                         about 1 request in 12 has its answer below
+                                         rank 10. Never settle for the closest hit.
+  3. midas_describe("<name or full uri>") get schema + a working example + notes.
+  4. call the matching action tool, copying the example's shape.
 
 Disambiguation — the same NAME exists in several places: across groups
 (db/MEMB vs ope/MEMB) and, for design/rating, across code standards (MATD under
@@ -269,12 +274,24 @@ if _auth is not None:
         openWorldHint=False,  # searches the bundled catalog, not the live app
     )
 )
-def midas_lookup(query: str, limit: int = 8, group: str | None = None) -> list[dict[str, Any]]:
+def midas_lookup(query: str, limit: int = 10, group: str | None = None) -> list[dict[str, Any]]:
     """Search the MIDAS API endpoint catalog by keyword (name / uri / description).
 
     Use this FIRST to find the right endpoint before calling the action tools.
-    Each hit carries its `group` and full `uri` — the API spans 10 groups
-    (db, design, ope, rating, doc, post, temp, view, requestinfo, config).
+    Each hit carries its `group`, full `uri` and a one-line `desc` — the API
+    spans 10 groups (db, design, ope, rating, doc, post, temp, view,
+    requestinfo, config).
+
+    READ THE `desc` OF EACH HIT AND PICK FROM IT. Endpoint names are 4-letter
+    abbreviations (SECT, CONS, SPLC), so the ranking is tuned to keep the right
+    endpoint somewhere in the list rather than always first — the top hit is not
+    necessarily the right one.
+
+    IF NO `desc` MATCHES WHAT YOU WERE ASKED FOR, CALL THIS AGAIN WITH
+    `limit=30` BEFORE CONCLUDING THE ENDPOINT DOES NOT EXIST. Roughly one
+    request in twelve has its answer below rank 10, and `limit=30` finds most
+    of them. Do not settle for the closest-looking hit from the first ten.
+    A second search costs far less than a wrong endpoint.
 
     Pass `group` to restrict results to one group; with a group set, a broad or
     empty `query` simply lists that group's endpoints. This matters because a

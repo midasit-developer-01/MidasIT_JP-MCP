@@ -21,5 +21,8 @@
   },
   "example": {
     "Argument": "C:/Users/Public/Documents/MyModel.mcb"
-  }
+  },
+  "manual_title": "Save As",
+  "feature_name": "Save As",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35994277012377-Save-As"
 }

@@ -65,5 +65,8 @@
       "SELECTION_TYPE": "SELECTION",
       "ALLOW_SINGLE": false
     }
-  }
+  },
+  "manual_title": "Member Assignment",
+  "feature_name": "Member Assignment",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/49514964272665-Member-Assignment"
 }

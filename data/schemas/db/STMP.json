@@ -42,5 +42,8 @@
         "GROUP_NAME": ""
       }
     }
-  }
+  },
+  "manual_title": "System Temperature",
+  "feature_name": "System Temperature",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35954219102233-System-Temperature"
 }

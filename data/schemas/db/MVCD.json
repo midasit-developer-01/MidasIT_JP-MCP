@@ -45,5 +45,8 @@
         "CODE": "EUROCODE"
       }
     }
-  }
+  },
+  "manual_title": "Moving Load Code",
+  "feature_name": "Moving Load Code",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35955076795929-Moving-Load-Code"
 }

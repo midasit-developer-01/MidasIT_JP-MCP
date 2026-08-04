@@ -182,5 +182,8 @@
         ]
       }
     }
-  }
+  },
+  "manual_title": "Beam Section Temperature",
+  "feature_name": "Beam Section Temperatures",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35954186047897-Beam-Section-Temperature"
 }

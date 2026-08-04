@@ -99,5 +99,8 @@
         ]
       }
     }
-  }
+  },
+  "manual_title": "Tendon Prestress",
+  "feature_name": "Tendon Prestress Loads",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35954702397209-Tendon-Prestress"
 }

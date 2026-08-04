@@ -73,5 +73,8 @@
         "TOL": 0.001
       }
     }
-  }
+  },
+  "manual_title": "Main Control Data",
+  "feature_name": "Main Control Data",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35409287717657-Main-Control-Data"
 }

@@ -98,5 +98,8 @@
         ]
       }
     }
-  }
+  },
+  "manual_title": "Time Dependent Material Properties - User Defined",
+  "feature_name": "Time Dependent Material (Creep/Shrinkage/Relaxation) Function",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35807665049369-Time-Dependent-Material-Properties-User-Defined"
 }

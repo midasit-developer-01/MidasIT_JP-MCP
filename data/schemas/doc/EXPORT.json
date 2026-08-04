@@ -20,5 +20,8 @@
   },
   "example": {
     "Argument": "C:/Temp/model_export.json"
-  }
+  },
+  "manual_title": "Export to Json",
+  "feature_name": "Export",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35994422273305-Export-to-Json"
 }

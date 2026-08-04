@@ -3,7 +3,7 @@
 An [MCP](https://modelcontextprotocol.io) server that lets an LLM (Claude, etc.)
 drive a running **MIDAS CIVIL/GEN NX** instance through its Open API.
 
-Instead of one tool per endpoint (**539 endpoints across 10 groups**), it exposes
+Instead of one tool per endpoint (**572 endpoints across 10 groups**), it exposes
 **15 generic tools** plus a **catalog lookup** so the model discovers the exact
 schema/example at call time — including the undocumented `db/IEHP` (inelastic
 hinge property).
@@ -12,7 +12,7 @@ hinge property).
 
 | Tool | Maps to | Purpose |
 | --- | --- | --- |
-| `midas_lookup(query)` | — | Search the endpoint catalog by keyword |
+| `midas_lookup(query)` | — | Search the endpoint catalog by keyword; each hit carries a one-line `desc` |
 | `midas_describe(name)` | — | Full schema + example for one endpoint (e.g. `NODE`, `IEHP`, `TABLE`) |
 | `midas_db_read(item, item_id?)` | `GET /db/{item}` | Read model data (unwrapped) |
 | `midas_db_create(item, assign)` | `POST /db/{item}` | Create records (`{"Assign": ...}`) |
@@ -60,6 +60,88 @@ included. The reference doc (`data/midas-api-reference.md`) is bundled from the
 React template repo. (This replaces the old monolithic
 `data/midas-api-examples.json`.)
 
+## Endpoint search
+
+`midas_lookup` ranks the catalog with BM25 over each endpoint's name, uri and
+description (`midas_mcp/search_index.py`). Endpoint names are 4-letter
+abbreviations, so a query's words rarely match a name at all — the description
+carries the match, and BM25's IDF keeps a common word like `load` (158 of 572
+endpoints) from outweighing a rare one like `spectrum` (3). Plurals are stemmed
+so `support` finds `Supports`, and the naming phrase each description opens with
+(`Constraint Supports (CONS).`) is weighted up, since that is where a query's
+identifying words land.
+
+Hits are ranked for **recall, not precision**: the goal is to keep the right
+endpoint somewhere in the list, and each hit ships a one-line `desc` so the
+model reads them and picks. The top hit is not assumed correct.
+
+### Manual names in the index
+
+The descriptions are DTO-derived, so they name things the way the code does
+while a user asks in UI wording. `scripts/merge_manual.py` folds the public
+manual's naming (`manual_title`, `feature_name`, `manual_url`) into the schema
+files for the 228 endpoints it covers, and those names are indexed alongside the
+description's own title. That is what makes "Graphic Files" reach `view/CAPTURE`
+and "Activities" reach `view/ACTIVE` — no scorer tuning can, since the words
+were simply absent. Only the naming fields are merged; the manual's prose is
+left out because it triples a document's indexed length for no measured gain.
+
+Re-run it whenever the manual is re-scraped — it is idempotent:
+
+```
+python scripts/merge_manual.py --source <API_Data dir> [--dry-run]
+```
+
+`scripts/extract_features.py` keeps the rest of each manual article —
+what the feature *does* and where it sits in the UI — in `data/features.json`,
+keyed by endpoint. It is **not** indexed: the eval set's `function` queries are
+drawn from that same text, and indexing it would leave nothing independent to
+measure against. It is kept because it is the starting point for any synonym
+work (the remaining misses are cases where the manual's wording and the DTO's
+share no words at all) and because it removes the need to re-scrape Help Center
+for future use.
+
+### When the first ten are not enough
+
+About **1 independent query in 12** has its answer below rank 10 — usually at
+rank 13–26, occasionally deeper. `midas_lookup`'s description tells the model to
+call again with `limit=30` when no `desc` matches, rather than settle for the
+closest-looking hit; measured, that recovers 6 of the 8 current misses for
+~1.2K extra tokens. `eval_search` prints how often a retry is needed and what it
+recovers, so the instruction's payoff stays a measured number.
+
+Reading a whole group instead was considered and rejected for this purpose: the
+`db` index alone is ~8.1K tokens against ~1.8K for a `limit=30` retry, for a
+smaller gain. A browse resource is still worth building — but for *browsing*
+("what load types exist?"), which search cannot answer at all, not as a
+search fallback.
+
+### Guarding it
+
+`python -m midas_mcp.eval_search` replays `data/eval_queries.json` (372 queries
+derived from the public manual) and fails if recall@10 regresses.
+
+**Two of the three query sources are circular** — `api_title` and
+`feature_title` are the very fields the merge copies into the index, so they
+score ~100% by construction and only prove the wiring works. `function` (the
+manual's prose statement of what a feature does) is *not* indexed, so it is the
+honest set, and **the floor is applied to it alone**:
+
+| source | n | recall@10 | top-1 | |
+| --- | ---: | ---: | ---: | --- |
+| `api_title` | 219 | 100.0% | 94.5% | circular |
+| `feature_title` | 61 | 100.0% | 91.8% | circular |
+| **`function`** | **92** | **91.3%** | **56.5%** | **the gate** |
+
+Before the merge, `function` sat at 85.9% / 42.4%, so the gain there (+5.4pp
+recall, +14.1pp top-1) is measured against text the index has never seen. The
+inflated 97.8% total is printed for continuity and means little.
+
+**Still not a benchmark of real usage:** the manual describes what a feature
+*is*, a user asks for what they *want to do*, and only 224 of the 572 endpoints
+are covered — design/rating/temp have none. Queries from real sessions are what
+would replace this; mark them `session` and move the gate onto them.
+
 ## Client-side validation
 
 Before every `POST`/`PUT` to `/db/{item}`, the client validates the `Assign`
@@ -79,11 +161,18 @@ midas_mcp/          # server source (stdio + streamable-http)  ── shared cor
   ├─ server.py      #   the 15 FastMCP tools
   ├─ client.py      #   thin REST client for the MIDAS Open API
   ├─ catalog.py     #   offline endpoint lookup over data/schemas
+  ├─ search_index.py#   BM25 ranking behind midas_lookup
+  ├─ eval_search.py #   recall guard for the ranking (python -m midas_mcp.eval_search)
   ├─ hooks/         #   pre-request JSON-Schema validation of DB bodies
   └─ auth/          #   opt-in OAuth for remote mode (MIDAS_MCP_PUBLIC_URL); see auth/README.md
 data/
   ├─ schemas/       # endpoint catalog, one file per endpoint (bundled into every build)
+  ├─ features.json  # what each feature does + its menu path, keyed by endpoint (not indexed)
+  ├─ eval_queries.json  # manual-derived query set for the recall guard
   └─ midas-api-reference.md
+scripts/
+  ├─ merge_manual.py     # folds public-manual naming into data/schemas (idempotent)
+  └─ extract_features.py # writes data/features.json from the same source
 mcpb/               # track 1: .mcpb bundle for Claude Desktop (PyInstaller, win32)
 Dockerfile          # track 2: container image for remote (streamable-http) deploy
 deploy/             # track 2: CloudFormation templates + AWS runbook
@@ -192,7 +281,10 @@ on a stable Elastic IP (point your own DNS at it), weekday auto stop/start.
 
 ## Example flow (what the model does)
 
-1. `midas_lookup("inelastic hinge")` → finds `IEHP`, `IEHG`, `IEHC`, `FIMP`
+1. `midas_lookup("inelastic hinge")` → `IEHG`, `IEHG-*`, `IEHP`, `IEHC`, … each
+   with a one-line `desc`. Reading those picks `IEHP` ("Defines the skeleton
+   curve / hysteresis model") over `IEHG` ("Assigns an inelastic hinge to an
+   element") — which is why hits carry descriptions rather than uris alone.
 2. `midas_describe("IEHP")` → gets the schema/example + the read rule
    (only `COMPONENT_DIR[i]==true` components hold valid values)
 3. `midas_db_read("IEHP")` → live data from the open model

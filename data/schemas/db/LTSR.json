@@ -40,5 +40,6 @@
         "TENS": 0
       }
     }
-  }
+  },
+  "feature_name": "Limiting Slenderness Ratio"
 }

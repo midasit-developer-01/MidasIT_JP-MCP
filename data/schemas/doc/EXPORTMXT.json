@@ -21,5 +21,8 @@
   },
   "example": {
     "Argument": "C:\\Temp\\model.mxt"
-  }
+  },
+  "manual_title": "Export to mct/mgt",
+  "feature_name": "Export",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35994462805017-Export-to-mct-mgt"
 }

@@ -77,5 +77,8 @@
         "bCHECK_GEOM_STIFF": false
       }
     }
-  }
+  },
+  "manual_title": "Small Displacement - Initial Force Control Data",
+  "feature_name": "Initial Forces Control Data",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35988927684633-Small-Displacement-Initial-Force-Control-Data"
 }

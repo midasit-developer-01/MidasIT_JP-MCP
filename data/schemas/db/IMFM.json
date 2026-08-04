@@ -43,5 +43,8 @@
         "REBAR_NAME": "Inelastic_Rebar"
       }
     }
-  }
+  },
+  "manual_title": "Inelastic Material Properties for Fiber Model",
+  "feature_name": "Inelastic Material Properties",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35807475893401-Inelastic-Material-Properties-for-Fiber-Model"
 }

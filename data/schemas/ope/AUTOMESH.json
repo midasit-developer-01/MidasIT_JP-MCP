@@ -235,5 +235,8 @@
         "SUBDIVIDE_LINE_ELEM": true
       }
     }
-  }
+  },
+  "manual_title": "Auto-Mesh Planar Area",
+  "feature_name": "Auto-mesh Planar Area",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35736427971225-Auto-Mesh-Planar-Area"
 }

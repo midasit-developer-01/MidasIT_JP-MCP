@@ -65,5 +65,8 @@
         ]
       }
     }
-  }
+  },
+  "manual_title": "Element Temperature",
+  "feature_name": "Element Temperatures",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35954097233561-Element-Temperature"
 }

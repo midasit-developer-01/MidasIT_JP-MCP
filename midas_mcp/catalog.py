@@ -8,6 +8,9 @@ Lets the LLM discover the exact schema/example/tables for any endpoint
 (including the undocumented `db/IEHP`) at call time instead of hardcoding 256
 tools. Splitting the old monolithic json into per-endpoint files is a pure
 data-layout change: the tool surface is unchanged.
+
+This module owns loading and ``describe``; ranking for ``search`` lives in
+:mod:`midas_mcp.search_index`.
 """
 
 from __future__ import annotations
@@ -16,6 +19,8 @@ import json
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
+
+from . import search_index
 
 _SCHEMA_DIR = Path(__file__).resolve().parent.parent / "data" / "schemas"
 
@@ -51,57 +56,61 @@ def _iter_entries():
     yield from _load()
 
 
-def search(query: str, limit: int = 8, group: str | None = None) -> list[dict[str, Any]]:
-    """Fuzzy-search endpoints by name / uri / note / field descriptions.
+DESC_MAX = 140
 
-    Returns compact hits: {group, name, uri, methods, note?}.
+# A sentence break is only worth cutting at if it lands late enough to have said
+# something. Catalog descriptions open with a title sentence — "Section (SECT)." —
+# that is under 40 characters 71% of the time, and stopping there would strip the
+# very detail the caller needs to tell two endpoints apart.
+_SENTENCE_MIN = 0.6
+
+
+def _short_desc(summary: str, cap: int = DESC_MAX) -> str:
+    """One line describing the endpoint, for a search hit.
+
+    Cuts at a sentence boundary when one falls late in the budget, otherwise at a
+    word boundary with an ellipsis, so a hit never ends mid-word.
+    """
+    text = " ".join(summary.split())
+    if len(text) <= cap:
+        return text
+
+    window = text[:cap]
+    stop = window.rfind(". ")
+    if stop >= cap * _SENTENCE_MIN:
+        return window[: stop + 1]
+
+    space = window.rfind(" ")
+    return (window[:space] if space > 0 else window[: cap - 1]).rstrip(" ,;:") + "…"
+
+
+def search(query: str, limit: int = 10, group: str | None = None) -> list[dict[str, Any]]:
+    """Fuzzy-search endpoints by name / uri / description (BM25, see search_index).
+
+    Returns compact hits: {group, name, uri, methods, desc, note?}. ``desc`` is
+    what makes the result usable — endpoint names are 4-letter abbreviations, so
+    a list of bare uris gives the caller nothing to choose between. The ranking
+    aims to keep the right endpoint ON the list rather than first; the caller is
+    expected to read the descriptions and pick.
+
     Pass `group` (e.g. "db", "design", "ope", "rating", "temp", "doc", "post",
     "view", "requestinfo", "config") to restrict results to that group — useful
     when a name repeats across groups/code-standards (e.g. MATD, MEMB, TABLE).
+    With a group set, an empty query simply lists that group.
     Use `describe()` to pull the full schema + example for a chosen endpoint.
     """
-    q = query.strip().lower()
-    grp = group.strip().lower() if group else None
-    tokens = [t for t in q.replace("/", " ").replace("-", " ").split() if t]
-    hits: list[tuple[int, dict[str, Any]]] = []
-    for group, name, entry in _iter_entries():
-        if grp is not None and group.lower() != grp:
-            continue
-        uri = str(entry.get("uri", ""))
-        note = str(entry.get("note", ""))
-        blob = f"{group} {name} {uri} {note}".lower()
-        # also scan schema field descriptions for keyword hits
-        schema_blob = json.dumps(entry.get("schema", ""))[:4000].lower()
-        # base 1 only when listing a group with no query, so `group=` + empty
-        # query enumerates that group without polluting real keyword searches
-        score = 1 if (grp is not None and not q) else 0
-        # whole-query exact/substring boosts
-        if q == name.lower():
-            score += 100
-        if q and q in name.lower():
-            score += 40
-        if q and q in uri.lower():
-            score += 30
-        # per-token scoring (handles multi-word queries like "inelastic hinge")
-        for tok in tokens:
-            if tok in name.lower():
-                score += 20
-            if tok in note.lower():
-                score += 8
-            if tok in blob:
-                score += 5
-            if tok in schema_blob:
-                score += 3
-        if score:
-            hits.append((score, {
-                "group": group,
-                "name": name,
-                "uri": uri,
-                "methods": entry.get("methods"),
-                **({"note": note} if note else {}),
-            }))
-    hits.sort(key=lambda x: x[0], reverse=True)
-    return [h for _, h in hits[:limit]]
+    hits: list[dict[str, Any]] = []
+    for doc in search_index.rank(query, limit=limit, group=group):
+        note = str(doc.entry.get("note", ""))
+        hits.append({
+            "group": doc.group,
+            "name": doc.key,
+            "uri": doc.uri,
+            "methods": doc.entry.get("methods"),
+            "desc": _short_desc(doc.summary),
+            **({"note": note} if note else {}),
+        })
+    return hits
 
 
 def _result(g: str, key: str, entry: dict[str, Any]) -> dict[str, Any]:

@@ -100,5 +100,8 @@
         ]
       }
     }
-  }
+  },
+  "manual_title": "Temperature Gradient",
+  "feature_name": "Temperature Gradient",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35954163821593-Temperature-Gradient"
 }

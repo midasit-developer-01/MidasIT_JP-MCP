@@ -33,5 +33,8 @@
         "INIT_FORCE": 10
       }
     }
-  }
+  },
+  "manual_title": "Large Displacement - Initial Forces for Geometric Stiffness",
+  "feature_name": "Initial Forces for Geometric Stiffness",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35988857497113-Large-Displacement-Initial-Forces-for-Geometric-Stiffness"
 }

@@ -96,5 +96,8 @@
         "Z": -1.0
       }
     }
-  }
+  },
+  "manual_title": "Nodal Body Force",
+  "feature_name": "Nodal Body Force",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35953117115545-Nodal-Body-Force"
 }

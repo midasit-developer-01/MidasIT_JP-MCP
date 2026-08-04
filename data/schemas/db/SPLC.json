@@ -302,5 +302,7 @@
         "aFUNCNAME": ["RS_func"]
       }
     }
-  }
+  },
+  "manual_title": "Response Spectrum Load Cases",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35963719599641-Response-Spectrum-Load-Cases"
 }

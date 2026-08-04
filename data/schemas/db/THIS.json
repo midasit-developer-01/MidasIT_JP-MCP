@@ -435,5 +435,8 @@
         "DALL": 0.05
       }
     }
-  }
+  },
+  "manual_title": "Time History Load Cases",
+  "feature_name": "Time History Load Cases",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35963903917593-Time-History-Load-Cases"
 }

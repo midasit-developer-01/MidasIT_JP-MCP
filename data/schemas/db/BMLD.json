@@ -174,5 +174,8 @@
         ]
       }
     }
-  }
+  },
+  "manual_title": "Beam Loads",
+  "feature_name": "Element Beam Loads",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35952826746521-Beam-Loads"
 }

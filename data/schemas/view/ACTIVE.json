@@ -55,5 +55,8 @@
       "IDENTITY_LIST": ["1F", "2F"],
       "STORY_ACTIVE": "Both"
     }
-  }
+  },
+  "manual_title": "Active",
+  "feature_name": "Activities",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35523395368985-Active"
 }

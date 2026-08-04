@@ -140,5 +140,8 @@
         "DESC": "Solid plane load on face 3"
       }
     }
-  }
+  },
+  "manual_title": "Assign Plane Loads",
+  "feature_name": "Assign Plane Loads",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35953557411993-Assign-Plane-Loads"
 }

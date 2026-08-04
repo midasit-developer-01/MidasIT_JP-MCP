@@ -319,5 +319,8 @@
         "STRAIN_VALUE_PRIORITY": 0
       }
     }
-  }
+  },
+  "manual_title": "Group Damping",
+  "feature_name": "Group Damping : Element Mass & Stiffness Proportional",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35944577940633-Group-Damping"
 }

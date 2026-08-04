@@ -113,5 +113,8 @@
         "NODES": [601, 602, 603, 604]
       }
     }
-  }
+  },
+  "manual_title": "Assign Floor Loads",
+  "feature_name": "Assign Floor Loads",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35953653792665-Assign-Floor-Loads"
 }

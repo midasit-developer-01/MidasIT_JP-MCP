@@ -71,5 +71,8 @@
       "STORY_STIFFNESS_METHOD": "1 / Story Drift Ratio",
       "SEISMIC_BEHAVIOR_FACTOR": "4"
     }
-  }
+  },
+  "manual_title": "Story Irregularity Check Parameter",
+  "feature_name": "Story",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/49514751862425-Story-Irregularity-Check-Parameter"
 }

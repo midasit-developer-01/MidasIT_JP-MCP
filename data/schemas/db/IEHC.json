@@ -122,5 +122,8 @@
         "dR": 0.4
       }
     }
-  }
+  },
+  "manual_title": "Inelastic Hinge Control Data",
+  "feature_name": "Inelastic Properties Control Data",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35944093809689-Inelastic-Hinge-Control-Data"
 }

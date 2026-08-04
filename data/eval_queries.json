@@ -1,0 +1,1928 @@
+[
+ {
+  "q": "Main Control Data",
+  "uri": "db/ACTL",
+  "src": "api_title",
+  "alt": [
+   "db/ACTL-M1"
+  ]
+ },
+ {
+  "q": "Enter the basic boundary conditions for elements and the analysis conditions for nonlinear elements",
+  "uri": "db/ACTL",
+  "src": "function",
+  "alt": [
+   "db/ACTL-M1"
+  ]
+ },
+ {
+  "q": "Boundary Change Assignment",
+  "uri": "db/BCCT",
+  "src": "api_title"
+ },
+ {
+  "q": "Beam Loads",
+  "uri": "db/BMLD",
+  "src": "api_title"
+ },
+ {
+  "q": "Element Beam Loads",
+  "uri": "db/BMLD",
+  "src": "feature_title"
+ },
+ {
+  "q": "Enter beam loads acting on beam elements such as uniformly distributed loads or in-span concentrated loads",
+  "uri": "db/BMLD",
+  "src": "function"
+ },
+ {
+  "q": "Boundary Group",
+  "uri": "db/BNGR",
+  "src": "api_title"
+ },
+ {
+  "q": "Define Boundary Group",
+  "uri": "db/BNGR",
+  "src": "feature_title"
+ },
+ {
+  "q": "Self-Weight",
+  "uri": "db/BODF",
+  "src": "api_title"
+ },
+ {
+  "q": "Self Weight",
+  "uri": "db/BODF",
+  "src": "feature_title"
+ },
+ {
+  "q": "Beam Section Temperature",
+  "uri": "db/BTMP",
+  "src": "api_title"
+ },
+ {
+  "q": "Beam Section Temperatures",
+  "uri": "db/BTMP",
+  "src": "feature_title"
+ },
+ {
+  "q": "Enter the temperature differences between specific locations of beam for thermal stress analysis",
+  "uri": "db/BTMP",
+  "src": "function"
+ },
+ {
+  "q": "Buckling Analysis Control",
+  "uri": "db/BUCK",
+  "src": "api_title"
+ },
+ {
+  "q": "FCM Camber Control",
+  "uri": "db/CAMB",
+  "src": "api_title"
+ },
+ {
+  "q": "Convection Coefficient Functions",
+  "uri": "db/CCFC",
+  "src": "api_title"
+ },
+ {
+  "q": "Change General Link Property",
+  "uri": "db/CGLP",
+  "src": "api_title"
+ },
+ {
+  "q": "Concurrent Joint Force Group",
+  "uri": "db/CJFG",
+  "src": "api_title"
+ },
+ {
+  "q": "Define Constraints Label Direction",
+  "uri": "db/CLDR",
+  "src": "api_title"
+ },
+ {
+  "q": "Define Constraint Label Direction",
+  "uri": "db/CLDR",
+  "src": "feature_title"
+ },
+ {
+  "q": "Define the directions of the supports for a display purpose on screen",
+  "uri": "db/CLDR",
+  "src": "function"
+ },
+ {
+  "q": "Plate Cutting Line Diagram",
+  "uri": "db/CLWP",
+  "src": "api_title"
+ },
+ {
+  "q": "Display the internal forces of plate elements along defined cross sectional lines in a graph",
+  "uri": "db/CLWP",
+  "src": "function"
+ },
+ {
+  "q": "Camber for Construction Stage",
+  "uri": "db/CMCS",
+  "src": "api_title"
+ },
+ {
+  "q": "Nodal Loads",
+  "uri": "db/CNLD",
+  "src": "api_title"
+ },
+ {
+  "q": "Constraint Support",
+  "uri": "db/CONS",
+  "src": "api_title"
+ },
+ {
+  "q": "Define Supports",
+  "uri": "db/CONS",
+  "src": "feature_title"
+ },
+ {
+  "q": "Restrain the degrees-of-freedom of selected nodes",
+  "uri": "db/CONS",
+  "src": "function"
+ },
+ {
+  "q": "Floor Load Color",
+  "uri": "db/CO_F",
+  "src": "api_title"
+ },
+ {
+  "q": "Material Color",
+  "uri": "db/CO_M",
+  "src": "api_title"
+ },
+ {
+  "q": "Section Color",
+  "uri": "db/CO_S",
+  "src": "api_title"
+ },
+ {
+  "q": "Thickness Color",
+  "uri": "db/CO_T",
+  "src": "api_title"
+ },
+ {
+  "q": "Concurrent Reaction Group",
+  "uri": "db/CRGR",
+  "src": "api_title"
+ },
+ {
+  "q": "Creep Coefficient for Construction Stage",
+  "uri": "db/CRPC",
+  "src": "api_title"
+ },
+ {
+  "q": "Composite Section for Construction Stage",
+  "uri": "db/CSCS",
+  "src": "api_title"
+ },
+ {
+  "q": "Cutting Line",
+  "uri": "db/CUTL",
+  "src": "api_title"
+ },
+ {
+  "q": "RC Design Code",
+  "uri": "db/DCON",
+  "src": "api_title"
+ },
+ {
+  "q": "Design Code Option",
+  "uri": "db/DCON",
+  "src": "feature_title"
+ },
+ {
+  "q": "Definition of Frame",
+  "uri": "db/DCTL",
+  "src": "api_title"
+ },
+ {
+  "q": "Select the structural frame type (braced/unbraced) with respect to the global X- and Y-directions",
+  "uri": "db/DCTL",
+  "src": "function"
+ },
+ {
+  "q": "Domain-Element",
+  "uri": "db/DOEL",
+  "src": "api_title"
+ },
+ {
+  "q": "Define Domain",
+  "uri": "db/DOEL",
+  "src": "feature_title"
+ },
+ {
+  "q": "Every time the Automesh function is used to generate a mesh the elements created are placed in a single domain",
+  "uri": "db/DOEL",
+  "src": "function"
+ },
+ {
+  "q": "Diaphragm Disconnect",
+  "uri": "db/DRLS",
+  "src": "api_title"
+ },
+ {
+  "q": "Design Steel Code",
+  "uri": "db/DSTL",
+  "src": "api_title"
+ },
+ {
+  "q": "Railway Dynamic Factor",
+  "uri": "db/DYFG",
+  "src": "api_title"
+ },
+ {
+  "q": "Dynamic Load Allowance",
+  "uri": "db/DYLA",
+  "src": "api_title"
+ },
+ {
+  "q": "Railway Dynamic Factor by Element",
+  "uri": "db/DYNF",
+  "src": "api_title"
+ },
+ {
+  "q": "Change Property",
+  "uri": "db/EDMP",
+  "src": "api_title"
+ },
+ {
+  "q": "Small Displacement - Initial Force Control Data",
+  "uri": "db/EFCT",
+  "src": "api_title"
+ },
+ {
+  "q": "Initial Forces Control Data",
+  "uri": "db/EFCT",
+  "src": "feature_title"
+ },
+ {
+  "q": "Eigenvalue Analysis Control",
+  "uri": "db/EIGV",
+  "src": "api_title",
+  "alt": [
+   "db/EIGV-M1"
+  ]
+ },
+ {
+  "q": "Element",
+  "uri": "db/ELEM",
+  "src": "api_title"
+ },
+ {
+  "q": "Create Elements",
+  "uri": "db/ELEM",
+  "src": "feature_title"
+ },
+ {
+  "q": "Elastic Link",
+  "uri": "db/ELNK",
+  "src": "api_title"
+ },
+ {
+  "q": "Create or remove elastic links",
+  "uri": "db/ELNK",
+  "src": "function"
+ },
+ {
+  "q": "Plastic Material",
+  "uri": "db/EPMT",
+  "src": "api_title",
+  "alt": [
+   "db/EPMT-M1"
+  ]
+ },
+ {
+  "q": "Specify a plastic material model for material nonlinear analysis",
+  "uri": "db/EPMT",
+  "src": "function",
+  "alt": [
+   "db/EPMT-M1"
+  ]
+ },
+ {
+  "q": "Static Earth Pressure",
+  "uri": "db/EPST",
+  "src": "api_title"
+ },
+ {
+  "q": "Add static earth pressure to spatial structures of general shapes",
+  "uri": "db/EPST",
+  "src": "function"
+ },
+ {
+  "q": "Element Stiffness Scale Factor",
+  "uri": "db/ESSF",
+  "src": "api_title"
+ },
+ {
+  "q": "Ambient Temperature Functions",
+  "uri": "db/ETFC",
+  "src": "api_title"
+ },
+ {
+  "q": "Element Temperature",
+  "uri": "db/ETMP",
+  "src": "api_title"
+ },
+ {
+  "q": "Element Temperatures",
+  "uri": "db/ETMP",
+  "src": "feature_title"
+ },
+ {
+  "q": "Specify element temperatures, or modify or delete previously defined temperatures for thermal analysis",
+  "uri": "db/ETMP",
+  "src": "function"
+ },
+ {
+  "q": "Effective Width Scale Factor",
+  "uri": "db/EWSF",
+  "src": "api_title"
+ },
+ {
+  "q": "External Type Load Case for Pretension",
+  "uri": "db/EXLD",
+  "src": "api_title"
+ },
+ {
+  "q": "Apply the pretension load of truss elements as an external type",
+  "uri": "db/EXLD",
+  "src": "function"
+ },
+ {
+  "q": "Assign Floor Loads",
+  "uri": "db/FBLA",
+  "src": "api_title"
+ },
+ {
+  "q": "Enter floor loads within a \"closed\" planar polygon",
+  "uri": "db/FBLA",
+  "src": "function"
+ },
+ {
+  "q": "Define Floor Load Type",
+  "uri": "db/FBLD",
+  "src": "api_title"
+ },
+ {
+  "q": "Define the floor load cases and the corresponding floor loads",
+  "uri": "db/FBLD",
+  "src": "function"
+ },
+ {
+  "q": "Fiber Division of Section",
+  "uri": "db/FIBR",
+  "src": "api_title"
+ },
+ {
+  "q": "Inelastic Material Properties",
+  "uri": "db/FIMP",
+  "src": "api_title"
+ },
+ {
+  "q": "Finishing Material Loads",
+  "uri": "db/FMLD",
+  "src": "api_title"
+ },
+ {
+  "q": "Beam End Release",
+  "uri": "db/FRLS",
+  "src": "api_title"
+ },
+ {
+  "q": "Grid Analysis Load",
+  "uri": "db/GALD",
+  "src": "api_title"
+ },
+ {
+  "q": "General Camber Control",
+  "uri": "db/GCMB",
+  "src": "api_title"
+ },
+ {
+  "q": "Group Damping",
+  "uri": "db/GRDP",
+  "src": "api_title"
+ },
+ {
+  "q": "Group Damping : Element Mass & Stiffness Proportional",
+  "uri": "db/GRDP",
+  "src": "feature_title"
+ },
+ {
+  "q": "Structure Group",
+  "uri": "db/GRUP",
+  "src": "api_title"
+ },
+ {
+  "q": "Define Structure Group",
+  "uri": "db/GRUP",
+  "src": "feature_title"
+ },
+ {
+  "q": "Define (create, modify & delete) structure group names to which specific nodes and elements are later assigned",
+  "uri": "db/GRUP",
+  "src": "function"
+ },
+ {
+  "q": "Bridge Girder Diagrams",
+  "uri": "db/GSBG",
+  "src": "api_title"
+ },
+ {
+  "q": "Assign General Spring Supports",
+  "uri": "db/GSPR",
+  "src": "api_title"
+ },
+ {
+  "q": "General Spring Supports",
+  "uri": "db/GSPR",
+  "src": "feature_title"
+ },
+ {
+  "q": "Define General Spring Type",
+  "uri": "db/GSTP",
+  "src": "api_title"
+ },
+ {
+  "q": "Temperature Gradient",
+  "uri": "db/GTMP",
+  "src": "api_title"
+ },
+ {
+  "q": "Enter the temperature differences between the tops and bottoms of beam or plate elements for thermal stress analysis",
+  "uri": "db/GTMP",
+  "src": "function"
+ },
+ {
+  "q": "Assign Heat Source",
+  "uri": "db/HAHS",
+  "src": "api_title"
+ },
+ {
+  "q": "Element Convection Boundary",
+  "uri": "db/HECB",
+  "src": "api_title"
+ },
+ {
+  "q": "Heat of Hydration Analysis Control",
+  "uri": "db/HHCT",
+  "src": "api_title",
+  "alt": [
+   "db/HHCT-M1"
+  ]
+ },
+ {
+  "q": "Heat of Hydaration Result Graph",
+  "uri": "db/HHND",
+  "src": "api_title"
+ },
+ {
+  "q": "Pipe Cooling",
+  "uri": "db/HPCE",
+  "src": "api_title"
+ },
+ {
+  "q": "Heat Source Functions",
+  "uri": "db/HSFC",
+  "src": "api_title"
+ },
+ {
+  "q": "Prescribed Temperature",
+  "uri": "db/HSPT",
+  "src": "api_title"
+ },
+ {
+  "q": "Define Construction Stage for Hydration",
+  "uri": "db/HSTG",
+  "src": "api_title"
+ },
+ {
+  "q": "Inelastic Hinge Control Data",
+  "uri": "db/IEHC",
+  "src": "api_title"
+ },
+ {
+  "q": "Inelastic Properties Control Data",
+  "uri": "db/IEHC",
+  "src": "feature_title"
+ },
+ {
+  "q": "This is a dialog box to automatically generate a fiber model for the inelastic analysis",
+  "uri": "db/IEHC",
+  "src": "function"
+ },
+ {
+  "q": "Assign Inelastic Hinge Properties",
+  "uri": "db/IEHG",
+  "src": "api_title"
+ },
+ {
+  "q": "Assign or delete inelastic hinge properties to elements",
+  "uri": "db/IEHG",
+  "src": "function"
+ },
+ {
+  "q": "Ignore Elements for Load Cases",
+  "uri": "db/IELC",
+  "src": "api_title"
+ },
+ {
+  "q": "Ignore Elements for Pushover Intial Load",
+  "uri": "db/IEPI",
+  "src": "api_title"
+ },
+ {
+  "q": "Large Displacement - Initial Forces for Geometric Stiffness",
+  "uri": "db/IFGS",
+  "src": "api_title"
+ },
+ {
+  "q": "Initial Forces for Geometric Stiffness",
+  "uri": "db/IFGS",
+  "src": "feature_title"
+ },
+ {
+  "q": "Enter initial axial forces into selected members for geometric stiffness calculation",
+  "uri": "db/IFGS",
+  "src": "function"
+ },
+ {
+  "q": "Inelastic Material Properties for Fiber Model",
+  "uri": "db/IMFM",
+  "src": "api_title",
+  "alt": [
+   "db/IMFM-M1"
+  ]
+ },
+ {
+  "q": "Additional Impact Factor",
+  "uri": "db/IMPF",
+  "src": "api_title"
+ },
+ {
+  "q": "Small Displacement - Initial Element Force",
+  "uri": "db/INMF",
+  "src": "api_title"
+ },
+ {
+  "q": "Initial Element Forces",
+  "uri": "db/INMF",
+  "src": "feature_title"
+ },
+ {
+  "q": "Enter the member forces in the structure due to external loads",
+  "uri": "db/INMF",
+  "src": "function"
+ },
+ {
+  "q": "Load Group",
+  "uri": "db/LDGR",
+  "src": "api_title"
+ },
+ {
+  "q": "Define Load Group",
+  "uri": "db/LDGR",
+  "src": "feature_title"
+ },
+ {
+  "q": "Define (create, modify & delete) load group names to which loaded nodes and elements are later assigned",
+  "uri": "db/LDGR",
+  "src": "function"
+ },
+ {
+  "q": "Load Sequence for Nonlinear",
+  "uri": "db/LDSQ",
+  "src": "api_title"
+ },
+ {
+  "q": "Unbraced Length",
+  "uri": "db/LENG",
+  "src": "api_title"
+ },
+ {
+  "q": "Unbraced Length (L,Lb)",
+  "uri": "db/LENG",
+  "src": "feature_title"
+ },
+ {
+  "q": "Traffic Line Lanes",
+  "uri": "db/LLAN",
+  "src": "api_title"
+ },
+ {
+  "q": "Enter the traffic (line) lanes for moving load analysis",
+  "uri": "db/LLAN",
+  "src": "function"
+ },
+ {
+  "q": "Traffic Line Lanes - China",
+  "uri": "db/LLANCH",
+  "src": "api_title"
+ },
+ {
+  "q": "Traffic Line Lanes - India",
+  "uri": "db/LLANID",
+  "src": "api_title"
+ },
+ {
+  "q": "Traffic Line Lanes - Moving Load Optimizaion",
+  "uri": "db/LLANOP",
+  "src": "api_title"
+ },
+ {
+  "q": "Traffic Line Lanes - Transverse",
+  "uri": "db/LLANTR",
+  "src": "api_title"
+ },
+ {
+  "q": "Loads to Masses",
+  "uri": "db/LTOM",
+  "src": "api_title"
+ },
+ {
+  "q": "Limiting Slenderness Ratio",
+  "uri": "db/LTSR",
+  "src": "feature_title"
+ },
+ {
+  "q": "Use this function to enter the limiting slenderness ratios for members subjected to axial compressive and tensile forces",
+  "uri": "db/LTSR",
+  "src": "function"
+ },
+ {
+  "q": "Modify Concrete Materials",
+  "uri": "db/MATD",
+  "src": "api_title"
+ },
+ {
+  "q": "Modify Concrete Material",
+  "uri": "db/MATD",
+  "src": "feature_title"
+ },
+ {
+  "q": "Material Properties",
+  "uri": "db/MATL",
+  "src": "api_title",
+  "alt": [
+   "db/MATL-M1"
+  ]
+ },
+ {
+  "q": "Enter the isotropic and orthotropic material properties",
+  "uri": "db/MATL",
+  "src": "function",
+  "alt": [
+   "db/MATL-M1"
+  ]
+ },
+ {
+  "q": "Modify Member Type",
+  "uri": "db/MBTP",
+  "src": "api_title"
+ },
+ {
+  "q": "Enter the type of members used in the design of steel and RC members",
+  "uri": "db/MBTP",
+  "src": "function"
+ },
+ {
+  "q": "Linear Constraints",
+  "uri": "db/MCON",
+  "src": "api_title"
+ },
+ {
+  "q": "Constrain a specific node to subordinate to the movements of certain nodes",
+  "uri": "db/MCON",
+  "src": "function"
+ },
+ {
+  "q": "Member Assignment",
+  "uri": "db/MEMB",
+  "src": "api_title"
+ },
+ {
+  "q": "Force-Deformation Function",
+  "uri": "db/MLFC",
+  "src": "api_title"
+ },
+ {
+  "q": "Lane Support - Negative Moments at Interior Piers",
+  "uri": "db/MLSP",
+  "src": "api_title"
+ },
+ {
+  "q": "Lane Supports(Negative Moments at Interior Piers)",
+  "uri": "db/MLSP",
+  "src": "feature_title"
+ },
+ {
+  "q": "Assign the elements constituting a multiple span being considered for moving load analysis using traffic lane loads",
+  "uri": "db/MLSP",
+  "src": "function"
+ },
+ {
+  "q": "Lane Support - Reactions at Interior Piers",
+  "uri": "db/MLSR",
+  "src": "api_title"
+ },
+ {
+  "q": "Moving Load Code",
+  "uri": "db/MVCD",
+  "src": "api_title"
+ },
+ {
+  "q": "Prior to defining moving load, Code must be selected first from Moving Load Analysis Data > Moving Load",
+  "uri": "db/MVCD",
+  "src": "function"
+ },
+ {
+  "q": "Moving Load Analysis Control",
+  "uri": "db/MVCT",
+  "src": "api_title"
+ },
+ {
+  "q": "Moving Load Analysis Control - BS",
+  "uri": "db/MVCTBS",
+  "src": "api_title"
+ },
+ {
+  "q": "Moving Load Analysis Control - China",
+  "uri": "db/MVCTCH",
+  "src": "api_title"
+ },
+ {
+  "q": "Moving Load Analysis Control - India",
+  "uri": "db/MVCTID",
+  "src": "api_title"
+ },
+ {
+  "q": "Moving Load Analysis Control - Transverse",
+  "uri": "db/MVCTTR",
+  "src": "api_title"
+ },
+ {
+  "q": "Vehicle Classes",
+  "uri": "db/MVHC",
+  "src": "api_title"
+ },
+ {
+  "q": "Vehicles - Transverse",
+  "uri": "db/MVHLTR",
+  "src": "api_title"
+ },
+ {
+  "q": "Moving Load Cases",
+  "uri": "db/MVLD",
+  "src": "api_title"
+ },
+ {
+  "q": "Use the entered vehicle load classes and the traffic lanes to create moving load cases",
+  "uri": "db/MVLD",
+  "src": "function"
+ },
+ {
+  "q": "Moving Load Cases - BS",
+  "uri": "db/MVLDBS",
+  "src": "api_title"
+ },
+ {
+  "q": "Moving Load Cases - China",
+  "uri": "db/MVLDCH",
+  "src": "api_title"
+ },
+ {
+  "q": "Moving Load Cases - Eurocode",
+  "uri": "db/MVLDEU",
+  "src": "api_title"
+ },
+ {
+  "q": "Moving Load Cases - India",
+  "uri": "db/MVLDID",
+  "src": "api_title"
+ },
+ {
+  "q": "Moving Load Cases - Poland",
+  "uri": "db/MVLDPL",
+  "src": "api_title"
+ },
+ {
+  "q": "Moving Load Cases - Transverse",
+  "uri": "db/MVLDTR",
+  "src": "api_title"
+ },
+ {
+  "q": "Nodal Body Force",
+  "uri": "db/NBOF",
+  "src": "api_title"
+ },
+ {
+  "q": "Nonlinear Analysis Control Data",
+  "uri": "db/NLCT",
+  "src": "api_title",
+  "alt": [
+   "db/NLCT-M1"
+  ]
+ },
+ {
+  "q": "General Link Properties",
+  "uri": "db/NLLP",
+  "src": "api_title"
+ },
+ {
+  "q": "Add, modify or delete the properties of general link elements",
+  "uri": "db/NLLP",
+  "src": "function"
+ },
+ {
+  "q": "General Link",
+  "uri": "db/NLNK",
+  "src": "api_title",
+  "alt": [
+   "db/NLNK-M1"
+  ]
+ },
+ {
+  "q": "Create or delete general link elements, each linking two nodes",
+  "uri": "db/NLNK",
+  "src": "function",
+  "alt": [
+   "db/NLNK-M1"
+  ]
+ },
+ {
+  "q": "Nodal Masses",
+  "uri": "db/NMAS",
+  "src": "api_title"
+ },
+ {
+  "q": "Node",
+  "uri": "db/NODE",
+  "src": "api_title"
+ },
+ {
+  "q": "Create Nodes",
+  "uri": "db/NODE",
+  "src": "feature_title"
+ },
+ {
+  "q": "Create a new node or create a set of nodes by copying the node simultaneously",
+  "uri": "db/NODE",
+  "src": "function"
+ },
+ {
+  "q": "Named Plane",
+  "uri": "db/NPLN",
+  "src": "api_title"
+ },
+ {
+  "q": "Assign names to specific planes",
+  "uri": "db/NPLN",
+  "src": "function"
+ },
+ {
+  "q": "Point Spring",
+  "uri": "db/NSPR",
+  "src": "api_title"
+ },
+ {
+  "q": "Point Spring Supports",
+  "uri": "db/NSPR",
+  "src": "feature_title"
+ },
+ {
+  "q": "Enter Spring Stiffness of selected nodes in each direction of GCS or nodal local coordinate system",
+  "uri": "db/NSPR",
+  "src": "function"
+ },
+ {
+  "q": "Nodal Temperature",
+  "uri": "db/NTMP",
+  "src": "api_title"
+ },
+ {
+  "q": "Nodal Temperatures",
+  "uri": "db/NTMP",
+  "src": "feature_title"
+ },
+ {
+  "q": "Enter nodal temperatures for thermal stress analysis, and modify or delete previously entered temperatures",
+  "uri": "db/NTMP",
+  "src": "function"
+ },
+ {
+  "q": "Beam End Offsets",
+  "uri": "db/OFFS",
+  "src": "api_title"
+ },
+ {
+  "q": "P-Delta Analysis Control",
+  "uri": "db/PDEL",
+  "src": "api_title"
+ },
+ {
+  "q": "Assign Pushover Hinge Properties",
+  "uri": "db/PHGE",
+  "src": "api_title"
+ },
+ {
+  "q": "Project Information",
+  "uri": "db/PJCF",
+  "src": "api_title"
+ },
+ {
+  "q": "Register the general project information (project name, user name, etc.)",
+  "uri": "db/PJCF",
+  "src": "function"
+ },
+ {
+  "q": "Pre-composite Section",
+  "uri": "db/PLCB",
+  "src": "api_title"
+ },
+ {
+  "q": "Assign Plane Loads",
+  "uri": "db/PNLA",
+  "src": "api_title"
+ },
+ {
+  "q": "Apply the plane loads defined in (Plane Load Type) to any specific locations on plate or solid elements",
+  "uri": "db/PNLA",
+  "src": "function"
+ },
+ {
+  "q": "Define Plane Load Type",
+  "uri": "db/PNLD",
+  "src": "api_title"
+ },
+ {
+  "q": "Define types and magnitudes of Plane Loads",
+  "uri": "db/PNLD",
+  "src": "function"
+ },
+ {
+  "q": "Pushover Analysis Control Data",
+  "uri": "db/POGD",
+  "src": "api_title",
+  "alt": [
+   "db/POGD-M1"
+  ]
+ },
+ {
+  "q": "Pushover Load Cases",
+  "uri": "db/POLC",
+  "src": "api_title",
+  "alt": [
+   "db/POLC-M1"
+  ]
+ },
+ {
+  "q": "Pushover Load Case",
+  "uri": "db/POLC",
+  "src": "feature_title",
+  "alt": [
+   "db/POLC-M1"
+  ]
+ },
+ {
+  "q": "Define load cases for pushover analysis",
+  "uri": "db/POLC",
+  "src": "function",
+  "alt": [
+   "db/POLC-M1"
+  ]
+ },
+ {
+  "q": "Parameter of Seismic Loads",
+  "uri": "db/POSL",
+  "src": "api_title"
+ },
+ {
+  "q": "Seismic Loads",
+  "uri": "db/POSL",
+  "src": "feature_title"
+ },
+ {
+  "q": "Parameter of Soil Properties",
+  "uri": "db/POSP",
+  "src": "api_title"
+ },
+ {
+  "q": "Parameters of Soil Properties",
+  "uri": "db/POSP",
+  "src": "feature_title"
+ },
+ {
+  "q": "Set soil properties for the calculation of static earth pressure",
+  "uri": "db/POSP",
+  "src": "function"
+ },
+ {
+  "q": "Assign Pressure Loads",
+  "uri": "db/PRES",
+  "src": "api_title"
+ },
+ {
+  "q": "Apply pressure loads to the faces or edges of plate, plane stress, plane strain, axisymmetric or solid elements",
+  "uri": "db/PRES",
+  "src": "function"
+ },
+ {
+  "q": "Plate End Release",
+  "uri": "db/PRLS",
+  "src": "api_title"
+ },
+ {
+  "q": "Prestress Beam Loads",
+  "uri": "db/PRST",
+  "src": "api_title"
+ },
+ {
+  "q": "Enter pre-stress loads for beams, or modify or delete previously entered loads",
+  "uri": "db/PRST",
+  "src": "function"
+ },
+ {
+  "q": "Define Pressure Load Type",
+  "uri": "db/PSLT",
+  "src": "api_title"
+ },
+ {
+  "q": "Pressure Loads",
+  "uri": "db/PSLT",
+  "src": "feature_title"
+ },
+ {
+  "q": "Define the pressure load cases and the corresponding pressure loads",
+  "uri": "db/PSLT",
+  "src": "function"
+ },
+ {
+  "q": "Section Manager - Plate Stiffness Scale Factor",
+  "uri": "db/PSSF",
+  "src": "api_title"
+ },
+ {
+  "q": "Plate Stiffness Scale Factor",
+  "uri": "db/PSSF",
+  "src": "feature_title"
+ },
+ {
+  "q": "Apply scale factors to the cross-sectional properties of plate elements",
+  "uri": "db/PSSF",
+  "src": "function"
+ },
+ {
+  "q": "Pretension Loads",
+  "uri": "db/PTNS",
+  "src": "api_title"
+ },
+ {
+  "q": "Specify pretension loads for Truss elements or tension-only elements (hook & cable)",
+  "uri": "db/PTNS",
+  "src": "function"
+ },
+ {
+  "q": "Panel Zone Effects",
+  "uri": "db/PZEF",
+  "src": "api_title"
+ },
+ {
+  "q": "Rebar Input for Checking - Beam/Column",
+  "uri": "db/RCHK",
+  "src": "api_title"
+ },
+ {
+  "q": "Rigid Link",
+  "uri": "db/RIGD",
+  "src": "api_title"
+ },
+ {
+  "q": "Constrain certain degrees-of-freedom of Slave Nodes to a Master Node",
+  "uri": "db/RIGD",
+  "src": "function"
+ },
+ {
+  "q": "Section Manager - Reinforcements",
+  "uri": "db/RPSC",
+  "src": "api_title"
+ },
+ {
+  "q": "Define Sub-Domain",
+  "uri": "db/SBDO",
+  "src": "api_title"
+ },
+ {
+  "q": "A Sub-Domain is the unit area of mesh elements",
+  "uri": "db/SBDO",
+  "src": "function"
+ },
+ {
+  "q": "Seismic Device - Hysteretic Isolator(MSS)",
+  "uri": "db/SDHY",
+  "src": "api_title"
+ },
+ {
+  "q": "Hysteretic Isolator (MSS)",
+  "uri": "db/SDHY",
+  "src": "feature_title"
+ },
+ {
+  "q": "Add, modify or delete the properties of Hysteretic Isolator (MSS) elements",
+  "uri": "db/SDHY",
+  "src": "function"
+ },
+ {
+  "q": "Seismic Device - Isolator(MSS)",
+  "uri": "db/SDIS",
+  "src": "api_title"
+ },
+ {
+  "q": "Isolator (MSS)",
+  "uri": "db/SDIS",
+  "src": "feature_title"
+ },
+ {
+  "q": "Add, modify or delete the properties of Isolator elements",
+  "uri": "db/SDIS",
+  "src": "function"
+ },
+ {
+  "q": "Specified Displacements of Support",
+  "uri": "db/SDSP",
+  "src": "api_title"
+ },
+ {
+  "q": "Specified Displacements of Supports",
+  "uri": "db/SDSP",
+  "src": "feature_title"
+ },
+ {
+  "q": "Enter specified (forced) nodal displacements, or modify or delete previously entered specified (forced) displacements",
+  "uri": "db/SDSP",
+  "src": "function"
+ },
+ {
+  "q": "Seismic Device - Steel Damper",
+  "uri": "db/SDST",
+  "src": "api_title"
+ },
+ {
+  "q": "Steel Damper",
+  "uri": "db/SDST",
+  "src": "feature_title"
+ },
+ {
+  "q": "Add, modify or delete the properties of Steel Damper elements",
+  "uri": "db/SDST",
+  "src": "function"
+ },
+ {
+  "q": "Seismic Device - Viscoelastic Damper",
+  "uri": "db/SDVE",
+  "src": "api_title"
+ },
+ {
+  "q": "Viscoelastic Damper",
+  "uri": "db/SDVE",
+  "src": "feature_title"
+ },
+ {
+  "q": "Add, modify or delete the properties of Viscoelastic Damper elements",
+  "uri": "db/SDVE",
+  "src": "function"
+ },
+ {
+  "q": "Seismic Device - Viscous Damper/Oil Damper",
+  "uri": "db/SDVI",
+  "src": "api_title"
+ },
+ {
+  "q": "Viscous Damper/ Oil Damper",
+  "uri": "db/SDVI",
+  "src": "feature_title"
+ },
+ {
+  "q": "Add, modify or delete the properties of Viscous Damper/ Oil Damper elements",
+  "uri": "db/SDVI",
+  "src": "function"
+ },
+ {
+  "q": "Section Manager - Stiffness",
+  "uri": "db/SECF",
+  "src": "api_title"
+ },
+ {
+  "q": "Section Stiffness Scale Factor",
+  "uri": "db/SECF",
+  "src": "feature_title"
+ },
+ {
+  "q": "Section Properties",
+  "uri": "db/SECT",
+  "src": "feature_title"
+ },
+ {
+  "q": "Enter section properties for line elements (Truss, Tension-only, Compression-only, Cable, Gap, Hook, Beam Element)",
+  "uri": "db/SECT",
+  "src": "function"
+ },
+ {
+  "q": "Plate Element for Influence Surface",
+  "uri": "db/SINF",
+  "src": "api_title"
+ },
+ {
+  "q": "Plate Elements for Influence Surface",
+  "uri": "db/SINF",
+  "src": "feature_title"
+ },
+ {
+  "q": "Use plate elements to represent additional surfaces for which an influence surface analysis is to be carried out",
+  "uri": "db/SINF",
+  "src": "function"
+ },
+ {
+  "q": "Node Local Axis",
+  "uri": "db/SKEW",
+  "src": "api_title"
+ },
+ {
+  "q": "Declare a local coordinate system for selected nodes to enter boundary conditions or produce output for reactions",
+  "uri": "db/SKEW",
+  "src": "function"
+ },
+ {
+  "q": "Traffic Surface Lanes",
+  "uri": "db/SLAN",
+  "src": "api_title"
+ },
+ {
+  "q": "Enter the traffic surface lanes for moving load analysis",
+  "uri": "db/SLAN",
+  "src": "function"
+ },
+ {
+  "q": "Traffic Surface Lanes - China",
+  "uri": "db/SLANCH",
+  "src": "api_title"
+ },
+ {
+  "q": "Traffic Surface Lanes - Moving Load Optimization",
+  "uri": "db/SLANOP",
+  "src": "api_title"
+ },
+ {
+  "q": "Settlement Analysis Control Data",
+  "uri": "db/SMCT",
+  "src": "api_title"
+ },
+ {
+  "q": "Settlement Load Cases",
+  "uri": "db/SMLC",
+  "src": "api_title"
+ },
+ {
+  "q": "Settlement Group",
+  "uri": "db/SMPT",
+  "src": "api_title"
+ },
+ {
+  "q": "Span Information",
+  "uri": "db/SPAN",
+  "src": "api_title"
+ },
+ {
+  "q": "Response Spectrum Functions",
+  "uri": "db/SPFC",
+  "src": "feature_title"
+ },
+ {
+  "q": "Enter spectral data for response spectrum analysis",
+  "uri": "db/SPFC",
+  "src": "function"
+ },
+ {
+  "q": "Response Spectrum Load Cases",
+  "uri": "db/SPLC",
+  "src": "api_title"
+ },
+ {
+  "q": "Surface Spring",
+  "uri": "db/SSPS",
+  "src": "api_title"
+ },
+ {
+  "q": "Surface Spring Supports",
+  "uri": "db/SSPS",
+  "src": "feature_title"
+ },
+ {
+  "q": "Enter spring stiffness per unit supporting area of planar or solid elements to create elastic spring supports",
+  "uri": "db/SSPS",
+  "src": "function"
+ },
+ {
+  "q": "Define Construction Stage",
+  "uri": "db/STAG",
+  "src": "api_title"
+ },
+ {
+  "q": "Set-Back Loads for Nonlinear Construction Stage",
+  "uri": "db/STBK",
+  "src": "api_title"
+ },
+ {
+  "q": "Construction Stage Analysis Control Data",
+  "uri": "db/STCT",
+  "src": "api_title",
+  "alt": [
+   "db/STCT-M1"
+  ]
+ },
+ {
+  "q": "Static Load Cases",
+  "uri": "db/STLD",
+  "src": "api_title"
+ },
+ {
+  "q": "Define static load cases, or modify or delete previously defined load cases",
+  "uri": "db/STLD",
+  "src": "function"
+ },
+ {
+  "q": "System Temperature",
+  "uri": "db/STMP",
+  "src": "api_title"
+ },
+ {
+  "q": "Story Data",
+  "uri": "db/STOR",
+  "src": "api_title"
+ },
+ {
+  "q": "Story",
+  "uri": "db/STOR",
+  "src": "feature_title"
+ },
+ {
+  "q": "Story is used to define the floor levels if the analysis model is a building",
+  "uri": "db/STOR",
+  "src": "function"
+ },
+ {
+  "q": "Section Manager - Stress Points",
+  "uri": "db/STRPSSM",
+  "src": "api_title"
+ },
+ {
+  "q": "Structure Type",
+  "uri": "db/STYP",
+  "src": "api_title",
+  "alt": [
+   "db/STYP-M1"
+  ]
+ },
+ {
+  "q": "Enter the type of and the basic data for structural analysis",
+  "uri": "db/STYP",
+  "src": "function",
+  "alt": [
+   "db/STYP-M1"
+  ]
+ },
+ {
+  "q": "Tendon Location for Composite Section",
+  "uri": "db/TDCS",
+  "src": "api_title"
+ },
+ {
+  "q": "Specify a part of composite section, through which a selected tendon profile is passing",
+  "uri": "db/TDCS",
+  "src": "function"
+ },
+ {
+  "q": "Tendon Group",
+  "uri": "db/TDGR",
+  "src": "api_title"
+ },
+ {
+  "q": "Define Tendon Group",
+  "uri": "db/TDGR",
+  "src": "feature_title"
+ },
+ {
+  "q": "Define (add, modify & delete) Tendon Group names to which specific tendons are later assigned",
+  "uri": "db/TDGR",
+  "src": "function"
+ },
+ {
+  "q": "Time Dependent Material Properties - Compressive Strength",
+  "uri": "db/TDME",
+  "src": "api_title"
+ },
+ {
+  "q": "Time Dependent Material (Comp. Strength)",
+  "uri": "db/TDME",
+  "src": "feature_title"
+ },
+ {
+  "q": "Time Dependent Material Properties - User Defined",
+  "uri": "db/TDMF",
+  "src": "api_title"
+ },
+ {
+  "q": "Time Dependent Material (Creep/Shrinkage/Relaxation) Function",
+  "uri": "db/TDMF",
+  "src": "feature_title"
+ },
+ {
+  "q": "The user directly defines the time dependent material properties (creep, shrinkage, and relaxation) of concrete",
+  "uri": "db/TDMF",
+  "src": "function"
+ },
+ {
+  "q": "Time Dependent Material Properties - Creep/Shrinkage",
+  "uri": "db/TDMT",
+  "src": "api_title"
+ },
+ {
+  "q": "Time Dependent Material (Creep/Shrinkage)",
+  "uri": "db/TDMT",
+  "src": "feature_title"
+ },
+ {
+  "q": "Define the time dependent creep and shrinkage material data for concrete",
+  "uri": "db/TDMT",
+  "src": "function"
+ },
+ {
+  "q": "Tendon Profile",
+  "uri": "db/TDNA",
+  "src": "api_title"
+ },
+ {
+  "q": "Define a tendon profile along the length of elements",
+  "uri": "db/TDNA",
+  "src": "function"
+ },
+ {
+  "q": "Tendon Property",
+  "uri": "db/TDNT",
+  "src": "api_title"
+ },
+ {
+  "q": "Define the tendon properties such as tendon area and instantaneous prestress losses",
+  "uri": "db/TDNT",
+  "src": "function"
+ },
+ {
+  "q": "Tendon Prestress",
+  "uri": "db/TDPL",
+  "src": "api_title"
+ },
+ {
+  "q": "Tendon Prestress Loads",
+  "uri": "db/TDPL",
+  "src": "feature_title"
+ },
+ {
+  "q": "Define the prestress loads to be applied to the selected tendons",
+  "uri": "db/TDPL",
+  "src": "function"
+ },
+ {
+  "q": "Time History Functions",
+  "uri": "db/THFC",
+  "src": "api_title"
+ },
+ {
+  "q": "Ground Acceleration",
+  "uri": "db/THGA",
+  "src": "api_title"
+ },
+ {
+  "q": "Time History Global Control",
+  "uri": "db/THGC",
+  "src": "api_title",
+  "alt": [
+   "db/THGC-M1"
+  ]
+ },
+ {
+  "q": "Thickness",
+  "uri": "db/THIK",
+  "src": "feature_title"
+ },
+ {
+  "q": "Enter thickness data for planar elements (plate element, plane stress element)",
+  "uri": "db/THIK",
+  "src": "function"
+ },
+ {
+  "q": "Time History Load Cases",
+  "uri": "db/THIS",
+  "src": "api_title",
+  "alt": [
+   "db/THIS-M1"
+  ]
+ },
+ {
+  "q": "Define the conditions and required control data for time history analysis",
+  "uri": "db/THIS",
+  "src": "function",
+  "alt": [
+   "db/THIS-M1"
+  ]
+ },
+ {
+  "q": "Multiple Support Excitation",
+  "uri": "db/THMS",
+  "src": "api_title"
+ },
+ {
+  "q": "Dynamic Nodal Loads",
+  "uri": "db/THNL",
+  "src": "api_title"
+ },
+ {
+  "q": "Time History Graph - Element Force Smart Graph",
+  "uri": "db/THRE",
+  "src": "api_title"
+ },
+ {
+  "q": "Time History Graph - General Link Smart Graph",
+  "uri": "db/THRG",
+  "src": "api_title"
+ },
+ {
+  "q": "Time History Graph - Inelastic Hinge Smart Graph",
+  "uri": "db/THRI",
+  "src": "api_title"
+ },
+ {
+  "q": "Time History Graph - Seismic Devices Smart Graph",
+  "uri": "db/THRS",
+  "src": "api_title"
+ },
+ {
+  "q": "Time Varying Static Loads",
+  "uri": "db/THSL",
+  "src": "api_title"
+ },
+ {
+  "q": "Time Dependent Material Link",
+  "uri": "db/TMAT",
+  "src": "api_title"
+ },
+ {
+  "q": "Material Link",
+  "uri": "db/TMAT",
+  "src": "feature_title"
+ },
+ {
+  "q": "Time Loads for Construction Stage",
+  "uri": "db/TMLD",
+  "src": "api_title"
+ },
+ {
+  "q": "Tapered Group",
+  "uri": "db/TSGR",
+  "src": "api_title"
+ },
+ {
+  "q": "Tapered Section Group",
+  "uri": "db/TSGR",
+  "src": "feature_title"
+ },
+ {
+  "q": "This function groups the members defined as Tapered Sections",
+  "uri": "db/TSGR",
+  "src": "function"
+ },
+ {
+  "q": "Cable Control - Unknown Load Factor Constraints",
+  "uri": "db/ULFC",
+  "src": "api_title"
+ },
+ {
+  "q": "Unknown Load Factor",
+  "uri": "db/ULFC",
+  "src": "feature_title"
+ },
+ {
+  "q": "Use optimization techniques to determine the optimal load factors that satisfy the specific constraints of a structure",
+  "uri": "db/ULFC",
+  "src": "function"
+ },
+ {
+  "q": "Unit System",
+  "uri": "db/UNIT",
+  "src": "api_title"
+ },
+ {
+  "q": "Change the unit system currently in use",
+  "uri": "db/UNIT",
+  "src": "function"
+ },
+ {
+  "q": "Section Manager - Section for Resultant Forces - Virtual Beam",
+  "uri": "db/VBEM",
+  "src": "api_title"
+ },
+ {
+  "q": "Section Manager - Section for Resultant Forces - Virtual Section",
+  "uri": "db/VSEC",
+  "src": "api_title"
+ },
+ {
+  "q": "Modify Wall Mark Design",
+  "uri": "db/WMAK",
+  "src": "api_title"
+ },
+ {
+  "q": "Modify Wall Mark Data",
+  "uri": "db/WMAK",
+  "src": "feature_title"
+ },
+ {
+  "q": "Wave Loads",
+  "uri": "db/WVLD",
+  "src": "api_title"
+ },
+ {
+  "q": "Perform Analysis",
+  "uri": "doc/ANAL",
+  "src": "api_title"
+ },
+ {
+  "q": "Close Project",
+  "uri": "doc/CLOSE",
+  "src": "api_title"
+ },
+ {
+  "q": "Close the current project file",
+  "uri": "doc/CLOSE",
+  "src": "function"
+ },
+ {
+  "q": "Export to Json",
+  "uri": "doc/EXPORT",
+  "src": "api_title"
+ },
+ {
+  "q": "Export",
+  "uri": "doc/EXPORT",
+  "src": "feature_title"
+ },
+ {
+  "q": "Export the model data created in a format other than MGB file of midas Gen",
+  "uri": "doc/EXPORT",
+  "src": "function"
+ },
+ {
+  "q": "Export to mct/mgt",
+  "uri": "doc/EXPORTMXT",
+  "src": "api_title"
+ },
+ {
+  "q": "Import to Json",
+  "uri": "doc/IMPORT",
+  "src": "api_title"
+ },
+ {
+  "q": "Import",
+  "uri": "doc/IMPORT",
+  "src": "feature_title"
+ },
+ {
+  "q": "Import MGT files as well as other types of files",
+  "uri": "doc/IMPORT",
+  "src": "function"
+ },
+ {
+  "q": "Import to mct/mgt",
+  "uri": "doc/IMPORTMXT",
+  "src": "api_title"
+ },
+ {
+  "q": "Merge Data File",
+  "uri": "doc/IMPORTMXT",
+  "src": "feature_title"
+ },
+ {
+  "q": "Merge the current model data file and a separate existing model data file",
+  "uri": "doc/IMPORTMXT",
+  "src": "function"
+ },
+ {
+  "q": "New Project",
+  "uri": "doc/NEW",
+  "src": "api_title"
+ },
+ {
+  "q": "Create a new project file",
+  "uri": "doc/NEW",
+  "src": "function"
+ },
+ {
+  "q": "Open Project",
+  "uri": "doc/OPEN",
+  "src": "api_title"
+ },
+ {
+  "q": "Open an existing file (fn.mgb : MIDAS GENw Binary File)",
+  "uri": "doc/OPEN",
+  "src": "function"
+ },
+ {
+  "q": "Save",
+  "uri": "doc/SAVE",
+  "src": "api_title"
+ },
+ {
+  "q": "Save the current work in a project file",
+  "uri": "doc/SAVE",
+  "src": "function"
+ },
+ {
+  "q": "Save As",
+  "uri": "doc/SAVEAS",
+  "src": "api_title"
+ },
+ {
+  "q": "Save the current work in another filename",
+  "uri": "doc/SAVEAS",
+  "src": "function"
+ },
+ {
+  "q": "Save Current Stage As",
+  "uri": "doc/STAGAS",
+  "src": "api_title"
+ },
+ {
+  "q": "Save the complete analysis model data of a specific construction stage of a construction stage analysis model",
+  "uri": "doc/STAGAS",
+  "src": "function"
+ },
+ {
+  "q": "Auto-Mesh Planar Area",
+  "uri": "ope/AUTOMESH",
+  "src": "api_title"
+ },
+ {
+  "q": "Automatically generate a mesh by specifying an area",
+  "uri": "ope/AUTOMESH",
+  "src": "function"
+ },
+ {
+  "q": "Divide Elements",
+  "uri": "ope/DIVIDEELEM",
+  "src": "api_title"
+ },
+ {
+  "q": "Divide selected elements and create nodes at the division points",
+  "uri": "ope/DIVIDEELEM",
+  "src": "function"
+ },
+ {
+  "q": "Line Beam Load",
+  "uri": "ope/LINEBMLD",
+  "src": "api_title"
+ },
+ {
+  "q": "Line Beam Loads",
+  "uri": "ope/LINEBMLD",
+  "src": "feature_title"
+ },
+ {
+  "q": "Project Status",
+  "uri": "ope/PROJECTSTATUS",
+  "src": "api_title"
+ },
+ {
+  "q": "Provide a list of data entry status of modeling for a quick reference",
+  "uri": "ope/PROJECTSTATUS",
+  "src": "function"
+ },
+ {
+  "q": "Section Properties Calculation Results",
+  "uri": "ope/SECTPROP",
+  "src": "api_title"
+ },
+ {
+  "q": "Story Calc OPT",
+  "uri": "ope/STOR",
+  "src": "api_title"
+ },
+ {
+  "q": "Story Irregularity Check Parameter",
+  "uri": "ope/STORY_IRR_PARAM",
+  "src": "api_title"
+ },
+ {
+  "q": "Story Check Parameter",
+  "uri": "ope/STORY_PARAM",
+  "src": "api_title"
+ },
+ {
+  "q": "Using Load Combinations",
+  "uri": "ope/USLC",
+  "src": "api_title"
+ },
+ {
+  "q": "Create Load Cases Using Load Combinations",
+  "uri": "ope/USLC",
+  "src": "feature_title"
+ },
+ {
+  "q": "Create a new load case using a predefined load combination",
+  "uri": "ope/USLC",
+  "src": "function"
+ },
+ {
+  "q": "P-M Interaction Diagram",
+  "uri": "post/PM",
+  "src": "api_title"
+ },
+ {
+  "q": "Steel Code Check",
+  "uri": "post/STEELCODECHECK",
+  "src": "api_title"
+ },
+ {
+  "q": "Text Output",
+  "uri": "post/TEXT",
+  "src": "feature_title"
+ },
+ {
+  "q": "Active",
+  "uri": "view/ACTIVE",
+  "src": "api_title"
+ },
+ {
+  "q": "Activities",
+  "uri": "view/ACTIVE",
+  "src": "feature_title"
+ },
+ {
+  "q": "\"Activities\" displays only the defined parts of the entire model on the screen",
+  "uri": "view/ACTIVE",
+  "src": "function"
+ },
+ {
+  "q": "Viewpoint",
+  "uri": "view/ANGLE",
+  "src": "api_title"
+ },
+ {
+  "q": "View Point",
+  "uri": "view/ANGLE",
+  "src": "feature_title"
+ },
+ {
+  "q": "Assign a View Point to view the model from a desired position",
+  "uri": "view/ANGLE",
+  "src": "function"
+ },
+ {
+  "q": "Capture",
+  "uri": "view/CAPTURE",
+  "src": "api_title"
+ },
+ {
+  "q": "Graphic Files",
+  "uri": "view/CAPTURE",
+  "src": "feature_title"
+ },
+ {
+  "q": "Save the graphic data of the Model Window in an AutoCAD DXF, BMP or EMF",
+  "uri": "view/CAPTURE",
+  "src": "function"
+ },
+ {
+  "q": "Display",
+  "uri": "view/DISPLAY",
+  "src": "api_title"
+ },
+ {
+  "q": "Display specific symbols or numerical values for various attributes to check the data entry status on the screen",
+  "uri": "view/DISPLAY",
+  "src": "function"
+ },
+ {
+  "q": "Dialog Capture",
+  "uri": "view/PRECAPTURE",
+  "src": "api_title"
+ },
+ {
+  "q": "Select",
+  "uri": "view/SELECT",
+  "src": "api_title"
+ }
+]

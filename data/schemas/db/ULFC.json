@@ -124,5 +124,8 @@
         "LB_VALUE": -250.0
       }
     }
-  }
+  },
+  "manual_title": "Cable Control - Unknown Load Factor Constraints",
+  "feature_name": "Unknown Load Factor",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35991960319897-Cable-Control-Unknown-Load-Factor-Constraints"
 }

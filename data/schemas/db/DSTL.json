@@ -25,5 +25,8 @@
         "DGNCODE": "Eurocode3-2:05"
       }
     }
-  }
+  },
+  "manual_title": "Design Steel Code",
+  "feature_name": "Design Code Option",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/52149417728665-Design-Steel-Code"
 }

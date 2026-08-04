@@ -25,5 +25,8 @@
         "DGNCODE": "KCI-USD12"
       }
     }
-  }
+  },
+  "manual_title": "RC Design Code",
+  "feature_name": "Design Code Option",
+  "manual_url": "https://support.midasuser.com/hc/en-us/articles/35993633394969-RC-Design-Code"
 }
