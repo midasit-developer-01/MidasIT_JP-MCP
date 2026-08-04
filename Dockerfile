@@ -1,5 +1,9 @@
 # MIDAS NX MCP server — remote (streamable-http) container image.
-FROM python:3.12-slim
+# Pull the base from AWS's ECR Public mirror of Docker Hub's official images
+# (public.ecr.aws/docker/library/*) instead of Docker Hub directly. CodeBuild's
+# shared egress IPs blow past Docker Hub's anonymous pull limit (429 Too Many
+# Requests); ECR Public has no such limit from within AWS.
+FROM public.ecr.aws/docker/library/python:3.12-slim
 
 # Faster, quieter, unbuffered logs (good for container stdout).
 ENV PYTHONUNBUFFERED=1 \
