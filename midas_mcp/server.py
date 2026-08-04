@@ -49,8 +49,9 @@ Precondition: the target MIDAS NX app must be running with a model file open.
 from __future__ import annotations
 
 import os
-from typing import Any
+from typing import Any, Callable, TypeVar
 
+import anyio
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.types import ToolAnnotations
 
@@ -192,11 +193,33 @@ def _client(ctx: Context | None = None) -> MidasClient:
     return _env_client
 
 
+_T = TypeVar("_T")
+
+
+async def _offload(thunk: Callable[[], _T]) -> _T:
+    """Run a blocking MidasClient call in a worker thread, off the event loop.
+
+    FastMCP invokes a synchronous tool directly on the single asyncio loop, so a
+    blocking `requests` call (up to the 60s client timeout) would stall EVERY
+    other user's request until it returns. Awaiting it in a thread instead keeps
+    the loop free, so concurrent callers are served in parallel (anyio's default
+    ~40-thread pool). Safe because each request builds its own per-key
+    MidasClient — no shared mutable state crosses threads.
+
+    Scaling note: the ~40-thread pool caps how many blocking calls run at once;
+    beyond that, extra calls queue (still far better than full serialization). If
+    concurrent in-flight requests routinely exceed ~40, raise the pool once at
+    startup, e.g.:
+        anyio.to_thread.current_default_thread_limiter().total_tokens = 100
+    """
+    return await anyio.to_thread.run_sync(thunk)
+
+
 # --- Re-keying (OAuth mode only): swap your MAPI key without reconnecting -
 # Registered only when the server is its own OAuth authorization server. In
 # stdio/.mcpb the key comes from env, so there is nothing to re-key here.
 
-def midas_rekey_link(ctx: Context) -> str:
+async def midas_rekey_link(ctx: Context) -> str:
     """Get a one-time link to replace your MAPI key without reconnecting.
 
     Use this after renewing your key, or to switch between MIDAS CIVIL and GEN —
@@ -212,7 +235,9 @@ def midas_rekey_link(ctx: Context) -> str:
                 "In local .mcpb/stdio mode, update MIDAS_MAPI_KEY in the extension "
                 "settings instead.")
     try:
-        url = _auth.start_rekey(token)
+        # start_rekey hits the SQLite auth store (blocking) — offload it so the
+        # loop stays free, same as the model-API tools below.
+        url = await _offload(lambda: _auth.start_rekey(token))
     except Exception as exc:  # e.g. AuthorizeError when the token is not live
         return f"Could not start re-keying: {exc}"
     return ("Open this link in a browser and paste your new MAPI key, then return "
@@ -292,7 +317,7 @@ def midas_describe(name: str, group: str | None = None) -> dict[str, Any]:
         openWorldHint=True,  # queries the running MIDAS instance
     )
 )
-def midas_db_read(item: str, ctx: Context, item_id: int | None = None) -> Any:
+async def midas_db_read(item: str, ctx: Context, item_id: int | None = None) -> Any:
     """Read model DB data. GET /{group}/{item} (all) or /.../{item_id} (one).
 
     `item` is a bare name under /db ("NODE", "SECT", "IEHP") or a full lookup uri
@@ -300,7 +325,9 @@ def midas_db_read(item: str, ctx: Context, item_id: int | None = None) -> Any:
     Response is unwrapped to {id: value, ...} (or the single record).
     """
     c = _client(ctx)
-    return c.db_read_item(item, item_id) if item_id is not None else c.db_read(item)
+    return await _offload(
+        lambda: c.db_read_item(item, item_id) if item_id is not None else c.db_read(item)
+    )
 
 
 @mcp.tool(
@@ -312,7 +339,7 @@ def midas_db_read(item: str, ctx: Context, item_id: int | None = None) -> Any:
         openWorldHint=True,
     )
 )
-def midas_db_create(item: str, assign: dict, ctx: Context) -> Any:
+async def midas_db_create(item: str, assign: dict, ctx: Context) -> Any:
     """Create DB records. POST /{group}/{item} with body {"Assign": assign}.
 
     `item` is a bare name under /db or a full uri to any db-shaped endpoint
@@ -320,7 +347,8 @@ def midas_db_create(item: str, assign: dict, ctx: Context) -> Any:
     numeric-string key to a record, e.g. {"1": {"X": 0, "Y": 0, "Z": 0}};
     see `midas_describe(item)` for the shape.
     """
-    return _client(ctx).db_create(item, assign)
+    c = _client(ctx)
+    return await _offload(lambda: c.db_create(item, assign))
 
 
 @mcp.tool(
@@ -332,10 +360,11 @@ def midas_db_create(item: str, assign: dict, ctx: Context) -> Any:
         openWorldHint=True,
     )
 )
-def midas_db_update(item: str, assign: dict, ctx: Context) -> Any:
+async def midas_db_update(item: str, assign: dict, ctx: Context) -> Any:
     """Update DB records. PUT /{group}/{item} ({"Assign": assign}). `item` is a
     bare name under /db or a full uri ("temp/db/MPHG", "design/PSC/AASHTO-LRFD24/MEMB")."""
-    return _client(ctx).db_update(item, assign)
+    c = _client(ctx)
+    return await _offload(lambda: c.db_update(item, assign))
 
 
 @mcp.tool(
@@ -347,10 +376,11 @@ def midas_db_update(item: str, assign: dict, ctx: Context) -> Any:
         openWorldHint=True,
     )
 )
-def midas_db_delete(item: str, item_id: int, ctx: Context) -> Any:
+async def midas_db_delete(item: str, item_id: int, ctx: Context) -> Any:
     """Delete a single DB record. DELETE /{group}/{item}/{item_id}. `item` is a
     bare name under /db or a full uri ("temp/db/MPHG", "design/PSC/AASHTO-LRFD24/DIDP")."""
-    return _client(ctx).db_delete(item, item_id)
+    c = _client(ctx)
+    return await _offload(lambda: c.db_delete(item, item_id))
 
 
 # --- Command groups: doc / ope / view / post (per-request key) ------------
@@ -367,13 +397,14 @@ def midas_db_delete(item: str, item_id: int, ctx: Context) -> Any:
         openWorldHint=True,
     )
 )
-def midas_doc(name: str, ctx: Context, argument: Any | None = None) -> Any:
+async def midas_doc(name: str, ctx: Context, argument: Any | None = None) -> Any:
     """File/document control. POST /doc/{name} with body {"Argument": argument}.
 
     e.g. name="ANAL" (run analysis), "SAVE", "OPEN", "NEW", "EXPORT". Omit
     `argument` for endpoints that take an empty body.
     """
-    return _client(ctx).command("doc", name, argument)
+    c = _client(ctx)
+    return await _offload(lambda: c.command("doc", name, argument))
 
 
 @mcp.tool(
@@ -385,8 +416,8 @@ def midas_doc(name: str, ctx: Context, argument: Any | None = None) -> Any:
         openWorldHint=True,
     )
 )
-def midas_ope(name: str, ctx: Context, argument: Any | None = None,
-              method: str = "POST", body: Any | None = None) -> Any:
+async def midas_ope(name: str, ctx: Context, argument: Any | None = None,
+                    method: str = "POST", body: Any | None = None) -> Any:
     """Modeling operation. POST /ope/{name} with body {"Argument": argument}.
 
     e.g. name="AUTOMESH", "DIVIDEELEM", "USLC". A few are reads (name="SECTPROP"
@@ -396,7 +427,8 @@ def midas_ope(name: str, ctx: Context, argument: Any | None = None,
     (STOR, STORYPROP, STORY_PARAM) — for those, pass the exact body via `body`,
     e.g. body={"STOR": {...}} (copy the shape from `midas_describe(name)`).
     """
-    return _client(ctx).command("ope", name, argument, method, body)
+    c = _client(ctx)
+    return await _offload(lambda: c.command("ope", name, argument, method, body))
 
 
 @mcp.tool(
@@ -408,14 +440,15 @@ def midas_ope(name: str, ctx: Context, argument: Any | None = None,
         openWorldHint=True,
     )
 )
-def midas_view(name: str, ctx: Context, argument: Any | None = None,
-               method: str = "POST") -> Any:
+async def midas_view(name: str, ctx: Context, argument: Any | None = None,
+                     method: str = "POST") -> Any:
     """View/display control. POST /view/{name} with body {"Argument": argument}.
 
     e.g. name="ACTIVE", "ANGLE", "CAPTURE", "DISPLAY". Reads use
     method="GET" (name="SELECT"). See `midas_describe(name)` for the shape.
     """
-    return _client(ctx).command("view", name, argument, method)
+    c = _client(ctx)
+    return await _offload(lambda: c.command("view", name, argument, method))
 
 
 @mcp.tool(
@@ -426,13 +459,14 @@ def midas_view(name: str, ctx: Context, argument: Any | None = None,
         openWorldHint=True,
     )
 )
-def midas_post(name: str, ctx: Context, argument: Any | None = None) -> Any:
+async def midas_post(name: str, ctx: Context, argument: Any | None = None) -> Any:
     """Post-processing / results extraction. POST /post/{name} with {"Argument": argument}.
 
     e.g. name="TABLE" (result table — see `midas_describe("TABLE")` for the
     table type/range shape), "STEELCODECHECK", "PM".
     """
-    return _client(ctx).command("post", name, argument)
+    c = _client(ctx)
+    return await _offload(lambda: c.command("post", name, argument))
 
 
 # --- Extended groups: design / rating / temp / requestinfo / config -------
@@ -460,8 +494,8 @@ def _sub(group: str, path: str) -> str:
         openWorldHint=True,
     )
 )
-def midas_design(path: str, ctx: Context, argument: Any | None = None,
-                 method: str = "POST", body: Any | None = None) -> Any:
+async def midas_design(path: str, ctx: Context, argument: Any | None = None,
+                       method: str = "POST", body: Any | None = None) -> Any:
     """Structural design / code-check endpoints. {method} /design/{path}.
 
     `path` is the `midas_lookup` uri after "design/", e.g.
@@ -472,7 +506,8 @@ def midas_design(path: str, ctx: Context, argument: Any | None = None,
     body={"Assign": {...}}; analysis/report items take argument={...} (sent as
     {"Argument": ...}). Reads use method="GET".
     """
-    return _client(ctx).command("design", _sub("design", path), argument, method, body)
+    c = _client(ctx)
+    return await _offload(lambda: c.command("design", _sub("design", path), argument, method, body))
 
 
 @mcp.tool(
@@ -484,8 +519,8 @@ def midas_design(path: str, ctx: Context, argument: Any | None = None,
         openWorldHint=True,
     )
 )
-def midas_rating(path: str, ctx: Context, argument: Any | None = None,
-                 method: str = "POST", body: Any | None = None) -> Any:
+async def midas_rating(path: str, ctx: Context, argument: Any | None = None,
+                       method: str = "POST", body: Any | None = None) -> Any:
     """Load-rating endpoints. {method} /rating/{path}.
 
     `path` is the `midas_lookup` uri after "rating/", e.g.
@@ -493,7 +528,8 @@ def midas_rating(path: str, ctx: Context, argument: Any | None = None,
     items take body={"Assign": {...}}; analysis/report items take argument={...}.
     Reads use method="GET". Copy the shape from `midas_describe`.
     """
-    return _client(ctx).command("rating", _sub("rating", path), argument, method, body)
+    c = _client(ctx)
+    return await _offload(lambda: c.command("rating", _sub("rating", path), argument, method, body))
 
 
 @mcp.tool(
@@ -505,8 +541,8 @@ def midas_rating(path: str, ctx: Context, argument: Any | None = None,
         openWorldHint=True,
     )
 )
-def midas_temp(path: str, ctx: Context, argument: Any | None = None,
-               method: str = "POST", body: Any | None = None) -> Any:
+async def midas_temp(path: str, ctx: Context, argument: Any | None = None,
+                     method: str = "POST", body: Any | None = None) -> Any:
     """Temp-group endpoints: DB for expansion & external-program connection, and
     temporary DB. {method} /temp/{path}.
 
@@ -516,7 +552,8 @@ def midas_temp(path: str, ctx: Context, argument: Any | None = None,
     argument={...} (or none). Reads use method="GET". Copy the shape from
     `midas_describe`.
     """
-    return _client(ctx).command("temp", _sub("temp", path), argument, method, body)
+    c = _client(ctx)
+    return await _offload(lambda: c.command("temp", _sub("temp", path), argument, method, body))
 
 
 @mcp.tool(
@@ -527,8 +564,8 @@ def midas_temp(path: str, ctx: Context, argument: Any | None = None,
         openWorldHint=True,
     )
 )
-def midas_requestinfo(path: str, ctx: Context, argument: Any | None = None,
-                      method: str = "GET", body: Any | None = None) -> Any:
+async def midas_requestinfo(path: str, ctx: Context, argument: Any | None = None,
+                            method: str = "GET", body: Any | None = None) -> Any:
     """Request-info / metadata endpoints (describe what a request expects).
     {method} /requestinfo/{path}.
 
@@ -536,7 +573,8 @@ def midas_requestinfo(path: str, ctx: Context, argument: Any | None = None,
     "POST/TABLE/TYPELIST", "POST/TABLE_REQUEST". These take {"Argument": argument}
     (often empty); most are reads (method="GET").
     """
-    return _client(ctx).command("requestinfo", _sub("requestinfo", path), argument, method, body)
+    c = _client(ctx)
+    return await _offload(lambda: c.command("requestinfo", _sub("requestinfo", path), argument, method, body))
 
 
 @mcp.tool(
@@ -547,14 +585,15 @@ def midas_requestinfo(path: str, ctx: Context, argument: Any | None = None,
         openWorldHint=True,
     )
 )
-def midas_config(path: str, ctx: Context, argument: Any | None = None,
-                 method: str = "GET", body: Any | None = None) -> Any:
+async def midas_config(path: str, ctx: Context, argument: Any | None = None,
+                       method: str = "GET", body: Any | None = None) -> Any:
     """Config endpoints (project info, program version). {method} /config/{path}.
 
     `path` is the `midas_lookup` uri after "config/", e.g. "PROJECT", "VER".
     Both are reads (method="GET").
     """
-    return _client(ctx).command("config", _sub("config", path), argument, method, body)
+    c = _client(ctx)
+    return await _offload(lambda: c.command("config", _sub("config", path), argument, method, body))
 
 
 def main() -> None:
