@@ -455,7 +455,7 @@ Resources:
             -p 80:80 -p 443:443 \
             -v caddy_data:/data -v caddy_config:/config \
             -v /opt/Caddyfile:/etc/caddy/Caddyfile:ro \
-            caddy:2
+            public.ecr.aws/docker/library/caddy:2
 
           systemctl start midas-redeploy.service \
             || echo "no image in ECR yet - the CodeBuild push will deploy it"

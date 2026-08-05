@@ -130,6 +130,19 @@ sudo docker ps                     # midas / caddy 둘 다 Up 이어야 정상
 sudo docker logs midas --tail 20   # "Application startup complete" 나오면 정상
 ```
 
+**새 이미지를 실제로 받았는지 확인** — `docker pull`이 새로 받았는지(vs 이미 최신) 결과 줄로 판단.
+컨테이너 재시작(`docker ps`의 짧은 uptime)은 재배포가 돌았다는 뜻일 뿐, 새 이미지를 받았다는
+보장은 아니다. pull 결과 줄이 유일하게 확실한 신호다:
+```bash
+sudo bash -c 'TZ=Asia/Tokyo journalctl -u midas-redeploy --no-pager | grep -iE "Downloaded newer image|Image is up to date|Pull complete" | tail -5'
+```
+- `Status: Downloaded newer image for ...` → **새로 받음**(새 이미지 반영됨)
+- `Status: Image is up to date for ...`     → **안 받음**(이미 같은 digest)
+
+> 로그는 시스템 타임존(기본 UTC)으로 찍힌다. `TZ=Asia/Tokyo`로 감싸 JST로 본다(`sudo`가 환경변수를
+> 걸러내므로 `sudo bash -c '…'`로 루트 셸 안에서 `TZ`를 세팅). 정기 기동은 08:00 JST = 23:00 UTC라,
+> 로그에 `23:00:3x`(UTC)로 보이는 게 정상.
+
 전체 OAuth 흐름(등록→로그인→토큰→도구 호출)까지 확인:
 ```bash
 python -m midas_mcp.auth.check_flow https://mcp.example.com   # 19개 항목
