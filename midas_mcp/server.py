@@ -85,10 +85,9 @@ midas_describe first and shape your `assign`/`argument`/`body` on the returned
 Procedure for any task:
   1. midas_lookup("<keywords>")          find candidate endpoints (group + uri + desc).
   2. read each hit's `desc` and pick     the top hit is NOT always the right one.
-                                         If no desc matches what you were asked for,
-                                         call midas_lookup again with limit=30 —
-                                         about 1 request in 12 has its answer below
-                                         rank 10. Never settle for the closest hit.
+                                         Leave limit at its default. Only if nothing
+                                         matches, search again with limit=30 — that
+                                         is a retry, not a starting point.
   3. midas_describe("<name or full uri>") get schema + a working example + notes.
   4. call the matching action tool, copying the example's shape.
 
@@ -301,16 +300,18 @@ def midas_lookup(query: str, limit: int = 10, group: str | None = None) -> list[
     spans 10 groups (db, design, ope, rating, doc, post, temp, view,
     requestinfo, config).
 
-    READ THE `desc` OF EACH HIT AND PICK FROM IT. Endpoint names are 4-letter
+    Read each hit's `desc` and pick from it. Endpoint names are 4-letter
     abbreviations (SECT, CONS, SPLC), so the ranking is tuned to keep the right
     endpoint somewhere in the list rather than always first — the top hit is not
     necessarily the right one.
 
-    IF NO `desc` MATCHES WHAT YOU WERE ASKED FOR, CALL THIS AGAIN WITH
-    `limit=30` BEFORE CONCLUDING THE ENDPOINT DOES NOT EXIST. Roughly one
-    request in twelve has its answer below rank 10, and `limit=30` finds most
-    of them. Do not settle for the closest-looking hit from the first ten.
-    A second search costs far less than a wrong endpoint.
+    Leave `limit` at its default. If nothing in the list matches what you were
+    asked for, search again with `limit=30` before concluding the endpoint does
+    not exist — about one request in twelve has its answer below rank 10. That
+    is a retry for when the first search comes up empty, not a starting point:
+    30 hits cost roughly three times the tokens of 10, so raising it on every
+    search costs more than the occasional second search. Do not settle for the
+    closest-looking hit either; a second search is cheaper than a wrong endpoint.
 
     Pass `group` to restrict results to one group; with a group set, a broad or
     empty `query` simply lists that group's endpoints. This matters because a
