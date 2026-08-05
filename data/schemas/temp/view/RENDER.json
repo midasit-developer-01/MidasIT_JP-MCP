@@ -1,0 +1,76 @@
+{
+  "_group": "temp",
+  "_name": "RENDER",
+  "uri": "temp/view/RENDER",
+  "methods": "POST",
+  "schema": {
+    "RENDER": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "View Render Settings (RENDER). Configure model-view rendering, organized into subsections like /VIEW/DISPLAY. Current scope: MODE (display-mode toggles) and DRAW (draw options). The request body is carried under 'Argument'. The response is { \"message\": <string> }. Requires an opened project and an active model view.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Render settings request body. Only assigned subsections are applied.",
+          "properties": {
+            "MODE": {
+              "type": "object",
+              "description": "[MODE] Render display-mode toggles. Each flag acts as a toggle (same as the ribbon buttons): only fields set to true are toggled; false leaves the current state unchanged.",
+              "properties": {
+                "WIREFRAME": {
+                  "type": "boolean",
+                  "description": "Toggle hidden-line-removal (wireframe) display when true.",
+                  "default": false
+                },
+                "SHRINK": {
+                  "type": "boolean",
+                  "description": "Toggle element shrink display when true.",
+                  "default": false
+                }
+              }
+            },
+            "DRAW": {
+              "type": "object",
+              "description": "[DRAW] Draw options (Display Option dialog > Draw tab). Current scope: inactive objects only.",
+              "properties": {
+                "INACTIVE_OBJECT": {
+                  "type": "object",
+                  "description": "Inactive-object draw settings.",
+                  "properties": {
+                    "DISPLAY_ELEMENTS_NODES": {
+                      "type": "boolean",
+                      "description": "Display elements/nodes of inactive objects. true: draw, false: do not draw.",
+                      "default": true
+                    },
+                    "LINK_ZOOM_AUTO_FIT": {
+                      "type": "boolean",
+                      "description": "Link inactive objects with zoom auto-fit. true: include, false: exclude.",
+                      "default": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "MODE": {
+        "WIREFRAME": true,
+        "SHRINK": false
+      },
+      "DRAW": {
+        "INACTIVE_OBJECT": {
+          "DISPLAY_ELEMENTS_NODES": true,
+          "LINK_ZOOM_AUTO_FIT": true
+        }
+      }
+    }
+  }
+}

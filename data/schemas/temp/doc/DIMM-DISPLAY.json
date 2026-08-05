@@ -1,0 +1,54 @@
+{
+  "_group": "temp",
+  "_name": "DIMM-DISPLAY",
+  "uri": "temp/doc/DIMM-DISPLAY",
+  "methods": "POST",
+  "schema": {
+    "DIMM-DISPLAY": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Dimension Line Show/Hide (DIMM-DISPLAY). Bulk-set the runtime view show/hide state of dimension lines — the same effect as the Works tree 'Dimension' context menu Show/Hide. The request body is carried under 'Argument'. The response is a flattened object { \"CHANGED_COUNT\": <int> }; CHANGED_COUNT is the number of dimensions whose display state actually changed. Requires an opened project. Non-existent DIMM keys are ignored.",
+      "properties": {
+        "Argument": {
+          "type": "object",
+          "description": "Dimension show/hide request body.",
+          "properties": {
+            "KEYS": {
+              "type": "array",
+              "description": "Target DIMM keys. Ignored when ALL=true; may be an empty array. Keys that do not exist are silently skipped.",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "DISPLAY": {
+              "type": "boolean",
+              "description": "true: show, false: hide."
+            },
+            "ALL": {
+              "type": "boolean",
+              "description": "Apply to all dimensions, ignoring KEYS. Optional; defaults to false.",
+              "default": false
+            }
+          },
+          "required": [
+            "KEYS",
+            "DISPLAY"
+          ]
+        }
+      },
+      "required": [
+        "Argument"
+      ]
+    }
+  },
+  "example": {
+    "Argument": {
+      "KEYS": [
+        1,
+        2
+      ],
+      "DISPLAY": true,
+      "ALL": false
+    }
+  }
+}

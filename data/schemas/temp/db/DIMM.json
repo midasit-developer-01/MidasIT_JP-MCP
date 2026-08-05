@@ -1,0 +1,57 @@
+{
+  "_group": "temp",
+  "_name": "DIMM",
+  "uri": "temp/db/DIMM",
+  "methods": "GET, PUT, DELETE",
+  "schema": {
+    "DIMM": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "description": "Dimension Line Header (DIMM). Read/modify/delete the header attributes (T_DIMM_D) of a dimension line, keyed by its DIMM key. Creation (Insert/POST) is not supported here — register a new dimension line via temp/doc/IMPORTDIMM (DXF import). This DTO carries only header properties; the dimension geometry (DMLT) is not included. All fields are optional so PUT can partially update a header.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Dimension name."
+        },
+        "SCALE_FACTOR": {
+          "type": "number",
+          "description": "Scale factor.",
+          "default": 1.0
+        },
+        "ORIGIN": {
+          "type": "array",
+          "description": "Insertion origin [X, Y, Z].",
+          "items": {
+            "type": "number"
+          }
+        },
+        "ROTATION": {
+          "type": "array",
+          "description": "Rotation [Rx, Ry, Rz] in degrees.",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "required": []
+    }
+  },
+  "example": {
+    "Assign": {
+      "1": {
+        "NAME": "DIM_PLAN_1",
+        "SCALE_FACTOR": 1.0,
+        "ORIGIN": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "ROTATION": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    }
+  }
+}
