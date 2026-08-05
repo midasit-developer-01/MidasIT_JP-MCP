@@ -484,8 +484,11 @@ Resources:
               - Effect: Allow
                 Action: ssm:SendCommand
                 Resource:
-                  # AWS-owned documents carry no account id in their ARN.
-                  - !Sub "arn:aws:ssm:${AWS::Region}::document/AWS-RunShellScript"
+                  # SendCommand authorizes the document ARN with the CALLER's
+                  # account id (even for the AWS-owned AWS-RunShellScript). A
+                  # no-account ARN here does NOT match, so every EventBridge
+                  # invocation failed with AccessDenied. Must carry AccountId.
+                  - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:document/AWS-RunShellScript"
                   - !Sub "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/${Instance}"
 
   EcrPushRule:
