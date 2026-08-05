@@ -1,0 +1,8 @@
+{
+ "uri": "db/MVCD",
+ "feature_name": "Moving Load Code",
+ "function": "Prior to defining moving load, Code must be selected first from Moving Load Analysis Data > Moving Load.",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Code] group > [Moving Load Code]",
+ "usage": "Note 1\nThe following codes are provided: [Korea, AASHTO Standard, AASHTO LRFD, PENNDOT, Canada, BS, Eurocode, Transverse]\n\nNote 2\nOnce a Code is selected, all the MVL related dialog boxes are changed accordingly.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29324213558041"
+}

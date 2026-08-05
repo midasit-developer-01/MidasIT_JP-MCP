@@ -1,0 +1,8 @@
+{
+ "uri": "db/TMAT",
+ "feature_name": "Material Link",
+ "function": "The time dependent material properties defined in \"Time Dependent Material (Creep/Shrinkage)\" are related to the conventional material data already entered. The properties entered here are applied to Construction Stage analysis and Heat of Hydration analysis but not to other analyses.",
+ "menu_path": "From the Main Menu select [Properties] tab > [Material Properties] group > [Material Link]",
+ "usage": "Time Dependent Material Type\n\nSelect appropriate Creep/Shrinkage and/or Comp. Strength types.\n\nSelect Materials to Assign\n\nAmong the material data registered in the Materials list, select relevant material data to register in Selected Materials, which will be assigned to the corresponding time history properties.\n\nOperation\n\nSelect a material that has been defined with time history property in Time Dependent Material (Creep/Shrinkage).\n\nThe Add/Modify button\n\nAssign the time history material data selected from Material Type to the material data in the Selected Materials list, or modify the Material Type.\n\nThe Delete button\n\nDelete the selected material data in the table containing the linked properties at the bottom of the dialog box.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29789401903897"
+}

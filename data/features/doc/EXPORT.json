@@ -1,0 +1,9 @@
+{
+ "uri": "doc/EXPORT",
+ "feature_name": "Export",
+ "function": "Export the model data created in a format other than MGB file of midas Gen.",
+ "menu_path": "From the Main Menu select [File] > [Export] > [midas Gen MGT File] From the Main Menu select [File] > [Export] > [MXT File (for FEA/GTS)] From the Main Menu select [File] > [Export] > [Nodal Results (for GTS)] From the Main Menu select [File] > [Export] > [AutoCAD DXF File] From the Main Menu select [File] > [Export] > [Frame Section for Solid] From the Main Menu select [File] > [Export] > [Frame Section for Plate] From the Main Menu select [File] > [Export] > [IFC File]",
+ "usage": "midas Gen MGT File\n\nSave the model data as a fn.MGT text file of midas Gen.",
+ "note": "IFC file contains only geometry data such as section data and element type, and element dimension. It does not contains loads, boundary conditions, and analysis control data.\n\nSection and Material properties excepting for SRC section, Hollow Section, and Tapered section are supported. SRC section, Hollow Section, and Tapered sections are displayed as 1D line without section shape. Composite type section will be excluded in IFC file.\n\nSection property includes only section shape and dimension of section. It does not support section stiffness or DB name.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29104598974873"
+}

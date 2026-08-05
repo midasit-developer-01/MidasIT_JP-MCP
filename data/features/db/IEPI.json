@@ -1,0 +1,8 @@
+{
+ "uri": "db/IEPI",
+ "feature_name": "Ignore Elements for NL. Analysis Initial Load",
+ "function": "The members assign by this feature can resist only the force by NL. Analysis without being affected by initial load like a gravity loads Generally, a masonry walls, braces, and other elements that resist earthquake correspond to a target member",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Dynamic Loads] > [Time History Analysis Data] group > [Global control] > [Ignore Elements for NL. Analysis Initial Load]",
+ "usage": "Element Selection\n\nSelected Elements in View : Select an elements to ignore an initial load during TH. analysis.\n\nImport “Ignore Element for Load Case” Data : Apply “Ignore Elements for Load Case” data.\n\n- Load Case Name : select a target load case\n- The ... Button : check and modify “Ignore Elements for Load Case” data.\n\n* “Ignore Elements for Load Case” “ can be called from ”Boundary > Etc. > Ignore\nElements for Load Case”\n\nOptions\n\nAdd : Add member data assigned by the selected members or load case.\nReplace : Data is replaced with elements and the selected load cases.\nDelete : Remove the assigned information of the selected members or load case.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29441803684505"
+}

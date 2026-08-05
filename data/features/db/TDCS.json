@@ -1,0 +1,8 @@
+{
+ "uri": "db/TDCS",
+ "feature_name": "Tendon Location for Composite Section",
+ "function": "Specify a part of composite section, through which a selected tendon profile is passing. This data is used to calculate the net area of prestressed concrete section. Note 1 If this is not specified, it is assumed that tendon profiles pass through Part1.",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Prestress] > [Prestress Loads] group > [Tendon Location for Composite Section]",
+ "usage": "Tendon Location for Composite Section\n\nTendon Profile : Select a tendon profile\n\nComposite Section for C.S : A composite section for construction stage is automatically selected based on the selected tendon profile.\n\nPart number : Specify part number through which a selected tendon profile passes.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29319617423513"
+}

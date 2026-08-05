@@ -1,0 +1,7 @@
+{
+ "uri": "doc/NEW",
+ "feature_name": "New Project",
+ "function": "Create a new project file. Click the Save button to save the file and enter the filename.",
+ "menu_path": "From the Main Menu select [File] > [New Project] Click the New Button in the Icon Menu. Shortcut key: [Ctrl]+N",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29102537168025"
+}

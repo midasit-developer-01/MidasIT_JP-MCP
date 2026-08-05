@@ -1,0 +1,8 @@
+{
+ "uri": "db/IELC",
+ "feature_name": "Ignore Elements for Load Case",
+ "function": "The members defined by this feature are not affected for the specific load case.",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Misc.] > [Etc.] group > [Ignore Elements for Load Case]",
+ "usage": "Load Case Name : Select load case not to be considered in the analysis.\n\nOptions\n\nAdd : Add an assignment of the selected members.\n\nDelete : Remove the assignment information of the selected members.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29943731110425"
+}

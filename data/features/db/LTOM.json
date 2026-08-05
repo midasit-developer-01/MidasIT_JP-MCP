@@ -1,0 +1,9 @@
+{
+ "uri": "db/LTOM",
+ "feature_name": "Loads to Masses",
+ "function": "Convert the values of the vertical components of the entered loads (loads acting in GCS (-)Z-direction) to masses and enter them as lumped mass data.",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Masses] group > [Masses] > [ Loads to Masses]",
+ "usage": "Mass Direction\n\nAssign applicable directions for the converted masses.",
+ "note": "When considering the seismic effect (response spectrum analysis and time history analysis using seismic data), the vertical mass component is usually neglected because the lateral behavior is typically dominant. Thus, it is common to select the X- and Y- mass directions. However, when considering the floor vibration analysis, it is common to select the Z- mass direction because the vibration mode in the vertical direction is the major mode.\n\nLoad Type for Converting\n\nSelect the vertical load types to be converted.\n\nGravity : Acceleration of gravity\n\nLoad Case/ Factor\n\nLoad Case : Select the Load Cases to be converted.\n\nScale Factor : Enter a scale factor to be applied to convert the loads to masses.\n\nNote 1\n\nThe general methods of converting the structure and the loads into masses are as follows:\n\n1.Self-weight of the structure\nConverting Type of Model Weight to Masses in Model>Structure Type\n\n2. Loads applied to the structure\nModel>Masses>Load to Masses\n\nNote 2\n\nIt is common to convert the structure and loads into lumped masses in case of building structures.\n\nNote 3\n\nThe converted masses from the structure and the loads can be checked from Query>Mass Summary Table.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29235653903769"
+}

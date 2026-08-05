@@ -1,0 +1,9 @@
+{
+ "uri": "db/NBOF",
+ "feature_name": "Nodal Body Force",
+ "function": "Convert Nodal Mass, Load to Mass and Structure Mass assigned to a selected node to a nodal (body) force in a specific direction. The scale factor can be applied in each direction. This is useful to apply load according to the mass distribution to each node in the pushover analysis.",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Masses] group > [Masses] > [ Nodal Body Force]",
+ "usage": "Load Case Name\n\nAssign the load case name. Click the ... Button to the right to enter additional load cases and modify or delete existing load cases.\n\nNodes for Nodal Body Force\n\nUse Structural Group : Select the nodes for nodal body force from the existing structural group. Click the ... Button to the right to add or modify a structure group.\n\nNode List : Enter the node numbers directly or select the nodes from the screen.\n\nMasses to be Converted\n\nSelect the type of masses to be converted.\n\nNodal Mass\n\nLoad to Mass\n\nStructural Mass\n\nNodal Body Force Factor\n\nX : Force Factor in X-direction\n\nY : Force Factor in Y-direction\n\nZ : Force Factor in Z-direction",
+ "note": "For a single Load Case, multiple Nodal Body Force Factors can be input. Body Force entered in each node can be checked from the Model View or in the Nodal Body Force Table.\n\nOptions\n\nTo modify previously entered load cases\nSelect the relevant case from the list at the bottom of the dialog box, modify the entry field at the top and click Modify Button.\n\nTo delete previously entered load cases\nSelect the relevant load case from the list at the bottom of the dialog box and click Delete Button.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29235680950809"
+}

@@ -1,0 +1,8 @@
+{
+ "uri": "db/WMAK",
+ "feature_name": "Modify Wall Mark Data",
+ "function": "Enter the group names or individual names for the purpose of classification of shear walls for automatic design or strength verification.",
+ "menu_path": "From the Main Menu select [Design] tab > [Type : RC Design] > [Design Input Data] group > [Design Parameters] > [Modify Wall Mark Data]",
+ "usage": "Wall Mark\n\nEnter the group or individual names to classify shear wall members.\n\nName : Group or individual name that classifies the shear wall members (refer to Note 1)\n\nWall ID. List : List of shear wall member numbers\n\nThe shear wall ID numbers can be entered in the entry field directly by the user or by selecting (picking) with the mouse in the analysis model.\n\nOperation\n\nAdd, modify or delete shear wall member names defined by a group of shear wall ID numbers.\n\nThe Add Button : Add the entered name for shear wall members.\n\nThe Modify Button : Update the previously defined name for shear wall members.\n\nThe Delete Button : Delete the selected name for shear wall members.\n\nThe Close Button : Close the entry dialog bar.\n\nNote 1\nWhen the Wall Mark name is not defined by the user, the program automatically creates the names as follows. A name can be as long as a maximum of 12 characters.\nName = \"wM\" + Shear Wall ID\n\nNote 2\nWhen the Wall Mark name is repeatedly entered for the same shear wall members, the Wall Mark name will be updated to the last name entered.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/30177928064793"
+}

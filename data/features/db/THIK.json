@@ -1,0 +1,9 @@
+{
+ "uri": "db/THIK",
+ "feature_name": "Thickness",
+ "function": "Enter thickness data for planar elements (plate element, plane stress element).",
+ "menu_path": "From the Main Menu select [Properties] tab > [Section Properties] group > [Thickness]",
+ "usage": "To enter new or additional thickness data\n\nClick the Add... button in the Properties dialog box and enter the following items :\n\nValue\n\nThickness ID : Thickness numbers of planar elements (Auto-set to the last thickness number +1)\n\nName : Enter a thickness name.\n\nIn-plane & Out-of-plane : Enter a thickness when the in-plane and out-of-plane thicknesses are identical in both directions.\n\nIn-plane : Enter a thickness used for the calculation of stiffness in the in-plane direction.\n\nOut-of-Plane : Enter a thickness used for the calculation of stiffness in the out-of-plane direction.\n\nPlate Offset : Offset of a plate section in the element's local-z direction.\n\nThickness Ratio : For a specific location of Offset, enter the distance as ratio of the offset distance to the plate thickness.",
+ "note": "If a fn.MGB is selected, all the thickness data contained in the existing fn.MGB file are registered in the Selected List.\n\nNumbering Type\nSpecify the Import mode for thickness numbers.\n\nKeep ID\nImport the data keeping the same thickness numbers.\n\nNew ID\nAssign new numbers to the imported thickness data.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29829858708121"
+}

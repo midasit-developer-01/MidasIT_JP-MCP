@@ -1,0 +1,8 @@
+{
+ "uri": "db/TDNA",
+ "feature_name": "Tendon Profile",
+ "function": "Define a tendon profile along the length of elements. Create the tendon profile relative to its own coordinate system, which will then be inserted relative to the elements. Note 1 Tendon placement can be simplified by copying, rotating and sloping tendon profiles. Note 2 Tendon properties can be changed at the Tendon Profile location in Works Tree.",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Prestress] > [Prestress Loads] group > [ Tendon Profile]",
+ "note": "x Axis Rot. Angle must be entered between -85 and +85 degrees.\n\nProjection\nThe tendon profile placed in the table is projected on the plane, which is rotated about TCS x-axis by the Angle.\n\nOffset : Tendon Offset is defined in the Element Coordinate System (ECS).\n\ny : Distance by which the tendon profile is moved in the ECS y-axis direction\n\nz : Distance by which the tendon profile is moved in the ECS z-axis direction",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29319619128601"
+}

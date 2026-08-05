@@ -1,0 +1,9 @@
+{
+ "uri": "doc/STAGAS",
+ "feature_name": "Save Current Stage As",
+ "function": "Save the complete analysis model data of a specific construction stage of a construction stage analysis model. The function enables us to separately analyze a specific construction stage to further investigate the effects of other conditions such as wind, construction load, etc. during the construction.",
+ "menu_path": "From the Main Menu select [File] > [Save Current Stage As]",
+ "usage": "The menu activates when a construction stage is selected for the purpose of saving it as a separate analysis model from the model defined with construction stages. (Refer to Select Construction Stage for Display)\n\nSelect Save Current Stage As to prompt the Save As dialog box. Enter the model file name and click the Save button.",
+ "note": "The Default file name is created as \"the current model file name\" - \"construction stage name\"",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29104123702553"
+}

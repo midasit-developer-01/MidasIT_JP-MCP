@@ -1,0 +1,9 @@
+{
+ "uri": "db/PJCF",
+ "feature_name": "Project Information",
+ "function": "Register the general project information (project name, user name, etc.).",
+ "menu_path": "From the Main Menu select [Project] tab > [Management] group > [Project Information]",
+ "usage": "Execute Project Information to display the dialog box in which general project information is registered.\n\nFill in the blanks as necessary and click the OK button to record the project information.",
+ "note": "The Project Name and User Name entered in Project Information will appear as a Header when the results are produced by the Text Editor after executing Text Output or design functions.\n\nFig. Text Output Header",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29102945440665"
+}

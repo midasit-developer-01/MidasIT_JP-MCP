@@ -1,0 +1,8 @@
+{
+ "uri": "doc/SAVEAS",
+ "feature_name": "Save As",
+ "function": "Save the current work in another filename. Use Save As supported by Standard Windows.",
+ "menu_path": "From the Main Menu select [File] > [Save As]",
+ "usage": "Select \"Save As\" to display the \"Save As\" dialog box. Assign a desired filename and its directory, and then click the Save button.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29103094227225"
+}

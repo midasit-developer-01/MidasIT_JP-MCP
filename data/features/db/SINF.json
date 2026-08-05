@@ -1,0 +1,8 @@
+{
+ "uri": "db/SINF",
+ "feature_name": "Plate Elements for Influence Surface",
+ "function": "Use plate elements to represent additional surfaces for which an influence surface analysis is to be carried out. When influence surface analysis results are required for additional surfaces beyond the range of the traffic surface lane, plate elements are used for the moving load analysis.",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Advanced] group > [Plate Elements for Influ. Surface]",
+ "usage": "Options\n\nAdd\nSelect plate elements using the selection functions in the Model Window and add the plate elements for influence surface analysis\n\nDelete\nSelect plate elements using the selection functions in the Model Window and delete the plate elements for influence surface analysis",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29324139132569"
+}

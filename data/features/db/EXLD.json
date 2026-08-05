@@ -1,0 +1,8 @@
+{
+ "uri": "db/EXLD",
+ "feature_name": "External Type Load Case for Pretension",
+ "function": "Apply the pretension load of truss elements as an external type. In the general static analysis, this version regards the pretension load as an internal type, but using this function, the pretension load can be entered as an external type. P-Delta Analysis can be executed at the same time.",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Prestress] > [Prestress Loads] group > [ External Type LoadCase]",
+ "usage": "Among the previously specified loading cases, select the loading case defined with pretension loads, and click the >> Button to select it as External Type Load Case.\n\nTo remove the input data entirely, click the Remove External Type Load Case Button.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29319622799769"
+}

@@ -1,0 +1,9 @@
+{
+ "uri": "db/ETMP",
+ "feature_name": "Element Temperatures",
+ "function": "Specify element temperatures, or modify or delete previously defined temperatures for thermal analysis. (refer to \"System Temperature\")",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Temperature] > [Temperature Loads] group > [Element Temp.]",
+ "usage": "Load Case Name\n\nSelect a load case from the load case selection field. Click the ... Button to the right to prompt the \"Static Load Cases\" dialog box to add load cases or modify/delete previously defined load cases.\n\nLoad Group Name\n\nSelect the load group, which will include the element temperature loads. Click the ... Button to the right to prompt the \"Define Load Group\" dialog box to add/modify/delete Load Group Names.\n\nOptions\n\nAdd : new or additional element temperature\n\nReplace : replace previously defined element temperature\n\nDelete : delete previously defined element temperature\n\nTemperature\n\nEnter the element temperature.\n\nInitial\nIt displays the entered initial temperature. Click the ... Button to the right to change the initial temperature in the \"Structure Type\" dialog box.\n\nFinal Temperature : final element temperature",
+ "note": "The temperature difference between the initial temperature and the final element temperature is applied as the temperature load.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29308268267161"
+}

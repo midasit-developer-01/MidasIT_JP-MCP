@@ -1,0 +1,8 @@
+{
+ "uri": "db/IFGS",
+ "feature_name": "Initial Forces for Geometric Stiffness",
+ "function": "Enter initial axial forces into selected members for geometric stiffness calculation. When cable elements are used, the self-weight of the cables should be inputted so that it can be considered in the analysis.",
+ "menu_path": "From the Main Menu select [Misc.] tab > [Type : Initial Forces] > [Initial Forces] > [Large Displacement] > [Initial Forces for Geometric Stiffness]",
+ "usage": "Options\n\nAdd/Replace : Enter new or replace existing initial axial forces in selected members.\n\nDelete : Delete entered initial axial forces in selected members.\n\nInitial Force\n\nEnter initial axial forces for geometric stiffness calculation.\n\nDirection : Select the direction of initial axial forces.\n\nAxial : Apply the entered forces as elements' axial forces.\n\nGlobal - X Projection : Apply the force in the GCS X-direction. Auto-compute and enter the axial forces based on the placement directions of the selected elements\n\nGlobal - Y Projection : Apply the force in the GCS Y-direction. Auto-compute and enter the axial forces based on the placement directions of the selected elements\n\nGlobal - Z Projection : Apply the forces the GCS Z-direction. Auto-compute and enter the axial forces based on the placement directions of the selected elements\n\nForce: Initial Force",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29307828740633"
+}

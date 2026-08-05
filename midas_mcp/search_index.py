@@ -12,15 +12,34 @@ What it ranks on
 Each endpoint is one short document: **name + uri + the schema's description**
 (570/572 endpoints carry one), plus the manual's own names for it where those
 were merged in (``manual_title``/``feature_name``, 228 of 572 endpoints — see
-``scripts/merge_manual.py``). The manual names matter because the descriptions
-are DTO-derived and a user asks in UI wording: "Graphic Files", not "View
-Capture".
+``scripts/merge_manual.py``), plus its **menu path** where a GUI guide exists
+(155 of 572 — see ``midas_mcp/features.py``). The manual names matter because
+the descriptions are DTO-derived and a user asks in UI wording: "Graphic
+Files", not "View Capture". The menu path adds the rest of that vocabulary —
+ribbon tab, group and button labels — so "where do I set material properties"
+reaches ``db/MATL`` instead of ``db/FIMP``. Both are title-weighted.
+
+Measured, adding the menu path: ``function`` recall@10 unchanged at 91.3%,
+top-1 56.5% -> 62.0% title-weighted (58.7% unweighted).
+
+Known side effect, and why it was accepted: only the 155 guided endpoints gain
+these terms, so they can outrank an unguided one on shared vocabulary — and
+design/rating/temp have **zero** eval coverage, so the gate cannot see it. Hand-
+checked on 10 design/rating/temp queries: 8 unchanged, 2 worse. One of those
+(``concrete design material`` -> ``design/RC/.../MATD``, 10 -> off the list)
+regresses in the unweighted variant too, so it is the menu terms rather than
+the weighting; the weighting alone costs ``design/SECT`` ranks 3 -> 5, still on
+the first page. Traded against +3.3pp of top-1 on 92 real queries.
 
 Schema *fields* are deliberately NOT indexed — measured on the seed eval set
 they leave recall unchanged but cost top-1 accuracy (11/18 -> 9/18) and
 quadruple the index (37.8 -> 155.6 terms/doc), because generic field names like
-``LOAD``/``SECTION`` appear nearly everywhere. The manual's prose sections are
-left out for the same reason.
+``LOAD``/``SECTION`` appear nearly everywhere. The guide's ``function`` and
+``usage`` prose is left out for a different reason: the eval set's ``function``
+queries are drawn from that exact text, so indexing it would leave
+``eval_search`` measuring itself. Menu paths are not the source of any query
+(0 of the 92 ``function`` queries are covered by menu-path terms), so they can
+be indexed while the gate stays honest.
 
 Why BM25 rather than hand-tuned weights
 ---------------------------------------
@@ -157,7 +176,9 @@ class Doc:
     entry: dict[str, Any]
     tf: dict[str, int] = field(default_factory=dict)
     length: int = 0
-    # Terms from the description's opening title, scored at TITLE_WEIGHT.
+    # Terms that name the endpoint rather than describe its fields — the
+    # description's opening title, the manual's names, and the menu path.
+    # Scored at TITLE_WEIGHT.
     title_terms: frozenset[str] = frozenset()
 
 
@@ -182,7 +203,8 @@ def build() -> Index:
     already spends parsing JSON — negligible even under stdio, where a fresh
     process starts per session.
     """
-    from . import catalog
+    # Deferred, like `catalog` above: `features` imports this module.
+    from . import catalog, features
 
     docs: list[Doc] = []
     for group, name, entry in catalog._iter_entries():
@@ -194,7 +216,17 @@ def build() -> Index:
         manual = " ".join(
             str(entry.get(f) or "") for f in ("manual_title", "feature_name")
         )
-        terms = tokenize(name) + tokenize(uri) + tokenize(summary) + tokenize(manual)
+        # The ribbon route to the feature's dialog, for the 155 endpoints that
+        # have one. This is the vocabulary a "where do I click" question is
+        # phrased in — tab, group and button labels the DTO description never
+        # mentions. It is also the ONLY part of the guide text that is indexed:
+        # `function` and `usage` are the source of the eval set's own queries,
+        # so indexing those would make `eval_search` measure itself. Menu paths
+        # are not the source of any query (0 of the 92 `function` queries are
+        # covered by menu-path terms), so the gate stays honest.
+        menu = features.menu_path(uri)
+        terms = (tokenize(name) + tokenize(uri) + tokenize(summary)
+                 + tokenize(manual) + tokenize(menu))
         doc = Doc(
             group=group,
             key=name,
@@ -202,7 +234,7 @@ def build() -> Index:
             uri=uri,
             summary=summary,
             entry=entry,
-            title_terms=frozenset(tokenize(title_of(summary)) + tokenize(manual)),
+            title_terms=frozenset(tokenize(title_of(summary)) + tokenize(manual) + tokenize(menu)),
         )
         for term in terms:
             doc.tf[term] = doc.tf.get(term, 0) + 1

@@ -4,9 +4,10 @@ An [MCP](https://modelcontextprotocol.io) server that lets an LLM (Claude, etc.)
 drive a running **MIDAS CIVIL/GEN NX** instance through its Open API.
 
 Instead of one tool per endpoint (**572 endpoints across 10 groups**), it exposes
-**15 generic tools** plus a **catalog lookup** so the model discovers the exact
+**16 generic tools** plus a **catalog lookup** so the model discovers the exact
 schema/example at call time — including the undocumented `db/IEHP` (inelastic
-hinge property).
+hinge property). It also answers the other kind of question — *"where do I click
+to do this?"* — from the bundled manual, without touching the running app.
 
 ## Tools
 
@@ -14,6 +15,7 @@ hinge property).
 | --- | --- | --- |
 | `midas_lookup(query)` | — | Search the endpoint catalog by keyword; each hit carries a one-line `desc` |
 | `midas_describe(name)` | — | Full schema + example for one endpoint (e.g. `NODE`, `IEHP`, `TABLE`) |
+| `midas_guide(name)` | — | Menu path + dialog field guide for a feature (155 of 572 endpoints) |
 | `midas_db_read(item, item_id?)` | `GET /db/{item}` | Read model data (unwrapped) |
 | `midas_db_create(item, assign)` | `POST /db/{item}` | Create records (`{"Assign": ...}`) |
 | `midas_db_update(item, assign)` | `PUT /db/{item}` | Update records |
@@ -47,8 +49,8 @@ endpoint — db-style items take `body={"Assign": {…}}`, the rest take
 
 Every tool carries MCP [`ToolAnnotations`](https://modelcontextprotocol.io/) hints
 (`readOnlyHint`/`destructiveHint`/`idempotentHint`/`openWorldHint`) so a host can,
-e.g., auto-approve reads (`midas_lookup`, `midas_db_read`, `midas_post`) but
-prompt before destructive writes (`midas_db_delete`, `midas_doc`).
+e.g., auto-approve reads (`midas_lookup`, `midas_guide`, `midas_db_read`,
+`midas_post`) but prompt before destructive writes (`midas_db_delete`, `midas_doc`).
 
 The catalog data lives one-file-per-endpoint under `data/schemas/<group>/<NAME>.json`
 (e.g. `data/schemas/db/NODE.json`); each file carries the endpoint's
@@ -92,14 +94,48 @@ Re-run it whenever the manual is re-scraped — it is idempotent:
 python scripts/merge_manual.py --source <API_Data dir> [--dry-run]
 ```
 
-`scripts/extract_features.py` keeps the rest of each manual article —
-what the feature *does* and where it sits in the UI — in `data/features.json`,
-keyed by endpoint. It is **not** indexed: the eval set's `function` queries are
-drawn from that same text, and indexing it would leave nothing independent to
-measure against. It is kept because it is the starting point for any synonym
-work (the remaining misses are cases where the manual's wording and the DTO's
-share no words at all) and because it removes the need to re-scrape Help Center
-for future use.
+`scripts/extract_features.py` keeps the rest of each manual article — what the
+feature *does*, where it sits in the UI, and how each dialog field works — as
+one file per endpoint under `data/features/`. That is what `midas_guide` serves;
+see [GUI operation guides](#gui-operation-guides) below.
+
+Only its `menu_path` is indexed. `function` and `usage` are **not**: the eval
+set's `function` queries are drawn from that same text, so indexing it would
+leave nothing independent to measure against. Menu paths are not the source of
+any query — 0 of the 92 `function` queries are fully covered by menu-path terms
+— so they can be indexed while the gate stays honest.
+
+### GUI operation guides
+
+When the user asks *how* to do something rather than asking the server to do it,
+`midas_guide("db/MATL")` returns the ribbon route, what the feature is for, and
+the dialog's controls explained field by field — all offline, from the bundle.
+
+| | |
+| --- | --- |
+| Coverage | **155 / 572 endpoints** — db 123, ope 11, doc 10, view 5, post 2 |
+| Not covered | design, rating and temp; the public manual has no feature article for them |
+| Also missing | 37 articles are restricted upstream (HTTP 401 even for the page), costing 44 endpoints — including `doc/ANAL` |
+| Layout | `data/features/<uri>.json`, mirroring `data/schemas` — the uri IS the path, so there is no slug to invent |
+
+A `midas_lookup` hit carrying `"guide": true` has one. A miss is a normal
+outcome, not an error: it returns the manual link the schema already knows, plus
+related guided features (a leaf name repeating under `db` is usually literally
+the same dialog), and says plainly that no guide is bundled — the failure being
+defended against is the model filling the silence with an invented menu path.
+
+Menu labels are the **English** UI's. On a localized MIDAS NX the tool's
+description tells the model to quote the English label and say so rather than
+translating it into a button that does not exist.
+
+Top up coverage whenever access to a restricted article appears:
+
+```bash
+python scripts/fetch_articles.py --source <API_Data dir> --verify   # parser sanity
+python scripts/fetch_articles.py --source <API_Data dir>            # fetch what is reachable
+python scripts/extract_features.py --source <API_Data dir>          # regenerate the tree
+python -m midas_mcp.hooks.check_features                            # parity gate
+```
 
 ### When the first ten are not enough
 
@@ -112,9 +148,9 @@ recovers, so the instruction's payoff stays a measured number.
 
 Reading a whole group instead was considered and rejected for this purpose: the
 `db` index alone is ~8.1K tokens against ~1.8K for a `limit=30` retry, for a
-smaller gain. A browse resource is still worth building — but for *browsing*
-("what load types exist?"), which search cannot answer at all, not as a
-search fallback.
+smaller gain. Browsing ("what load types exist?") is still unanswered by search
+and still worth building — `midas_guide` covers the adjacent question ("how do I
+use this feature?"), not that one.
 
 ### Guarding it
 
@@ -129,18 +165,27 @@ honest set, and **the floor is applied to it alone**:
 
 | source | n | recall@10 | top-1 | |
 | --- | ---: | ---: | ---: | --- |
-| `api_title` | 219 | 100.0% | 94.5% | circular |
+| `api_title` | 219 | 100.0% | 94.3% | circular |
 | `feature_title` | 61 | 100.0% | 91.8% | circular |
-| **`function`** | **92** | **91.3%** | **56.5%** | **the gate** |
+| **`function`** | **92** | **91.3%** | **62.0%** | **the gate** |
 
-Before the merge, `function` sat at 85.9% / 42.4%, so the gain there (+5.4pp
-recall, +14.1pp top-1) is measured against text the index has never seen. The
-inflated 97.8% total is printed for continuity and means little.
+Before the merge, `function` sat at 85.9% / 42.4%; indexing the guides'
+`menu_path` took top-1 from 56.5% to 62.0% on top of that. Both gains are
+measured against text the index has never seen. The inflated total is printed
+for continuity and means little.
 
 **Still not a benchmark of real usage:** the manual describes what a feature
 *is*, a user asks for what they *want to do*, and only 224 of the 572 endpoints
-are covered — design/rating/temp have none. Queries from real sessions are what
-would replace this; mark them `session` and move the gate onto them.
+are covered — design/rating/temp have none. That blind spot is load-bearing:
+the menu-path change was hand-checked on 10 design/rating/temp queries because
+the gate cannot see them (8 unchanged, 2 worse — see `search_index.py`). Queries
+from real sessions are what would replace this; mark them `session` and move the
+gate onto them.
+
+`python -m midas_mcp.hooks.check_features` is the second data guard: every file
+under `data/features/` must name a real endpoint and agree with `_index.json`.
+It does **not** gate coverage — most endpoints have no manual article, and that
+is expected.
 
 ## Client-side validation
 
@@ -158,21 +203,23 @@ Two independent distribution tracks share one core:
 
 ```
 midas_mcp/          # server source (stdio + streamable-http)  ── shared core
-  ├─ server.py      #   the 15 FastMCP tools
+  ├─ server.py      #   the 16 FastMCP tools
   ├─ client.py      #   thin REST client for the MIDAS Open API
   ├─ catalog.py     #   offline endpoint lookup over data/schemas
   ├─ search_index.py#   BM25 ranking behind midas_lookup
   ├─ eval_search.py #   recall guard for the ranking (python -m midas_mcp.eval_search)
-  ├─ hooks/         #   pre-request JSON-Schema validation of DB bodies
+  ├─ features.py    #   GUI operation guides behind midas_guide (lazy, one file per read)
+  ├─ hooks/         #   pre-request validation of DB bodies + the two data guards
   └─ auth/          #   opt-in OAuth for remote mode (MIDAS_MCP_PUBLIC_URL); see auth/README.md
 data/
   ├─ schemas/       # endpoint catalog, one file per endpoint (bundled into every build)
-  ├─ features.json  # what each feature does + its menu path, keyed by endpoint (not indexed)
+  ├─ features/      # GUI guides, same tree shape — <uri>.json + _index.json (155 endpoints)
   ├─ eval_queries.json  # manual-derived query set for the recall guard
   └─ midas-api-reference.md
 scripts/
   ├─ merge_manual.py     # folds public-manual naming into data/schemas (idempotent)
-  └─ extract_features.py # writes data/features.json from the same source
+  ├─ extract_features.py # writes data/features/ from the manual articles
+  └─ fetch_articles.py   # re-fetches manual articles the local scrape is missing (network)
 mcpb/               # track 1: .mcpb bundle for Claude Desktop (PyInstaller, win32)
 Dockerfile          # track 2: container image for remote (streamable-http) deploy
 deploy/             # track 2: CloudFormation templates + AWS runbook
