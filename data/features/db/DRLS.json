@@ -1,0 +1,8 @@
+{
+ "uri": "db/DRLS",
+ "feature_name": "Diaphragm Disconnect",
+ "function": "Select the desired nodes to be disconnected from Floor Rigid Diaphragms created internally for each floor by the program's Story function.",
+ "menu_path": "From the Main Menu select [Boundary] tab > [Advanced] group > [Diaphragm Disconnect]",
+ "usage": "Select the desired nodes and click the Apply button to add or delete nodes disconnected from the diaphragms.\n\nOptions\n\nAdd or delete Diaphragm disconnection conditions.\n\nNo : Consecutive numbers\n\nNode Number : Selected node numbers",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29943565122969"
+}

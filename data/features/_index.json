@@ -1,0 +1,622 @@
+{
+ "db/ACTL": {
+  "feature_name": "Main Control Data",
+  "menu_path": "From the Main Menu select [Analysis] tab > [Analysis Control] group > [Main Control Data]"
+ },
+ "db/BMLD": {
+  "feature_name": "Element Beam Loads",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Static Loads] group > [Beam Loads] > [ Element]"
+ },
+ "db/BNGR": {
+  "feature_name": "Define Boundary Group",
+  "menu_path": "From the Main Menu select [Structure] tab > [Group] group > [Group] > [Define Boundary Group]"
+ },
+ "db/BODF": {
+  "feature_name": "Self Weight",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Create Load Cases] group > [ Self Weight]"
+ },
+ "db/BTMP": {
+  "feature_name": "Beam Section Temperatures",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Temperature] > [Temperature Loads] group > [Beam Section Temperature]"
+ },
+ "db/CLDR": {
+  "feature_name": "Define Constraint Label Direction",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Advanced] group > [Define Label Dir]"
+ },
+ "db/CLWP": {
+  "feature_name": "Plate Cutting Line Diagram",
+  "menu_path": "From the Main Menu select [Results] tab > [Type : Analysis Result] > [Result Display] group > [ Forces] > [Plate Cutting Line Diagram]"
+ },
+ "db/CNLD": {
+  "feature_name": "Nodal Loads",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Create Load Cases] group > [Nodal Loads]"
+ },
+ "db/CONS": {
+  "feature_name": "Define Supports",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Supports] group > [Define Supports]"
+ },
+ "db/CUTL": {
+  "feature_name": "Plate Cutting Line Diagram",
+  "menu_path": "From the Main Menu select [Results] tab > [Type : Analysis Result] > [Result Display] group > [ Forces] > [Plate Cutting Line Diagram]"
+ },
+ "db/DCON": {
+  "feature_name": "Design Code Option",
+  "menu_path": "From the Main Menu select [Design] tab > [Type : RC Design] > [Design Input Data] > [Design Code Option]"
+ },
+ "db/DCTL": {
+  "feature_name": "Definition of Frame",
+  "menu_path": "From the Main Menu select [Design] tab > [Type : Steel Design] > [Design Input Data] group > [Design Parameters] > [Definition of Frame] From the Main Menu select [Design] tab > [Type : RC Design] > [Design Input Data] group > [Design Parameters] > [Definition of Frame] From the Main Menu select [Design] tab > [Type : SRC Design] > [Design Input Data] group > [Design Parameters] > [Definition of Frame] From the Main Menu select [Design] tab > [Type : Cold Formed Steel Design] > [Design Input Data] > [Design Parameters] > [Definition of Frame]"
+ },
+ "db/DOEL": {
+  "feature_name": "Define Domain",
+  "menu_path": "From the Main Menu select [Node/Element] tab > [Mesh] group > [Domain] > [Define Domain]"
+ },
+ "db/DRLS": {
+  "feature_name": "Diaphragm Disconnect",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Advanced] group > [Diaphragm Disconnect]"
+ },
+ "db/DSTL": {
+  "feature_name": "Design Code Option",
+  "menu_path": "From the Main Menu select [Design] tab > [Type : Steel Design] > [Design Input Data] group > [Design Code Option]"
+ },
+ "db/EDMP": {
+  "feature_name": "Change Property",
+  "menu_path": "From the Main Menu select [Properties] tab > [Material Properties] group > [Change Property]"
+ },
+ "db/EFCT": {
+  "feature_name": "Initial Forces Control Data",
+  "menu_path": "From the Main Menu select [Misc.] tab > [Type : Initial Forces] > [Initial Forces] group > [Small Displacement] > [Initial Forces Control Data]"
+ },
+ "db/ELEM": {
+  "feature_name": "Create Elements",
+  "menu_path": "From the Main Menu select [Node/Element] tab > [General] group > [Create] > [Create Element] Shortcut key: [Alt]+1"
+ },
+ "db/ELNK": {
+  "feature_name": "Elastic Link",
+  "menu_path": "From the Main Menu select [Boundary] > [Link] > [Elastic Link]"
+ },
+ "db/EPMT": {
+  "feature_name": "Plastic Material",
+  "menu_path": "From the Main Menu select [Properties] tab > [Material Properties] group > [Plastic Material]"
+ },
+ "db/EPST": {
+  "feature_name": "Static Earth Pressure",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Lateral] group > [Earth Pressure] > [Static Earth Pressure]"
+ },
+ "db/ESSF": {
+  "feature_name": "Element Stiffness Scale Factor",
+  "menu_path": "From the Main Menu select [Properties] tab > [Section Properties] group > [Scale Factor] > [Element Stiffness Scale Factor]"
+ },
+ "db/ETMP": {
+  "feature_name": "Element Temperatures",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Temperature] > [Temperature Loads] group > [Element Temp.]"
+ },
+ "db/EXLD": {
+  "feature_name": "External Type Load Case for Pretension",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Prestress] > [Prestress Loads] group > [ External Type LoadCase]"
+ },
+ "db/FBLA": {
+  "feature_name": "Assign Floor Loads",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Advanced] group > [Assign Floor Loads] > [Assign Floor Loads]"
+ },
+ "db/FBLD": {
+  "feature_name": "Define Floor Load Type",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Advanced] group > [Assign Floor Loads] > [Define Floor Load Type]"
+ },
+ "db/FIBR": {
+  "feature_name": "Fiber Division of Section",
+  "menu_path": "From the Main Menu select [Properties] tab > [Inelastic Properties] group > [Inelastic Material] > [Fiber Division of Section]"
+ },
+ "db/FIMP": {
+  "feature_name": "Inelastic Material Properties",
+  "menu_path": "From the Main Menu select [Properties] tab > [Inelastic Properties] group > [Inelastic Material] > [Inelastic Material Properties]"
+ },
+ "db/FRLS": {
+  "feature_name": "Beam End Release",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Release/Offset] group > [Beam End Release]"
+ },
+ "db/GRDP": {
+  "feature_name": "Group Damping : Element Mass & Stiffness Proportional",
+  "menu_path": "From the Main Menu select [Properties] tab > [Damping] group > [Group Damping] > [Element Mass Stiffness Proportional]"
+ },
+ "db/GRUP": {
+  "feature_name": "Define Structure Group",
+  "menu_path": "From the Main Menu select [Structure] tab > [Group] group > [Group] > [Structure] Shortcut key: [Ctrl]+[F1]"
+ },
+ "db/GSPR": {
+  "feature_name": "General Spring Supports",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Springs] group > [General Spring] > [General Spring Supports]"
+ },
+ "db/GSTP": {
+  "feature_name": "Define General Spring Type",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Springs] group > [General Spring] > [Define General Spring Type]"
+ },
+ "db/GTMP": {
+  "feature_name": "Temperature Gradient",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Temperature] > [Temperature Loads] group > [Temperature Gradient]"
+ },
+ "db/IEHC": {
+  "feature_name": "Inelastic Properties Control Data",
+  "menu_path": "From the Main Menu select [Properties] tab > [Inelastic Properties] group > [Inel. Control Data] > [Inel. Control Data]"
+ },
+ "db/IEHG": {
+  "feature_name": "Assign Inelastic Hinge Properties",
+  "menu_path": "From the Main Menu select [Properties] tab > [Inelastic Properties] group > [Inelastic Hinge] > [Assign Inelastic Hinge Properties]"
+ },
+ "db/IELC": {
+  "feature_name": "Ignore Elements for Load Case",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Misc.] > [Etc.] group > [Ignore Elements for Load Case]"
+ },
+ "db/IEPI": {
+  "feature_name": "Ignore Elements for NL. Analysis Initial Load",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Dynamic Loads] > [Time History Analysis Data] group > [Global control] > [Ignore Elements for NL. Analysis Initial Load]"
+ },
+ "db/IFGS": {
+  "feature_name": "Initial Forces for Geometric Stiffness",
+  "menu_path": "From the Main Menu select [Misc.] tab > [Type : Initial Forces] > [Initial Forces] > [Large Displacement] > [Initial Forces for Geometric Stiffness]"
+ },
+ "db/IMFM": {
+  "feature_name": "Inelastic Material Properties",
+  "menu_path": "From the Main Menu select [Properties] tab > [Inelastic Properties] group > [Inelastic Material] > [Inelastic Material Properties]"
+ },
+ "db/INMF": {
+  "feature_name": "Initial Element Forces",
+  "menu_path": "From the Main Menu select [Load] group > [Type : Misc.] > [Initial Forces] group > [Small Displacement] > [Initial Element Forces]"
+ },
+ "db/LDGR": {
+  "feature_name": "Define Load Group",
+  "menu_path": "From the Main Menu select [Structure] tab > [Group] group > [Group] > [Define Load Group]"
+ },
+ "db/LENG": {
+  "feature_name": "Unbraced Length (L,Lb)",
+  "menu_path": "From the Main Menu select [Design] tab > [Type : Steel Design] > [Design Input Data] group > [Design Parameters] > [Unbraced Length (L,Lb)] From the Main Menu select [Design] tab > [Type : RC Design] > [Design Input Data] group > [Design Parameters] > [Unbraced Length (L,Lb)] From the Main Menu select [Design] tab > [Type : SRC Design] > [Design Input Data] group > [Design Parameters] > [Unbraced Length (L,Lb)] From the Main Menu select [Design] tab > [Type : Cold Formed Steel Design] > [Design Input Data] group] > [Design Parameters] > [Unbraced Length (L,Lb)]"
+ },
+ "db/LLAN": {
+  "feature_name": "Traffic Line Lanes",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Traffic Line Lanes]"
+ },
+ "db/LLANCH": {
+  "feature_name": "Traffic Line Lanes",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Traffic Line Lanes]"
+ },
+ "db/LLANID": {
+  "feature_name": "Traffic Line Lanes",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Traffic Line Lanes]"
+ },
+ "db/LLANOP": {
+  "feature_name": "Traffic Line Lanes",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Traffic Line Lanes]"
+ },
+ "db/LLANTR": {
+  "feature_name": "Traffic Line Lanes",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Traffic Line Lanes]"
+ },
+ "db/LTOM": {
+  "feature_name": "Loads to Masses",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Masses] group > [Masses] > [ Loads to Masses]"
+ },
+ "db/LTSR": {
+  "feature_name": "Limiting Slenderness Ratio",
+  "menu_path": "From the Main Menu select [Design] tab > [Type : Steel Design] > [Design Input Data] group > [Design Parameters] > [Limiting Slenderness Ratio] From the Main Menu select [Design] tab > [Type : SRC Design] > [Design Input Data] group > [Design Parameters] > [Limiting Slenderness Ratio] From the Main Menu select [Design] tab > [Type : Cold Formed Steel Design] > [Design Input Data] group > [Design Parameters] > [Limiting Slenderness Ratio]"
+ },
+ "db/MADO": {
+  "feature_name": "Define Domain",
+  "menu_path": "From the Main Menu select [Node/Element] tab > [Mesh] group > [Domain] > [Define Domain]"
+ },
+ "db/MATD": {
+  "feature_name": "Modify Concrete Material",
+  "menu_path": "From the Main Menu select [Design] tab > [Type : RC Design] > [Design Input Data] group > [Modify Concrete Material]"
+ },
+ "db/MATL": {
+  "feature_name": "Material Properties",
+  "menu_path": "From the Main Menu select [Properties] tab > [Material Properties] group > [Material Properties]"
+ },
+ "db/MBTP": {
+  "feature_name": "Modify Member Type",
+  "menu_path": "From the Main Menu select [Design] tab > [Type : Steel Design] > [Design Input Data] group > [Design Parameters] > [Modify Member Type] From the Main Menu select [Design] tab > [Type : RC Design] > [Design Input Data] group > [Design Parameters] > [Modify Member Type] From the Main Menu select [Design] tab > [Type : SRC Design] > [Design Input Data] group > [Design Parameters] > [Modify Member Type] From the Main Menu select [Design] tab > [Type : Cold Formed Steel Design] > [Design Input Data] group > [Design Parameters] > [Modify Member Type]"
+ },
+ "db/MCON": {
+  "feature_name": "Linear Constraints",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Advanced] group > [Linear Constraints]"
+ },
+ "db/MEMB": {
+  "feature_name": "Member Assignment",
+  "menu_path": "From the Main Menu select [Design] tab > [Type : Steel Design] > [Design Input Data] group > [Design Parameters] > [ Member Assignment] From the Main Menu select [Design] tab > [Type : RC Design] > [Design Input Data] group > [Design Parameters] > [ Member Assignment] From the Main Menu select [Design] tab > [Type : SRC Design] > [Design Input Data] group > [Design Parameters] > [ Member Assignment] From the Main Menu select [Design] tab > [Type : Cold Formed Steel Design] > [Design Input Data] group > [Design Parameters] > [ Member Assignment]"
+ },
+ "db/MLSP": {
+  "feature_name": "Lane Supports(Negative Moments at Interior Piers)",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Advanced] group > [Lane Supports] > [Lane Support-Nega. Moments]"
+ },
+ "db/MLSR": {
+  "feature_name": "Lane Supports(Negative Moments at Interior Piers)",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Advanced] group > [Lane Supports] > [Lane Support-Nega. Moments]"
+ },
+ "db/MVCD": {
+  "feature_name": "Moving Load Code",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Code] group > [Moving Load Code]"
+ },
+ "db/MVHL": {
+  "feature_name": "Vehicles",
+  "menu_path": "From the Main Menu select Load > Moving Load > Moving Load Analysis Data > Vehicles."
+ },
+ "db/MVHLTR": {
+  "feature_name": "Vehicles",
+  "menu_path": "From the Main Menu select Load > Moving Load > Moving Load Analysis Data > Vehicles."
+ },
+ "db/MVLD": {
+  "feature_name": "Moving Load Cases",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Moving Load Cases]"
+ },
+ "db/MVLDBS": {
+  "feature_name": "Moving Load Cases",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Moving Load Cases]"
+ },
+ "db/MVLDCH": {
+  "feature_name": "Moving Load Cases",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Moving Load Cases]"
+ },
+ "db/MVLDEU": {
+  "feature_name": "Moving Load Cases",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Moving Load Cases]"
+ },
+ "db/MVLDID": {
+  "feature_name": "Moving Load Cases",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Moving Load Cases]"
+ },
+ "db/MVLDPL": {
+  "feature_name": "Moving Load Cases",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Moving Load Cases]"
+ },
+ "db/MVLDTR": {
+  "feature_name": "Moving Load Cases",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Moving Load Cases]"
+ },
+ "db/NBOF": {
+  "feature_name": "Nodal Body Force",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Masses] group > [Masses] > [ Nodal Body Force]"
+ },
+ "db/NLLP": {
+  "feature_name": "General Link Properties",
+  "menu_path": "From the Main Menu select [Boundary] > [Link] > [General Link] > [General Link Properties]"
+ },
+ "db/NLNK": {
+  "feature_name": "General Link",
+  "menu_path": "From the Main Menu select [Boundary] > [Link] > [General Link] > [General Link]"
+ },
+ "db/NMAS": {
+  "feature_name": "Nodal Masses",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Masses] group > [Masses] > [Nodal Masses]"
+ },
+ "db/NODE": {
+  "feature_name": "Create Nodes",
+  "menu_path": "From the Main Menu select [Node/Element] tab > [General] group > [Create] > [Create Node]"
+ },
+ "db/NPLN": {
+  "feature_name": "Named Plane",
+  "menu_path": "From the Main Menu select [View] tab > [View] group > [Named] > [Named Plane]"
+ },
+ "db/NSPR": {
+  "feature_name": "Point Spring Supports",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Springs] group > [Point Spring]"
+ },
+ "db/NTMP": {
+  "feature_name": "Nodal Temperatures",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Temperature] > [Temperature Loads] group > [Nodal Temperatures]"
+ },
+ "db/OFFS": {
+  "feature_name": "Beam End Offsets",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Release/Offset] group > [Beam End Offsets]"
+ },
+ "db/PJCF": {
+  "feature_name": "Project Information",
+  "menu_path": "From the Main Menu select [Project] tab > [Management] group > [Project Information]"
+ },
+ "db/PNLA": {
+  "feature_name": "Assign Plane Loads",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Pressure Load] group > [Assign Plane Loads] > [Assign Plane Loads]"
+ },
+ "db/PNLD": {
+  "feature_name": "Define Plane Load Type",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Pressure Load] group > [Assign Plane Loads] > [Define Plane Load Type]"
+ },
+ "db/POLC": {
+  "feature_name": "Pushover Load Case",
+  "menu_path": "From the nain nenu, select [Poshover] tab > [Load Case] group > [Load Case]"
+ },
+ "db/POSL": {
+  "feature_name": "Seismic Loads",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Load] > [Lateral] group > [Seismic Loads]"
+ },
+ "db/POSP": {
+  "feature_name": "Parameters of Soil Properties",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Lateral] group > [Earth Pressure] > [Parameters of Soil Properties]"
+ },
+ "db/PRES": {
+  "feature_name": "Assign Pressure Loads",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Pressure Load] group > [Pressure Loads] > [Assign Pressure Loads]"
+ },
+ "db/PRLS": {
+  "feature_name": "Plate End Release",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Release/Offset] group > [Plate End Release]"
+ },
+ "db/PRST": {
+  "feature_name": "Prestress Beam Loads",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Prestress] > [Prestress Loads] group > [ Prestress Beam Loads]"
+ },
+ "db/PSLT": {
+  "feature_name": "Pressure Loads",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Pressure Load] group > [Pressure Loads] > [Define Pressure Load Type]"
+ },
+ "db/PSSF": {
+  "feature_name": "Plate Stiffness Scale Factor",
+  "menu_path": "From the Main Menu select [Properties] tab > [Section Properties] group > [Scale Factor] > [Plate Stiffness Scale Factor]"
+ },
+ "db/PTNS": {
+  "feature_name": "Pretension Loads",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Prestress] > [Prestress Loads] group > [ Pretension Loads]"
+ },
+ "db/PZEF": {
+  "feature_name": "Panel Zone Effects",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Advanced] group > [Panel Zone Effects]"
+ },
+ "db/RIGD": {
+  "feature_name": "Rigid Link",
+  "menu_path": "From the Main Menu select [Boundary] tab> [Link] group > [Rigid Link]"
+ },
+ "db/SBDO": {
+  "feature_name": "Define Sub-Domain",
+  "menu_path": "From the Main Menu select [Node/Element] tab > [Mesh] group > [Domain] > [Define Sub-Domain]"
+ },
+ "db/SDHY": {
+  "feature_name": "Hysteretic Isolator (MSS)",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Advanced] group > [Seismic Device] > [Hysteretic Isolator (MSS)]"
+ },
+ "db/SDIS": {
+  "feature_name": "Isolator (MSS)",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Advanced] group > [Seismic Device] > [Isolator (MSS)]"
+ },
+ "db/SDSP": {
+  "feature_name": "Specified Displacements of Supports",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Static Loads] group > [Specified Displ.]"
+ },
+ "db/SDST": {
+  "feature_name": "Steel Damper",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Advanced] group > [Seismic Device] > [Steel Damper]"
+ },
+ "db/SDVE": {
+  "feature_name": "Viscoelastic Damper",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Advanced] group > [Seismic Device] > [Viscoelastic Damper]"
+ },
+ "db/SDVI": {
+  "feature_name": "Viscous Damper/ Oil Damper",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Advanced] group > [Seismic Device] > [Viscous Damper/ Oil Damper]"
+ },
+ "db/SECF": {
+  "feature_name": "Section Stiffness Scale Factor",
+  "menu_path": "From the Main Menu select [Properties] tab > [Section Properties] group > [Scale Factor] > [Section Stiffness Scale Factor]"
+ },
+ "db/SECT": {
+  "feature_name": "Section Properties",
+  "menu_path": "From the Main Menu select [Properties] tab > [Section Properties] group > [Section Properties]"
+ },
+ "db/SINF": {
+  "feature_name": "Plate Elements for Influence Surface",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Advanced] group > [Plate Elements for Influ. Surface]"
+ },
+ "db/SKEW": {
+  "feature_name": "Node Local Axis",
+  "menu_path": "From the Main Menu select [Node/Element] tab > [Node Detail] group > [Nodes Table] > [Node local Axis]"
+ },
+ "db/SLAN": {
+  "feature_name": "Traffic Surface Lanes",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Traffic Surface Lanes] > [Traffic Surface Lanes]"
+ },
+ "db/SLANCH": {
+  "feature_name": "Traffic Surface Lanes",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Traffic Surface Lanes] > [Traffic Surface Lanes]"
+ },
+ "db/SLANOP": {
+  "feature_name": "Traffic Surface Lanes",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Moving Load] > [Moving Load Analysis Data] group > [Traffic Surface Lanes] > [Traffic Surface Lanes]"
+ },
+ "db/SMPT": {
+  "feature_name": "Settlement Group",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Settlement] > [Settlement Analysis Data] group > [Settlement Group]"
+ },
+ "db/SPFC": {
+  "feature_name": "Response Spectrum Functions",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Dynamic Loads] > [Response Spectrum] group > [RS Functions]"
+ },
+ "db/SSPS": {
+  "feature_name": "Surface Spring Supports",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Springs] group > [Surface Spring]"
+ },
+ "db/STLD": {
+  "feature_name": "Static Load Cases",
+  "menu_path": "From the Main Menu Select [Load] tab > [Type : Static Loads] > [Create Load Cases] group > [Static Load Cases] Shortcut key : [F9] Click the ... button to the right of the Load Case Name field in the dialog boxes of various functions purposed to specify static loads to define or modify static unit load conditions."
+ },
+ "db/STMP": {
+  "feature_name": "System Temperature",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Temperature] > [Temperature Loads] group > [ System Temperature]"
+ },
+ "db/STOR": {
+  "feature_name": "Story",
+  "menu_path": "From the Main Menu select [Structure] tab > [Building] group > [Story] Shortcut key: [F10]"
+ },
+ "db/STYP": {
+  "feature_name": "Structure Type",
+  "menu_path": "From the Main Menu select [Structure] tab > [Type] group > [Structure Type]"
+ },
+ "db/TDCS": {
+  "feature_name": "Tendon Location for Composite Section",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Prestress] > [Prestress Loads] group > [Tendon Location for Composite Section]"
+ },
+ "db/TDGR": {
+  "feature_name": "Define Tendon Group",
+  "menu_path": "From the Main Menu select [Structure] tab > [Group] group > [Group] > [Define Tendon Group]"
+ },
+ "db/TDME": {
+  "feature_name": "Time Dependent Material (Comp. Strength)",
+  "menu_path": "From the Main Menu select [Properties] tab > [Material Properties] group > [Time Dependent Material] > [Comp. Strength]"
+ },
+ "db/TDMF": {
+  "feature_name": "Time Dependent Material (Creep/Shrinkage/Relaxation) Function",
+  "menu_path": "From the Main Menu select [Properties] tab > [Material Properties] group > [Time Dependent Material] > [User Defined]"
+ },
+ "db/TDMT": {
+  "feature_name": "Time Dependent Material (Creep/Shrinkage)",
+  "menu_path": "From the Main Menu select [Properties] tab > [Material Properties] group > [Time Dependent Material] > [Creep/Shrinkage]"
+ },
+ "db/TDNA": {
+  "feature_name": "Tendon Profile",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Prestress] > [Prestress Loads] group > [ Tendon Profile]"
+ },
+ "db/TDNT": {
+  "feature_name": "Tendon Property",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Prestress] > [Prestress Loads] group > [ Tendon Property]"
+ },
+ "db/TDPL": {
+  "feature_name": "Tendon Prestress Loads",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Prestress] > [Prestress Loads] group > [ Tendon Prestress]"
+ },
+ "db/THIK": {
+  "feature_name": "Thickness",
+  "menu_path": "From the Main Menu select [Properties] tab > [Section Properties] group > [Thickness]"
+ },
+ "db/THIS": {
+  "feature_name": "Time History Load Cases",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Dynamic Loads] > [Time History Analysis Data] group > [Load Cases]"
+ },
+ "db/TMAT": {
+  "feature_name": "Material Link",
+  "menu_path": "From the Main Menu select [Properties] tab > [Material Properties] group > [Material Link]"
+ },
+ "db/TSGR": {
+  "feature_name": "Tapered Section Group",
+  "menu_path": "From the Main Menu select [Properties] tab > [Section Properties] group > [Tapered Section Group]"
+ },
+ "db/ULFC": {
+  "feature_name": "Unknown Load Factor",
+  "menu_path": "From the Main Menu select [Results] tab > [Type : Analysis Result] > [Dynamic] group > [Detail Result] > [Advanced] > [Unknown Load Factor]"
+ },
+ "db/UNIT": {
+  "feature_name": "Unit System",
+  "menu_path": "From the Main Menu select [Project] tab > [Setting] group > [Unit System]"
+ },
+ "db/WMAK": {
+  "feature_name": "Modify Wall Mark Data",
+  "menu_path": "From the Main Menu select [Design] tab > [Type : RC Design] > [Design Input Data] group > [Design Parameters] > [Modify Wall Mark Data]"
+ },
+ "doc/CLOSE": {
+  "feature_name": "Close Project",
+  "menu_path": "From the Main Menu select [File] > [Close Project]"
+ },
+ "doc/EXPORT": {
+  "feature_name": "Export",
+  "menu_path": "From the Main Menu select [File] > [Export] > [midas Gen MGT File] From the Main Menu select [File] > [Export] > [MXT File (for FEA/GTS)] From the Main Menu select [File] > [Export] > [Nodal Results (for GTS)] From the Main Menu select [File] > [Export] > [AutoCAD DXF File] From the Main Menu select [File] > [Export] > [Frame Section for Solid] From the Main Menu select [File] > [Export] > [Frame Section for Plate] From the Main Menu select [File] > [Export] > [IFC File]"
+ },
+ "doc/EXPORTMXT": {
+  "feature_name": "Export",
+  "menu_path": "From the Main Menu select [File] > [Export] > [midas Gen MGT File] From the Main Menu select [File] > [Export] > [MXT File (for FEA/GTS)] From the Main Menu select [File] > [Export] > [Nodal Results (for GTS)] From the Main Menu select [File] > [Export] > [AutoCAD DXF File] From the Main Menu select [File] > [Export] > [Frame Section for Solid] From the Main Menu select [File] > [Export] > [Frame Section for Plate] From the Main Menu select [File] > [Export] > [IFC File]"
+ },
+ "doc/IMPORT": {
+  "feature_name": "Import",
+  "menu_path": "From the Main Menu select [File] > [Import] > [midas Gen MGT File] From the Main Menu select [File] > [Import] > [MXT file (for FEA/GTS)] From the Main Menu select [File] > [Import] > [Nodal Results (for GTS)] From the Main Menu select [File] > [Import] > [AutoCAD DXF File] From the Main Menu select [File] > [Import] > [SAP2000(V6, V7) File] From the Main Menu select [File] > [Import] > [SAP2000(V8) File] From the Main Menu select [File] > [Import] > [STAAD2000 File] From the Main Menu select [File] > [Import] > [STAAD2002 File] From the Main Menu select [File] > [Import] > [MSC.Nastran File]"
+ },
+ "doc/IMPORTMXT": {
+  "feature_name": "Merge Data File",
+  "menu_path": "From the Main Menu select [File] > [Merge Data File]"
+ },
+ "doc/NEW": {
+  "feature_name": "New Project",
+  "menu_path": "From the Main Menu select [File] > [New Project] Click the New Button in the Icon Menu. Shortcut key: [Ctrl]+N"
+ },
+ "doc/OPEN": {
+  "feature_name": "Open Project",
+  "menu_path": "From the Main Menu select [File] > [Open Project] Click the Open button in the Icon Menu. Shortcut key: [Ctrl]+O"
+ },
+ "doc/SAVE": {
+  "feature_name": "Save",
+  "menu_path": "From the Main Menu select [File] > [Save] Click the Save button in the Icon Menu. Shortcut key: [Ctrl]+S"
+ },
+ "doc/SAVEAS": {
+  "feature_name": "Save As",
+  "menu_path": "From the Main Menu select [File] > [Save As]"
+ },
+ "doc/STAGAS": {
+  "feature_name": "Save Current Stage As",
+  "menu_path": "From the Main Menu select [File] > [Save Current Stage As]"
+ },
+ "ope/AUTOMESH": {
+  "feature_name": "Auto-mesh Planar Area",
+  "menu_path": "From the Main Menu select [Node/Element] tab > [Mesh] group > [Mesh] > [Auto-mesh]"
+ },
+ "ope/DIVIDEELEM": {
+  "feature_name": "Divide Elements",
+  "menu_path": "From the Main Menu select [Node/Element] tab > [General] group > [Divide] > [Divide Element] Shortcut key: [Alt]+7"
+ },
+ "ope/EDMP": {
+  "feature_name": "Change Property",
+  "menu_path": "From the Main Menu select [Properties] tab > [Material Properties] group > [Change Property]"
+ },
+ "ope/LINEBMLD": {
+  "feature_name": "Line Beam Loads",
+  "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Static Loads] group > [Beam Loads] > [Line]"
+ },
+ "ope/MEMB": {
+  "feature_name": "Member Assignment",
+  "menu_path": "From the Main Menu select [Design] tab > [Type : Steel Design] > [Design Input Data] group > [Design Parameters] > [ Member Assignment] From the Main Menu select [Design] tab > [Type : RC Design] > [Design Input Data] group > [Design Parameters] > [ Member Assignment] From the Main Menu select [Design] tab > [Type : SRC Design] > [Design Input Data] group > [Design Parameters] > [ Member Assignment] From the Main Menu select [Design] tab > [Type : Cold Formed Steel Design] > [Design Input Data] group > [Design Parameters] > [ Member Assignment]"
+ },
+ "ope/PROJECTSTATUS": {
+  "feature_name": "Project Status",
+  "menu_path": "From the Main Menu select [Project] tab > [Management] group > [Project Status] Shortcut key : [Ctrl]+T"
+ },
+ "ope/SSPS": {
+  "feature_name": "Surface Spring Supports",
+  "menu_path": "From the Main Menu select [Boundary] tab > [Springs] group > [Surface Spring]"
+ },
+ "ope/STOR": {
+  "feature_name": "Story",
+  "menu_path": "From the Main Menu select [Structure] tab > [Building] group > [Story] Shortcut key: [F10]"
+ },
+ "ope/STORY_IRR_PARAM": {
+  "feature_name": "Story",
+  "menu_path": "From the Main Menu select [Structure] tab > [Building] group > [Story] Shortcut key: [F10]"
+ },
+ "ope/STORY_PARAM": {
+  "feature_name": "Story",
+  "menu_path": "From the Main Menu select [Structure] tab > [Building] group > [Story] Shortcut key: [F10]"
+ },
+ "ope/USLC": {
+  "feature_name": "Create Load Cases Using Load Combinations",
+  "menu_path": "From the Main Menu Select [Load] tab > [Type : Static Loads] > [Create Load Cases] group > [Using Load Combinations]"
+ },
+ "post/STEELCODECHECK": {
+  "feature_name": "Steel Code Check",
+  "menu_path": "From the Main Menu select [Design] tab > [Type : Steel Design] > [Perform] group > [Steel Code Check] Shortcut key: [Ctrl] + [6]"
+ },
+ "post/TEXT": {
+  "feature_name": "Text Output",
+  "menu_path": "From the Main Menu select [Results] tab > [Type : Analysis Result] > [Text] group > [Text Output]"
+ },
+ "view/ACTIVE": {
+  "feature_name": "Activities",
+  "menu_path": "From the Main Menu select [View] tab > [Activities] group > [Active] > [Active] Shortcut key: [F2] From the Main Menu select [View] tab > [Activities] group > [Active] > [Inactive] Shortcut key: [Ctrl]+[F2] From the Main Menu select [View] tab > [Activities] group > [All] > Inverse Active. Shortcut key: [Ctrl]+A From the Main Menu select [View] tab > [Activities] group > [All] > [Active All] From the Main Menu select [View] tab > [Activities] group > [All] > [Active Identity] Shortcut key: [Ctrl]+D From the Main Menu select [View] tab > [Activities] group > [All] > [Active Previous]"
+ },
+ "view/ANGLE": {
+  "feature_name": "View Point",
+  "menu_path": "From the Main Menu select [View] tab > [View] group > [View Point] > [Iso] Shortcut key: [Ctrl]+[Shift]+I From the Main Menu select [View] tab > [View] group > [View Point] > [Top(+Z)] Shortcut key: [Ctrl]+[Shift]+T From the Main Menu select [View] tab > [View] group > [View Point] > [Bottom(-Z)] Shortcut key: [Ctrl]+[Shift]+B From the Main Menu select [View] tab > [View] group > [View Point] > [Left(-X)] Shortcut key: [Ctrl]+[Shift]+L From the Main Menu select [View] tab > [View] group > [View Point] > [Right(+X)] Shortcut key: [Ctrl]+[Shift]+R From the Main Menu select [View] tab > [View] group > [View Point] > [Front(-Y)] Shortcut key: [Ctrl]+[Shift]+F From the Main Menu select [View] tab > [View] group > [View Point] > [Rear(+Y)] Shortcut key: [Ctrl]+[Shift]+E From the Main Menu select [View] tab > [View] group > [View Point] > [Angle] From the Main Menu select [View] tab > [View] group > [View Point] > [Rotate Left] Shortcut key: [Ctrl]+[Alt]+the left arrow button From the Main Menu select [View] tab > [View] group > [View Point] > [Rotate Right] Shortcut key: [Ctrl]+[Alt]+the right arrow button From the Main Menu select [View] tab > [View] group > [View Point] > [Rotate Up] Shortcut key: [Ctrl]+[Alt]+the up arrow button From the Main Menu select [View] tab > [View] group > [View Point] > [Rotate Down] Shortcut key: [Ctrl]+[Alt]+the down arrow button"
+ },
+ "view/CAPTURE": {
+  "feature_name": "Graphic Files",
+  "menu_path": "From the Main Menu select [File] > [Graphic Files]"
+ },
+ "view/DISPLAY": {
+  "feature_name": "Display",
+  "menu_path": "From the Main Menu select [View] tab > [Display] group > [Display] > [Display] Click the Display button in the Icon Menu. Shortcut key: [Ctrl]+E"
+ },
+ "view/SELECT": {
+  "feature_name": "Select",
+  "menu_path": "From the Main Menu select [View] tab > [Select] group > [Select] > [Identity] From the Main Menu select [View] tab > [Select] group > [Select] > [Filter] From the Main Menu select [View] tab > [Select] group > [Select] > [Single] From the Main Menu select [View] tab > [Select] group > [Select] > [Window] From the Main Menu select [View] tab > [Select] group > [Select] > [Polygon] From the Main Menu select [View] tab > [Select] group > [Select] > [Intersect Line] From the Main Menu select [View] tab > [Select] group > [Select] > [Plane] From the Main Menu select [View] tab > [Select] group > [Select] > [Volume] From the Main Menu select [View] tab > [Select] group > [Select] > [Select All] From the Main Menu select [View] tab > [Select] group > [Select] > [Select Previous] From the Main Menu select [View] tab > [Select] group > [Select] > [Select Recent Entities]"
+ }
+}

@@ -1,0 +1,8 @@
+{
+ "uri": "db/NTMP",
+ "feature_name": "Nodal Temperatures",
+ "function": "Enter nodal temperatures for thermal stress analysis, and modify or delete previously entered temperatures. (Refer to \"System Temperature\")",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Temperature] > [Temperature Loads] group > [Nodal Temperatures]",
+ "usage": "Load Case Name\n\nAssign the load case name. Click the ... Button to the right to enter additional load cases and modify or delete existing load cases.\n\nLoad Group Name\n\nSelect the desired Load Group that will include the entered Nodal Temperatures data. Select \"Default\" if a Group assignment is unnecessary. Click the ... Button to the right to add, modify or delete Load Groups.\n\nOptions\n\nAdd : To enter new or additional nodal temperatures\n\nReplace : To replace previously entered nodal temperatures\n\nDelete : To delete previously entered nodal temperatures\n\nTemperature\n\nEnter nodal temperatures.\n\nInitial\n\nFinal Temperature",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29308288542105"
+}

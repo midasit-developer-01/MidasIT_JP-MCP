@@ -1,0 +1,8 @@
+{
+ "uri": "db/SMPT",
+ "feature_name": "Settlement Group",
+ "function": "For analyses considering support settlement loads in bridge structures, specify settlement groups within which supports settle simultaneously.",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Settlement] > [Settlement Analysis Data] group > [Settlement Group]",
+ "usage": "Settlement Group\n\nGroup Name\n\nEnter the name of a support settlement group.\n\nSettlement Displacement\n\nEnter the magnitude of the settled displacement for supports.\n\nNode List\n\nEnter the supports to be included in the support settlement group.\n\nThe supports can be directly entered or selected in the model.\n\nOperations\n\nThe Add Button\n\nAdd the data entered in Group Name, Settlement Displacement and Node List in the support settlement group list.\n\nThe Modify Button\n\nModify the contents of a support settlement group entered in the list.\n\nThe Delete Button\n\nDelete a support settlement group entered in the list.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29443062626841"
+}

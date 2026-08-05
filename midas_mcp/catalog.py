@@ -20,7 +20,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from . import search_index
+from . import features, search_index
 
 _SCHEMA_DIR = Path(__file__).resolve().parent.parent / "data" / "schemas"
 
@@ -109,6 +109,10 @@ def search(query: str, limit: int = 10, group: str | None = None) -> list[dict[s
             "methods": doc.entry.get("methods"),
             "desc": _short_desc(doc.summary),
             **({"note": note} if note else {}),
+            # Only ever present, never False: absence is the signal, as with
+            # `note`. Tells the model a midas_guide call will actually return
+            # something, so it does not have to try one to find out.
+            **({"guide": True} if features.has_guide(doc.uri) else {}),
         })
     return hits
 
@@ -122,7 +126,15 @@ def _result(g: str, key: str, entry: dict[str, Any]) -> dict[str, Any]:
         else "argument" if isinstance(ex, dict) and "Argument" in ex
         else "unknown"
     )
-    return {"group": g, "name": key, "convention": convention, **entry}
+    # Ahead of **entry so a stray `guide` key in a schema file cannot shadow
+    # the computed one.
+    return {
+        "group": g,
+        "name": key,
+        "convention": convention,
+        **({"guide": True} if features.has_guide(str(entry.get("uri", ""))) else {}),
+        **entry,
+    }
 
 
 def describe(name: str, group: str | None = None) -> dict[str, Any]:

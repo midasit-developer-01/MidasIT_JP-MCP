@@ -1,0 +1,8 @@
+{
+ "uri": "db/CNLD",
+ "feature_name": "Nodal Loads",
+ "function": "Enter concentrated nodal loads (Concentrated Forces and Moments), or modify or delete previously entered concentrated loads.",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Create Load Cases] group > [Nodal Loads]",
+ "usage": "Load Case Name\n\nAssign the load case name. Click ... to the right to enter, additional load cases and modify or delete existing load cases.\n\nLoad Group Name\n\nSelect the desire Load Group that will include the entered Nodal Loads data. Select \"Default\", if a Group assignment is unnecessary. Click ... to the right to add, modify or delete Load Groups.\n\nOptions\n\nAdd : To enter new or additional concentrated nodal loads\n\nReplace : To replace previously entered concentrated nodal loads\n\nDelete : To delete previously entered concentrated nodal loads\n\nNodal Loads\n\nEnter concentrated nodal loads with respect to GCS.\n\nFX : GCS X-direction component of the concentrated load\n\nFY : GCS Y-direction component of the concentrated load\n\nFZ : GCS Z-direction component of the concentrated load\n\nMX : Concentrated moment component about GCS X-axis\n\nMY : Concentrated moment component about GCS Y-axis\n\nMZ : Concentrated moment component about GCS Z-axis",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29235763208601"
+}

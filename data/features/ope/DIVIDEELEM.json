@@ -1,0 +1,9 @@
+{
+ "uri": "ope/DIVIDEELEM",
+ "feature_name": "Divide Elements",
+ "function": "Divide selected elements and create nodes at the division points.",
+ "menu_path": "From the Main Menu select [Node/Element] tab > [General] group > [Divide] > [Divide Element] Shortcut key: [Alt]+7",
+ "usage": "Click the [...] button to the right of Divide Elements : Display the Element Table\n\nStart Node Number\n\nAssign a starting node number for the newly created nodes resulting from the division. This number is auto-set to the largest node number in use +1. To modify this item, click the [...] button and select an option to specify a desired number.\n\nStart Element Number\n\nAssign a new starting element number for new elements being created. This number is auto-set to the largest element number in use +1. To modify this item, click the [...] button and select an option to specify a desired number.\n\nDivide\n\nElement Type : Assign the type of elements.\n\nFrame : line element (Truss, Beam etc.)\n\nWall : wall element",
+ "note": "Base Edge and Base Point define the application direction of a Pattern. They do not affect the structural analysis.\n\nMerge Duplicate Nodes\n\nMerge overlapping nodes to single nodes if new nodes coincide with existing nodes. Click to modify the Merging Tolerance.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29743458539033"
+}

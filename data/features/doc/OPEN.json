@@ -1,0 +1,8 @@
+{
+ "uri": "doc/OPEN",
+ "feature_name": "Open Project",
+ "function": "Open an existing file (fn.mgb : MIDAS GENw Binary File). Use Open supported by Standard Windows.",
+ "menu_path": "From the Main Menu select [File] > [Open Project] Click the Open button in the Icon Menu. Shortcut key: [Ctrl]+O",
+ "usage": "Select Open Project to display the File Open dialog box. Assign a desired file and click the Open button.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29102633639961"
+}

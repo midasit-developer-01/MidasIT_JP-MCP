@@ -55,13 +55,27 @@ import anyio
 from mcp.server.fastmcp import Context, FastMCP
 from mcp.types import ToolAnnotations
 
-from . import auth, catalog
+from . import auth, catalog, features
 from .client import MidasClient
 
 INSTRUCTIONS = """\
 MIDAS NX Open API — read and edit a live MIDAS CIVIL/GEN NX structural model
 (nodes, elements, sections, materials, loads, analysis, design/rating, results)
 over its REST API.
+
+FIRST, DECIDE WHAT THE USER WANTS BACK: an explanation, or a changed model.
+
+If the deliverable is knowledge — what a feature is, what it is for, how it is
+operated, where it lives in the UI — then answer, and touch nothing. Do
+midas_lookup, then midas_guide("<uri>"), and answer from its `menu_path` (where
+the dialog lives) and `usage` (what each field does). The user is driving the
+program themselves; an action tool would be answering a question they did not
+ask. This holds however the question is phrased and in any language.
+
+If the deliverable is a changed model, follow the procedure below.
+
+When both readings are live, EXPLAIN FIRST and offer to do it. Explaining is
+reversible; editing the model is not. Never do both in one turn unasked.
 
 CORE RULE — never call an action tool from memory. The API has 572 endpoints and
 you select one by NAME at call time; each has its own payload shape. Call
@@ -94,8 +108,13 @@ Which tool:
     a code category + standard in that path (e.g. "RC/KDS-41-20-2022/DCRM-BEAM").
 
 Good to know:
-  • midas_lookup and midas_describe are OFFLINE (bundled catalog) — no running app
-    or key needed. Use them freely to plan before touching the model.
+  • midas_lookup, midas_describe and midas_guide are OFFLINE (bundled catalog) —
+    no running app or key needed. Use them freely to plan before touching the model.
+  • midas_guide covers 155 of the 572 endpoints (db, ope, doc, view, post; the
+    manual has no feature article for design, rating or temp). A lookup hit marked
+    "guide": true has one. Its menu labels are the ENGLISH UI's — if the user runs
+    a localized MIDAS NX, quote the English label and say so rather than inventing
+    a translated one.
   • DB writes are schema-checked before sending; an invalid body comes back as a
     field-level error to fix, not silently sent.
   • Reads are safe; midas_db_delete and midas_doc (NEW/OPEN/SAVE/EXPORT) change or
@@ -322,6 +341,50 @@ def midas_describe(name: str, group: str | None = None) -> dict[str, Any]:
     (e.g. name="design/RC/KDS-41-20-2022/MATD"), or pass `group` to narrow.
     """
     return catalog.describe(name, group=group)
+
+
+@mcp.tool(
+    annotations=ToolAnnotations(
+        title="Show the GUI guide for a MIDAS feature",
+        readOnlyHint=True,
+        idempotentHint=True,
+        openWorldHint=False,  # bundled manual text, not the live app
+    )
+)
+def midas_guide(name: str, group: str | None = None, full: bool = False) -> dict[str, Any]:
+    """How to use a feature in the MIDAS NX UI: menu path + dialog field guide.
+
+    Call this whenever the thing being asked for is an explanation of a feature —
+    what it is, what it is for, how it is operated, where it lives in the UI —
+    rather than a change to the model. Phrasing and language do not matter; what
+    matters is that the user wants to know something, not to have something done.
+    If both readings are live, answer from here first and then offer to perform
+    it: explaining is reversible, editing the model is not. To actually perform
+    it, use `midas_describe` + an action tool.
+
+    Returns `menu_path` (the ribbon route to the dialog), `function` (what the
+    feature is for), `usage` (the dialog's controls explained field by field),
+    `note` and `url` (the public manual article).
+
+    `name` takes a bare catalog name ("NODE", "MATL") or a full `uri`
+    ("db/NODE"), resolved by exactly the same rules as `midas_describe` — pass
+    the full `uri` when a name repeats across groups.
+
+    Guides exist for 155 of the 572 endpoints: db, ope, doc, view and post only,
+    because the public manual has no feature article for design, rating or temp.
+    A `midas_lookup` hit carrying `"guide": true` has one. On a miss you still
+    get the manual link and related guided features — read that out rather than
+    guessing a menu path.
+
+    MENU LABELS ARE THE ENGLISH UI'S. If the user runs a localized MIDAS NX,
+    quote the English label and say so instead of inventing a translated one.
+
+    Long dialogs are trimmed; pass `full=True` when the response says it was cut.
+    """
+    entry = catalog.describe(name, group=group)
+    if "error" in entry:
+        return entry
+    return features.guide(entry, full=full)
 
 
 # --- DB CRUD (per-request key) -------------------------------------------

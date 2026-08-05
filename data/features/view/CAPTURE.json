@@ -1,0 +1,9 @@
+{
+ "uri": "view/CAPTURE",
+ "feature_name": "Graphic Files",
+ "function": "Save the graphic data of the Model Window in an AutoCAD DXF, BMP or EMF.",
+ "menu_path": "From the Main Menu select [File] > [Graphic Files]",
+ "usage": "Invoke the dialog box of Graphic Files to save the graphic data as a desired file format.\n\nEnter a file name, select a file type and click on the Save button to generate a new file.",
+ "note": "File type to save can be selected among *.*(All Files), *.emf (Emf Files), *.bmp (Bmp Files), *.jpg (JPG files), *.dxf (Dxf Files) and *.dwg (Dwg Files). When *.dxf is selected, the program internally generates Meta file (emf) and execute Tools > Convert Meta Files to DXF Files.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29105513910297"
+}

@@ -1,0 +1,7 @@
+{
+ "uri": "doc/SAVE",
+ "feature_name": "Save",
+ "function": "Save the current work in a project file. Save As will prompt if a project file has not been assigned previously.",
+ "menu_path": "From the Main Menu select [File] > [Save] Click the Save button in the Icon Menu. Shortcut key: [Ctrl]+S",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29102985812505"
+}

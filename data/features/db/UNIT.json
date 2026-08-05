@@ -1,0 +1,8 @@
+{
+ "uri": "db/UNIT",
+ "feature_name": "Unit System",
+ "function": "Change the unit system currently in use.",
+ "menu_path": "From the Main Menu select [Project] tab > [Setting] group > [Unit System]",
+ "usage": "1. \"Force\" are selected and marked with  in the dialog box.\n\n2. First, select the new unit system for the length and force, then click the Apply button or the OK button to change the unit system. All the values appearing in the current window will change to suit the new unit system.\n\n3. The values for heat will be changed as per the selected units, but the values for temperature will remain unchanged irrespective of unit change..\n\n4. The OK button sets the new unit system and close the dialog box. The Apply button leaves the dialog box open.\n\n5. If the OK button or the Apply button is clicked while \"Set/Change Default Unit System\" is checked in, \"Default Unit System\" in \"Preference\" is changed to the new unit system.\n\nNote 1\n\nThe current unit system may also be changed by using the unit conversion window  at the bottom of the status bar.\n\nNote 2\n\nFor the built-in DB of materials, values are changed with the selected temperature unit. However, for the materials defined by the user, the values are always in Celsius irrespective of the selected unit.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/30113020141977"
+}

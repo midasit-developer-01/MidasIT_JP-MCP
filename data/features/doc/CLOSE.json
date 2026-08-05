@@ -1,0 +1,7 @@
+{
+ "uri": "doc/CLOSE",
+ "feature_name": "Close Project",
+ "function": "Close the current project file. Use Close supported by Standard Windows. If the project data have been modified, a Dialog Box will appear and ask if the changes are to be saved. When the project file is closed, midas Gen restores the default window.",
+ "menu_path": "From the Main Menu select [File] > [Close Project]",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29102716231449"
+}

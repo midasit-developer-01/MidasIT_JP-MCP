@@ -1,0 +1,8 @@
+{
+ "uri": "ope/PROJECTSTATUS",
+ "feature_name": "Project Status",
+ "function": "Provide a list of data entry status of modeling for a quick reference. The list may come in handy when the progress of modeling is evaluated and the current model data are compared with other model data.",
+ "menu_path": "From the Main Menu select [Project] tab > [Management] group > [Project Status] Shortcut key : [Ctrl]+T",
+ "usage": "Display the status of data entry for each item. Where applicable, provide the number of data entries.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/30078471487513"
+}

@@ -1,0 +1,8 @@
+{
+ "uri": "db/POSP",
+ "feature_name": "Parameters of Soil Properties",
+ "function": "Set soil properties for the calculation of static earth pressure.",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Static Loads] > [Lateral] group > [Earth Pressure] > [Parameters of Soil Properties]",
+ "usage": "Soil Properties Name\n\nDefine soil property name.\n\nSoil Level\n\nSet the level (GCS Z-axis) of ground, footing bottom, and bedrock\n\nGround Level :Level of ground surface\n\nBottom Level of Footing : Level of footing bottom\n\nBedrock Level : Level of Bedrock\n\nSoil Parameters\n\nSoil characteristics can be specified.\n\nHeight : soil layer thickness\n\nNo.of Copies : It can be defined by considering the number of repetitions for which the thickness is set.\n\nUse N Value : Use N value instead of internal friction angle (Angle). If N is entered, the friction angle is calculated and applied using the following formula.\n\n(The formula suggested by Dunham: when the particle size is poor and the earth particles are round)\n\nLevel : The location of the soil layer, automatically calculated by considering the soil thickness from the ground level entered in the soil levels.\n\nAngle : Internal friction angle of soil (degree)\n\nDensity : Unit volume weight of soil.\nIt must follow the soil quality test value, but if there is no test value, 1700~1800kg/m3 of normal soil and good quality soil can be used.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29238915505305"
+}

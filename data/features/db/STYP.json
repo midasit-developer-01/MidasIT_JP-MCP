@@ -1,0 +1,9 @@
+{
+ "uri": "db/STYP",
+ "feature_name": "Structure Type",
+ "function": "Enter the type of and the basic data for structural analysis.",
+ "menu_path": "From the Main Menu select [Structure] tab > [Type] group > [Structure Type]",
+ "usage": "Structure Type\n\nSelect an option as to whether the analysis is to be carried out in 3-D or 2-D.\n\n3-D : 3-D structural analysis\n\nX-Z Plane : 2-D analysis in GCS X-Z plane\n\nY-Z Plane : 2-D analysis in GCS Y-Z plane\n\nX-Y Plane : 2-D analysis in GCS X-Y plane\n\nConstraint RZ : 3-D analysis constraining rotational degree-of-freedom about GCS Z-axis",
+ "note": "When the alignment options are not selected, the center lines of the line and plate elements are shown to be connected to the column nodes.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29225414332185"
+}

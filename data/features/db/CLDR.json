@@ -1,0 +1,9 @@
+{
+ "uri": "db/CLDR",
+ "feature_name": "Define Constraint Label Direction",
+ "function": "Define the directions of the supports for a display purpose on screen.",
+ "menu_path": "From the Main Menu select [Boundary] tab > [Advanced] group > [Define Label Dir]",
+ "usage": "Options\n\nAdd/Replace : Enter or replace a local coordinate system for selected nodes\n\nDelete : Delete previously entered node's local coordinate system for selected nodes\n\nLabel Direction\n\nDefine the direction of the label of the support.\n\nFor example, a set-up such that local z(+) is defined for the bottom supports and local x(+) is defined for the left supports will display on screen as below.",
+ "note": "View > Display > Boundary Tab, the display of the directions of supports can be controlled by checking on and off.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29943640386713"
+}

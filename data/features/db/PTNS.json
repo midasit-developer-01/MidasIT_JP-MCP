@@ -1,0 +1,9 @@
+{
+ "uri": "db/PTNS",
+ "feature_name": "Pretension Loads",
+ "function": "Specify pretension loads for Truss elements or tension-only elements (hook & cable). Or, modify or delete previously specified loads. This load cannot be used for performing analysis with materials having nonlinear properties.",
+ "menu_path": "From the Main Menu select [Load] tab > [Type : Prestress] > [Prestress Loads] group > [ Pretension Loads]",
+ "usage": "Load Case Name\n\nAssign the load case name. Click the ... Button to the right to enter, additional load cases and modify or delete existing load cases.\n\nLoad Group Name\n\nSelect the desire Load Group that will include the entered Pretension Loads data. Select \"Default\", if a Group assignment is unnecessary. Click the ... Button to the right to add, modify or delete Load Groups.\n\nOptions\n\nAdd : To enter new or additional pretension loads\n\nReplace : To replace previously entered pretension loads\n\nDelete : To delete previously entered pretension loads\n\nPretension Load\n\nEnter positive (tension) or negative (compression) pretension load.",
+ "note": "If Pretension Loads are unspecified in Cable Elements, Gen NX calculates the initial stresses using the weight density and the cable geometry.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29319593070105"
+}

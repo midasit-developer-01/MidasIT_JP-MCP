@@ -1,0 +1,8 @@
+{
+ "uri": "db/IEHC",
+ "feature_name": "Inelastic Properties Control Data",
+ "function": "This is a dialog box to automatically generate a fiber model for the inelastic analysis. To create a fiber model, the location of the reference section and mesh size are set in this dialog box.",
+ "menu_path": "From the Main Menu select [Properties] tab > [Inelastic Properties] group > [Inel. Control Data] > [Inel. Control Data]",
+ "usage": "Reference Location for Distributed Hinges\n\nFor beam, a fiber model is created for the cross section selected among i-end, middle, and j-end.\n\n*Columns and walls are created with the middle section.\n\nFiber Model Option : Beam-Column\n\nSet the number of divisions for automatic generation of the fiber model.\n\nEnter the numbers in core(confined area) and cover(unconfined area) respectively.\n\nFig. Auto-generation of fiber model\n\nFiber Model Option : Wall\n\nSet the number of divisions for automatic generation of the wall fiber model.\n\n\"Consider Out-of-plane Nonlinearity of Plate type\" : If out-of-plane stiffness in nonlinear analysis is not considered, the y-direction of the cross section is not divided..\n\n\"Fiber Areas\"\n\n- Auto Size : Automatically generate the fiber model considering the location of the rebar.\n\n- Equal Size : Automatically divides into equal intervals.",
+ "url": "https://support.midasuser.com/hc/en-us/articles/29830713087641"
+}
