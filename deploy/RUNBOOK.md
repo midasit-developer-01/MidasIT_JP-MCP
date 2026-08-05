@@ -1,28 +1,69 @@
 # 배포 런북 — 실행 방법
 
 CloudShell에 yaml 하나 올리고 명령 하나면 빌드까지 굴러간다. 로컬에 설치할 것 없음.
-**각 파라미터·리소스·옵션의 자세한 설명은 [`infra-ec2.md`](infra-ec2.md) 참고.**
+**각 파라미터·리소스·옵션의 자세한 설명은 [`infra.md`](infra.md) 참고.**
+
+템플릿은 **둘**이다 — 구조·접근 모두 같고 `temp` 포함 여부(+ ECR 저장소·URL)만 다르다:
+
+| 템플릿 | 용도 | `temp` | 접근 |
+| --- | --- | --- | --- |
+| `infra-pr.yaml` | 외부·공개 | 제외 | 80·443 전체 개방 |
+| `infra-dev.yaml` | temp 포함판 | 포함 | 80·443 전체 개방(pr과 동일) |
+
+> 두 스택은 **호스트명·ECR 저장소가 서로 달라** 한 계정·리전에 공존할 수 있다.
+> `temp` 포함 여부는 각 yaml의 `IncludeTemp` 기본값에 이미 박혀 있으니 **건드리지 않는다.**
+> 둘 다 `0.0.0.0/0`로 열려 있고 OAuth로 보호된다 — dev도 어디서든 접근 가능하지만
+> 비공식 `temp`가 노출되니 URL은 내부에만 배포한다.
 
 ## 1. 배포
 
-CloudShell **Actions → Upload file**로 `deploy/infra-ec2.yaml` 업로드 후:
+CloudShell **Actions → Upload file**로 대상 템플릿을 업로드한 뒤 (아래에서 `<...>`는
+**실제 값으로 교체**하고 `<>` 기호는 지운다. `=` 뒤에 공백을 넣지 않는다):
 
+**외부(pr) 스택**
 ```bash
 aws cloudformation deploy \
   --region ap-northeast-1 \
-  --template-file infra-ec2.yaml \
+  --template-file infra-pr.yaml \
   --stack-name midas-mcp \
   --capabilities CAPABILITY_IAM \
   --parameter-overrides \
-      GitHubBranch=Deploy-Image \
-      ServiceHostname=mcp.example.com \
-      AcmeEmail=you@example.com
+      GitHubToken=<GitHub_PAT> \
+      GitHubBranch=<브랜치> \
+      ServiceHostname=<mcp.example.com> \
+      AcmeEmail=<you@example.com>
 ```
 
-`ServiceHostname`·`AcmeEmail`은 필수(기본값 없음), `GitHubBranch`는 기본이 `master`라
-다른 브랜치면 지정. 빌드는 3~5분, 끝나는 순간 EC2가 이미지를 받아 컨테이너를 띄운다.
+**dev(temp 포함) 스택** — pr과 동일한 파라미터, `--template-file`·`--stack-name`·
+`ServiceHostname`만 다르다(`AllowedCidr`는 기본 `0.0.0.0/0`이라 생략 가능):
+```bash
+aws cloudformation deploy \
+  --region ap-northeast-1 \
+  --template-file infra-dev.yaml \
+  --stack-name midas-mcp-dev \
+  --capabilities CAPABILITY_IAM \
+  --parameter-overrides \
+      GitHubToken=<GitHub_PAT> \
+      GitHubBranch=<브랜치> \
+      ServiceHostname=<mcp-dev.example.com> \
+      AcmeEmail=<you@example.com>
+```
 
-출력값 확인:
+- `ServiceHostname`·`AcmeEmail`은 **필수**(기본값 없음). dev도 pr과 동일하게 `AllowedCidr`는
+  기본 `0.0.0.0/0`이라 **생략하면 어디서든 접근 가능**. 특정 대역으로 좁히고 싶을 때만 지정.
+- `GitHubToken`은 **선택** — PAT(`repo`+`admin:repo_hook`)를 넣으면 push마다 자동 재빌드
+  웹훅이 걸린다. 수동 빌드만 할 거면 **이 줄을 통째로 생략**한다(§3 참고). 계정+리전당
+  자격증명은 1개만 저장되니, 이미 있으면 비워 둔다.
+- `GitHubBranch`는 기본이 `master`라 다른 브랜치일 때만 지정.
+- **두 스택은 `--stack-name`·`ServiceHostname`이 서로 달라야** 한다(같으면 EIP·인증서 충돌).
+
+빌드는 3~5분, 끝나는 순간 EC2가 이미지를 받아 컨테이너를 띄운다.
+
+> dev도 `0.0.0.0/0`로 열려 비공식 `temp`가 인증만 통과하면 외부에서도 닿는다. 그래서
+> **dev URL은 내부에만 배포**한다. 접근을 대역으로 제한하려면 `AllowedCidr=<CIDR>`을
+> 넘기되, 80까지 함께 좁혀지니 Let's Encrypt(HTTP-01)가 깨질 수 있음에 유의(pr과 동일 제약).
+
+출력값 확인(스택 이름만 바꿔 각각):
 ```bash
 aws cloudformation describe-stacks --region ap-northeast-1 \
   --stack-name midas-mcp --query "Stacks[0].Outputs" --output table
@@ -63,6 +104,10 @@ nslookup mcp.example.com 8.8.8.8         # 공용 리졸버로 권위 반영 확
 > 자주 재배포한다면 EIP를 미리 할당해 고정(`EipAllocationId` 파라미터)해두면 재작업이 없다.
 
 ## 3. 이미지 갱신
+
+> 아래 명령들은 **외부(pr) 스택** 이름 기준(`STACK=midas-mcp`, `PROJECT=midas-mcp-build`,
+> ECR `midas-mcp`)이다. **사내(dev) 스택**은 `midas-mcp-dev` / `midas-mcp-dev-build` /
+> ECR `midas-mcp-dev`로 바꿔 쓴다. 두 스택은 각자의 ECR·EventBridge를 가져 서로 독립이다.
 
 **A. GitHub push 자동 (권장, 토큰 필요)** — `GitHubToken`에 PAT(`repo`+`admin:repo_hook`) 지정:
 ```bash

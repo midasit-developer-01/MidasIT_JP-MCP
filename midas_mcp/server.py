@@ -613,15 +613,6 @@ async def midas_rating(path: str, ctx: Context, argument: Any | None = None,
     return await _offload(lambda: c.command("rating", _sub("rating", path), argument, method, body))
 
 
-@mcp.tool(
-    annotations=ToolAnnotations(
-        title="Expansion / external-link DB",
-        readOnlyHint=False,
-        destructiveHint=True,  # some temp endpoints are full-CRUD DB (Assign)
-        idempotentHint=False,
-        openWorldHint=True,
-    )
-)
 async def midas_temp(path: str, ctx: Context, argument: Any | None = None,
                      method: str = "POST", body: Any | None = None) -> Any:
     """Temp-group endpoints: DB for expansion & external-program connection, and
@@ -635,6 +626,22 @@ async def midas_temp(path: str, ctx: Context, argument: Any | None = None,
     """
     c = _client(ctx)
     return await _offload(lambda: c.command("temp", _sub("temp", path), argument, method, body))
+
+
+# Register only when the temp schemas are bundled. External (pr) images strip
+# them at build time (Dockerfile INCLUDE_TEMP=false), so temp is absent from the
+# catalog AND the tool surface — no discovery, no call path. Internal (dev)
+# images keep the schemas, so the tool is registered.
+if catalog.has_group("temp"):
+    midas_temp = mcp.tool(
+        annotations=ToolAnnotations(
+            title="Expansion / external-link DB",
+            readOnlyHint=False,
+            destructiveHint=True,  # some temp endpoints are full-CRUD DB (Assign)
+            idempotentHint=False,
+            openWorldHint=True,
+        )
+    )(midas_temp)
 
 
 @mcp.tool(

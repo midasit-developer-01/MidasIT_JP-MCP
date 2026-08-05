@@ -2,10 +2,12 @@ AWSTemplateFormatVersion: "2010-09-09"
 
 # CloudFormation rejects a Description over 1024 characters.
 Description: >
-  MIDAS NX MCP server - persistent EC2 stack. CodeBuild builds the arm64 image
-  from GitHub and pushes it to ECR; the push triggers a pull-and-restart on the
-  instance via SSM. HTTPS through Caddy on a stable Elastic IP, daily auto
-  stop/start (08:00-24:00). Point your own DNS at the ElasticIP output. See deploy/RUNBOOK.md.
+  MIDAS NX MCP server - INTERNAL (temp-bundled) EC2 stack. temp endpoints included
+  (IncludeTemp=true). Reachable from anywhere (80·443 open, same as pr) - it
+  differs from the external stack only in that it bundles temp and uses its own
+  ECR repo. CodeBuild builds the arm64 image from GitHub and pushes it to ECR; the
+  push triggers a pull-and-restart on the instance via SSM. HTTPS through Caddy on
+  a stable Elastic IP. Daily auto stop/start (08:00-24:00). See deploy/RUNBOOK.md.
 
 Parameters:
   # ---- Source ----
@@ -30,14 +32,24 @@ Parameters:
   # ---- Image ----
   EcrRepositoryName:
     Type: String
-    Default: midas-mcp
-    Description: ECR repository this stack creates; CodeBuild pushes here.
+    Default: midas-mcp-dev
+    Description: >
+      ECR repository this stack creates; CodeBuild pushes here. Distinct from the
+      external (pr) stack's repo so both can coexist in one account+region.
   ImageTag:
     Type: String
     Default: latest
     Description: >
       Tag CodeBuild pushes and the instance runs. A push to THIS tag triggers the
       automatic redeploy.
+  IncludeTemp:
+    Type: String
+    Default: "true"
+    AllowedValues: [ "true", "false" ]
+    Description: >
+      Whether to bundle the not-yet-official `temp` endpoints. INTERNAL (dev)
+      deploy keeps this true, so data/schemas/temp ships in the image and the
+      midas_temp tool is registered. External (pr) deploy sets false.
 
   # ---- Domain / TLS ----
   ServiceHostname:
@@ -64,8 +76,10 @@ Parameters:
     Type: String
     Default: 0.0.0.0/0
     Description: >
-      CIDR allowed to reach 80/443. Must stay 0.0.0.0/0 for Let's Encrypt HTTP-01
-      to work; restrict later if you switch to a DNS challenge.
+      CIDR allowed to reach 80/443. Open to everywhere by default (same as the
+      external stack) — the internal stack is reachable from anywhere and differs
+      from pr only in that it bundles temp. Must stay 0.0.0.0/0 for Let's Encrypt
+      HTTP-01 to work; restrict later if you switch to a DNS challenge.
 
   # ---- Schedule ----
   ScheduleTimezone:
@@ -174,6 +188,8 @@ Resources:
             Value: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com"
           - Name: IMAGE
             Value: !Sub "${EcrRepository.RepositoryUri}:${ImageTag}"
+          - Name: INCLUDE_TEMP
+            Value: !Ref IncludeTemp
       Source:
         Type: GITHUB
         Location: !Ref GitHubRepoUrl
@@ -192,7 +208,7 @@ Resources:
                 - aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$REGISTRY"
             build:
               commands:
-                - docker build -t "$IMAGE" .
+                - docker build --build-arg INCLUDE_TEMP="$INCLUDE_TEMP" -t "$IMAGE" .
             post_build:
               commands:
                 - docker push "$IMAGE"
@@ -289,9 +305,11 @@ Resources:
     Properties:
       ServiceToken: !GetAtt InitialBuildFunction.Arn
       ProjectName: !Ref BuildProject
-      # Changing either re-runs the build on a stack update.
+      # Changing any of these re-runs the build on a stack update (so toggling
+      # IncludeTemp rebuilds the image with/without temp).
       SourceVersion: !Ref GitHubBranch
       ImageTag: !Ref ImageTag
+      IncludeTemp: !Ref IncludeTemp
 
   # ================= IAM: instance =================
   InstanceRole:

@@ -1,0 +1,605 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+# CloudFormation rejects a Description over 1024 characters.
+Description: >
+  MIDAS NX MCP server - EXTERNAL (public) EC2 stack. temp endpoints excluded
+  (IncludeTemp=false). CodeBuild builds the arm64 image from GitHub and pushes it
+  to ECR; the push triggers a pull-and-restart on the instance via SSM. HTTPS
+  through Caddy on a stable Elastic IP, open to 0.0.0.0/0, daily auto stop/start
+  (08:00-24:00). Point your own DNS at the ElasticIP output. See deploy/RUNBOOK.md.
+
+Parameters:
+  # ---- Source ----
+  GitHubRepoUrl:
+    Type: String
+    Default: https://github.com/midasit-developer-01/MidasIT_JP-MCP.git
+    Description: Public GitHub repo CodeBuild clones. Must contain the Dockerfile.
+  GitHubBranch:
+    Type: String
+    Default: master
+    Description: Branch to build.
+  GitHubToken:
+    Type: String
+    Default: ""
+    NoEcho: true
+    Description: >
+      OPTIONAL GitHub personal access token (repo + admin:repo_hook). Supplying it
+      registers a webhook so every push to the branch rebuilds automatically.
+      Leave empty to rebuild manually. NOTE: AWS stores one GitHub credential per
+      account+region - if the account already has one, leave this empty.
+
+  # ---- Image ----
+  EcrRepositoryName:
+    Type: String
+    Default: midas-mcp
+    Description: ECR repository this stack creates; CodeBuild pushes here.
+  ImageTag:
+    Type: String
+    Default: latest
+    Description: >
+      Tag CodeBuild pushes and the instance runs. A push to THIS tag triggers the
+      automatic redeploy.
+  IncludeTemp:
+    Type: String
+    Default: "false"
+    AllowedValues: [ "true", "false" ]
+    Description: >
+      Whether to bundle the not-yet-official `temp` endpoints. EXTERNAL (pr)
+      deploy keeps this false: the Dockerfile strips data/schemas/temp before the
+      wheel is built, so temp is absent from both the catalog and the tool surface
+      (midas_temp is not registered). Internal (dev) deploy sets true.
+
+  # ---- Domain / TLS ----
+  ServiceHostname:
+    Type: String
+    Description: FQDN clients will hit, e.g. mcp.example.com. Its A record must point at the ElasticIP output.
+  AcmeEmail:
+    Type: String
+    Description: Email for Let's Encrypt account / expiry notices.
+
+  # ---- Instance ----
+  InstanceType:
+    Type: String
+    Default: t4g.small
+    Description: ARM (Graviton). Must stay ARM to match the image CodeBuild builds.
+  LatestAmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-arm64
+    Description: Amazon Linux 2023 ARM64 AMI (resolved automatically; do not change).
+  VolumeSizeGb:
+    Type: Number
+    Default: 20
+    Description: Root EBS gp3 size in GiB.
+  AllowedCidr:
+    Type: String
+    Default: 0.0.0.0/0
+    Description: >
+      CIDR allowed to reach 80/443. Must stay 0.0.0.0/0 for Let's Encrypt HTTP-01
+      to work; restrict later if you switch to a DNS challenge.
+
+  # ---- Schedule ----
+  ScheduleTimezone:
+    Type: String
+    Default: Asia/Tokyo
+    Description: IANA timezone for the start/stop schedule (e.g. Asia/Tokyo, Asia/Seoul).
+  StartCron:
+    Type: String
+    Default: cron(0 8 * * ? *)
+    Description: When to START the instance (default every day 08:00).
+  StopCron:
+    Type: String
+    Default: cron(0 0 * * ? *)
+    Description: When to STOP the instance (default every day 00:00, i.e. 24:00).
+
+Conditions:
+  HasGitHubToken: !Not [ !Equals [ !Ref GitHubToken, "" ] ]
+
+Resources:
+  # ================= Image registry =================
+  EcrRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Ref EcrRepositoryName
+      ImageTagMutability: MUTABLE
+      # Lets delete-stack succeed without a manual purge; images are rebuildable.
+      EmptyOnDelete: true
+      ImageScanningConfiguration:
+        ScanOnPush: true
+      LifecyclePolicy:
+        # Each push to a mutable tag orphans the previous image.
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Expire untagged images after 7 days",
+                "selection": {
+                  "tagStatus": "untagged",
+                  "countType": "sinceImagePushed",
+                  "countUnit": "days",
+                  "countNumber": 7
+                },
+                "action": { "type": "expire" }
+              }
+            ]
+          }
+
+  # ================= Build: GitHub -> ECR =================
+  BuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: codebuild.amazonaws.com }
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: build-and-push
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*"
+              # GetAuthorizationToken is account-scoped; it takes no resource.
+              - Effect: Allow
+                Action: ecr:GetAuthorizationToken
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:InitiateLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:CompleteLayerUpload
+                  - ecr:PutImage
+                Resource: !GetAtt EcrRepository.Arn
+
+  GitHubCredential:
+    Condition: HasGitHubToken
+    Type: AWS::CodeBuild::SourceCredential
+    Properties:
+      ServerType: GITHUB
+      AuthType: PERSONAL_ACCESS_TOKEN
+      Token: !Ref GitHubToken
+
+  BuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub "${AWS::StackName}-build"
+      Description: Build the MIDAS MCP arm64 image from GitHub and push it to ECR.
+      ServiceRole: !GetAtt BuildRole.Arn
+      Artifacts: { Type: NO_ARTIFACTS }
+      Environment:
+        # ARM_CONTAINER builds aarch64 natively - no QEMU, no cross-compilation.
+        Type: ARM_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/amazonlinux2-aarch64-standard:3.0
+        PrivilegedMode: true
+        EnvironmentVariables:
+          - Name: REGISTRY
+            Value: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com"
+          - Name: IMAGE
+            Value: !Sub "${EcrRepository.RepositoryUri}:${ImageTag}"
+          - Name: INCLUDE_TEMP
+            Value: !Ref IncludeTemp
+      Source:
+        Type: GITHUB
+        Location: !Ref GitHubRepoUrl
+        # Referencing the credential here rather than via DependsOn, which cannot
+        # point at a resource whose condition is false.
+        Auth: !If
+          - HasGitHubToken
+          - Type: OAUTH
+            Resource: !Ref GitHubCredential
+          - !Ref AWS::NoValue
+        BuildSpec: |
+          version: 0.2
+          phases:
+            pre_build:
+              commands:
+                - aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$REGISTRY"
+            build:
+              commands:
+                - docker build --build-arg INCLUDE_TEMP="$INCLUDE_TEMP" -t "$IMAGE" .
+            post_build:
+              commands:
+                - docker push "$IMAGE"
+                - echo "pushed $IMAGE"
+      SourceVersion: !Ref GitHubBranch
+      # Webhooks need an authenticated GitHub connection; cloning a public repo
+      # does not. So build-on-push is opt-in, manual rebuild always works.
+      Triggers: !If
+        - HasGitHubToken
+        - Webhook: true
+          FilterGroups:
+            - - Type: EVENT
+                Pattern: PUSH
+              - Type: HEAD_REF
+                Pattern: !Sub "^refs/heads/${GitHubBranch}$"
+        - !Ref AWS::NoValue
+      TimeoutInMinutes: 20
+      LogsConfig:
+        CloudWatchLogs: { Status: ENABLED }
+
+  # ---- First build, so a single deploy brings up the whole system ----
+  InitialBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: lambda.amazonaws.com }
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: start-the-build
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: codebuild:StartBuild
+                Resource: !GetAtt BuildProject.Arn
+
+  InitialBuildFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !GetAtt InitialBuildRole.Arn
+      Timeout: 60
+      Code:
+        ZipFile: |
+          """Start one CodeBuild run when the stack is created or updated.
+
+          Deliberately reports SUCCESS even when StartBuild fails: a build that
+          did not start is a rebuild away, and is never worth rolling the whole
+          stack back over. The reason is recorded in the CFN event either way.
+          """
+          import json
+          import urllib.request
+
+          import boto3
+
+
+          def respond(event, context, reason):
+              body = json.dumps({
+                  "Status": "SUCCESS",
+                  "Reason": f"{reason} (see {context.log_stream_name})",
+                  "PhysicalResourceId": "initial-build",
+                  "StackId": event["StackId"],
+                  "RequestId": event["RequestId"],
+                  "LogicalResourceId": event["LogicalResourceId"],
+                  "Data": {},
+              }).encode()
+              req = urllib.request.Request(
+                  event["ResponseURL"], data=body, method="PUT",
+                  headers={"content-type": "", "content-length": str(len(body))},
+              )
+              urllib.request.urlopen(req)
+
+
+          def handler(event, context):
+              reason = "no action for this request type"
+              try:
+                  if event["RequestType"] in ("Create", "Update"):
+                      project = event["ResourceProperties"]["ProjectName"]
+                      build = boto3.client("codebuild").start_build(projectName=project)
+                      reason = "started " + build["build"]["id"]
+              except Exception as exc:
+                  reason = f"initial build not started: {exc}"
+              print(reason)
+              respond(event, context, reason)
+
+  InitialBuild:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken: !GetAtt InitialBuildFunction.Arn
+      ProjectName: !Ref BuildProject
+      # Changing any of these re-runs the build on a stack update (so toggling
+      # IncludeTemp rebuilds the image with/without temp).
+      SourceVersion: !Ref GitHubBranch
+      ImageTag: !Ref ImageTag
+      IncludeTemp: !Ref IncludeTemp
+
+  # ================= IAM: instance =================
+  InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: ec2.amazonaws.com }
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        # SSM Session Manager (shell) + Run Command (the redeploy trigger).
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        - PolicyName: pull-image-from-ecr
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: ecr:GetAuthorizationToken
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:BatchGetImage
+                  - ecr:GetDownloadUrlForLayer
+                Resource: !GetAtt EcrRepository.Arn
+
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles: [ !Ref InstanceRole ]
+
+  # ================= Network =================
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      # EC2 accepts only this character set in group/rule descriptions:
+      #   a-zA-Z0-9. _-:/()#,@[]+=&;{}!$*
+      # No apostrophes - "Let's Encrypt" is rejected here.
+      GroupDescription: MIDAS MCP - inbound HTTP(80) + HTTPS(443) only.
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: !Ref AllowedCidr
+          Description: HTTP (ACME HTTP-01 challenge + redirect to HTTPS)
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: !Ref AllowedCidr
+          Description: HTTPS (MCP via Caddy reverse proxy)
+
+  Eip:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: midas-mcp
+
+  # ================= Compute =================
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref LatestAmiId
+      IamInstanceProfile: !Ref InstanceProfile
+      SecurityGroupIds: [ !Ref SecurityGroup ]
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: !Ref VolumeSizeGb
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Tags:
+        - Key: Name
+          Value: midas-mcp
+      UserData:
+        # Runs ONCE per instance, not on every boot. Anything that must happen on
+        # each start (pulling the current image) belongs in the systemd unit.
+        #
+        # Three things are installed here, then never touched again:
+        #   /opt/midas.env             values only CloudFormation knows
+        #   /opt/redeploy.sh           the one script both redeploy paths call
+        #                              (boot via systemd, ECR push via SSM)
+        #   midas-redeploy.service     runs it on every boot, retrying every 60s
+        #                              until the pull succeeds - which is what
+        #                              makes the first deploy self-healing while
+        #                              CodeBuild is still building, and what
+        #                              covers an ECR push event that arrives
+        #                              before SSM has registered the instance
+        #
+        # Caddy starts before the app exists on purpose: it resolves the `midas`
+        # upstream per request, so it can obtain the certificate during that
+        # first build (requests just 502 until the app lands).
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          set -eux
+
+          dnf install -y docker
+          systemctl enable --now docker
+          docker network create web || true
+
+          cat > /opt/midas.env <<EOF
+          AWS_REGION=${AWS::Region}
+          REGISTRY=${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com
+          IMAGE=${EcrRepository.RepositoryUri}:${ImageTag}
+          PUBLIC_URL=https://${ServiceHostname}
+          EOF
+
+          cat > /opt/redeploy.sh <<'SCRIPT'
+          #!/bin/bash
+          set -euo pipefail
+          source /opt/midas.env
+          aws ecr get-login-password --region "$AWS_REGION" \
+            | docker login --username AWS --password-stdin "$REGISTRY"
+          docker pull "$IMAGE"
+          docker rm -f midas 2>/dev/null || true
+
+          docker run -d --restart always --name midas --network web \
+            --expose 8080 \
+            -v midas_data:/data \
+            -e MIDAS_MCP_PUBLIC_URL="$PUBLIC_URL" \
+            "$IMAGE"
+          docker image prune -f
+          SCRIPT
+          chmod +x /opt/redeploy.sh
+
+          cat > /etc/systemd/system/midas-redeploy.service <<'EOF'
+          [Unit]
+          Description=Pull the current MIDAS MCP image from ECR and (re)start it
+          Requires=docker.service
+          After=docker.service network-online.target
+          StartLimitIntervalSec=0
+
+          [Service]
+          Type=oneshot
+          RemainAfterExit=yes
+          ExecStart=/opt/redeploy.sh
+          Restart=on-failure
+          RestartSec=60
+
+          [Install]
+          WantedBy=multi-user.target
+          EOF
+          systemctl daemon-reload
+          systemctl enable midas-redeploy.service
+
+          cat > /opt/Caddyfile <<'EOF'
+          {
+            email ${AcmeEmail}
+          }
+          ${ServiceHostname} {
+            reverse_proxy midas:8080
+          }
+          EOF
+          docker rm -f caddy 2>/dev/null || true
+          docker run -d --restart always --name caddy --network web \
+            -p 80:80 -p 443:443 \
+            -v caddy_data:/data -v caddy_config:/config \
+            -v /opt/Caddyfile:/etc/caddy/Caddyfile:ro \
+            public.ecr.aws/docker/library/caddy:2
+
+          systemctl start midas-redeploy.service \
+            || echo "no image in ECR yet - the CodeBuild push will deploy it"
+
+  EipAssociation:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      AllocationId: !GetAtt Eip.AllocationId
+      InstanceId: !Ref Instance
+
+  # ================= Continuous deploy: ECR push -> SSM =================
+  EcrPushInvokeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: events.amazonaws.com }
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: run-redeploy-on-instance
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: ssm:SendCommand
+                Resource:
+                  # SendCommand authorizes the document ARN with the CALLER's
+                  # account id (even for the AWS-owned AWS-RunShellScript). A
+                  # no-account ARN here does NOT match, so every EventBridge
+                  # invocation failed with AccessDenied. Must carry AccountId.
+                  - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:document/AWS-RunShellScript"
+                  - !Sub "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/${Instance}"
+
+  EcrPushRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: !Sub "Redeploy midas-mcp when ${ImageTag} is pushed to ECR."
+      State: ENABLED
+      EventPattern:
+        source: [ aws.ecr ]
+        detail-type: [ "ECR Image Action" ]
+        detail:
+          action-type: [ PUSH ]
+          result: [ SUCCESS ]
+          repository-name: [ !Ref EcrRepository ]
+          image-tag: [ !Ref ImageTag ]
+      Targets:
+        - Id: redeploy-via-ssm
+          Arn: !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:document/AWS-RunShellScript"
+          RoleArn: !GetAtt EcrPushInvokeRole.Arn
+          RunCommandParameters:
+            RunCommandTargets:
+              - Key: InstanceIds
+                Values: [ !Ref Instance ]
+          # If the instance is stopped the command fails; the boot-time systemd
+          # unit picks the image up on next start.
+          Input: '{"commands":["/opt/redeploy.sh"],"executionTimeout":["600"]}'
+
+  # ================= Scheduled start/stop =================
+  SchedulerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: scheduler.amazonaws.com }
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ec2-start-stop
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:StartInstances
+                  - ec2:StopInstances
+                Resource: "*"
+
+  StartSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      FlexibleTimeWindow: { Mode: "OFF" }
+      ScheduleExpression: !Ref StartCron
+      ScheduleExpressionTimezone: !Ref ScheduleTimezone
+      Target:
+        Arn: arn:aws:scheduler:::aws-sdk:ec2:startInstances
+        RoleArn: !GetAtt SchedulerRole.Arn
+        Input: !Sub '{"InstanceIds": ["${Instance}"]}'
+
+  StopSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      FlexibleTimeWindow: { Mode: "OFF" }
+      ScheduleExpression: !Ref StopCron
+      ScheduleExpressionTimezone: !Ref ScheduleTimezone
+      Target:
+        Arn: arn:aws:scheduler:::aws-sdk:ec2:stopInstances
+        RoleArn: !GetAtt SchedulerRole.Arn
+        Input: !Sub '{"InstanceIds": ["${Instance}"]}'
+
+Outputs:
+  McpEndpoint:
+    Description: HTTPS MCP endpoint (give this URL to the client).
+    Value: !Sub "https://${ServiceHostname}/mcp"
+  DnsRecordToCreate:
+    Description: >
+      Create this A record at your DNS provider. Caddy retries until it resolves,
+      then issues the certificate.
+    Value: !Sub "${ServiceHostname}  A  ${Eip}"
+  RebuildCommand:
+    Description: Rebuild from GitHub and redeploy (the one command you rerun).
+    Value: !Sub "aws codebuild start-build --region ${AWS::Region} --project-name ${BuildProject}"
+  BuildLogs:
+    Description: Watch the build.
+    Value: !Sub "https://${AWS::Region}.console.aws.amazon.com/codesuite/codebuild/projects/${BuildProject}/history?region=${AWS::Region}"
+  ImageUri:
+    Description: Exact image reference CodeBuild pushes and the instance runs.
+    Value: !Sub "${EcrRepository.RepositoryUri}:${ImageTag}"
+  ElasticIP:
+    Description: Stable public IP (point your domain here; billed even when stopped).
+    Value: !Ref Eip
+  ForceRedeploy:
+    Description: Re-pull the current image without rebuilding.
+    Value: !Sub >-
+      aws ssm send-command --region ${AWS::Region}
+      --document-name AWS-RunShellScript --instance-ids ${Instance}
+      --parameters commands=/opt/redeploy.sh
+  SsmConnect:
+    Description: Open a shell on the instance (debug app / Caddy / DNS).
+    Value: !Sub "aws ssm start-session --target ${Instance}"

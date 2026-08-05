@@ -56,6 +56,17 @@ def _iter_entries():
     yield from _load()
 
 
+def has_group(group: str) -> bool:
+    """True if any bundled endpoint belongs to `group` (e.g. "temp").
+
+    server.py uses this to register the `midas_temp` tool only when the temp
+    schemas are actually bundled — external images strip them at build time
+    (Dockerfile INCLUDE_TEMP=false), so there the tool is skipped entirely.
+    """
+    g = group.strip().lower()
+    return any(grp.lower() == g for grp, _, _ in _iter_entries())
+
+
 DESC_MAX = 140
 
 # A sentence break is only worth cutting at if it lands late enough to have said

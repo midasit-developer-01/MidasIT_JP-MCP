@@ -293,16 +293,16 @@ docker run --rm -p 8080:8080 midas-mcp
 ### Track 2 — deploy to AWS (EC2 via CloudFormation)
 
 Nothing is built or uploaded from your machine — no local AWS CLI, no local
-Docker. Two templates share one architecture and differ only in whether the
-not-yet-official `temp` endpoints ship, and in network exposure:
+Docker. Two templates share one architecture and one network posture (both open
+to `0.0.0.0/0`, OAuth-protected); they differ only in whether the not-yet-official
+`temp` endpoints ship (and the ECR repo / URL):
 
-- **`deploy/infra-pr.yaml`** — external/public. temp excluded, 80·443 open.
-- **`deploy/infra-dev.yaml`** — internal. temp included, 443 restricted to
-  `AllowedCidr` (required) while 80 stays open for the ACME challenge.
+- **`deploy/infra-pr.yaml`** — external/public. temp excluded.
+- **`deploy/infra-dev.yaml`** — same but temp included. Reachable from anywhere
+  too, so distribute its URL internally only.
 
-Upload the one you want to CloudShell and deploy it (external shown; for internal
-use `infra-dev.yaml`, a distinct `--stack-name`/`ServiceHostname`, and add
-`AllowedCidr=<corp CIDR>`):
+Upload the one you want to CloudShell and deploy it (external shown; for the
+temp-bundled one use `infra-dev.yaml` with a distinct `--stack-name`/`ServiceHostname`):
 
 ```bash
 aws cloudformation deploy \
@@ -335,10 +335,10 @@ watched ECR tag redeploys, whoever made it.
 Step-by-step, parameter reference and troubleshooting:
 [deploy/RUNBOOK.md](deploy/RUNBOOK.md).
 
-`deploy/infra-pr.yaml` (external) and `deploy/infra-dev.yaml` (internal) are the
-two templates: CodeBuild→ECR→EC2, HTTPS via Caddy on a stable Elastic IP (point
-your own DNS at it), weekday auto stop/start. They differ only in `IncludeTemp`,
-`EcrRepositoryName`, and the 443 access rule — see [deploy/infra-ec2.md](deploy/infra-ec2.md).
+`deploy/infra-pr.yaml` (external) and `deploy/infra-dev.yaml` (temp-bundled) are
+the two templates: CodeBuild→ECR→EC2, HTTPS via Caddy on a stable Elastic IP
+(point your own DNS at it), weekday auto stop/start. They differ only in
+`IncludeTemp` and `EcrRepositoryName` — see [deploy/infra.md](deploy/infra.md).
 
 ## Example flow (what the model does)
 

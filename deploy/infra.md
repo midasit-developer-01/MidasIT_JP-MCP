@@ -1,8 +1,32 @@
-# `infra-ec2.yaml` 상세 설명
+# EC2 인프라 스택 상세 설명 (`infra-pr.yaml` / `infra-dev.yaml`)
 
 CloudFormation 템플릿 하나로 **이미지 빌드 → 저장 → EC2 배포 → 자동 HTTPS →
 자동 재배포 → 시작/정지 스케줄**까지 전부 만든다. 실행 방법은 `RUNBOOK.md` 참고.
 이 문서는 "이 yaml이 무엇을, 왜 만드는가"를 설명한다.
+
+## 두 템플릿 — 외부(pr) / temp 포함(dev)
+
+구조·접근 방식은 **동일**하고, `temp`(아직 비공식) 엔드포인트를 번들에 넣느냐만 다르다.
+둘 다 `0.0.0.0/0`로 열려 어디서든 접근 가능하며 OAuth로 보호된다.
+
+| | `infra-pr.yaml` (외부·공개) | `infra-dev.yaml` (temp 포함) |
+| --- | --- | --- |
+| `IncludeTemp` | `false` — `temp` 스키마·`midas_temp` tool 모두 제외 | `true` — `temp` 포함 |
+| `EcrRepositoryName` | `midas-mcp` | `midas-mcp-dev` (한 계정에 공존하도록 분리) |
+| 접근 제어 | 80·443 모두 `AllowedCidr`(기본 `0.0.0.0/0`) | 80·443 모두 `AllowedCidr`(기본 `0.0.0.0/0`) — pr과 동일 |
+
+> dev도 개방돼 있으므로 비공식 `temp`는 **인증만 통과하면 외부에서도 닿는다.** 노출을
+> 원치 않으면 dev URL을 내부에만 배포하거나 `AllowedCidr`를 좁힌다(단 80까지 좁혀져
+> Let's Encrypt가 깨질 수 있음 — pr과 동일 제약).
+
+`temp`를 실제로 가르는 것은 **이미지 안에 `data/schemas/temp` 파일이 있느냐** 하나다:
+빌드 시 `--build-arg INCLUDE_TEMP`가 false면 `Dockerfile`이 그 폴더를 지우고, 그러면
+카탈로그에서 사라질 뿐 아니라 `server.py`가 `midas_temp` tool 등록도 건너뛴다
+(`catalog.has_group("temp")` 기준). 별도 런타임 ENV는 없다. 로컬 `.mcpb` 번들도
+같은 방식이다(`mcpb/build.ps1 -IncludeTemp`, `mcpb/README.md`).
+
+> 두 스택은 **호스트명(`ServiceHostname`)이 서로 달라야** 한다 — EIP·인증서가 스택마다
+> 따로라 같은 FQDN을 공유할 수 없다. 경로(`/mcp`)는 둘 다 그대로 둔다.
 
 ## 전체 그림
 
@@ -33,7 +57,7 @@ CloudFormation 템플릿 하나로 **이미지 빌드 → 저장 → EC2 배포 
 
 | 파라미터 | 무엇을 넣나 |
 | --- | --- |
-| `ServiceHostname` | 클라이언트가 접속할 FQDN(예: `mcp.example.com`). **실제로 소유한 도메인**이어야 한다 — Caddy가 이 이름으로 인증서를 받고, 이 이름의 A 레코드가 Elastic IP를 가리켜야 한다. |
+| `ServiceHostname` | 클라이언트가 접속할 FQDN(예: `mcp.example.com`). **실제로 소유한 도메인**이어야 한다 — Caddy가 이 이름으로 인증서를 받고, 이 이름의 A 레코드가 Elastic IP를 가리켜야 한다. **pr·dev는 서로 다른 FQDN**을 써야 한다. |
 | `AcmeEmail` | Let's Encrypt 계정 이메일. 인증서 만료 경고가 여기로 온다. 받을 수 있는 실제 주소. |
 
 **기본값 있음** — 필요할 때만 덮어쓴다.
@@ -43,11 +67,12 @@ CloudFormation 템플릿 하나로 **이미지 빌드 → 저장 → EC2 배포 
 | `GitHubBranch` | `master` | **빌드할 브랜치.** 기본값이 아니면 반드시 지정. 잘못 두면 엉뚱한 코드가 배포된다. |
 | `GitHubRepoUrl` | 이 리포 | 포크했거나 리포를 옮겼을 때 |
 | `GitHubToken` | 비어 있음 | push마다 자동 빌드(웹훅)를 원할 때만 |
-| `EcrRepositoryName` | `midas-mcp` | 계정에 같은 이름 저장소가 이미 있을 때(있으면 생성 실패) |
+| `IncludeTemp` | pr `false` / dev `true` | `temp` 엔드포인트 번들 여부. **파일별 기본값을 그대로 쓰는 게 정상** — 뒤집으면 외부에 비공식 API가 노출되거나 사내에서 사라진다 |
+| `EcrRepositoryName` | pr `midas-mcp` / dev `midas-mcp-dev` | 계정에 같은 이름 저장소가 이미 있을 때(있으면 생성 실패). 두 스택이 서로 다른 기본값을 쓰는 이유 |
 | `ImageTag` | `latest` | 감시할 태그. 이 태그로 push될 때만 재배포가 걸린다 |
 | `InstanceType` | `t4g.small` | 메모리 부족 시 `t4g.medium`. **ARM(`t4g.*`) 유지 필수** — CodeBuild가 arm64로 빌드한다 |
 | `VolumeSizeGb` | `20` | 이미지·로그가 쌓여 디스크가 모자랄 때 |
-| `AllowedCidr` | `0.0.0.0/0` | Let's Encrypt HTTP-01이 외부 접근을 요구하므로 **초기엔 그대로.** 발급 후 좁히려면 DNS 챌린지로 전환 |
+| `AllowedCidr` | `0.0.0.0/0` (pr·dev 동일) | 80·443 접근 허용 대역. 둘 다 기본 전체 개방이라 생략 가능. 좁히려면 CIDR를 넣되 80까지 함께 좁혀져 Let's Encrypt HTTP-01이 깨질 수 있다(그 경우 DNS 챌린지로 전환) |
 | `StartCron` / `StopCron` | 매일 08:00 / 24:00(자정) | 운영 시간이 다를 때. 24시간 가동하려면 배포 후 두 스케줄 비활성화 |
 | `ScheduleTimezone` | `Asia/Tokyo` | 한국 기준이면 `Asia/Seoul` |
 | `LatestAmiId` | AL2023 ARM64 | 건드리지 않는다 |
@@ -60,7 +85,7 @@ CloudFormation 템플릿 하나로 **이미지 빌드 → 저장 → EC2 배포 
 | `EcrRepository` | `AWS::ECR::Repository` | 이미지 저장소. `EmptyOnDelete: true`라 스택 삭제 시 이미지째 삭제 |
 | `BuildRole` | `AWS::IAM::Role` | CodeBuild가 ECR push·로그 기록에 쓰는 권한 |
 | `GitHubCredential` | `AWS::CodeBuild::SourceCredential` | GitHub 자격증명(토큰). **계정+리전당 1개**만 저장됨 |
-| `BuildProject` | `AWS::CodeBuild::Project` | ARM 네이티브로 `Dockerfile`을 빌드해 ECR로 push |
+| `BuildProject` | `AWS::CodeBuild::Project` | ARM 네이티브로 `Dockerfile`을 빌드해 ECR로 push. `INCLUDE_TEMP` 환경변수를 `docker build --build-arg`로 넘겨 `temp` 포함 여부를 결정 |
 
 ### 첫 빌드 자동 실행
 | 논리 ID | 타입 | 역할 |
@@ -74,7 +99,7 @@ CloudFormation 템플릿 하나로 **이미지 빌드 → 저장 → EC2 배포 
 | --- | --- | --- |
 | `InstanceRole` | `AWS::IAM::Role` | EC2가 ECR pull·SSM에 쓰는 권한 |
 | `InstanceProfile` | `AWS::IAM::InstanceProfile` | 위 롤을 인스턴스에 붙이는 껍데기 |
-| `SecurityGroup` | `AWS::EC2::SecurityGroup` | 80/443을 `AllowedCidr`에 개방 |
+| `SecurityGroup` | `AWS::EC2::SecurityGroup` | pr·dev 동일 — 80·443을 `AllowedCidr`(기본 `0.0.0.0/0`)에 개방 |
 | `Eip` / `EipAssociation` | `AWS::EC2::EIP` | 고정 IP — 정지/시작해도 주소 불변 (A 레코드 안정) |
 | `Instance` | `AWS::EC2::Instance` | 실제 서버. user-data가 Docker·Caddy·재배포 유닛을 깐다(아래) |
 
@@ -146,3 +171,8 @@ Caddy는 앱보다 먼저 뜬다(의도적): `midas` 업스트림을 요청마�
   토큰 없이 접속하면 `401`을 받고 로그인 폼으로 유도된다 → `midas_mcp/auth/README.md`.
 - **Dockerfile은 리포에 있어야** CodeBuild가 클론해 빌드한다(`Dockerfile`,
   `.dockerignore`, `deploy/`를 커밋).
+- **temp 게이팅**: `IncludeTemp` 파라미터 → CodeBuild `INCLUDE_TEMP` 환경변수 →
+  `docker build --build-arg INCLUDE_TEMP=...`. `Dockerfile`은 false일 때 `pip install`
+  **전에** `data/schemas/temp`를 지워 wheel 번들에서 제외한다. 파일이 없으면 카탈로그에도
+  안 뜨고 `server.py`가 `midas_temp` 등록도 건너뛴다 → 발견·호출 표면 모두 사라짐.
+  `IncludeTemp`는 `InitialBuild` 입력에도 물려 있어 값 변경 시 스택 업데이트가 재빌드를 건다.
