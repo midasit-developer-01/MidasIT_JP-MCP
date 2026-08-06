@@ -105,19 +105,31 @@ nslookup mcp.example.com 8.8.8.8         # 공용 리졸버로 권위 반영 확
 
 ## 3. 이미지 갱신
 
-> 아래 명령들은 **외부(pr) 스택** 이름 기준(`STACK=midas-mcp`, `PROJECT=midas-mcp-build`,
-> ECR `midas-mcp`)이다. **사내(dev) 스택**은 `midas-mcp-dev` / `midas-mcp-dev-build` /
-> ECR `midas-mcp-dev`로 바꿔 쓴다. 두 스택은 각자의 ECR·EventBridge를 가져 서로 독립이다.
+두 스택은 **각자의 ECR·CodeBuild·EventBridge를 가져 완전히 독립**이다. 리소스 이름이
+스택마다 다르니, 먼저 **대상 스택 하나를 골라** 이름을 확인한다:
 
-**A. GitHub push 자동 (권장, 토큰 필요)** — `GitHubToken`에 PAT(`repo`+`admin:repo_hook`) 지정:
+| | 외부(pr) | dev(temp 포함) |
+| --- | --- | --- |
+| 스택 (`--stack-name`) | `midas-mcp` | `midas-mcp-dev` |
+| CodeBuild 프로젝트 | `midas-mcp-build` | `midas-mcp-dev-build` |
+| ECR 저장소 | `midas-mcp` | `midas-mcp-dev` |
+
+> 규칙: **CodeBuild 프로젝트 = `<스택이름>-build`**, **ECR 저장소 = 스택 이름**(기본값 기준).
+
+**먼저 대상 스택을 변수로 고정한다** — 이 셋만 바꾸면 아래 모든 명령이 그 스택을 가리킨다:
 ```bash
-aws cloudformation deploy ... --parameter-overrides ... GitHubToken=ghp_xxx
+REGION=ap-northeast-1
+STACK=midas-mcp          # ← dev를 갱신하려면 midas-mcp-dev
+PROJECT=${STACK}-build   # 자동: midas-mcp-build / midas-mcp-dev-build
+REPO=$STACK              # ECR 저장소(기본이 스택 이름과 동일)
 ```
 
-**B. 수동 빌드 + 재배포 (토큰 없이)** — GitHub에 push 후. **ECR push 자동 재배포가
-안 걸릴 수 있으므로**, 빌드 완료를 기다렸다가 인스턴스 재배포까지 함께 한다:
+---
+
+**A. 코드 바꾼 뒤 재빌드 (토큰 없이 — 상시 사용하는 주 경로)** — GitHub에 push 후, 위
+`$PROJECT`로 빌드를 트리거한다. **ECR push 자동 재배포가 안 걸릴 수 있으므로**, 빌드
+완료를 기다렸다가 인스턴스 재배포까지 함께 한다:
 ```bash
-REGION=ap-northeast-1; PROJECT=midas-mcp-build; STACK=midas-mcp
 INSTANCE=$(aws cloudformation describe-stacks --region $REGION --stack-name $STACK \
   --query "Stacks[0].Outputs[?OutputKey=='SsmConnect'].OutputValue" --output text | awk '{print $NF}')
 
@@ -136,20 +148,31 @@ aws ssm send-command --region $REGION --document-name AWS-RunShellScript \
 ```
 > `SsmConnect` 출력이 `aws ssm start-session --target i-xxxx` 형태라 `awk '{print $NF}'`로
 > 인스턴스 id만 뽑는다. 자동 재배포(ECR push→EventBridge→SSM)가 정상이면 2)는 생략 가능.
+> 빠르게 한 방이면 스택 출력 `RebuildCommand`가 위 1)의 `start-build`와 동일하다.
 
-**C. 직접 ECR push** — 자동 반영. `linux/arm64` + 감시 태그(`latest`)만 지킬 것:
+**B. 직접 ECR push** — CodeBuild 우회, 자동 반영. `linux/arm64` + 감시 태그(`latest`)만 지킬 것:
 ```bash
-docker buildx build --platform linux/arm64 --push -t <ECR>/midas-mcp:latest .
+ECR=$(aws ecr describe-repositories --region $REGION --repository-names $REPO \
+  --query 'repositories[0].repositoryUri' --output text)
+docker buildx build --platform linux/arm64 --push -t "$ECR:latest" .
 ```
 
-**D. 재빌드 없이 재배포만** — 스택 출력 `ForceRedeploy` (컨테이너만 재-pull).
+**C. 재빌드 없이 재배포만** — 스택 출력 `ForceRedeploy` (컨테이너만 재-pull).
+
+**D. GitHub push 자동 (선택, 토큰 필요)** — `GitHubToken`에 PAT(`repo`+`admin:repo_hook`)를 주면
+push마다 자동 재빌드 웹훅이 걸린다:
+```bash
+aws cloudformation deploy ... --stack-name $STACK --parameter-overrides ... GitHubToken=ghp_xxx
+```
+> ⚠️ GitHub 자격증명은 **계정+리전당 1개**뿐이라, **pr·dev 중 한 스택만** 토큰을 가질 수 있다
+> (둘 다 주면 `ResourceAlreadyExistsException`). 나머지 스택은 반드시 토큰 없이(A/B/C) 간다.
 
 롤백은 옛 digest에 `latest` 재부착:
 ```bash
-MANIFEST=$(aws ecr batch-get-image --repository-name midas-mcp \
+MANIFEST=$(aws ecr batch-get-image --repository-name $REPO \
   --image-ids imageDigest=sha256:<옛날digest> \
   --query 'images[0].imageManifest' --output text)
-aws ecr put-image --repository-name midas-mcp --image-tag latest --image-manifest "$MANIFEST"
+aws ecr put-image --repository-name $REPO --image-tag latest --image-manifest "$MANIFEST"
 ```
 
 ## 4. 검증
@@ -198,9 +221,11 @@ python -m midas_mcp.auth.check_flow https://mcp.example.com   # 19개 항목
 
 ## 5. 문제 생겼을 때
 
+> 이름은 §3 표 기준(`$PROJECT`=`<스택>-build`, `$STACK`). dev면 `-dev`가 붙은 값으로.
+
 빌드 — 스택 출력 `BuildLogs`(콘솔) 또는:
 ```bash
-aws codebuild list-builds-for-project --project-name midas-mcp-build --max-items 1
+aws codebuild list-builds-for-project --project-name $PROJECT --max-items 1
 ```
 
 인스턴스 — 출력 `SsmConnect`로 셸을 열고:
@@ -218,6 +243,6 @@ sudo cat /var/log/cloud-init-output.log     # 최초 부팅 셋업
 
 시작/정지는 매일 08:00 기동 / 24:00(자정) 정지 (Asia/Tokyo). 정지 중에도 EBS·Elastic IP는 과금.
 ```bash
-aws cloudformation delete-stack --region ap-northeast-1 --stack-name midas-mcp
+aws cloudformation delete-stack --region ap-northeast-1 --stack-name midas-mcp      # dev: midas-mcp-dev
 ```
-ECR은 `EmptyOnDelete: true`라 이미지째 삭제된다.
+ECR은 `EmptyOnDelete: true`라 이미지째 삭제된다. **pr·dev는 별도 스택**이라 각각 삭제해야 한다.
