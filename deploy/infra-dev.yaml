@@ -32,7 +32,7 @@ Parameters:
   # ---- Image ----
   EcrRepositoryName:
     Type: String
-    Default: midas-mcp-dev
+    Default: midas-mcp-release-dev
     Description: >
       ECR repository this stack creates; CodeBuild pushes here. Distinct from the
       external (pr) stack's repo so both can coexist in one account+region.
@@ -370,7 +370,7 @@ Resources:
       Domain: vpc
       Tags:
         - Key: Name
-          Value: midas-mcp
+          Value: midas-mcp-release-dev
 
   # ================= Compute =================
   Instance:
@@ -388,7 +388,7 @@ Resources:
             DeleteOnTermination: true
       Tags:
         - Key: Name
-          Value: midas-mcp
+          Value: midas-mcp-release-dev
       UserData:
         # Runs ONCE per instance, not on every boot. Anything that must happen on
         # each start (pulling the current image) belongs in the systemd unit.
@@ -509,7 +509,7 @@ Resources:
   EcrPushRule:
     Type: AWS::Events::Rule
     Properties:
-      Description: !Sub "Redeploy midas-mcp when ${ImageTag} is pushed to ECR."
+      Description: !Sub "Redeploy midas-mcp-release-dev when ${ImageTag} is pushed to ECR."
       State: ENABLED
       EventPattern:
         source: [ aws.ecr ]
