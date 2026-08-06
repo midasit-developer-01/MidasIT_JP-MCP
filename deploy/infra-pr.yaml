@@ -520,7 +520,7 @@ Resources:
           image-tag: [ !Ref ImageTag ]
       Targets:
         - Id: redeploy-via-ssm
-          Arn: !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:document/AWS-RunShellScript"
+          Arn: !Sub "arn:aws:ssm:${AWS::Region}::document/AWS-RunShellScript"
           RoleArn: !GetAtt EcrPushInvokeRole.Arn
           RunCommandParameters:
             RunCommandTargets:
